@@ -1,0 +1,16 @@
+Fitter Status : Successful - Sat Nov 23 13:02:29 2019
+Quartus Prime Version : 19.1.0 Build 670 09/22/2019 SJ Lite Edition
+Revision Name : FPGC4
+Top-level Entity Name : FPGC4
+Family : Cyclone IV E
+Device : EP4CE15F23C8
+Timing Models : Final
+Total logic elements : 3,731 / 15,408 ( 24 % )
+    Total combinational functions : 2,993 / 15,408 ( 19 % )
+    Dedicated logic registers : 2,585 / 15,408 ( 17 % )
+Total registers : 2585
+Total pins : 30 / 344 ( 9 % )
+Total virtual pins : 0
+Total memory bits : 51,200 / 516,096 ( 10 % )
+Embedded Multiplier 9-bit elements : 0 / 112 ( 0 % )
+Total PLLs : 1 / 4 ( 25 % )

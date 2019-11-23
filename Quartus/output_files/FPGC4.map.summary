@@ -1,0 +1,14 @@
+Analysis & Synthesis Status : Successful - Sat Nov 23 13:02:12 2019
+Quartus Prime Version : 19.1.0 Build 670 09/22/2019 SJ Lite Edition
+Revision Name : FPGC4
+Top-level Entity Name : FPGC4
+Family : Cyclone IV E
+Total logic elements : 4,605
+    Total combinational functions : 2,993
+    Dedicated logic registers : 2,585
+Total registers : 2585
+Total pins : 30
+Total virtual pins : 0
+Total memory bits : 51,200
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 1

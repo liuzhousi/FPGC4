@@ -1,74 +1,97 @@
 [*]
 [*] GTKWave Analyzer v (Modified by Bart for High DPI displays) 3.3.103 (w)1999-2019 BSI
-[*] Fri Nov 22 22:20:57 2019
+[*] Wed Dec  4 19:07:23 2019
 [*]
 [dumpfile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/wave.vcd"
-[dumpfile_mtime] "Fri Nov 22 22:10:20 2019"
-[dumpfile_size] 12241630
+[dumpfile_mtime] "Wed Dec  4 19:06:52 2019"
+[dumpfile_size] 626530
 [savefile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/FPGC4.gtkw"
-[timestart] 1451696
+[timestart] 0
 [size] 2736 1716
 [pos] -1 -1
-*-8.000000 1453640 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-19.000000 1177000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] FPGC_tb.
 [treeopen] FPGC_tb.fpgc.
-[sst_width] 411
-[signals_width] 544
+[treeopen] FPGC_tb.fpgc.mu.
+[sst_width] 474
+[signals_width] 563
 [sst_expanded] 1
 [sst_vpaned_height] 505
 @28
+FPGC_tb.fpgc.clk
 FPGC_tb.fpgc.nreset
 FPGC_tb.fpgc.reset
 @200
 -
-@29
-FPGC_tb.fpgc.vga_clk
+-MemoryUnit
+@22
+FPGC_tb.fpgc.mu.address[26:0]
 @28
-FPGC_tb.fpgc.fsx.vga_r[7:0]
-FPGC_tb.fpgc.fsx.vga_g[7:0]
-FPGC_tb.fpgc.fsx.vga_b[7:0]
+FPGC_tb.fpgc.mu.busy
+@22
+FPGC_tb.fpgc.mu.data[31:0]
+@28
+FPGC_tb.fpgc.mu.initDone
+@22
+FPGC_tb.fpgc.mu.q[31:0]
+@28
+FPGC_tb.fpgc.mu.start
+FPGC_tb.fpgc.mu.we
 @200
 -
+-SDRAMcontroller
+@25
+FPGC_tb.fpgc.mu.sdramcontroller.startup_refresh_count[9:0]
+@22
+FPGC_tb.fpgc.mu.sd_addr[23:0]
 @28
-FPGC_tb.fpgc.clk
-@24
-FPGC_tb.fpgc.vram8_gpu_addr[10:0]
-FPGC_tb.fpgc.vram8_gpu_q[7:0]
+FPGC_tb.fpgc.mu.sd_busy
+@22
+FPGC_tb.fpgc.mu.sd_d[31:0]
+FPGC_tb.fpgc.mu.sd_q[31:0]
+@28
+FPGC_tb.fpgc.mu.sd_q_ready
+FPGC_tb.fpgc.mu.sd_start
+FPGC_tb.fpgc.mu.sd_we
 @200
 -
-@24
-FPGC_tb.fpgc.vram32_gpu_addr[10:0]
-FPGC_tb.fpgc.vram32_gpu_q[31:0]
+-SPIreader
+@22
+FPGC_tb.fpgc.mu.sr_addr[23:0]
+@28
+FPGC_tb.fpgc.mu.sr_initDone
+@22
+FPGC_tb.fpgc.mu.sr_q[31:0]
+@28
+FPGC_tb.fpgc.mu.sr_recvDone
+FPGC_tb.fpgc.mu.sr_start
 @200
 -
+-SDRAM
 @28
-FPGC_tb.fpgc.fsx.reversevram32_q[31:0]
-@24
-FPGC_tb.fpgc.fsx.CounterX[11:0]
-FPGC_tb.fpgc.fsx.CounterXdiv4[11:0]
-FPGC_tb.fpgc.fsx.CounterY[11:0]
-FPGC_tb.fpgc.fsx.alwaysVpixel[11:0]
-FPGC_tb.fpgc.fsx.alwaysVtilePixel[2:0]
-FPGC_tb.fpgc.fsx.currentHpixel[7:0]
-FPGC_tb.fpgc.fsx.currentHtilePixel[2:0]
-FPGC_tb.fpgc.fsx.currentHtile[4:0]
-FPGC_tb.fpgc.fsx.currentTile[9:0]
-FPGC_tb.fpgc.fsx.currentVpixel[7:0]
-FPGC_tb.fpgc.fsx.currentVtilePixel[2:0]
-FPGC_tb.fpgc.fsx.currentVtile[4:0]
-FPGC_tb.fpgc.fsx.fetchBGnameTable
-FPGC_tb.fpgc.fsx.fetchPatternTable
-FPGC_tb.fpgc.fsx.fetchBGPaletteTable
-FPGC_tb.fpgc.fsx.fetchPaletteTable
-FPGC_tb.fpgc.fsx.inDisplayArea
-FPGC_tb.fpgc.fsx.o_frame
-FPGC_tb.fpgc.fsx.ondoubletile
-FPGC_tb.fpgc.fsx.ontile
-FPGC_tb.fpgc.fsx.ontile_h
-FPGC_tb.fpgc.fsx.ontile_v
-FPGC_tb.fpgc.fsx.paletteID[3:0]
-FPGC_tb.fpgc.fsx.stateCounter[1:0]
-FPGC_tb.fpgc.fsx.tileClock
-FPGC_tb.fpgc.fsx.tileID[7:0]
+FPGC_tb.sdram_clk
+@22
+FPGC_tb.fpgc.mu.SDRAM_A[12:0]
+@28
+FPGC_tb.fpgc.mu.SDRAM_BA[1:0]
+FPGC_tb.fpgc.mu.SDRAM_CKE
+FPGC_tb.fpgc.mu.SDRAM_CSn
+FPGC_tb.fpgc.mu.SDRAM_DQM[1:0]
+@22
+FPGC_tb.fpgc.mu.SDRAM_DQ[15:0]
+@28
+FPGC_tb.fpgc.mu.SDRAM_CASn
+FPGC_tb.fpgc.mu.SDRAM_RASn
+FPGC_tb.fpgc.mu.SDRAM_WEn
+@200
+-
+-SPIflash
+@28
+FPGC_tb.fpgc.mu.spi_clk
+FPGC_tb.fpgc.mu.spi_cs
+FPGC_tb.fpgc.mu.spi_data
+FPGC_tb.fpgc.mu.spi_hold
+FPGC_tb.fpgc.mu.spi_q
+FPGC_tb.fpgc.mu.spi_wp
 [pattern_trace] 1
 [pattern_trace] 0

@@ -7,9 +7,9 @@
 module FSX(
     //VGA I/O
     input               vga_clk,            //25MHz
-    output wire [2:0]   vga_r,
-    output wire [2:0]   vga_g,
-    output wire [1:0]   vga_b,
+    output wire [7:0]   vga_r,
+    output wire [7:0]   vga_g,
+    output wire [7:0]   vga_b,
     output wire         vga_hs,
     output wire         vga_vs,
     output wire         vga_blk,

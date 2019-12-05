@@ -4,6 +4,10 @@
 			"name" : "Top",
 			"pins" : [
 				{
+					"name" : "vga_clk",
+					"strict" : false
+				},
+				{
 					"name" : "vga_hs",
 					"strict" : false
 				},
@@ -24,26 +28,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "vga_r[3]",
-					"strict" : false
-				},
-				{
-					"name" : "vga_r[4]",
-					"strict" : false
-				},
-				{
-					"name" : "vga_r[5]",
-					"strict" : false
-				},
-				{
-					"name" : "vga_r[6]",
-					"strict" : false
-				},
-				{
-					"name" : "vga_r[7]",
-					"strict" : false
-				},
-				{
 					"name" : "vga_g[0]",
 					"strict" : false
 				},
@@ -56,26 +40,6 @@
 					"strict" : false
 				},
 				{
-					"name" : "vga_g[3]",
-					"strict" : false
-				},
-				{
-					"name" : "vga_g[4]",
-					"strict" : false
-				},
-				{
-					"name" : "vga_g[5]",
-					"strict" : false
-				},
-				{
-					"name" : "vga_g[6]",
-					"strict" : false
-				},
-				{
-					"name" : "vga_g[7]",
-					"strict" : false
-				},
-				{
 					"name" : "vga_b[0]",
 					"strict" : false
 				},
@@ -84,27 +48,191 @@
 					"strict" : false
 				},
 				{
-					"name" : "vga_b[2]",
+					"name" : "SDRAM_CLK",
 					"strict" : false
 				},
 				{
-					"name" : "vga_b[3]",
+					"name" : "SDRAM_CSn",
 					"strict" : false
 				},
 				{
-					"name" : "vga_b[4]",
+					"name" : "SDRAM_WEn",
 					"strict" : false
 				},
 				{
-					"name" : "vga_b[5]",
+					"name" : "SDRAM_CASn",
 					"strict" : false
 				},
 				{
-					"name" : "vga_b[6]",
+					"name" : "SDRAM_RASn",
 					"strict" : false
 				},
 				{
-					"name" : "vga_b[7]",
+					"name" : "SDRAM_CKE",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_A[0]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_A[1]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_A[2]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_A[3]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_A[4]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_A[5]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_A[6]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_A[7]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_A[8]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_A[9]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_A[10]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_A[11]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_A[12]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_BA[0]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_BA[1]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQM[0]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQM[1]",
+					"strict" : false
+				},
+				{
+					"name" : "spi_cs",
+					"strict" : false
+				},
+				{
+					"name" : "spi_clk",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQ[0]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQ[1]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQ[2]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQ[3]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQ[4]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQ[5]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQ[6]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQ[7]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQ[8]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQ[9]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQ[10]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQ[11]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQ[12]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQ[13]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQ[14]",
+					"strict" : false
+				},
+				{
+					"name" : "SDRAM_DQ[15]",
+					"strict" : false
+				},
+				{
+					"name" : "spi_data",
+					"strict" : false
+				},
+				{
+					"name" : "spi_q",
+					"strict" : false
+				},
+				{
+					"name" : "spi_wp",
+					"strict" : false
+				},
+				{
+					"name" : "spi_hold",
+					"strict" : false
+				},
+				{
+					"name" : "clk",
+					"strict" : false
+				},
+				{
+					"name" : "nreset",
 					"strict" : false
 				}
 			]

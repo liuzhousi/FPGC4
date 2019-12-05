@@ -1,7 +1,6 @@
 /*
 * VGA signal generator
 * For different signals/resolutions, see commented out parameters
-* However, everything is built around 480p with a 25MHz pixel clock
 */
 module VGA(
     input               clk,         // clock
@@ -14,14 +13,14 @@ module VGA(
 );
 
 parameter
-    H_RES=640,      // horizontal resolution (pixels)
-    V_RES=480,      // vertical resolution (lines)
-    H_FP=16,        // horizontal front porch
-    H_SYNC=96,      // horizontal sync
-    H_BP=48,        // horizontal back porch
-    V_FP=11,        // vertical front porch
-    V_SYNC=2,       // vertical sync
-    V_BP=31,        // vertical back porch
+    H_RES=480,      // horizontal resolution (pixels)
+    V_RES=272,      // vertical resolution (lines)
+    H_FP=2,        // horizontal front porch
+    H_SYNC=41,      // horizontal sync
+    H_BP=2,        // horizontal back porch
+    V_FP=2,        // vertical front porch
+    V_SYNC=10,       // vertical sync
+    V_BP=2,        // vertical back porch
     H_POL=0,        // horizontal sync polarity (0:neg, 1:pos)
     V_POL=0;        // vertical sync polarity (0:neg, 1:pos)
     

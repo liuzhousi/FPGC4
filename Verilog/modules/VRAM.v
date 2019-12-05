@@ -11,13 +11,13 @@ module VRAM
 (
   input                   cpu_clk,        
   input      [WIDTH-1:0]  cpu_d,
-  input      [10:0]       cpu_addr,
+  input      [11:0]       cpu_addr,
   input                   cpu_we,
   output reg [WIDTH-1:0]  cpu_q, 
 
   input                   gpu_clk,
   input      [WIDTH-1:0]  gpu_d,
-  input      [10:0]       gpu_addr,
+  input      [11:0]       gpu_addr,
   input                   gpu_we,
   output reg [WIDTH-1:0]  gpu_q 
 );
@@ -27,7 +27,7 @@ module VRAM
 reg [WIDTH-1:0] ram [0:WORDS-1]; //basically the memory cells
 
 //cpu port
-always @(posedge cpu_clk) 
+always @(negedge cpu_clk) 
 begin
   cpu_q <= ram[cpu_addr];
   if (cpu_we)

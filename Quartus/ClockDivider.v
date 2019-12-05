@@ -1,35 +1,30 @@
 /*
 * Divides clk_in by the number specified in the DIVISOR parameter
-* Division is max
 */
 module ClockDivider
 #(
     parameter DIVISOR = 25
 ) 
 (
-    input clk,
-    output reg clk_e
+    input clk_in,
+    output wire clk_out
 );
 
-reg[$clog2(DIVISOR):0] counter;
+reg[15:0] counter;
 
-always @(posedge clk)
+always @(posedge clk_in)
 begin
-    if (counter < DIVISOR - 1'b1)
-        counter <= counter + 1'b1;
-    else
-        counter <= 0;
+    counter <= counter + 16'd1;
+    if (counter >= (DIVISOR-1))
+        counter <= 16'd0;
 end
 
-always @(posedge clk)
-begin
-    clk_e <= (counter == DIVISOR - 1'b1);
-end
+assign clk_out = (counter < DIVISOR/2) ? 1'b0:
+        1'b1;
 
 initial
 begin
-    counter = 0;
-    clk_e = 0;
+    counter = 16'd0;
 end
 
 endmodule

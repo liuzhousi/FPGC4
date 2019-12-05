@@ -21,6 +21,7 @@
 
 `include "../modules/SDRAMcontroller.v"
 `include "../modules/SPIreader.v"
+`include "../modules/ROM.v"
 `include "../modules/MemoryUnit.v"
 
 //Define testmodule

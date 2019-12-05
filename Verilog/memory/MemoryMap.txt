@@ -1,0 +1,7 @@
+Memory map:
+0x000000 to 0x7FFFFF -> SDRAM 		32MiB 		@ 32bit (8388608 addresses)
+0x800000 to 0xBFFFFF -> SPI FLASH 	16MiB 		@ 32bit (4194304 addresses)
+0xC00000 to 0xC0040F -> VRAM32 		4.0625KiB 	@ 32bit (1024+16 addresses)
+0xC00410 to 0xC013FF -> VRAM8 		3.984375KiB @ 8bit	(2*2040  addresses)
+0xC01400 to 0xC015FF -> ROM 		2KiB 		@ 32bit (512 	 addresses)
+0xC01600 to 0xC015FF -> I/O (GPIO, SNES, KEYBOARD)

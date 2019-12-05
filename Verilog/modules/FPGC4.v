@@ -51,13 +51,13 @@ assign SDRAM_CLK = clk;
 //---------------------------VRAM32---------------------------------
 //VRAM32 I/O
 wire        vram32_gpu_clk;
-wire [10:0] vram32_gpu_addr;
+wire [11:0] vram32_gpu_addr;
 wire [31:0] vram32_gpu_d;
 wire        vram32_gpu_we;
 wire [31:0] vram32_gpu_q;
 
 wire        vram32_cpu_clk;
-wire [10:0] vram32_cpu_addr;
+wire [11:0] vram32_cpu_addr;
 wire [31:0] vram32_cpu_d;
 wire        vram32_cpu_we; 
 wire [31:0] vram32_cpu_q;
@@ -68,7 +68,7 @@ assign vram32_gpu_d     = 32'd0;
 
 VRAM #(
 .WIDTH(32), 
-.WORDS(1152), 
+.WORDS(1040), 
 .LIST("../memory/vram32.list")
 )   vram32(
 //CPU port
@@ -90,13 +90,13 @@ VRAM #(
 //--------------------------VRAM8--------------------------------
 //VRAM8 I/O
 wire        vram8_gpu_clk;
-wire [10:0] vram8_gpu_addr;
+wire [11:0] vram8_gpu_addr;
 wire [7:0]  vram8_gpu_d;
 wire        vram8_gpu_we;
 wire [7:0]  vram8_gpu_q;
 
 wire        vram8_cpu_clk;
-wire [10:0] vram8_cpu_addr;
+wire [11:0] vram8_cpu_addr;
 wire [7:0]  vram8_cpu_d;
 wire        vram8_cpu_we;
 wire [7:0]  vram8_cpu_q;
@@ -107,7 +107,7 @@ assign vram8_gpu_d      = 8'd0;
 
 VRAM #(
 .WIDTH(8), 
-.WORDS(1792), 
+.WORDS(4080), 
 .LIST("../memory/vram8.list")
 )   vram8(
 //CPU port
@@ -157,6 +157,18 @@ FSX fsx(
 );
 
 
+//-------------------ROM-------------------------
+//ROM I/O
+wire [8:0] rom_addr;
+wire [31:0] rom_q;
+
+ROM rom(
+.clk            (clk),
+.address        (rom_addr),
+.q              (rom_q)
+);
+
+
 //----------------Memory Unit--------------------
 //Memory Unit I/O
 reg [26:0] address;
@@ -170,6 +182,7 @@ wire [31:0] q;
 MemoryUnit mu(
 //clocks
 .clk            (clk),
+.reset          (reset),
 
 //I/O
 .address        (address),
@@ -179,7 +192,6 @@ MemoryUnit mu(
 .initDone       (initDone),       //High when initialization is done
 .busy           (busy),
 .q              (q),
-
 
 //vram32 cpu side
 .vram32_cpu_d   (vram32_cpu_d),        
@@ -192,6 +204,10 @@ MemoryUnit mu(
 .vram8_cpu_addr (vram8_cpu_addr), 
 .vram8_cpu_we   (vram8_cpu_we),
 .vram8_cpu_q    (vram8_cpu_q),
+
+//ROM
+.rom_addr       (rom_addr),
+.rom_q          (rom_q),
 
 //SPI
 .spi_data       (spi_data), 
@@ -241,7 +257,7 @@ begin
         begin
             data <= q;
             we <= 1;
-            address <= 27'h800008;
+            address <= 27'h000008;
             start <= 0;
             c <= 999;
         end
@@ -265,8 +281,8 @@ begin
     begin
         start <= 1;
         we <= 0;
-        address <= 27'h800009;
-        data <= 0;
+        address <= 27'hC01402;
+        data <= 32'd123456;
     end
         
 
@@ -276,7 +292,9 @@ begin
         if (!busy)
         begin
             start <= 0;
-            //c <= 2000;
+            we <= 0;
+            address <= 0;
+            data <= 0;
         end
     end
 

@@ -15,11 +15,11 @@ module FSX(
     output wire         vga_blk,
 
     //VRAM32
-    output [10:0]       vram32_addr,
+    output [11:0]       vram32_addr,
     input  [31:0]       vram32_q, 
 
     //VRAM8
-    output [10:0]       vram8_addr,
+    output [11:0]       vram8_addr,
     input  [7:0]        vram8_q,
 
     //Interrupt signal
@@ -49,8 +49,8 @@ VGA displayGen(
 
 //--------------------FSX Code---------------------
 //Start positions of image
-parameter HDAT_BEGIN = 72;
-parameter VDAT_BEGIN = 0;//26;
+parameter HDAT_BEGIN = 0;//2;
+parameter VDAT_BEGIN = 0;//2;
 
 
 //vram fetching state machine
@@ -96,14 +96,14 @@ assign vram32_addr =    ((fetchPatternTable||fetchBGPaletteTable)   && CounterXd
                         11'd0;
 
 assign vram8_addr =     ((fetchBGnameTable||fetchPatternTable)      && CounterXdiv4 < 32  && inDisplayArea && CounterY >= VDAT_BEGIN)   ? 11'h000 + CounterXdiv4 + ( ((CounterY - VDAT_BEGIN) >> 4) <<5 ):
-                        ((fetchBGPaletteTable||fetchPaletteTable)   && CounterXdiv4 < 32  && inDisplayArea && CounterY >= VDAT_BEGIN)   ? 11'h380 + CounterXdiv4 + ( ((CounterY - VDAT_BEGIN) >> 4) <<5 ):
+                        ((fetchBGPaletteTable||fetchPaletteTable)   && CounterXdiv4 < 32  && inDisplayArea && CounterY >= VDAT_BEGIN)   ? 11'h7F8 + CounterXdiv4 + ( ((CounterY - VDAT_BEGIN) >> 4) <<5 ):
                         11'd0;
 
 
 //this costs many LEs, and therefore does not allow for high clock speeds. However, 25MHz is achievable
 //might want to find other solution (dp ram?) when implementing sprites
-reg [1:0] lineDataBuffer [255:0];   //buffer for tile data for current line
-reg [7:0] lineBuffer [255:0];       //buffer for color data for current line (complete line)
+reg [1:0] lineDataBuffer [479:0];   //buffer for tile data for current line
+reg [7:0] lineBuffer [479:0];       //buffer for color data for current line (complete line)
 
 //reverse tile data bits
 wire [31:0] reversevram32_q;
@@ -184,13 +184,13 @@ end
 
 
 //COUNTERS FOR CURRENT POSITION ON SCREEN
-wire [9:0] currentTile; //current tile the vga_clk is on
+wire [10:0] currentTile; //current tile the vga_clk is on
 
 wire ontile_h; //when pixel clock horizontally on a tile
 //wire ontile_v; //when pixel clock vertically on a tile
 wire ontile, ondoubletile; //when pixel clock is on a tile
-wire [7:0] currentHpixel, currentVpixel; //current horizontal/vertical pixel the vga_clk is on
-wire [4:0] currentHtile, currentVtile; //current horiontal/vertical tile the vga_clk is on
+wire [8:0] currentHpixel, currentVpixel; //current horizontal/vertical pixel the vga_clk is on
+wire [5:0] currentHtile, currentVtile; //current horiontal/vertical tile the vga_clk is on
 wire [2:0] currentHtilePixel; //current horizontal pixel in current tile
 wire [2:0] currentVtilePixel; //current vertical pixel in current tile
 wire tileClock; //pulse at start of tile
@@ -243,9 +243,9 @@ assign data_B_2bit = (!ondoubletile) ? 2'b00:
                 lineBuffer[(CounterX - HDAT_BEGIN) >> 1][1:0];
 
 
-assign vga_r = {data_R[2], data_R[1], data_R[1], data_R[0], data_R[0], data_R[0], data_R[0], data_R[0]};
-assign vga_g = {data_G[2], data_G[1], data_G[1], data_G[0], data_G[0], data_G[0], data_G[0], data_G[0]};
-assign vga_b = {data_B_2bit[1], data_B_2bit[1], data_B_2bit[0], data_B_2bit[0], data_B_2bit[0], data_B_2bit[0], data_B_2bit[0], data_B_2bit[0]};
+assign vga_r = {data_R[2], data_R[1], data_R[0]};
+assign vga_g = {data_G[2], data_G[1], data_G[0]};
+assign vga_b = {data_B_2bit[1], data_B_2bit[0]};
 
 initial
 begin

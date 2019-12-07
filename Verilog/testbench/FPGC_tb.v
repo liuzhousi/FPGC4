@@ -6,23 +6,32 @@
 `timescale 1 ns/1 ns
 
 //Include top level design
-`include "../modules/FPGC4.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/FPGC4.v"
 //Include modules
-//`include "../modules/CPU.v"
 //`include "../modules/ClockDivider.v"
-`include "../modules/ResetStabilizer.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Stabilizer.v"
 
-`include "../modules/VRAM.v"
-`include "../modules/FSX.v"
-`include "../modules/VGA.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/GPU/FSX.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/GPU/VGA.v"
 
-`include "../modules/mt48lc16m16a2.v"
-`include "../modules/w25q128jv.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/VRAM.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/mt48lc16m16a2.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/w25q128jv.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/SDRAMcontroller.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/SPIreader.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/ROM.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/MemoryUnit.v"
 
-`include "../modules/SDRAMcontroller.v"
-`include "../modules/SPIreader.v"
-`include "../modules/ROM.v"
-`include "../modules/MemoryUnit.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/CPU/CPU.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/CPU/ALU.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/CPU/ControlUnit.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/CPU/InstructionDecoder.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/CPU/PC.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/CPU/Regbank.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/CPU/Stack.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/CPU/Timer.v"
+
+
 
 //Define testmodule
 module FPGC_tb;
@@ -30,6 +39,7 @@ module FPGC_tb;
 //I/O
 reg clk;
 reg nreset;
+reg int1, int2, int3, int4;
 
 //SPI Flash
 wire spi_clk;
@@ -118,19 +128,34 @@ FPGC4 fpgc (
 .spi_q 		(spi_q),
 .spi_wp 	(spi_wp),
 .spi_hold 	(spi_hold),
-.spi_cs 	(spi_cs)
+.spi_cs 	(spi_cs),
+
+
+//Interrupts
+.int1           (int1), 
+.int2           (int2), 
+.int3           (int3), 
+.int4           (int4)
 );
 
 
 initial
 begin
     //Dump everything for GTKwave
-    $dumpfile("../output/wave.vcd");
+    $dumpfile("/home/bart/Documents/FPGA/FPGC4/Verilog/output/wave.vcd");
     $dumpvars;
+    int1 = 0;
+    int2 = 0;
+    int3 = 0;
+    int4 = 0;
     clk = 0;
     nreset = 1;
 
-    repeat(10000) #10 clk = ~clk; //50MHz
+    repeat(497) #20 clk = ~clk; //25MHz
+    int3 = 1;
+    repeat(100) #20 clk = ~clk; //25MHz
+    int3 = 0;
+    repeat(1000) #20 clk = ~clk; //25MHz
 
     #1 $finish;
 end

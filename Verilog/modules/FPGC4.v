@@ -32,21 +32,34 @@ module FPGC4(
     inout           spi_data, 
     inout           spi_q, 
     inout           spi_wp, 
-    inout           spi_hold
+    inout           spi_hold,
+
+    //Interrupts
+    input           int1,
+    input           int2,
+    input           int3,
+    input           int4
+
 );
 
 //----------------Reset Stabilizer-------------------
 //Reset stabilizer I/O
-wire reset;
-ResetStabilizer resStabilizer (
-.nreset(nreset),
+wire nreset_stable, reset;
+
+assign reset = ~nreset_stable;
+
+Stabilizer resStabilizer (
 .clk(clk),
-.reset(reset)
+.reset(1'b0), //Since we stabilize the reset signal, we do NOT want to use it here
+.unstable(nreset),
+.stable(nreset_stable)
 );
 
 
 //--------------------Clocks----------------------
 assign SDRAM_CLK = clk;
+wire gpu_clk, gpu_clk2;
+
 
 //---------------------------VRAM32---------------------------------
 //VRAM32 I/O
@@ -69,7 +82,7 @@ assign vram32_gpu_d     = 32'd0;
 VRAM #(
 .WIDTH(32), 
 .WORDS(1040), 
-.LIST("../memory/vram32.list")
+.LIST("/home/bart/Documents/FPGA/FPGC4/Verilog/memory/vram32.list")
 )   vram32(
 //CPU port
 .cpu_clk    (clk),
@@ -79,7 +92,7 @@ VRAM #(
 .cpu_q      (vram32_cpu_q),
 
 //GPU port
-.gpu_clk    (vga_clk),
+.gpu_clk    (gpu_clk),
 .gpu_d      (vram32_gpu_d),
 .gpu_addr   (vram32_gpu_addr),
 .gpu_we     (vram32_gpu_we),
@@ -108,7 +121,7 @@ assign vram8_gpu_d      = 8'd0;
 VRAM #(
 .WIDTH(8), 
 .WORDS(4080), 
-.LIST("../memory/vram8.list")
+.LIST("/home/bart/Documents/FPGA/FPGC4/Verilog/memory/vram8.list")
 )   vram8(
 //CPU port
 .cpu_clk    (clk),
@@ -118,7 +131,7 @@ VRAM #(
 .cpu_q      (vram8_cpu_q),
 
 //GPU port
-.gpu_clk    (vga_clk),
+.gpu_clk    (gpu_clk2),
 .gpu_d      (vram8_gpu_d),
 .gpu_addr   (vram8_gpu_addr),
 .gpu_we     (vram8_gpu_we),
@@ -133,7 +146,6 @@ wire ontile_v;      //high when rendering on current line
 
 assign vga_clk = clk; //should become 6 ish mhz eventually
 
-
 FSX fsx(
 //VGA
 .vga_clk        (vga_clk),
@@ -145,10 +157,12 @@ FSX fsx(
 .vga_blk        (vga_blk),
 
 //VRAM32
+.gpu_clk        (gpu_clk),
 .vram32_addr    (vram32_gpu_addr),
 .vram32_q       (vram32_gpu_q),
 
 //VRAM8
+.gpu_clk2       (gpu_clk2),
 .vram8_addr     (vram8_gpu_addr),
 .vram8_q        (vram8_gpu_q),
 
@@ -171,10 +185,10 @@ ROM rom(
 
 //----------------Memory Unit--------------------
 //Memory Unit I/O
-reg [26:0] address;
-reg [31:0] data;
-reg        we;
-reg        start;
+wire [26:0] address;
+wire [31:0] data;
+wire        we;
+wire        start;
 wire        initDone;
 wire        busy;
 wire [31:0] q;
@@ -230,78 +244,22 @@ MemoryUnit mu(
 );
 
 
-reg [63:0] c = 0;
+//---------------CPU----------------
+//CPU I/O
 
-//DEBUG SIM
-always @(posedge clk)
-begin
-    c <= c + 1;
-
-    if (c == 0)
-    begin
-        address <= 0;
-        data <= 0;
-        we <= 0;
-        start <= 0;
-    end
-
-    if (c == 101)
-    begin
-        address <= 27'h800007;
-        start <= 1;
-    end
-
-    if (c > 101 && c <900)
-    begin
-        if (!busy)
-        begin
-            data <= q;
-            we <= 1;
-            address <= 27'h000008;
-            start <= 0;
-            c <= 999;
-        end
-    end
-
-    if (c == 1003)
-        start <= 1;
-
-    if (c > 1003 && c < 2000)
-    begin
-
-        if (!busy)
-        begin
-            start <= 0;
-            c <= 2000;
-        end
-    end
-
-
-    if (c == 2002)
-    begin
-        start <= 1;
-        we <= 0;
-        address <= 27'hC01402;
-        data <= 32'd123456;
-    end
-        
-
-    if (c > 2002 && c < 3000)
-    begin
-
-        if (!busy)
-        begin
-            start <= 0;
-            we <= 0;
-            address <= 0;
-            data <= 0;
-        end
-    end
-
-
-
-
-
-end
+CPU cpu(
+.clk            (clk),
+.reset          (reset),
+.int1           (int1), 
+.int2           (int2), 
+.int3           (int3), 
+.int4           (int4),
+.address        (address),
+.data           (data),
+.we             (we),
+.q              (q),
+.start          (start),
+.busy           (busy)
+);
 
 endmodule

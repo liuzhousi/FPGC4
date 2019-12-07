@@ -1,0 +1,53 @@
+Checklist
+halt 	y
+read 	y,y
+write	y
+copy	y
+push 	y
+pop		y
+jump 	y,y
+jumpr	y,y
+load 	y,y
+beq 	y
+bne		y
+bgt 	y
+bge 	y
+savpc	y
+reti 	probably y
+arith 	y
+
+TODO:
+When on FPGA, write a simple test rom
+When assembler updated, write a big test rom
+
+Things that can go wrong in hardware:
+SDRAM timing not good
+timing requirements not met (should get warning)
+SPI timings not good
+some same clock timing thing that i missed in simulation
+miswire in quartus top level (should look at warnings)
+
+Logs:
+writing to spi results in a read by MU, and nothing happens in cpu because read_mem is low for writing instructions
+PC only handles interrupts when PC is smaller than the internal ROM address
+
+
+Display pinout FPGA side (header U7)
+1.	gnd
+2.	gnd
+3.	3v
+4.	3v
+5.	gnd
+6.	gnd
+7.	clk 	r1
+8. 	blk 	r2
+9.	hs 		p1
+10.	vs 		p2
+11.	r2 		n1
+12.	r1 		n2
+13.	r0 		m1
+14.	g2 		m2
+15.	g1 		j1
+16. g0 		j2
+17. b1 		h1
+18. b0 		h2

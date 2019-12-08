@@ -27,8 +27,8 @@ begin
             4'b0100: y = a       - b;       //SUB
             4'b0101: y = a      << b[5:0];  //SHIFTL
             4'b0110: y = a      >> b[5:0];  //SHIFTR
-            4'b0111: y = a[15:0] * b[15:0]; //MULT
-            4'b1000: y =         ~ b;       //NOTB
+            4'b0111: y = a       * b;       //MULT
+            4'b1000: y =         ~ a;       //NOTA
             4'b1001: y = 32'd0;             //UNIMPLEMENTED
             4'b1010: y = 32'd0;             //UNIMPLEMENTED
             4'b1011: y = 32'd0;             //UNIMPLEMENTED

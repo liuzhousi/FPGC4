@@ -155,7 +155,7 @@ begin
     int3 = 1;
     repeat(100) #20 clk = ~clk; //25MHz
     int3 = 0;
-    repeat(1000) #20 clk = ~clk; //25MHz
+    repeat(100000) #20 clk = ~clk; //25MHz
 
     #1 $finish;
 end

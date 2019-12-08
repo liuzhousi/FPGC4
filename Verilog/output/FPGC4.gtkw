@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v (Modified by Bart for High DPI displays) 3.3.103 (w)1999-2019 BSI
-[*] Sat Dec  7 21:10:59 2019
+[*] Sun Dec  8 14:07:49 2019
 [*]
 [dumpfile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/wave.vcd"
-[dumpfile_mtime] "Sat Dec  7 21:10:29 2019"
-[dumpfile_size] 236080
+[dumpfile_mtime] "Sun Dec  8 14:06:35 2019"
+[dumpfile_size] 16771960
 [savefile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/FPGC4.gtkw"
-[timestart] 1528000
+[timestart] 82352000
 [size] 2736 1716
 [pos] -1 -1
-*-17.838461 2111000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-17.838461 83300000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] FPGC_tb.
 [treeopen] FPGC_tb.fpgc.
 [treeopen] FPGC_tb.fpgc.cpu.
@@ -35,7 +35,9 @@ FPGC_tb.fpgc.cpu.timer.reset
 @28
 FPGC_tb.fpgc.cpu.timer.fetch
 FPGC_tb.fpgc.cpu.timer.getRegs
+@29
 FPGC_tb.fpgc.cpu.timer.readMem
+@28
 FPGC_tb.fpgc.cpu.timer.writeBack
 FPGC_tb.fpgc.cpu.timer.busy
 @24
@@ -311,7 +313,6 @@ FPGC_tb.fpgc.mu.vram8_cpu_d[7:0]
 FPGC_tb.fpgc.mu.vram8_cpu_q[7:0]
 @28
 FPGC_tb.fpgc.mu.vram8_cpu_we
-@29
 FPGC_tb.fpgc.mu.vram32_cpu_we
 @200
 -

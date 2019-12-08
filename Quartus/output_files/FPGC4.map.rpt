@@ -1,5 +1,5 @@
 Analysis & Synthesis report for FPGC4
-Sat Dec  7 22:16:07 2019
+Sun Dec  8 15:51:48 2019
 Quartus Prime Version 19.1.0 Build 670 09/22/2019 SJ Lite Edition
 
 
@@ -86,19 +86,19 @@ https://fpgasoftware.intel.com/eula.
 +----------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                     ;
 +------------------------------------+---------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Sat Dec  7 22:16:07 2019       ;
+; Analysis & Synthesis Status        ; Successful - Sun Dec  8 15:51:48 2019       ;
 ; Quartus Prime Version              ; 19.1.0 Build 670 09/22/2019 SJ Lite Edition ;
 ; Revision Name                      ; FPGC4                                       ;
 ; Top-level Entity Name              ; FPGC4                                       ;
 ; Family                             ; Cyclone IV E                                ;
-; Total logic elements               ; 7,099                                       ;
-;     Total combinational functions  ; 4,287                                       ;
+; Total logic elements               ; 7,089                                       ;
+;     Total combinational functions  ; 4,277                                       ;
 ;     Dedicated logic registers      ; 3,195                                       ;
 ; Total registers                    ; 3195                                        ;
 ; Total pins                         ; 64                                          ;
 ; Total virtual pins                 ; 0                                           ;
 ; Total memory bits                  ; 115,072                                     ;
-; Embedded Multiplier 9-bit elements ; 2                                           ;
+; Embedded Multiplier 9-bit elements ; 6                                           ;
 ; Total PLLs                         ; 1                                           ;
 +------------------------------------+---------------------------------------------+
 
@@ -283,17 +283,17 @@ https://fpgasoftware.intel.com/eula.
 +---------------------------------------------+--------+
 ; Resource                                    ; Usage  ;
 +---------------------------------------------+--------+
-; Estimated Total logic elements              ; 7,099  ;
+; Estimated Total logic elements              ; 7,089  ;
 ;                                             ;        ;
-; Total combinational functions               ; 4287   ;
+; Total combinational functions               ; 4277   ;
 ; Logic element usage by number of LUT inputs ;        ;
-;     -- 4 input functions                    ; 3203   ;
-;     -- 3 input functions                    ; 710    ;
-;     -- <=2 input functions                  ; 374    ;
+;     -- 4 input functions                    ; 3197   ;
+;     -- 3 input functions                    ; 750    ;
+;     -- <=2 input functions                  ; 330    ;
 ;                                             ;        ;
 ; Logic elements by mode                      ;        ;
-;     -- normal mode                          ; 3979   ;
-;     -- arithmetic mode                      ; 308    ;
+;     -- normal mode                          ; 3943   ;
+;     -- arithmetic mode                      ; 334    ;
 ;                                             ;        ;
 ; Total registers                             ; 3195   ;
 ;     -- Dedicated logic registers            ; 3195   ;
@@ -302,15 +302,15 @@ https://fpgasoftware.intel.com/eula.
 ; I/O pins                                    ; 64     ;
 ; Total memory bits                           ; 115072 ;
 ;                                             ;        ;
-; Embedded Multiplier 9-bit elements          ; 2      ;
+; Embedded Multiplier 9-bit elements          ; 6      ;
 ;                                             ;        ;
 ; Total PLLs                                  ; 1      ;
 ;     -- PLLs                                 ; 1      ;
 ;                                             ;        ;
 ; Maximum fan-out node                        ; rtl~1  ;
 ; Maximum fan-out                             ; 1395   ;
-; Total fan-out                               ; 27829  ;
-; Average fan-out                             ; 3.60   ;
+; Total fan-out                               ; 27891  ;
+; Average fan-out                             ; 3.61   ;
 +---------------------------------------------+--------+
 
 
@@ -319,21 +319,21 @@ https://fpgasoftware.intel.com/eula.
 +---------------------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+---------------------------------------------------------------------------------------------------------------------------------------+--------------------+--------------+
 ; Compilation Hierarchy Node                        ; Combinational ALUTs ; Dedicated Logic Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name                                                                                                                   ; Entity Name        ; Library Name ;
 +---------------------------------------------------+---------------------+---------------------------+-------------+--------------+---------+-----------+------+--------------+---------------------------------------------------------------------------------------------------------------------------------------+--------------------+--------------+
-; |FPGC4                                            ; 4287 (3)            ; 3195 (0)                  ; 115072      ; 2            ; 0       ; 1         ; 64   ; 0            ; |FPGC4                                                                                                                                ; FPGC4              ; work         ;
-;    |CPU:cpu|                                      ; 1832 (0)            ; 652 (0)                   ; 32768       ; 2            ; 0       ; 1         ; 0    ; 0            ; |FPGC4|CPU:cpu                                                                                                                        ; CPU                ; work         ;
-;       |ALU:alu|                                   ; 540 (540)           ; 0 (0)                     ; 0           ; 2            ; 0       ; 1         ; 0    ; 0            ; |FPGC4|CPU:cpu|ALU:alu                                                                                                                ; ALU                ; work         ;
-;          |lpm_mult:Mult0|                         ; 0 (0)               ; 0 (0)                     ; 0           ; 2            ; 0       ; 1         ; 0    ; 0            ; |FPGC4|CPU:cpu|ALU:alu|lpm_mult:Mult0                                                                                                 ; lpm_mult           ; work         ;
-;             |mult_7dt:auto_generated|             ; 0 (0)               ; 0 (0)                     ; 0           ; 2            ; 0       ; 1         ; 0    ; 0            ; |FPGC4|CPU:cpu|ALU:alu|lpm_mult:Mult0|mult_7dt:auto_generated                                                                         ; mult_7dt           ; work         ;
-;       |ControlUnit:cu|                            ; 263 (263)           ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|CPU:cpu|ControlUnit:cu                                                                                                         ; ControlUnit        ; work         ;
+; |FPGC4                                            ; 4277 (3)            ; 3195 (0)                  ; 115072      ; 6            ; 0       ; 3         ; 64   ; 0            ; |FPGC4                                                                                                                                ; FPGC4              ; work         ;
+;    |CPU:cpu|                                      ; 1826 (0)            ; 652 (0)                   ; 32768       ; 6            ; 0       ; 3         ; 0    ; 0            ; |FPGC4|CPU:cpu                                                                                                                        ; CPU                ; work         ;
+;       |ALU:alu|                                   ; 504 (476)           ; 0 (0)                     ; 0           ; 6            ; 0       ; 3         ; 0    ; 0            ; |FPGC4|CPU:cpu|ALU:alu                                                                                                                ; ALU                ; work         ;
+;          |lpm_mult:Mult0|                         ; 28 (0)              ; 0 (0)                     ; 0           ; 6            ; 0       ; 3         ; 0    ; 0            ; |FPGC4|CPU:cpu|ALU:alu|lpm_mult:Mult0                                                                                                 ; lpm_mult           ; work         ;
+;             |mult_7dt:auto_generated|             ; 28 (28)             ; 0 (0)                     ; 0           ; 6            ; 0       ; 3         ; 0    ; 0            ; |FPGC4|CPU:cpu|ALU:alu|lpm_mult:Mult0|mult_7dt:auto_generated                                                                         ; mult_7dt           ; work         ;
+;       |ControlUnit:cu|                            ; 271 (271)           ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|CPU:cpu|ControlUnit:cu                                                                                                         ; ControlUnit        ; work         ;
 ;       |InstructionDecoder:instDec|                ; 32 (32)             ; 32 (32)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|CPU:cpu|InstructionDecoder:instDec                                                                                             ; InstructionDecoder ; work         ;
-;       |PC:pc|                                     ; 157 (157)           ; 58 (58)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|CPU:cpu|PC:pc                                                                                                                  ; PC                 ; work         ;
-;       |Regbank:regbank|                           ; 815 (815)           ; 544 (544)                 ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|CPU:cpu|Regbank:regbank                                                                                                        ; Regbank            ; work         ;
+;       |PC:pc|                                     ; 158 (158)           ; 58 (58)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|CPU:cpu|PC:pc                                                                                                                  ; PC                 ; work         ;
+;       |Regbank:regbank|                           ; 836 (836)           ; 544 (544)                 ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|CPU:cpu|Regbank:regbank                                                                                                        ; Regbank            ; work         ;
 ;       |Stabilizer:int1Stabilizer|                 ; 1 (1)               ; 3 (3)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|CPU:cpu|Stabilizer:int1Stabilizer                                                                                              ; Stabilizer         ; work         ;
 ;       |Stack:stack|                               ; 20 (20)             ; 10 (10)                   ; 32768       ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|CPU:cpu|Stack:stack                                                                                                            ; Stack              ; work         ;
 ;          |altsyncram:stack_rtl_0|                 ; 0 (0)               ; 0 (0)                     ; 32768       ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|CPU:cpu|Stack:stack|altsyncram:stack_rtl_0                                                                                     ; altsyncram         ; work         ;
 ;             |altsyncram_12i1:auto_generated|      ; 0 (0)               ; 0 (0)                     ; 32768       ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|CPU:cpu|Stack:stack|altsyncram:stack_rtl_0|altsyncram_12i1:auto_generated                                                      ; altsyncram_12i1    ; work         ;
 ;       |Timer:timer|                               ; 4 (4)               ; 5 (5)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|CPU:cpu|Timer:timer                                                                                                            ; Timer              ; work         ;
-;    |FSX:fsx|                                      ; 1974 (1848)         ; 2346 (2322)               ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|FSX:fsx                                                                                                                        ; FSX                ; work         ;
+;    |FSX:fsx|                                      ; 1975 (1849)         ; 2346 (2322)               ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|FSX:fsx                                                                                                                        ; FSX                ; work         ;
 ;       |VGA:displayGen|                            ; 102 (102)           ; 24 (24)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|FSX:fsx|VGA:displayGen                                                                                                         ; VGA                ; work         ;
 ;       |lpm_mult:Mult0|                            ; 24 (0)              ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|FSX:fsx|lpm_mult:Mult0                                                                                                         ; lpm_mult           ; work         ;
 ;          |multcore:mult_core|                     ; 24 (12)             ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|FSX:fsx|lpm_mult:Mult0|multcore:mult_core                                                                                      ; multcore           ; work         ;
@@ -343,8 +343,8 @@ https://fpgasoftware.intel.com/eula.
 ;                |mpar_add:sub_par_add|             ; 4 (0)               ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|FSX:fsx|lpm_mult:Mult0|multcore:mult_core|mpar_add:padder|mpar_add:sub_par_add                                                 ; mpar_add           ; work         ;
 ;                   |lpm_add_sub:adder[0]|          ; 4 (0)               ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|FSX:fsx|lpm_mult:Mult0|multcore:mult_core|mpar_add:padder|mpar_add:sub_par_add|lpm_add_sub:adder[0]                            ; lpm_add_sub        ; work         ;
 ;                      |add_sub_ngh:auto_generated| ; 4 (4)               ; 0 (0)                     ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|FSX:fsx|lpm_mult:Mult0|multcore:mult_core|mpar_add:padder|mpar_add:sub_par_add|lpm_add_sub:adder[0]|add_sub_ngh:auto_generated ; add_sub_ngh        ; work         ;
-;    |MemoryUnit:mu|                                ; 478 (219)           ; 194 (33)                  ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|MemoryUnit:mu                                                                                                                  ; MemoryUnit         ; work         ;
-;       |SDRAMcontroller:sdramcontroller|           ; 175 (175)           ; 113 (113)                 ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller                                                                                  ; SDRAMcontroller    ; work         ;
+;    |MemoryUnit:mu|                                ; 473 (215)           ; 194 (33)                  ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|MemoryUnit:mu                                                                                                                  ; MemoryUnit         ; work         ;
+;       |SDRAMcontroller:sdramcontroller|           ; 174 (174)           ; 113 (113)                 ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller                                                                                  ; SDRAMcontroller    ; work         ;
 ;       |SPIreader:sreader|                         ; 84 (84)             ; 48 (48)                   ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|MemoryUnit:mu|SPIreader:sreader                                                                                                ; SPIreader          ; work         ;
 ;    |ROM:rom|                                      ; 0 (0)               ; 0 (0)                     ; 16384       ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|ROM:rom                                                                                                                        ; ROM                ; work         ;
 ;       |altsyncram:rom_rtl_0|                      ; 0 (0)               ; 0 (0)                     ; 16384       ; 0            ; 0       ; 0         ; 0    ; 0            ; |FPGC4|ROM:rom|altsyncram:rom_rtl_0                                                                                                   ; altsyncram         ; work         ;
@@ -381,11 +381,11 @@ Note: For table entries with two numbers listed, the numbers in parentheses indi
 ; Statistic                             ; Number Used ;
 +---------------------------------------+-------------+
 ; Simple Multipliers (9-bit)            ; 0           ;
-; Simple Multipliers (18-bit)           ; 1           ;
+; Simple Multipliers (18-bit)           ; 3           ;
 ; Embedded Multiplier Blocks            ; --          ;
-; Embedded Multiplier 9-bit elements    ; 2           ;
+; Embedded Multiplier 9-bit elements    ; 6           ;
 ; Signed Embedded Multipliers           ; 0           ;
-; Unsigned Embedded Multipliers         ; 1           ;
+; Unsigned Embedded Multipliers         ; 3           ;
 ; Mixed Sign Embedded Multipliers       ; 0           ;
 ; Variable Sign Embedded Multipliers    ; 0           ;
 ; Dedicated Input Shift Register Chains ; 0           ;
@@ -541,7 +541,7 @@ Encoding Type:  One-Hot
 ; Statistic                                    ; Value ;
 +----------------------------------------------+-------+
 ; Total registers                              ; 3195  ;
-; Number of registers using Synchronous Clear  ; 116   ;
+; Number of registers using Synchronous Clear  ; 100   ;
 ; Number of registers using Synchronous Load   ; 83    ;
 ; Number of registers using Asynchronous Clear ; 0     ;
 ; Number of registers using Asynchronous Load  ; 0     ;
@@ -583,53 +583,52 @@ Encoding Type:  One-Hot
 +--------------------+-----------+---------------+----------------------+------------------------+------------+-------------------------------------------------------------------------------+
 ; Multiplexer Inputs ; Bus Width ; Baseline Area ; Area if Restructured ; Saving if Restructured ; Registered ; Example Multiplexer Output                                                    ;
 +--------------------+-----------+---------------+----------------------+------------------------+------------+-------------------------------------------------------------------------------+
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller|q_low[9]                 ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller|q_high[9]                ;
-; 3:1                ; 27 bits   ; 54 LEs        ; 27 LEs               ; 27 LEs                 ; Yes        ; |FPGC4|CPU:cpu|PC:pc|PCintBackup[0]                                           ;
-; 3:1                ; 10 bits   ; 20 LEs        ; 10 LEs               ; 10 LEs                 ; Yes        ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller|startup_refresh_count[7] ;
-; 3:1                ; 10 bits   ; 20 LEs        ; 10 LEs               ; 10 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Stack:stack|ptr[4]                                             ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg1[7]                                        ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg2[0]                                        ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg3[6]                                        ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg4[6]                                        ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg5[7]                                        ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg6[11]                                       ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg7[8]                                        ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg8[13]                                       ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg9[11]                                       ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg10[11]                                      ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg11[15]                                      ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg12[1]                                       ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg13[10]                                      ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg14[4]                                       ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg15[10]                                      ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg1[23]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller|q_low[3]                 ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller|q_high[7]                ;
+; 3:1                ; 27 bits   ; 54 LEs        ; 27 LEs               ; 27 LEs                 ; Yes        ; |FPGC4|CPU:cpu|PC:pc|PCintBackup[21]                                          ;
+; 3:1                ; 10 bits   ; 20 LEs        ; 10 LEs               ; 10 LEs                 ; Yes        ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller|startup_refresh_count[5] ;
+; 3:1                ; 10 bits   ; 20 LEs        ; 10 LEs               ; 10 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Stack:stack|ptr[0]                                             ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg1[6]                                        ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg2[9]                                        ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg3[14]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg4[9]                                        ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg5[11]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg6[13]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg7[15]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg8[4]                                        ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg9[14]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg10[4]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg11[7]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg12[9]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg13[7]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg14[9]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg15[8]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg1[21]                                       ;
 ; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg2[27]                                       ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg3[16]                                       ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg4[17]                                       ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg5[27]                                       ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg6[17]                                       ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg7[16]                                       ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg8[31]                                       ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg9[29]                                       ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg10[24]                                      ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg11[22]                                      ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg12[18]                                      ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg13[30]                                      ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg14[31]                                      ;
-; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg15[22]                                      ;
-; 16:1               ; 32 bits   ; 320 LEs       ; 320 LEs              ; 0 LEs                  ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|data_b[27]                                     ;
-; 16:1               ; 16 bits   ; 160 LEs       ; 160 LEs              ; 0 LEs                  ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|data_a[28]                                     ;
-; 6:1                ; 24 bits   ; 96 LEs        ; 72 LEs               ; 24 LEs                 ; Yes        ; |FPGC4|MemoryUnit:mu|q[29]                                                    ;
-; 6:1                ; 8 bits    ; 32 LEs        ; 24 LEs               ; 8 LEs                  ; Yes        ; |FPGC4|MemoryUnit:mu|q[1]                                                     ;
-; 7:1                ; 23 bits   ; 92 LEs        ; 69 LEs               ; 23 LEs                 ; Yes        ; |FPGC4|CPU:cpu|PC:pc|pc_out[26]                                               ;
-; 5:1                ; 2 bits    ; 6 LEs         ; 2 LEs                ; 4 LEs                  ; Yes        ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller|SDRAM_BA[0]              ;
-; 9:1                ; 3 bits    ; 18 LEs        ; 3 LEs                ; 15 LEs                 ; Yes        ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller|SDRAM_A[12]              ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg3[17]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg4[22]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg5[18]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg6[27]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg7[31]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg8[18]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg9[19]                                       ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg10[16]                                      ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg11[27]                                      ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg12[24]                                      ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg13[26]                                      ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg14[20]                                      ;
+; 3:1                ; 16 bits   ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|reg15[27]                                      ;
+; 16:1               ; 32 bits   ; 320 LEs       ; 320 LEs              ; 0 LEs                  ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|data_b[31]                                     ;
+; 6:1                ; 24 bits   ; 96 LEs        ; 72 LEs               ; 24 LEs                 ; Yes        ; |FPGC4|MemoryUnit:mu|q[14]                                                    ;
+; 6:1                ; 8 bits    ; 32 LEs        ; 24 LEs               ; 8 LEs                  ; Yes        ; |FPGC4|MemoryUnit:mu|q[2]                                                     ;
+; 7:1                ; 23 bits   ; 92 LEs        ; 69 LEs               ; 23 LEs                 ; Yes        ; |FPGC4|CPU:cpu|PC:pc|pc_out[11]                                               ;
+; 5:1                ; 2 bits    ; 6 LEs         ; 2 LEs                ; 4 LEs                  ; Yes        ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller|SDRAM_BA[1]              ;
+; 9:1                ; 3 bits    ; 18 LEs        ; 3 LEs                ; 15 LEs                 ; Yes        ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller|SDRAM_A[9]               ;
 ; 10:1               ; 7 bits    ; 42 LEs        ; 14 LEs               ; 28 LEs                 ; Yes        ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller|SDRAM_A[1]               ;
-; 10:1               ; 7 bits    ; 42 LEs        ; 7 LEs                ; 35 LEs                 ; Yes        ; |FPGC4|MemoryUnit:mu|SPIreader:sreader|counter[1]                             ;
-; 16:1               ; 16 bits   ; 160 LEs       ; 160 LEs              ; 0 LEs                  ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|data_a[0]                                      ;
-; 7:1                ; 4 bits    ; 16 LEs        ; 12 LEs               ; 4 LEs                  ; Yes        ; |FPGC4|CPU:cpu|PC:pc|pc_out[12]                                               ;
-; 7:1                ; 16 bits   ; 64 LEs        ; 64 LEs               ; 0 LEs                  ; Yes        ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller|WrData[0]                ;
+; 10:1               ; 7 bits    ; 42 LEs        ; 7 LEs                ; 35 LEs                 ; Yes        ; |FPGC4|MemoryUnit:mu|SPIreader:sreader|counter[0]                             ;
+; 16:1               ; 32 bits   ; 320 LEs       ; 320 LEs              ; 0 LEs                  ; Yes        ; |FPGC4|CPU:cpu|Regbank:regbank|data_a[31]                                     ;
+; 7:1                ; 4 bits    ; 16 LEs        ; 12 LEs               ; 4 LEs                  ; Yes        ; |FPGC4|CPU:cpu|PC:pc|pc_out[22]                                               ;
+; 7:1                ; 16 bits   ; 64 LEs        ; 64 LEs               ; 0 LEs                  ; Yes        ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller|WrData[8]                ;
 ; 3:1                ; 3 bits    ; 6 LEs         ; 6 LEs                ; 0 LEs                  ; No         ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller|state                    ;
 ; 4:1                ; 3 bits    ; 6 LEs         ; 6 LEs                ; 0 LEs                  ; No         ; |FPGC4|FSX:fsx|lineBuffer                                                     ;
 ; 4:1                ; 3 bits    ; 6 LEs         ; 6 LEs                ; 0 LEs                  ; No         ; |FPGC4|FSX:fsx|lineBuffer                                                     ;
@@ -640,29 +639,29 @@ Encoding Type:  One-Hot
 ; 4:1                ; 3 bits    ; 6 LEs         ; 6 LEs                ; 0 LEs                  ; No         ; |FPGC4|FSX:fsx|lineBuffer                                                     ;
 ; 4:1                ; 3 bits    ; 6 LEs         ; 6 LEs                ; 0 LEs                  ; No         ; |FPGC4|FSX:fsx|lineBuffer                                                     ;
 ; 3:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; No         ; |FPGC4|FSX:fsx|vram32_addr[3]                                                 ;
-; 3:1                ; 12 bits   ; 24 LEs        ; 24 LEs               ; 0 LEs                  ; No         ; |FPGC4|FSX:fsx|vram8_addr[8]                                                  ;
-; 4:1                ; 11 bits   ; 22 LEs        ; 22 LEs               ; 0 LEs                  ; No         ; |FPGC4|CPU:cpu|ControlUnit:cu|input_b[0]                                      ;
-; 4:1                ; 11 bits   ; 22 LEs        ; 22 LEs               ; 0 LEs                  ; No         ; |FPGC4|CPU:cpu|ControlUnit:cu|jump_addr[16]                                   ;
-; 4:1                ; 27 bits   ; 54 LEs        ; 54 LEs               ; 0 LEs                  ; No         ; |FPGC4|CPU:cpu|ControlUnit:cu|address[0]                                      ;
+; 3:1                ; 12 bits   ; 24 LEs        ; 24 LEs               ; 0 LEs                  ; No         ; |FPGC4|FSX:fsx|vram8_addr[9]                                                  ;
+; 4:1                ; 11 bits   ; 22 LEs        ; 22 LEs               ; 0 LEs                  ; No         ; |FPGC4|CPU:cpu|ControlUnit:cu|input_b[9]                                      ;
+; 4:1                ; 11 bits   ; 22 LEs        ; 22 LEs               ; 0 LEs                  ; No         ; |FPGC4|CPU:cpu|ControlUnit:cu|jump_addr[25]                                   ;
+; 4:1                ; 27 bits   ; 54 LEs        ; 54 LEs               ; 0 LEs                  ; No         ; |FPGC4|CPU:cpu|ControlUnit:cu|address[26]                                     ;
 ; 4:1                ; 2 bits    ; 4 LEs         ; 4 LEs                ; 0 LEs                  ; No         ; |FPGC4|FSX:fsx|vram32_addr[0]                                                 ;
 ; 5:1                ; 5 bits    ; 15 LEs        ; 10 LEs               ; 5 LEs                  ; No         ; |FPGC4|CPU:cpu|ControlUnit:cu|input_b[31]                                     ;
-; 5:1                ; 11 bits   ; 33 LEs        ; 22 LEs               ; 11 LEs                 ; No         ; |FPGC4|CPU:cpu|ControlUnit:cu|input_b[17]                                     ;
-; 5:1                ; 5 bits    ; 15 LEs        ; 15 LEs               ; 0 LEs                  ; No         ; |FPGC4|CPU:cpu|ControlUnit:cu|input_b[13]                                     ;
-; 5:1                ; 16 bits   ; 48 LEs        ; 32 LEs               ; 16 LEs                 ; No         ; |FPGC4|CPU:cpu|ControlUnit:cu|jump_addr[14]                                   ;
-; 58:1               ; 16 bits   ; 608 LEs       ; 608 LEs              ; 0 LEs                  ; No         ; |FPGC4|FSX:fsx|Mux11                                                          ;
+; 5:1                ; 11 bits   ; 33 LEs        ; 22 LEs               ; 11 LEs                 ; No         ; |FPGC4|CPU:cpu|ControlUnit:cu|input_b[24]                                     ;
+; 5:1                ; 5 bits    ; 15 LEs        ; 15 LEs               ; 0 LEs                  ; No         ; |FPGC4|CPU:cpu|ControlUnit:cu|input_b[11]                                     ;
+; 5:1                ; 16 bits   ; 48 LEs        ; 32 LEs               ; 16 LEs                 ; No         ; |FPGC4|CPU:cpu|ControlUnit:cu|jump_addr[8]                                    ;
+; 58:1               ; 16 bits   ; 608 LEs       ; 608 LEs              ; 0 LEs                  ; No         ; |FPGC4|FSX:fsx|Mux13                                                          ;
 ; 8:1                ; 2 bits    ; 10 LEs        ; 4 LEs                ; 6 LEs                  ; No         ; |FPGC4|MemoryUnit:mu|SDRAMcontroller:sdramcontroller|state                    ;
 ; 465:1              ; 3 bits    ; 930 LEs       ; 930 LEs              ; 0 LEs                  ; No         ; |FPGC4|FSX:fsx|vga_b[0]                                                       ;
+; 22:1               ; 8 bits    ; 112 LEs       ; 56 LEs               ; 56 LEs                 ; No         ; |FPGC4|CPU:cpu|ALU:alu|y[9]                                                   ;
+; 23:1               ; 4 bits    ; 60 LEs        ; 36 LEs               ; 24 LEs                 ; No         ; |FPGC4|CPU:cpu|ALU:alu|y[4]                                                   ;
 ; 9:1                ; 2 bits    ; 12 LEs        ; 4 LEs                ; 8 LEs                  ; No         ; |FPGC4|MemoryUnit:mu|SPIreader:sreader|phase                                  ;
-; 20:1               ; 2 bits    ; 26 LEs        ; 18 LEs               ; 8 LEs                  ; No         ; |FPGC4|MemoryUnit:mu|SPIreader:sreader|io2_out                                ;
+; 24:1               ; 2 bits    ; 32 LEs        ; 16 LEs               ; 16 LEs                 ; No         ; |FPGC4|CPU:cpu|ALU:alu|y[3]                                                   ;
+; 24:1               ; 8 bits    ; 128 LEs       ; 72 LEs               ; 56 LEs                 ; No         ; |FPGC4|CPU:cpu|Regbank:regbank|reg1                                           ;
+; 20:1               ; 2 bits    ; 26 LEs        ; 18 LEs               ; 8 LEs                  ; No         ; |FPGC4|MemoryUnit:mu|SPIreader:sreader|io3_out                                ;
 ; 11:1               ; 2 bits    ; 14 LEs        ; 6 LEs                ; 8 LEs                  ; No         ; |FPGC4|MemoryUnit:mu|SPIreader:sreader|phase                                  ;
-; 19:1               ; 8 bits    ; 96 LEs        ; 56 LEs               ; 40 LEs                 ; No         ; |FPGC4|CPU:cpu|ALU:alu|y[12]                                                  ;
-; 20:1               ; 4 bits    ; 52 LEs        ; 32 LEs               ; 20 LEs                 ; No         ; |FPGC4|CPU:cpu|ALU:alu|y[6]                                                   ;
-; 21:1               ; 2 bits    ; 28 LEs        ; 18 LEs               ; 10 LEs                 ; No         ; |FPGC4|CPU:cpu|ALU:alu|y[3]                                                   ;
-; 21:1               ; 8 bits    ; 112 LEs       ; 64 LEs               ; 48 LEs                 ; No         ; |FPGC4|CPU:cpu|Regbank:regbank|reg1                                           ;
-; 22:1               ; 2 bits    ; 28 LEs        ; 18 LEs               ; 10 LEs                 ; No         ; |FPGC4|CPU:cpu|ALU:alu|y[1]                                                   ;
-; 22:1               ; 4 bits    ; 56 LEs        ; 36 LEs               ; 20 LEs                 ; No         ; |FPGC4|CPU:cpu|Regbank:regbank|reg1                                           ;
-; 23:1               ; 2 bits    ; 30 LEs        ; 20 LEs               ; 10 LEs                 ; No         ; |FPGC4|CPU:cpu|Regbank:regbank|reg1                                           ;
-; 24:1               ; 2 bits    ; 32 LEs        ; 20 LEs               ; 12 LEs                 ; No         ; |FPGC4|CPU:cpu|Regbank:regbank|reg1                                           ;
+; 25:1               ; 2 bits    ; 32 LEs        ; 18 LEs               ; 14 LEs                 ; No         ; |FPGC4|CPU:cpu|ALU:alu|y[0]                                                   ;
+; 25:1               ; 4 bits    ; 64 LEs        ; 40 LEs               ; 24 LEs                 ; No         ; |FPGC4|CPU:cpu|Regbank:regbank|reg1                                           ;
+; 26:1               ; 2 bits    ; 34 LEs        ; 20 LEs               ; 14 LEs                 ; No         ; |FPGC4|CPU:cpu|Regbank:regbank|reg1                                           ;
+; 27:1               ; 2 bits    ; 36 LEs        ; 22 LEs               ; 14 LEs                 ; No         ; |FPGC4|CPU:cpu|Regbank:regbank|reg1                                           ;
 +--------------------+-----------+---------------+----------------------+------------------------+------------+-------------------------------------------------------------------------------+
 
 
@@ -1516,10 +1515,10 @@ Note: In order to hide this table in the UI and the text report file, please set
 ; IGNORE_CARRY_BUFFERS                           ; OFF          ; IGNORE_CARRY        ;
 ; AUTO_CASCADE_CHAINS                            ; ON           ; AUTO_CASCADE        ;
 ; IGNORE_CASCADE_BUFFERS                         ; OFF          ; IGNORE_CASCADE      ;
-; LPM_WIDTHA                                     ; 16           ; Untyped             ;
-; LPM_WIDTHB                                     ; 16           ; Untyped             ;
-; LPM_WIDTHP                                     ; 32           ; Untyped             ;
-; LPM_WIDTHR                                     ; 32           ; Untyped             ;
+; LPM_WIDTHA                                     ; 32           ; Untyped             ;
+; LPM_WIDTHB                                     ; 32           ; Untyped             ;
+; LPM_WIDTHP                                     ; 64           ; Untyped             ;
+; LPM_WIDTHR                                     ; 64           ; Untyped             ;
 ; LPM_WIDTHS                                     ; 1            ; Untyped             ;
 ; LPM_REPRESENTATION                             ; UNSIGNED     ; Untyped             ;
 ; LPM_PIPELINE                                   ; 0            ; Untyped             ;
@@ -1527,7 +1526,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 ; INPUT_A_IS_CONSTANT                            ; NO           ; Untyped             ;
 ; INPUT_B_IS_CONSTANT                            ; NO           ; Untyped             ;
 ; USE_EAB                                        ; OFF          ; Untyped             ;
-; MAXIMIZE_SPEED                                 ; 6            ; Untyped             ;
+; MAXIMIZE_SPEED                                 ; 5            ; Untyped             ;
 ; DEVICE_FAMILY                                  ; Cyclone IV E ; Untyped             ;
 ; CARRY_CHAIN                                    ; MANUAL       ; Untyped             ;
 ; APEX20K_TECHNOLOGY_MAPPER                      ; LUT          ; TECH_MAPPER_APEX20K ;
@@ -1630,9 +1629,9 @@ Note: In order to hide this table in the UI and the text report file, please set
 ;     -- INPUT_A_FIXED_VALUE            ; Bx                             ;
 ;     -- INPUT_B_FIXED_VALUE            ; Bx                             ;
 ; Entity Instance                       ; CPU:cpu|ALU:alu|lpm_mult:Mult0 ;
-;     -- LPM_WIDTHA                     ; 16                             ;
-;     -- LPM_WIDTHB                     ; 16                             ;
-;     -- LPM_WIDTHP                     ; 32                             ;
+;     -- LPM_WIDTHA                     ; 32                             ;
+;     -- LPM_WIDTHB                     ; 32                             ;
+;     -- LPM_WIDTHP                     ; 64                             ;
 ;     -- LPM_REPRESENTATION             ; UNSIGNED                       ;
 ;     -- INPUT_A_IS_CONSTANT            ; NO                             ;
 ;     -- INPUT_B_IS_CONSTANT            ; NO                             ;
@@ -1728,30 +1727,30 @@ Note: In order to hide this table in the UI and the text report file, please set
 ; cycloneiii_ff         ; 3195                        ;
 ;     ENA               ; 2999                        ;
 ;     ENA SCLR          ; 30                          ;
-;     ENA SCLR SLD      ; 55                          ;
-;     ENA SLD           ; 27                          ;
+;     ENA SCLR SLD      ; 39                          ;
+;     ENA SLD           ; 43                          ;
 ;     SCLR              ; 31                          ;
 ;     SLD               ; 1                           ;
 ;     plain             ; 52                          ;
 ; cycloneiii_io_obuf    ; 20                          ;
-; cycloneiii_lcell_comb ; 4292                        ;
-;     arith             ; 308                         ;
+; cycloneiii_lcell_comb ; 4282                        ;
+;     arith             ; 334                         ;
 ;         1 data inputs ; 2                           ;
 ;         2 data inputs ; 132                         ;
-;         3 data inputs ; 174                         ;
-;     normal            ; 3984                        ;
+;         3 data inputs ; 200                         ;
+;     normal            ; 3948                        ;
 ;         0 data inputs ; 4                           ;
 ;         1 data inputs ; 19                          ;
-;         2 data inputs ; 222                         ;
-;         3 data inputs ; 536                         ;
-;         4 data inputs ; 3203                        ;
-; cycloneiii_mac_mult   ; 1                           ;
-; cycloneiii_mac_out    ; 1                           ;
+;         2 data inputs ; 178                         ;
+;         3 data inputs ; 550                         ;
+;         4 data inputs ; 3197                        ;
+; cycloneiii_mac_mult   ; 3                           ;
+; cycloneiii_mac_out    ; 3                           ;
 ; cycloneiii_pll        ; 1                           ;
 ; cycloneiii_ram_block  ; 104                         ;
 ;                       ;                             ;
-; Max LUT depth         ; 19.00                       ;
-; Average LUT depth     ; 9.06                        ;
+; Max LUT depth         ; 18.00                       ;
+; Average LUT depth     ; 8.86                        ;
 +-----------------------+-----------------------------+
 
 
@@ -1760,7 +1759,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 +----------------+--------------+
 ; Partition Name ; Elapsed Time ;
 +----------------+--------------+
-; Top            ; 00:00:23     ;
+; Top            ; 00:00:20     ;
 +----------------+--------------+
 
 
@@ -1770,7 +1769,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 19.1.0 Build 670 09/22/2019 SJ Lite Edition
-    Info: Processing started: Sat Dec  7 22:15:31 2019
+    Info: Processing started: Sun Dec  8 15:51:15 2019
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off FPGC4 -c FPGC4
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 2 of the 2 processors detected
@@ -2104,17 +2103,23 @@ Info (12021): Found 1 design units, including 1 entities, in source file db/add_
 Info (12131): Elaborated megafunction instantiation "FSX:fsx|lpm_mult:Mult0|altshift:external_latency_ffs", which is child of megafunction instantiation "FSX:fsx|lpm_mult:Mult0" File: /home/bart/intelFPGA_lite/19.1/quartus/libraries/megafunctions/lpm_mult.tdf Line: 352
 Info (12130): Elaborated megafunction instantiation "CPU:cpu|ALU:alu|lpm_mult:Mult0" File: /home/bart/Documents/FPGA/FPGC4/Quartus/modules/CPU/ALU.v Line: 30
 Info (12133): Instantiated megafunction "CPU:cpu|ALU:alu|lpm_mult:Mult0" with the following parameter: File: /home/bart/Documents/FPGA/FPGC4/Quartus/modules/CPU/ALU.v Line: 30
-    Info (12134): Parameter "LPM_WIDTHA" = "16"
-    Info (12134): Parameter "LPM_WIDTHB" = "16"
-    Info (12134): Parameter "LPM_WIDTHP" = "32"
-    Info (12134): Parameter "LPM_WIDTHR" = "32"
+    Info (12134): Parameter "LPM_WIDTHA" = "32"
+    Info (12134): Parameter "LPM_WIDTHB" = "32"
+    Info (12134): Parameter "LPM_WIDTHP" = "64"
+    Info (12134): Parameter "LPM_WIDTHR" = "64"
     Info (12134): Parameter "LPM_WIDTHS" = "1"
     Info (12134): Parameter "LPM_REPRESENTATION" = "UNSIGNED"
     Info (12134): Parameter "INPUT_A_IS_CONSTANT" = "NO"
     Info (12134): Parameter "INPUT_B_IS_CONSTANT" = "NO"
-    Info (12134): Parameter "MAXIMIZE_SPEED" = "6"
+    Info (12134): Parameter "MAXIMIZE_SPEED" = "5"
 Info (12021): Found 1 design units, including 1 entities, in source file db/mult_7dt.tdf
-    Info (12023): Found entity 1: mult_7dt File: /home/bart/Documents/FPGA/FPGC4/Quartus/db/mult_7dt.tdf Line: 29
+    Info (12023): Found entity 1: mult_7dt File: /home/bart/Documents/FPGA/FPGC4/Quartus/db/mult_7dt.tdf Line: 31
+Warning (14284): Synthesized away the following node(s):
+    Warning (14285): Synthesized away the following DSP element node(s):
+        Warning (14320): Synthesized away node "CPU:cpu|ALU:alu|lpm_mult:Mult0|mult_7dt:auto_generated|mac_mult7" File: /home/bart/Documents/FPGA/FPGC4/Quartus/db/mult_7dt.tdf Line: 67
+        Warning (14320): Synthesized away node "CPU:cpu|ALU:alu|lpm_mult:Mult0|mult_7dt:auto_generated|mac_out8" File: /home/bart/Documents/FPGA/FPGC4/Quartus/db/mult_7dt.tdf Line: 91
+Info (13014): Ignored 84 buffer(s)
+    Info (13019): Ignored 84 SOFT buffer(s)
 Warning (13046): Tri-state node(s) do not directly drive top-level pin(s)
     Warning (13047): Converted the fan-out from the tri-state buffer "MemoryUnit:mu|SPIreader:sreader|io3_in" to the node "MemoryUnit:mu|SPIreader:sreader|b3[7]" into an OR gate File: /home/bart/Documents/FPGA/FPGC4/Quartus/modules/Memory/SPIreader.v Line: 16
     Warning (13047): Converted the fan-out from the tri-state buffer "MemoryUnit:mu|SPIreader:sreader|io2_in" to the node "MemoryUnit:mu|SPIreader:sreader|b2[7]" into an OR gate File: /home/bart/Documents/FPGA/FPGC4/Quartus/modules/Memory/SPIreader.v Line: 16
@@ -2131,19 +2136,19 @@ Warning (21074): Design contains 3 input pin(s) that do not drive logic
     Warning (15610): No output dependent on input pin "nint2" File: /home/bart/Documents/FPGA/FPGC4/Quartus/modules/FPGC4.v Line: 39
     Warning (15610): No output dependent on input pin "nint3" File: /home/bart/Documents/FPGA/FPGC4/Quartus/modules/FPGC4.v Line: 40
     Warning (15610): No output dependent on input pin "nint4" File: /home/bart/Documents/FPGA/FPGC4/Quartus/modules/FPGC4.v Line: 41
-Info (21057): Implemented 7380 device resources after synthesis - the final resource count might be different
+Info (21057): Implemented 7374 device resources after synthesis - the final resource count might be different
     Info (21058): Implemented 6 input pins
     Info (21059): Implemented 38 output pins
     Info (21060): Implemented 20 bidirectional pins
-    Info (21061): Implemented 7209 logic cells
+    Info (21061): Implemented 7199 logic cells
     Info (21064): Implemented 104 RAM segments
     Info (21065): Implemented 1 PLLs
-    Info (21062): Implemented 2 DSP elements
-Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 52 warnings
-    Info: Peak virtual memory: 1048 megabytes
-    Info: Processing ended: Sat Dec  7 22:16:07 2019
-    Info: Elapsed time: 00:00:36
-    Info: Total CPU time (on all processors): 00:00:50
+    Info (21062): Implemented 6 DSP elements
+Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 56 warnings
+    Info: Peak virtual memory: 1039 megabytes
+    Info: Processing ended: Sun Dec  8 15:51:48 2019
+    Info: Elapsed time: 00:00:33
+    Info: Total CPU time (on all processors): 00:00:47
 
 
 +------------------------------------------+

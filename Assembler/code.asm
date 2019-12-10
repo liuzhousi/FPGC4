@@ -17,13 +17,13 @@ Main:
    
 
 Int1:
-    halt
+    reti
 
 Int2:
-    halt
+    reti
 
 Int3:
-    halt
+    reti
 
 Int4:
-    halt
+    reti

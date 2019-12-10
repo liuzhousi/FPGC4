@@ -48,10 +48,6 @@ begin
     begin
         if (writeBack && ~writeBack_prev)
         begin
-            rising_int1 <= 1'b0;
-            rising_int2 <= 1'b0;
-            rising_int3 <= 1'b0;
-            rising_int4 <= 1'b0;
             //Restore PC and re-enable interrupts when reti is high
             if (reti)
             begin
@@ -61,6 +57,7 @@ begin
 
             else if (int_en && rising_int1 && pc_out < 27'hC01400) //if interrupt1 is valid
             begin
+                rising_int1 <= 1'b0;
                 if (jump)
                     PCintBackup <= jump_addr;
                 else
@@ -71,6 +68,7 @@ begin
 
             else if (int_en && rising_int2 && pc_out < 27'hC01400) //if interrupt2 is valid
             begin
+                rising_int2 <= 1'b0;
                 if (jump)
                     PCintBackup <= jump_addr;
                 else
@@ -81,6 +79,7 @@ begin
 
             else if (int_en && rising_int3 && pc_out < 27'hC01400) //if interrupt3 is valid
             begin
+                rising_int3 <= 1'b0;
                 if (jump)
                     PCintBackup <= jump_addr;
                 else
@@ -91,6 +90,7 @@ begin
 
             else if (int_en && rising_int4 && pc_out < 27'hC01400) //if interrupt4 is valid
             begin
+                rising_int4 <= 1'b0;
                 if (jump)
                     PCintBackup <= jump_addr;
                 else

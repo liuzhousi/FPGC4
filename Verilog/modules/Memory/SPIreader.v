@@ -164,7 +164,7 @@ begin
          //idle - ready to read when triggered (after some instruction delay)
          3'd2:
          begin
-            if (counter == 7'd3)
+            if (counter == 7'd4) //could be 3, but one extra cycle delay to wait for start from MU to go low
             begin
                initDone <= 1'b1;
                if (start)

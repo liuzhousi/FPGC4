@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v (Modified by Bart for High DPI displays) 3.3.103 (w)1999-2019 BSI
-[*] Tue Dec 10 19:56:11 2019
+[*] Thu Dec 12 11:22:40 2019
 [*]
 [dumpfile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/wave.vcd"
-[dumpfile_mtime] "Tue Dec 10 19:55:21 2019"
-[dumpfile_size] 738001
+[dumpfile_mtime] "Thu Dec 12 09:53:52 2019"
+[dumpfile_size] 8837729
 [savefile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/FPGC4.gtkw"
-[timestart] 48636000
+[timestart] 537170000
 [size] 2736 1716
 [pos] -1 -1
-*-17.838461 48939000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-17.838461 538142000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] FPGC_tb.
 [treeopen] FPGC_tb.fpgc.
 [treeopen] FPGC_tb.fpgc.cpu.
@@ -23,7 +23,7 @@
 FPGC_tb.fpgc.clk
 FPGC_tb.fpgc.nreset
 FPGC_tb.fpgc.reset
-@22
+@24
 FPGC_tb.fpgc.cpu.pc_out[26:0]
 @200
 -
@@ -161,7 +161,9 @@ FPGC_tb.fpgc.cpu.regbank.mem_q[31:0]
 -ALU
 @22
 FPGC_tb.fpgc.cpu.alu.opcode[3:0]
+@23
 FPGC_tb.fpgc.cpu.alu.a[31:0]
+@22
 FPGC_tb.fpgc.cpu.alu.b[31:0]
 FPGC_tb.fpgc.cpu.alu.y[31:0]
 @28
@@ -257,9 +259,8 @@ FPGC_tb.fpgc.mu.sr_addr[23:0]
 FPGC_tb.fpgc.mu.sr_initDone
 @22
 FPGC_tb.fpgc.mu.sr_q[31:0]
-@29
-FPGC_tb.fpgc.mu.sr_recvDone
 @28
+FPGC_tb.fpgc.mu.sr_recvDone
 FPGC_tb.fpgc.mu.sr_start
 @24
 FPGC_tb.fpgc.mu.sreader.phase[2:0]

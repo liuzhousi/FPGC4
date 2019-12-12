@@ -21,7 +21,7 @@ These are the current specifications of the FPGC4:
 - 16 32bit registers
 - 32bit instructions
 - 27bit program counter, for a possible future address space of 0.5GiB
-- 480x272 resolution with 256 colors (60 (currently 58) x 34 tiles of 8x8 pixels)
+- 480x272 resolution with 256 colors (60 (currently 57) x 34 tiles of 8x8 pixels)
 - rendered on a 4.3 inch TFT screen (with the worst viewing angle EVER!) over a 40pin TTL interface
 
 ### Computer Architecture
@@ -323,10 +323,10 @@ This one address on the memory map is mapped to GPIO pins on the FPGA. Only the 
 #### GPU (FSX2)
 The GPU generates a 480x272@60-ish hz TTL signal (or as I like to call it, digital VGA) using a pixel clock of 9MHz. For each tile, the GPU has to read the BG Tile table, Pattern table, BG Color table and Palette table (in this order) to know which color to draw. This is heavily inspired by the PPU of the NES, which uses the same principle. One big difference is that I currently implemented a line buffer which is being filled each line. This line buffer takes a lot of space and delay in the FPGA, and is temporarily. The color contents of the current pixel are then read from this line buffer. Because the linebuffer is only being filled when the pixel clock is on the most left pixel (outside blanking), the first tile cannot be shown. Therefore the actual horizontal resolution is currently 480-16, which means 58 tiles instead of 60. Currently the code is a complete mess with registers clocking the VRAM and bad things like that. Eventually I will rewrite everything specifically for this 480x272 display (or another if I can find a better one). Then I can also think about sprite rendering and HW scrolling support, which are not available now.
 
-The GPU currently allows for 58x34 tiles of 8x8 pixels with 8 bit colors.
+The GPU currently allows for 57x34 tiles of 8x8 pixels with 8 bit colors.
 The pattern table allows for 256 different tiles.
 The palette table allows for 16 different palettes with four colors per palette.
-Each address in the background tile table and the background color table is mapped to one tile of the 58x34 tiles (actually 60x34 tiles, but the last 2x24 tiles are not used)
+Each address in the background tile table and the background color table is mapped to one tile of the 57x34 tiles (actually 60x34 tiles, but the last 3x24 tiles are not used)
 
 ## Bootloader code
 The bootloader is the first thing that is executed by the CPU. The bootloader is used to copy data from the slow SPI flash to the faster SDRAM, and to jump to address 0 on the SDRAM. Since the bootloader has room for 512 instructions, I might add a splash/boot screen.
@@ -502,9 +502,11 @@ These are kinda ordered based on priority
 - Rebuild and improve FSX
 - Add sprites
 - Add hardware scrolling
+- Add "library" support for assembler (Using include copy paste?)
 - Add mass storage (SDCARD)
 - Create a pattern and palette table generator
 - Change SPI Flash for SDCARD
+- Add usb serial for communication with PC
 - Write a simplistic C compiler. Use software stack with dedicated stack pointer register.
 - Add Gameboy printer via Arduino to I/O
 - Write an OS

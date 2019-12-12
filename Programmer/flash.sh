@@ -1,5 +1,27 @@
-#quick and dirty. will even stop working when size is bigger than 4096
-python3 spi_flash_programmer_client.py -d /dev/ttyACM0 -l 8192 -f code.bin write
+#!/bin/bash
+if [ ! $# -eq 2 ]
+  then
+    echo "Please give two arguments"
+    echo "arg1: device (/dev/ttyACM0)"
+    echo "arg2: code (code.asm)"
+    exit 
+fi
 
-# do read with python3 spi_flash_programmer_client.py -d /dev/ttyACM0 -f test.bin -l 8192 read
-# compare with diff test.bin code.bin
+device=$1
+code=$2
+
+fileSize=$(stat -c %s code.bin)
+
+python3 spi_flash_programmer_client.py -d $device -l $fileSize -f $code write
+
+python3 spi_flash_programmer_client.py -d $device -f verify.bin -l $fileSize read
+
+difference=$(diff verify.bin $code)
+
+if [ -z "$difference" ]
+then
+      echo "Flash successful"
+else
+      echo "Verification failed!"
+fi
+

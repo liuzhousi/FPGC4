@@ -1,2 +1,7 @@
 Test/
-
+Quartus/db/
+Quartus/incremental_db/
+Quartus/simulation/
+Quartus/output_files/
+!Quartus/output_files/output_file.jic
+!Quartus/output_files/FPGC4.sof

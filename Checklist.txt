@@ -1,4 +1,7 @@
 Checklist
+This file is a crappy note checklist for verifying that the FPGC4 works.
+
+[x] CPU instructions
 halt 	y
 read 	y,y
 write	y
@@ -13,25 +16,25 @@ bne		y
 bgt 	y
 bge 	y
 savpc	y
-reti 	probably y
+reti 	y
 arith 	y
 
 TODO:
-When on FPGA, write a simple test rom
-When assembler updated, write a big test rom
+[x] When on FPGA, write a simple test rom
+[ ] When assembler updated, write a big test rom
 
 Things that can go wrong in hardware:
-SDRAM timing not good
-timing requirements not met (should get warning)
-SPI timings not good
-some same clock timing thing that i missed in simulation
-miswire in quartus top level (should look at warnings)
+SDRAM timing not good 											false, it works fine
+timing requirements not met (should get warning)				true, however, it works fine for 25MHz
+SPI timings not good 											false, it works fine
+some same clock timing thing that i missed in simulation 		false, afik
+miswire in quartus top level (should look at warnings) 			false, all wires are connected correctly
 
 Logs:
 writing to spi results in a read by MU, and nothing happens in cpu because read_mem is low for writing instructions
 PC only handles interrupts when PC is smaller than the internal ROM address
 
-
+Need to put this in the readme somewhere under new hardware connection section
 Display pinout FPGA side (header U7)
 1.	gnd
 2.	gnd

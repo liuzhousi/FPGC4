@@ -503,6 +503,7 @@ These are kinda ordered based on priority
 - Add sprites
 - Add hardware scrolling
 - Add mass storage (SDCARD)
+- Create a pattern and palette table generator
 - Change SPI Flash for SDCARD
 - Write a simplistic C compiler. Use software stack with dedicated stack pointer register.
 - Add Gameboy printer via Arduino to I/O

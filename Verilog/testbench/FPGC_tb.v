@@ -152,10 +152,10 @@ begin
     nreset = 1;
 
     repeat(497) #20 clk = ~clk; //25MHz
-    int3 = 1;
+    //int3 = 1;
     repeat(100) #20 clk = ~clk; //25MHz
-    int3 = 0;
-    repeat(5000) #20 clk = ~clk; //25MHz
+    //int3 = 0;
+    repeat(50000) #20 clk = ~clk; //25MHz
 
     #1 $finish;
 end

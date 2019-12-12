@@ -112,22 +112,22 @@ assign pop          =   (instrOP == INSTR_POP && readMem);
 
 
 //---------Jumps------------
-assign jump_addr    =   (instrOP == INSTR_JUMP)              ?   const27            :
-                        (instrOP == INSTR_JUMPR)             ?   data_b + const16   :
-                        (instrOP == INSTR_HALT)              ?   pc_in              : //halt: current implementation of halt is jumping to current address
-                        (instrOP == INSTR_BEQ && bea)        ?   const16            :
-                        (instrOP == INSTR_BNE && ~bea)       ?   const16            :
-                        (instrOP == INSTR_BGT && bga)        ?   const16            :
-                        (instrOP == INSTR_BGE && (bea||bga)) ?   const16            :
+assign jump_addr    =   (instrOP == INSTR_JUMP)             ?   const27            :
+                        (instrOP == INSTR_JUMPR)            ?   data_b + const16   :
+                        (instrOP == INSTR_HALT)             ?   pc_in              : //halt: current implementation of halt is jumping to current address
+                        (instrOP == INSTR_BEQ)              ?   const16            :
+                        (instrOP == INSTR_BNE)              ?   const16            :
+                        (instrOP == INSTR_BGT)              ?   const16            :
+                        (instrOP == INSTR_BGE)              ?   const16            :
                         27'd0;
 
-assign jump         =   (instrOP == INSTR_JUMP)              ?   1'b1:
-                        (instrOP == INSTR_JUMPR)             ?   1'b1:
-                        (instrOP == INSTR_HALT)              ?   1'b1: //halt: current implementation of halt is jumping to current address
-                        (instrOP == INSTR_BEQ && bea)        ?   1'b1:
-                        (instrOP == INSTR_BNE && ~bea)       ?   1'b1:
-                        (instrOP == INSTR_BGT && bga)        ?   1'b1:
-                        (instrOP == INSTR_BGE && (bea||bga)) ?   1'b1:
+assign jump         =   (instrOP == INSTR_JUMP)                 ?   1'b1:
+                        (instrOP == INSTR_JUMPR)                ?   1'b1:
+                        (instrOP == INSTR_HALT)                 ?   1'b1: //halt: current implementation of halt is jumping to current address
+                        (instrOP == INSTR_BEQ && bea)           ?   1'b1:
+                        (instrOP == INSTR_BNE && ~bea)          ?   1'b1:
+                        (instrOP == INSTR_BGT && (~bga && ~bea))?   1'b1:
+                        (instrOP == INSTR_BGE && ~bga)          ?   1'b1:
                         1'b0;
 
 assign offset       =   (instrOP == INSTR_JUMPR && oe)       ?   1'b1:
@@ -142,75 +142,3 @@ assign reti         =   (instrOP == INSTR_RETI)              ?   1'b1:
                         1'b0;
 
 endmodule
-
-/*
-assign data         = (instrOP==4'b1011) ? q : 
-                        data_b; //because breg usually contains the data to write to RAM
-
-//Set the a input of the ALU based on certain instruction parameters
-assign input_a      =   (instrOP==4'b0000&&ce)  ?   {20'd0, const12}        : //arith
-                        (instrOP==4'b1000)      ?   {16'd0, const16}        : //load
-                        (instrOP==4'b1001)      ?   {16'd0, const16}        : //loadhi
-                        (instrOP==4'b0001)      ?   {24'd0, pc_in}          : //savepc
-                        (instrOP==4'b1110)      ?   {stack_q}               : //pop
-                        data_a ;
-
-//Set REGA as data to write to stack
-assign stack_d      =   data_a ;                                              //push
-
-
-//areg or breg contains the base write address
-assign write_addr   =   (instrOP==4'b1010)      ?   data_a + const12        : //write
-                        //(instrOP==4'b1011)      ?   data_b + const12        : //copy
-                        20'd0 ;
-
-//areg contains the base read address
-assign read_addr    =   (instrOP==4'b1100)      ?   data_a + const12        : //read
-                        //(instrOP==4'b1011)      ?   data_a + const12        : //copy
-                        20'd0 ;
-
-//breg contains the base jump address for jmp instruction
-assign jump_addr    =   (instrOP==4'b0110)              ?   data_b + const20    : //jmp
-                        (instrOP==4'b1111)              ?   pc_in                   : //halt: current implementation of halt is jumping to current address
-                        (instrOP==4'b0100&&bea)         ?   const20         : //beq
-                        (instrOP==4'b0010&&~bea)        ?   const20         : //bne
-                        (instrOP==4'b0101&&bga)         ?   const20         : //bgt
-                        (instrOP==4'b0111&&(bea||bga))  ?   const20         : //bge
-                        20'd0 ;
-
-//in which cases jump should be high so PC will jump to jump_addr
-assign jump         =   (instrOP==4'b0110)              ?   1'b1                    : //jmp
-                        (instrOP==4'b1111)              ?   1'b1                    : //halt: current implementation of halt is jumping to current address
-                        (instrOP==4'b0100&&bea)         ?   1'b1                    : //beq
-                        (instrOP==4'b0010&&~bea)        ?   1'b1                    : //bne
-                        (instrOP==4'b0101&&bga)         ?   1'b1                    : //bgt
-                        (instrOP==4'b0111&&(bea||bga))  ?   1'b1                    : //bge
-                        1'b0 ;
-
-assign reti         =   (instrOP==4'b0011)      ?   1'b1: //reti
-                        1'b0;
-
-//only high when readMem or writeBack
-assign we       =   (instrOP==4'b1010&&((readMem && ~clk)||(writeBack&&clk)))    ?   1'b1: //write
-                    //(instrOP==4'b1011&&((readMem && ~clk)||writeBack))  ?   1'b1: //copy
-                        1'b0;
-
-//only high when readMem or writeBack
-assign read_ram =   (instrOP==4'b1100&&(readMem||writeBack))    ?   1'b1: //read: readMem, get ram | writeBack, write to dreg
-                    //(instrOP==4'b1011&&(readMem||writeBack))  ?   1'b1: //copy: readMem, get ram | writeBack, write to ram //Note: should not be needed, because no regbank involved
-                        1'b0;
-
-//only high when readMem or writeBack
-assign dreg_we =    (instrOP==4'b0000&&(readMem||writeBack))    ?   1'b1: //arith
-                    (instrOP==4'b1000&&(readMem||writeBack))    ?   1'b1: //load
-                    (instrOP==4'b1001&&(readMem||writeBack))    ?   1'b1: //loadhi
-                    (instrOP==4'b1100&&(readMem||writeBack))    ?   1'b1: //read
-                    (instrOP==4'b0001&&(readMem||writeBack))    ?   1'b1: //savpc
-                    (instrOP==4'b1110&&(readMem||writeBack))    ?   1'b1: //pop
-                        1'b0;
-
-//only high when readMem or writeBack
-assign dreg_we_high =   (instrOP==4'b1001&&(readMem||writeBack)) ; //loadhi
-assign push =           (instrOP==4'b1101&&((getRegs&&~clk)||(readMem&&clk))) ; //push
-assign pop =            (instrOP==4'b1110&&((getRegs&&~clk)||(readMem&&clk))) ; //pop
-*/

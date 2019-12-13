@@ -39,15 +39,21 @@ module FPGC4(
     input           nint2,
     input           nint3,
     input           nint4,
+
+    //PS/2
+    input           ps2d, ps2c,
+    //(S)NESpad
+    output          nesc, nesl,
+    input           nesd,
 	 
-	 output led
+    output led
 
 );
 
 wire frameDrawn;    //high when frame just rendered
                     //needs to be stabilized
 
-assign led = ~frameDrawn;
+assign led = 1'b1;
 
 wire int1;
 wire int2;
@@ -58,6 +64,8 @@ assign int1 = ~nint1;
 assign int2 = 1'b0;//~nint2;
 assign int3 = 1'b0;//~nint3;
 assign int4 = frameDrawn;
+
+wire clk;
 
 //PLL for VGA @9MHz and clk @25MHz
 pll pll (
@@ -259,7 +267,16 @@ MemoryUnit mu(
 .SDRAM_A        (SDRAM_A),
 .SDRAM_BA       (SDRAM_BA),
 .SDRAM_DQM      (SDRAM_DQM),
-.SDRAM_DQ       (SDRAM_DQ)
+.SDRAM_DQ       (SDRAM_DQ),
+
+//PS/2
+.ps2d(ps2d), 
+.ps2c(ps2c),
+
+//(S)NESpad
+.nesc(nesc), 
+.nesl(nesl),
+.nesd(nesd)
 );
 
 

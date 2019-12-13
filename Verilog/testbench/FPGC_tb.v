@@ -7,9 +7,10 @@
 
 //Include top level design
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/FPGC4.v"
+
 //Include modules
-//`include "../modules/ClockDivider.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Stabilizer.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/ClockDivider.v"
 
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/GPU/FSX.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/GPU/VGA.v"
@@ -31,7 +32,8 @@
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/CPU/Stack.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/CPU/Timer.v"
 
-
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/Keyboard.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/NESpadReader.v"
 
 //Define testmodule
 module FPGC_tb;

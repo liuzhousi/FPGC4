@@ -137,6 +137,8 @@ set_location_assignment PIN_W1 -to SDRAM_A[10]
 set_location_assignment PIN_Y4 -to SDRAM_A[11]
 set_location_assignment PIN_V6 -to SDRAM_A[12]
 set_global_assignment -name VERILOG_FILE modules/FPGC4.v
+set_global_assignment -name VERILOG_FILE modules/IO/NESpadReader.v
+set_global_assignment -name VERILOG_FILE modules/IO/Keyboard.v
 set_global_assignment -name VERILOG_FILE modules/CPU/Timer.v
 set_global_assignment -name VERILOG_FILE modules/CPU/Stack.v
 set_global_assignment -name VERILOG_FILE modules/CPU/Regbank.v
@@ -156,4 +158,14 @@ set_global_assignment -name VERILOG_FILE modules/Stabilizer.v
 set_global_assignment -name VERILOG_FILE modules/ClockDivider.v
 set_global_assignment -name SDC_FILE FPGC4.sdc
 set_global_assignment -name QIP_FILE pll.qip
+set_location_assignment PIN_E22 -to ps2d
+set_location_assignment PIN_F22 -to ps2c
+set_location_assignment PIN_M20 -to nesc
+set_location_assignment PIN_N20 -to nesl
+set_location_assignment PIN_B22 -to nesd
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to ps2d
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to ps2c
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nesc
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nesl
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nesd
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

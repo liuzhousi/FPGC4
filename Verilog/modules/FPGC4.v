@@ -42,6 +42,14 @@ module FPGC4(
 
 );
 
+//I/O
+    //PS/2
+    wire    ps2d, ps2c;
+    //(S)NESpad
+    wire    nesc, nesl;
+    wire    nesd;
+
+
 //----------------Reset Stabilizer-------------------
 //Reset stabilizer I/O
 wire nreset_stable, reset;
@@ -240,7 +248,16 @@ MemoryUnit mu(
 .SDRAM_A        (SDRAM_A),
 .SDRAM_BA       (SDRAM_BA),
 .SDRAM_DQM      (SDRAM_DQM),
-.SDRAM_DQ       (SDRAM_DQ)
+.SDRAM_DQ       (SDRAM_DQ),
+
+//PS/2
+.ps2d(ps2d), 
+.ps2c(ps2c),
+
+//(S)NESpad
+.nesc(nesc), 
+.nesl(nesl),
+.nesd(nesd)
 );
 
 

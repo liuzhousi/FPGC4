@@ -42,7 +42,14 @@ module MemoryUnit(
     output [12:0]   SDRAM_A,
     output [1:0]    SDRAM_BA,
     output [1:0]    SDRAM_DQM,
-    inout [15:0]    SDRAM_DQ
+    inout [15:0]    SDRAM_DQ,
+
+    //PS/2
+    input           ps2d, ps2c,
+    
+    //(S)NESpad
+    output          nesc, nesl,
+    input           nesd
 );  
 
     //SDRAMcontroller, SPIreader, vram, and I/O should work on negedge clock
@@ -107,6 +114,35 @@ module MemoryUnit(
     .SDRAM_DQM  (SDRAM_DQM),
     .SDRAM_DQ   (SDRAM_DQ)
     );
+
+//-----------------NES Controller-------------------
+//Controller I/O
+wire [15:0] nesState;
+
+NESpadReader npr (
+.clk(clk),
+.nesc(nesc),
+.nesl(nesl),
+.nesd(nesd),
+.nesState(nesState)
+);
+
+
+//-----------------PS/2 Keyboard-------------------
+//PS/2 Keyboard I/O
+wire [7:0] scanCode;
+wire scan_code_ready;
+wire [78:0] buttonState;
+
+Keyboard keyboard(
+.clk(clk),
+.reset(reset),
+.scan_code_ready(scan_code_ready),
+.ps2c(ps2c),                    //PS/2 clock
+.ps2d(ps2d),                    //PS/2 data
+.scanCode(scanCode),
+.buttonState(buttonState)   //pressed state of all buttons (79 buttons)
+);
 
 
 assign initDone         = (sr_initDone && sd_initDone);
@@ -173,7 +209,35 @@ begin
     if (busy && address >= 27'hC01400 && address < 27'hC01600)
     begin
         busy <= 0;
-        q <= {rom_q};
+        q <= rom_q;
+    end
+
+    //NESPAD
+    if (busy && address == 27'hC01600)
+    begin
+        busy <= 0;
+        q <= {16'd0, nesState};
+    end
+
+    //Keyboard1
+    if (busy && address == 27'hC01601)
+    begin
+        busy <= 0;
+        q <= buttonState[31:16];
+    end
+
+    //Keyboard2
+    if (busy && address == 27'hC01602)
+    begin
+        busy <= 0;
+        q <= buttonState[63:32];
+    end
+
+    //Keyboard3
+    if (busy && address == 27'hC01603)
+    begin
+        busy <= 0;
+        q <= buttonState[78:64];
     end
 end
 

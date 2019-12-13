@@ -4,4 +4,7 @@ Memory map:
 0xC00000 to 0xC0040F -> VRAM32 		4.0625KiB 	@ 32bit (1024+16 addresses)
 0xC00410 to 0xC013FF -> VRAM8 		3.984375KiB @ 8bit	(2*2040  addresses)
 0xC01400 to 0xC015FF -> ROM 		2KiB 		@ 32bit (512 	 addresses)
-0xC01600 to 0xC015FF -> I/O (GPIO, SNES, KEYBOARD)
+0xC01600  		 	 -> (S)NES controller
+0xC01601 to 0xC01604 -> PS/2 Keyboard
+
+0xC01604 to 0x?????? -> I/O (GPIO, etc.)

@@ -13,7 +13,7 @@ Main:
 
     ; print some data to screen
     addr2reg PRINTDATA r1   ; data to copy
-    load 27 r2              ; length of data
+    load 25 r2              ; length of data
     load 350 r3             ; offset from start
     load 0 r4               ; palette indx
 
@@ -341,7 +341,7 @@ Int4:
 
 
 PRINTDATA:
-.ds "Print data test. Derp derp blahblah"
+.ds "Graphics printing test :)"
 
 PALETTETABLE:
 .dw 0b00000000000000001111111111111111 ; black, black,  white,  white

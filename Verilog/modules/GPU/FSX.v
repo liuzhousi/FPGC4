@@ -25,9 +25,10 @@ module FSX(
     input  [7:0]        vram8_q,
 
     //Interrupt signal
-    output wire         ontile_v
+    output wire         frameDrawn
 );
 
+assign frameDrawn = (CounterY == 271 && CounterX > 460);
 
 //-----------------------VGA-------------------------
 //VGA I/O
@@ -187,7 +188,7 @@ end
 wire [12:0] currentTile; //current tile the pixel_clk is on
 
 wire ontile_h; //when pixel clock horizontally on a tile
-//wire ontile_v; //when pixel clock vertically on a tile
+wire ontile_v; //when pixel clock vertically on a tile
 wire ontile, ondoubletile; //when pixel clock is on a tile
 wire [9:0] currentHpixel, currentVpixel; //current horizontal/vertical pixel the pixel_clk is on
 wire [9:0] currentHtile, currentVtile; //current horiontal/vertical tile the pixel_clk is on

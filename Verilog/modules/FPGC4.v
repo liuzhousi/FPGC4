@@ -141,7 +141,7 @@ VRAM #(
 
 //-----------------------FSX-------------------------
 //FSX I/O
-wire ontile_v;      //high when rendering on current line
+wire frameDrawn;      //high when frame just rendered
                     //needs to be stabilized
 
 assign vga_clk = clk; //should become 6 ish mhz eventually
@@ -167,7 +167,7 @@ FSX fsx(
 .vram8_q        (vram8_gpu_q),
 
 //Interrupt signal
-.ontile_v       (ontile_v)
+.frameDrawn     (frameDrawn)
 );
 
 
@@ -253,7 +253,7 @@ CPU cpu(
 .int1           (int1), 
 .int2           (int2), 
 .int3           (int3), 
-.int4           (int4),
+.int4           (frameDrawn),
 .address        (address),
 .data           (data),
 .we             (we),

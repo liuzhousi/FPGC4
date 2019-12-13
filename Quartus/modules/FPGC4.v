@@ -44,7 +44,10 @@ module FPGC4(
 
 );
 
-assign led = vga_vs;
+wire frameDrawn;    //high when frame just rendered
+                    //needs to be stabilized
+
+assign led = ~frameDrawn;
 
 wire int1;
 wire int2;
@@ -54,7 +57,7 @@ wire int4;
 assign int1 = ~nint1;
 assign int2 = 1'b0;//~nint2;
 assign int3 = 1'b0;//~nint3;
-assign int4 = 1'b0;//~nint4;
+assign int4 = frameDrawn;
 
 //PLL for VGA @9MHz and clk @25MHz
 pll pll (
@@ -162,8 +165,6 @@ VRAM #(
 
 //-----------------------FSX-------------------------
 //FSX I/O
-wire ontile_v;      //high when rendering on current line
-                    //needs to be stabilized
 
 FSX fsx(
 //VGA
@@ -186,7 +187,7 @@ FSX fsx(
 .vram8_q        (vram8_gpu_q),
 
 //Interrupt signal
-.ontile_v       (ontile_v)
+.frameDrawn     (frameDrawn)
 );
 
 

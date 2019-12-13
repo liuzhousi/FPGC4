@@ -428,7 +428,7 @@ def compileBeq(line):
     const16 = format(arg3Int, '016b')
 
     #create instruction
-    instruction = "0110" + const16 + areg + breg + "0000" + " //If " + line[1] + " == " + line[2] + ", then jump to offset" + line[3]
+    instruction = "0110" + const16 + areg + breg + "0000" + " //If " + line[1] + " == " + line[2] + ", then jump to offset " + line[3]
 
     return instruction
 
@@ -466,7 +466,7 @@ def compileBne(line):
     const16 = format(arg3Int, '016b')
 
     #create instruction
-    instruction = "0101" + const16 + areg + breg + "0000" + " //If " + line[1] + " != " + line[2] + ", then jump to offset" + line[3]
+    instruction = "0101" + const16 + areg + breg + "0000" + " //If " + line[1] + " != " + line[2] + ", then jump to offset " + line[3]
 
     return instruction
 
@@ -504,7 +504,7 @@ def compileBgt(line):
     const16 = format(arg3Int, '016b')
 
     #create instruction
-    instruction = "0100" + const16 + areg + breg + "0000" + " //If " + line[1] + " > " + line[2] + ", then jump to offset" + line[3]
+    instruction = "0100" + const16 + areg + breg + "0000" + " //If " + line[1] + " > " + line[2] + ", then jump to offset " + line[3]
 
     return instruction
 
@@ -542,7 +542,7 @@ def compileBge(line):
     const16 = format(arg3Int, '016b')
 
     #create instruction
-    instruction = "0011" + const16 + areg + breg + "0000" + " //If " + line[1] + " >= " + line[2] + ", then jump to offset" + line[3]
+    instruction = "0011" + const16 + areg + breg + "0000" + " //If " + line[1] + " >= " + line[2] + ", then jump to offset " + line[3]
 
     return instruction
 
@@ -1184,3 +1184,22 @@ def compileDb(line):
         instruction = instruction + "00000000"
 
     return instruction
+
+#compiles .ds instruction by converting it to a .db instruction
+def compileDs(line):
+    if len(line) != 2:
+        raise Exception("Incorrect number of arguments. Expected 1, but got " + str(len(line)-1))
+
+    #.db instruction
+    dbList = []
+
+    dbList.append(".db")
+
+    # check for " "
+    if (line[1][0] == "\"" and line[1][-1] == "\""):
+        dbList = dbList + [str(ord(char)) for char in line[1][1:-1]]
+        #TODO convert string to ascii list using [ord(char) for char in string]
+    else:
+        raise Exception("Invalid string: " + line[1])
+    
+    return compileDb(dbList)

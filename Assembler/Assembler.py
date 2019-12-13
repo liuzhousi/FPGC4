@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 
 import sys
 import CompileInstruction
@@ -6,9 +7,13 @@ def parseLines():
     parsedLines = []
     with open('code.asm', 'r') as f:
         for i, line in enumerate(f, start=1):
-            parsedLine = line.strip().split(";",maxsplit=1)[0].split()
-            if (parsedLine != []):
-                parsedLines.append((i, parsedLine))
+            # do something special in case of a .ds instruction
+            if (len(line) > 4 and line.split(" ",maxsplit=1)[0] == ".ds"):
+                parsedLines.append((i, ['.ds', line.split(" ",maxsplit=1)[1].rstrip('\n')]))
+            else:
+                parsedLine = line.strip().split(";",maxsplit=1)[0].split()
+                if (parsedLine != []):
+                    parsedLines.append((i, parsedLine))
     return parsedLines
 
 
@@ -49,6 +54,7 @@ def compileLine(line):
         ".dw"       : CompileInstruction.compileDw,
         ".dd"       : CompileInstruction.compileDd,
         ".db"       : CompileInstruction.compileDb,
+        ".ds"       : CompileInstruction.compileDs,
         "loadlabellow" : CompileInstruction.compileLoadLabelLow,
         "loadlabelhigh" : CompileInstruction.compileLoadLabelHigh
     }

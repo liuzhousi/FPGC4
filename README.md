@@ -329,12 +329,38 @@ The palette table allows for 16 different palettes with four colors per palette.
 Each address in the background tile table and the background color table is mapped to one tile of the 57x34 tiles (actually 60x34 tiles, but the last 3x24 tiles are not used)
 
 ## Bootloader code
-The bootloader is the first thing that is executed by the CPU. The bootloader is used to copy data from the slow SPI flash to the faster SDRAM, and to jump to address 0 on the SDRAM. Since the bootloader has room for 512 instructions, I might add a splash/boot screen.
+The bootloader is the first thing that is executed by the CPU. The bootloader is used to copy data from the slow SPI flash to the faster SDRAM, and to jump to address 0 on the SDRAM. Since the bootloader has room for 512 instructions, I might add a boot screen.
 
-The code is shown below:
-
+This is the assembly code of the bootloader:
 ```
-TODO put code here in B322 assembly and machine code
+loadhi 0x80 r1          ; r1 = address 0 of SPI: 0x800000
+load 0 r2               ; r2 = address 0 of SDRAM: 0x00, and loop var
+read 5 r1 r3            ; r3 = last address to copy +1, which is in line 6 of SPI code
+
+CopyLoop:
+    copy 0 r1 r2            ; copy SPI to SDRAM
+
+    add r1 1 r1             ; incr SPI address 
+    add r2 1 r2             ; incr SDRAM address
+
+    beq r2 r3 2             ; copy is done when SDRAM address == number of lines to copy
+    jump CopyLoop           ; copy is not done yet, copy next address
+    jump 0                  ; copy is done, jump to sdram
+
+halt                        ; should not get here, halt if we do
+```
+And that translates to these instructions:
+```
+01110000000010000000000100000001 //Set highest 16 bits of r1 to 0x80
+01110000000000000000000000000010 //Set r2 to 0
+11100000000000000101000100000011 //Read at address in r1 with offset 5 to r3
+11000000000000000000000100100000 //Copy from address in r1 to address in r2 with offset 0
+00001001100000000001000100000001 //Compute r1 + 1 and write result to r1
+00001001100000000001001000000010 //Compute r2 + 1 and write result to r2
+01100000000000000010001000110000 //If r2 == r3, then jump to offset 2
+10010001100000000010100000000110 //Jump to constant address 3 of ROM
+10010000000000000000000000000000 //Jump to constant address 0
+11111111111111111111111111111111 //Halt
 ```
 
 ## Assembler for B322
@@ -350,7 +376,7 @@ Each line is parsed on its own. There are four types of lines:
 - Instructions
 
 #### Comments
-Comments can be added by using the ';' character. For each line, only the part until the first ';' occurrence will be used by the assembler. This means that anything can be written after the ';'
+Comments can be added by using the ';' character. For each line, only the part until the first ';' occurrence will be used by the assembler. This means that anything can be written after the ';'. This all does not go for .ds lines. They must not have any comments. This way it is not needed to use escape characters in the strings
 
 #### Defines
 Defines are the first type of lines that are processed by the assembler. A define line should have the following structure:
@@ -424,11 +450,13 @@ ADDR2REG| L     | R     |       || Loads address from Arg1 to Arg2. Is converted
 .DW     | N32   | *     | *     || Data: Each argument is converted to 32bit binary
 .DD     | N16   | *     | *     || Data: Each argument is converted to 16bit binary **
 .DB     | N8    | *     | *     || Data: Each argument is converted to 8bit binary **
+.DS     | N8    | S     |       || Data: Each character of the string is converted to 8bit ASCII **
 
 /   = Or
 R   = Register
 Cx  = Constant that fits within x bits
 L   = Label
+S   = String
 
 *  Optional argument with same type as Arg1. Has 'no limit' on number of arguments
 ** Data is placed after each other to make blocks of 32 bits. If a block cannot be made, it will be padded by zeros

@@ -483,7 +483,7 @@ TODO add more information about the functionality of the flash.sh file when it i
 
 ## About the Project
 ### Structure of project files
-All Verilog related files are in the Verilog folder. The Quartus files are in the Quartus folder. The SPI flash programmer files are in the Programmer folder. The assembler files are in the Assembler folder.
+All Verilog related files are in the Verilog folder. The Quartus files are in the Quartus folder. The SPI flash programmer files are in the Programmer folder. The assembler files are in the Assembler folder. The SublimeText3 folder contains the build scripts I use for compiling certain files in this project. In the future, I might add a custom syntax highlighting file for the assembly language.
 
 ### Progress log
 - MU seems to work

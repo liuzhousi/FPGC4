@@ -10,10 +10,8 @@ module PC(
     input int1, int2, int3, int4
 );
 
-//TODO disable interrupts when address is in ROM range
-
 //Start value of PC
-parameter PCstart = 27'hC01400; //Internal ROM addr 0
+parameter PCstart = 27'hC02422; //Internal ROM addr 0
 
 reg [26:0] PCintBackup;         //Backup of PC. Used when there is an interrupt. Is restored when reti is high
 reg int_en;                     //enable interrupts
@@ -55,44 +53,64 @@ begin
                 int_en <= 1'b1;
             end
 
-            else if (int_en && rising_int1 && pc_out < 27'hC01400) //if interrupt1 is valid
+            else if (int_en && rising_int1 && pc_out < PCstart) //if interrupt1 is valid
             begin
                 rising_int1 <= 1'b0;
                 if (jump)
-                    PCintBackup <= jump_addr;
+                begin
+                    if (offset) //jump with offset
+                        PCintBackup <= pc_out + jump_addr;
+                    else
+                        PCintBackup <= jump_addr;
+                end
                 else
                     PCintBackup <= pc_out + 1'b1;
                 int_en <= 1'b0;
                 pc_out <= 27'd1;
             end
 
-            else if (int_en && rising_int2 && pc_out < 27'hC01400) //if interrupt2 is valid
+            else if (int_en && rising_int2 && pc_out < PCstart) //if interrupt2 is valid
             begin
                 rising_int2 <= 1'b0;
                 if (jump)
-                    PCintBackup <= jump_addr;
+                begin
+                    if (offset) //jump with offset
+                        PCintBackup <= pc_out + jump_addr;
+                    else
+                        PCintBackup <= jump_addr;
+                end
                 else
                     PCintBackup <= pc_out + 1'b1;
                 pc_out <= 27'd2;
                 int_en <= 1'b0;
             end
 
-            else if (int_en && rising_int3 && pc_out < 27'hC01400) //if interrupt3 is valid
+            else if (int_en && rising_int3 && pc_out < PCstart) //if interrupt3 is valid
             begin
                 rising_int3 <= 1'b0;
                 if (jump)
-                    PCintBackup <= jump_addr;
+                begin
+                    if (offset) //jump with offset
+                        PCintBackup <= pc_out + jump_addr;
+                    else
+                        PCintBackup <= jump_addr;
+                end
                 else
                     PCintBackup <= pc_out + 1'b1;
                 int_en <= 1'b0;
                 pc_out <= 17'd3;
             end
 
-            else if (int_en && rising_int4 && pc_out < 27'hC01400) //if interrupt4 is valid
+            else if (int_en && rising_int4 && pc_out < PCstart) //if interrupt4 is valid
             begin
                 rising_int4 <= 1'b0;
                 if (jump)
-                    PCintBackup <= jump_addr;
+                begin
+                    if (offset) //jump with offset
+                        PCintBackup <= pc_out + jump_addr;
+                    else
+                        PCintBackup <= jump_addr;
+                end
                 else
                     PCintBackup <= pc_out + 1'b1;
                 int_en <= 1'b0;

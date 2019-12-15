@@ -91,18 +91,17 @@ Stabilizer resStabilizer (
 
 //--------------------Clocks----------------------
 assign SDRAM_CLK = clk;
-wire gpu_clk, gpu_clk2;
 
 //---------------------------VRAM32---------------------------------
 //VRAM32 I/O
 wire        vram32_gpu_clk;
-wire [11:0] vram32_gpu_addr;
+wire [13:0] vram32_gpu_addr;
 wire [31:0] vram32_gpu_d;
 wire        vram32_gpu_we;
 wire [31:0] vram32_gpu_q;
 
 wire        vram32_cpu_clk;
-wire [11:0] vram32_cpu_addr;
+wire [13:0] vram32_cpu_addr;
 wire [31:0] vram32_cpu_d;
 wire        vram32_cpu_we; 
 wire [31:0] vram32_cpu_q;
@@ -113,7 +112,7 @@ assign vram32_gpu_d     = 32'd0;
 
 VRAM #(
 .WIDTH(32), 
-.WORDS(1040), 
+.WORDS(1056), 
 .LIST("/home/bart/Documents/FPGA/FPGC4/Verilog/memory/vram32.list")
 )   vram32(
 //CPU port
@@ -124,7 +123,7 @@ VRAM #(
 .cpu_q      (vram32_cpu_q),
 
 //GPU port
-.gpu_clk    (gpu_clk),
+.gpu_clk    (vga_clk),
 .gpu_d      (vram32_gpu_d),
 .gpu_addr   (vram32_gpu_addr),
 .gpu_we     (vram32_gpu_we),
@@ -135,13 +134,13 @@ VRAM #(
 //--------------------------VRAM8--------------------------------
 //VRAM8 I/O
 wire        vram8_gpu_clk;
-wire [11:0] vram8_gpu_addr;
+wire [13:0] vram8_gpu_addr;
 wire [7:0]  vram8_gpu_d;
 wire        vram8_gpu_we;
 wire [7:0]  vram8_gpu_q;
 
 wire        vram8_cpu_clk;
-wire [11:0] vram8_cpu_addr;
+wire [13:0] vram8_cpu_addr;
 wire [7:0]  vram8_cpu_d;
 wire        vram8_cpu_we;
 wire [7:0]  vram8_cpu_q;
@@ -152,7 +151,7 @@ assign vram8_gpu_d      = 8'd0;
 
 VRAM #(
 .WIDTH(8), 
-.WORDS(4080), 
+.WORDS(8194), 
 .LIST("/home/bart/Documents/FPGA/FPGC4/Verilog/memory/vram8.list")
 )   vram8(
 //CPU port
@@ -163,7 +162,7 @@ VRAM #(
 .cpu_q      (vram8_cpu_q),
 
 //GPU port
-.gpu_clk    (gpu_clk2),
+.gpu_clk    (vga_clk),
 .gpu_d      (vram8_gpu_d),
 .gpu_addr   (vram8_gpu_addr),
 .gpu_we     (vram8_gpu_we),
@@ -185,19 +184,16 @@ FSX fsx(
 .vga_blk        (vga_blk),
 
 //VRAM32
-.gpu_clk        (gpu_clk),
 .vram32_addr    (vram32_gpu_addr),
 .vram32_q       (vram32_gpu_q),
 
 //VRAM8
-.gpu_clk2       (gpu_clk2),
 .vram8_addr     (vram8_gpu_addr),
 .vram8_q        (vram8_gpu_q),
 
 //Interrupt signal
 .frameDrawn     (frameDrawn)
 );
-
 
 //-------------------ROM-------------------------
 //ROM I/O

@@ -2,8 +2,9 @@
 ; Should eventually become a real library when library support is added in assembler
 
 define GFX_PATTERN_TABLE_SIZE       = 1024      ; size of pattern table
-define GFX_PALETTE_TABLE_SIZE       = 16        ; size of palette table
-define GFX_TILES                    = 1938      ; number of tiles on screen
+define GFX_PALETTE_TABLE_SIZE       = 32        ; size of palette table
+define GFX_WINDOW_TILES             = 1920      ; number of tiles in window plane
+define GFX_BG_TILES                 = 2048      ; number of tiles in bg plane
 
 Main:
 
@@ -11,27 +12,44 @@ Main:
     push r15
     jump GFXinitVram
 
-    ; print some data to screen
-    addr2reg PRINTDATA r1   ; data to copy
+    ; print some data to Window
+    addr2reg WINDOWTEXT r1   ; data to copy
     load 25 r2              ; length of data
-    load 350 r3             ; offset from start
-    load 0 r4               ; palette indx
+    load 0 r3               ; offset from start
+    load 0 r4               ; palette idx
 
     savpc r15
     push r15
-    jump GFXprintColored    
-    
-    halt
+    jump GFXprintWindowColored   
+
+    ; print some data to BG
+    addr2reg BACKGROUNDTILES r1   ; data to copy
+    load 6 r2               ; length of data
+    load 16 r3              ; offset from start
+    load 1 r4               ; palette idx
+
+    savpc r15
+    push r15
+    jump GFXprintBGColored  
+
+    halt    
 
 
-; Prints to screen, with color, data is accessed in bytes
+WINDOWTEXT:
+.ds "Graphics printing test :)"
+
+BACKGROUNDTILES:
+.db 176 176 177 177 178 178
+
+
+; Prints to screen in window plane, with color, data is accessed in bytes
 ; Reads each word from left to right
 ; INPUT:
 ;   r1 = address of data to print
 ;   r2 = length of data
 ;   r3 = position on screen
 ;   r4 = palette index
-GFXprintColored:
+GFXprintWindowColored:
     ; backup registers
     push r5
     push r6
@@ -41,8 +59,8 @@ GFXprintColored:
     push r10
 
     ; vram address
-    load 0x0410 r10
-    loadhi 0xC0 r10                 ; r10 = vram addr 1040 0xC00410
+    load 0x1420 r10
+    loadhi 0xC0 r10                 ; r10 = vram addr 1056+4096 0xC01420
 
     ; loop variables
     load 0 r5                       ; r5 = loopvar
@@ -53,12 +71,12 @@ GFXprintColored:
     add r3 r6 r6                    ; apply offset from r3
 
     ; copy loop
-    GFXprintColoredLoop:
+    GFXprintWindowColoredLoop:
         sub r8 8 r8             ; remove 8 from shift variable
         read 0 r7 r9            ; read 32 bits
         shiftr r9 r8 r9         ; shift to right
         write 0 r6 r9           ; write char to vram
-        write 2040 r6 r4        ; write palette index to vram
+        write 2048 r6 r4        ; write palette index to vram
         add r6 1 r6             ; incr vram address
 
         bne r0 r8 3             ; if we shifted the last byte
@@ -67,7 +85,7 @@ GFXprintColored:
 
         add r5 1 r5             ; incr counter
         bge r5 r2 2             ; keep looping until all data is copied
-        jump GFXprintColoredLoop
+        jump GFXprintWindowColoredLoop
 
     ; restore registers
     pop r10
@@ -82,13 +100,13 @@ GFXprintColored:
     jumpr 3 r15
 
 
-; Prints to screen, data is accessed in bytes
+; Prints to screen in window plane, data is accessed in bytes
 ; Reads each word from left to right
 ; INPUT:
 ;   r1 = address of data to print
 ;   r2 = length of data
 ;   r3 = position on screen
-GFXprint:
+GFXprintWindow:
     ; backup registers
     push r4
     push r5
@@ -98,8 +116,8 @@ GFXprint:
     push r9
 
     ; vram address
-    load 0x0410 r4
-    loadhi 0xC0 r4                  ; r4 = vram addr 1040 0xC00410
+    load 0x1420 r4
+    loadhi 0xC0 r4                 ; r10 = vram addr 1056+4096 0xC01420
 
     ; loop variables
     load 0 r5                       ; r5 = loopvar
@@ -110,7 +128,7 @@ GFXprint:
     add r3 r6 r6                    ; apply offset from r3
 
     ; copy loop
-    GFXprintLoop:
+    GFXprintWindowLoop:
         sub r8 8 r8             ; remove 8 from shift variable
         read 0 r7 r9            ; read 32 bits
         shiftr r9 r8 r9         ; shift to right
@@ -123,7 +141,7 @@ GFXprint:
 
         add r5 1 r5             ; incr counter
         bge r5 r2 2             ; keep looping until all data is copied
-        jump GFXprintLoop
+        jump GFXprintWindowLoop
 
     ; restore registers
     pop r9
@@ -137,6 +155,120 @@ GFXprint:
     pop r15
     jumpr 3 r15
    
+
+; Prints to screen in BG plane, with color, data is accessed in bytes
+; Reads each word from left to right
+; INPUT:
+;   r1 = address of data to print
+;   r2 = length of data
+;   r3 = position on screen
+;   r4 = palette index
+GFXprintBGColored:
+    ; backup registers
+    push r5
+    push r6
+    push r7
+    push r8
+    push r9
+    push r10
+
+    ; vram address
+    load 0x0420 r10
+    loadhi 0xC0 r10                 ; r10 = vram addr 1056 0xC00420
+
+    ; loop variables
+    load 0 r5                       ; r5 = loopvar
+    or r10 r0 r6                    ; r6 = vram addr with offset
+    or r1 r0 r7                     ; r7 = data addr with offset
+    load 32 r8                      ; r8 = shift variable
+
+    add r3 r6 r6                    ; apply offset from r3
+
+    ; copy loop
+    GFXprintBGColoredLoop:
+        sub r8 8 r8             ; remove 8 from shift variable
+        read 0 r7 r9            ; read 32 bits
+        shiftr r9 r8 r9         ; shift to right
+        write 0 r6 r9           ; write char to vram
+        write 2048 r6 r4        ; write palette index to vram
+        add r6 1 r6             ; incr vram address
+
+        bne r0 r8 3             ; if we shifted the last byte
+            add r7 1 r7             ; incr data address 
+            load 32 r8              ; set shift variable back to 24
+
+        add r5 1 r5             ; incr counter
+        bge r5 r2 2             ; keep looping until all data is copied
+        jump GFXprintBGColoredLoop
+
+    ; restore registers
+    pop r10
+    pop r9
+    pop r8
+    pop r7
+    pop r6
+    pop r5
+
+    ; return
+    pop r15
+    jumpr 3 r15
+
+
+; Prints to screen in window plane, data is accessed in bytes
+; Reads each word from left to right
+; INPUT:
+;   r1 = address of data to print
+;   r2 = length of data
+;   r3 = position on screen
+GFXprintBG:
+    ; backup registers
+    push r4
+    push r5
+    push r6
+    push r7
+    push r8
+    push r9
+
+    ; vram address
+    load 0x0420 r4
+    loadhi 0xC0 r4                 ; r10 = vram addr 1056 0xC00420
+
+    ; loop variables
+    load 0 r5                       ; r5 = loopvar
+    or r4 r0 r6                     ; r6 = vram addr with offset
+    or r1 r0 r7                     ; r7 = data addr with offset
+    load 32 r8                      ; r8 = shift variable
+
+    add r3 r6 r6                    ; apply offset from r3
+
+    ; copy loop
+    GFXprintBGLoop:
+        sub r8 8 r8             ; remove 8 from shift variable
+        read 0 r7 r9            ; read 32 bits
+        shiftr r9 r8 r9         ; shift to right
+        write 0 r6 r9           ; write char to vram
+        add r6 1 r6             ; incr vram address
+
+        bne r0 r8 3             ; if we shifted the last byte
+            add r7 1 r7             ; incr data address 
+            load 32 r8              ; set shift variable back to 24
+
+        add r5 1 r5             ; incr counter
+        bge r5 r2 2             ; keep looping until all data is copied
+        jump GFXprintBGLoop
+
+    ; restore registers
+    pop r9
+    pop r8
+    pop r7
+    pop r6
+    pop r5
+    pop r4
+
+    ; return
+    pop r15
+    jumpr 3 r15
+
 
 ; Initialize VRAM by copying pattern table and palette table
 ; also clears BG tile and BG palette table
@@ -162,6 +294,14 @@ GFXinitVram:
     savpc r15
     push r15
     jump GFXclearBGpaletteTable
+
+    savpc r15
+    push r15
+    jump GFXclearWindowtileTable
+
+    savpc r15
+    push r15
+    jump GFXclearWindowpaletteTable
 
     ; return
     pop r15
@@ -262,12 +402,12 @@ GFXclearBGtileTable:
     push r5
 
     ; vram address
-    load 0x0410 r1
-    loadhi 0xC0 r1          ; r1 = vram addr 1040 0xC00410
+    load 0x0420 r1
+    loadhi 0xC0 r1          ; r1 = vram addr 1056 0xC00420
 
     ; loop variables
     load 0 r3               ; r3 = loopvar
-    load GFX_TILES r4       ; r4 = loopmax
+    load GFX_BG_TILES r4    ; r4 = loopmax
     or r1 r0 r5             ; r5 = vram addr with offset
 
     ; copy loop
@@ -300,12 +440,12 @@ GFXclearBGpaletteTable:
     push r5
 
     ; vram address
-    load 0x0C08 r1
-    loadhi 0xC0 r1          ; r1 = vram addr 1040+2040 0xC00C08
+    load 0x0C20 r1
+    loadhi 0xC0 r1          ; r1 = vram addr 1056+2048 0xC00C20
 
     ; loop variables
     load 0 r3               ; r3 = loopvar
-    load GFX_TILES r4       ; r4 = loopmax
+    load GFX_BG_TILES r4    ; r4 = loopmax
     or r1 r0 r5             ; r5 = vram addr with offset
 
     ; copy loop
@@ -327,6 +467,83 @@ GFXclearBGpaletteTable:
     pop r15
     jumpr 3 r15
 
+
+; Clear Window tile table
+GFXclearWindowtileTable:
+    ; backup registers
+    push r1
+    push r2
+    push r3
+    push r4
+    push r5
+
+    ; vram address
+    load 0x1420 r1
+    loadhi 0xC0 r1          ; r1 = vram addr 1056+2048 0xC01420
+
+    ; loop variables
+    load 0 r3               ; r3 = loopvar
+    load GFX_WINDOW_TILES r4    ; r4 = loopmax
+    or r1 r0 r5             ; r5 = vram addr with offset
+
+    ; copy loop
+    GFXclearWindowtileTableLoop:
+        write 0 r5 r0           ; clear tile
+        add r5 1 r5             ; incr vram address
+        add r3 1 r3             ; incr counter
+        beq r3 r4 2             ; keep looping until all tiles are cleared
+        jump GFXclearWindowtileTableLoop
+
+    ; restore registers
+    pop r5
+    pop r4
+    pop r3
+    pop r2
+    pop r1
+
+    ; return
+    pop r15
+    jumpr 3 r15
+  
+
+; Clear Window palette table
+GFXclearWindowpaletteTable:
+    ; backup registers
+    push r1
+    push r2
+    push r3
+    push r4
+    push r5
+
+    ; vram address
+    load 0x0C20 r1
+    loadhi 0xC0 r1          ; r1 = vram addr 1056+2048 0xC00C20
+
+    ; loop variables
+    load 0 r3               ; r3 = loopvar
+    load GFX_WINDOW_TILES r4    ; r4 = loopmax
+    or r1 r0 r5             ; r5 = vram addr with offset
+
+    ; copy loop
+    GFXclearWindowpaletteTableLoop:
+        write 0 r5 r0           ; clear tile
+        add r5 1 r5             ; incr vram address
+        add r3 1 r3             ; incr counter
+        beq r3 r4 2             ; keep looping until all tiles are cleared
+        jump GFXclearWindowpaletteTableLoop
+
+    ; restore registers
+    pop r5
+    pop r4
+    pop r3
+    pop r2
+    pop r1
+
+    ; return
+    pop r15
+    jumpr 3 r15
+
+
 Int1:
     reti
 
@@ -340,12 +557,9 @@ Int4:
     reti
 
 
-PRINTDATA:
-.ds "Graphics printing test :)"
-
 PALETTETABLE:
 .dw 0b00000000000000001111111111111111 ; black, black,  white,  white
-.dw 0b00000000111000000001110000000011 ; black, red,    green,  blue
+.dw 0b00000011000000000000000000011101 ; blue, black, black, greenblueish
 .dw 0b00000000000000000000000000000000
 .dw 0b00000000000000000000000000000000
 .dw 0b00000000000000000000000000000000
@@ -360,6 +574,23 @@ PALETTETABLE:
 .dw 0b00000000000000000000000000000000
 .dw 0b00000000000000000000000000000000
 .dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+
 
 ASCIITABLE:
 .dw 0b00000000000000000000000000000000

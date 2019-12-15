@@ -5,25 +5,23 @@
 module VRAM
 #(
     parameter WIDTH = 32,
-    parameter WORDS = 1152,
+    parameter WORDS = 256,
     parameter LIST  = "/home/bart/Documents/FPGA/FPGC4/Verilog/memory/vram32.list"
 ) 
 (
   input                   cpu_clk,        
   input      [WIDTH-1:0]  cpu_d,
-  input      [11:0]       cpu_addr,
+  input      [13:0]       cpu_addr,
   input                   cpu_we,
   output reg [WIDTH-1:0]  cpu_q, 
 
   input                   gpu_clk,
   input      [WIDTH-1:0]  gpu_d,
-  input      [11:0]       gpu_addr,
+  input      [13:0]       gpu_addr,
   input                   gpu_we,
   output reg [WIDTH-1:0]  gpu_q 
 );
 
-//1152 = 0x480 HEX
-//1152*32 = 4.5KiB
 reg [WIDTH-1:0] ram [0:WORDS-1]; //basically the memory cells
 
 //cpu port
@@ -38,7 +36,7 @@ begin
 end
 
 //gpu port
-always @(posedge gpu_clk) 
+always @(negedge gpu_clk) 
 begin
   gpu_q <= ram[gpu_addr];
   if (gpu_we)

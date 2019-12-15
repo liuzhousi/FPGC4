@@ -13,7 +13,6 @@
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/ClockDivider.v"
 
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/GPU/FSX.v"
-`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/GPU/VGA.v"
 
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/VRAM.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/mt48lc16m16a2.v"
@@ -157,7 +156,7 @@ begin
     //int3 = 1;
     repeat(100) #20 clk = ~clk; //25MHz
     //int3 = 0;
-    repeat(50000) #20 clk = ~clk; //25MHz
+    repeat(30000) #20 clk = ~clk; //25MHz
 
     #1 $finish;
 end

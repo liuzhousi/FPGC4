@@ -17,13 +17,13 @@ module MemoryUnit(
 
     //vram32 cpu side
     output [31:0]   vram32_cpu_d,
-    output [11:0]   vram32_cpu_addr, 
+    output [13:0]   vram32_cpu_addr, 
     output          vram32_cpu_we,
     input  [31:0]   vram32_cpu_q,
 
     //vram8 cpu side
     output [7:0]    vram8_cpu_d,
-    output [11:0]   vram8_cpu_addr, 
+    output [13:0]   vram8_cpu_addr, 
     output          vram8_cpu_we,
     input  [7:0]    vram8_cpu_q,
 
@@ -156,15 +156,15 @@ assign sr_addr          = (address >= 27'h800000 && address < 27'hC00000)   ? ad
 assign sr_start         = (address >= 27'h800000 && address < 27'hC00000)   ? start                     : 1'd0;
 
 
-assign vram32_cpu_addr  = (address >= 27'hC00000 && address < 27'hC00410)   ? address - 27'hC00000      : 12'd0;
-assign vram32_cpu_d     = (address >= 27'hC00000 && address < 27'hC00410)   ? data                      : 32'd0;
-assign vram32_cpu_we    = (address >= 27'hC00000 && address < 27'hC00410)   ? we                        : 1'd0;
+assign vram32_cpu_addr  = (address >= 27'hC00000 && address < 27'hC00420)   ? address - 27'hC00000      : 14'd0;
+assign vram32_cpu_d     = (address >= 27'hC00000 && address < 27'hC00420)   ? data                      : 32'd0;
+assign vram32_cpu_we    = (address >= 27'hC00000 && address < 27'hC00420)   ? we                        : 1'd0;
 
-assign vram8_cpu_addr   = (address >= 27'hC00410 && address < 27'hC01400)   ? address - 27'hC00410      : 12'd0;
-assign vram8_cpu_d      = (address >= 27'hC00410 && address < 27'hC01400)   ? data                      : 8'd0;
-assign vram8_cpu_we     = (address >= 27'hC00410 && address < 27'hC01400)   ? we                        : 1'd0;
+assign vram8_cpu_addr   = (address >= 27'hC00420 && address < 27'hC02422)   ? address - 27'hC00420      : 14'd0;
+assign vram8_cpu_d      = (address >= 27'hC00420 && address < 27'hC02422)   ? data                      : 8'd0;
+assign vram8_cpu_we     = (address >= 27'hC00420 && address < 27'hC02422)   ? we                        : 1'd0;
 
-assign rom_addr         = (address >= 27'hC01400 && address < 27'hC01600)   ? address - 27'hC01400      : 9'd0;
+assign rom_addr         = (address >= 27'hC02422 && address < 27'hC02622)   ? address - 27'hC02422      : 9'd0;
 
 initial
 begin
@@ -192,49 +192,49 @@ begin
     end
 
     //VRAM32
-    if (busy && address >= 27'hC00000 && address < 27'hC00410)
+    if (busy && address >= 27'hC00000 && address < 27'hC00420)
     begin
         busy <= 0;
         q <= vram32_cpu_q;
     end
 
     //VRAM8
-    if (busy && address >= 27'hC00410 && address < 27'hC01400)
+    if (busy && address >= 27'hC00420 && address < 27'hC02422)
     begin
         busy <= 0;
         q <= {24'd0, vram8_cpu_q};
     end
 
     //ROM
-    if (busy && address >= 27'hC01400 && address < 27'hC01600)
+    if (busy && address >= 27'hC02422 && address < 27'hC02622)
     begin
         busy <= 0;
         q <= rom_q;
     end
 
     //NESPAD
-    if (busy && address == 27'hC01600)
+    if (busy && address == 27'hC02622)
     begin
         busy <= 0;
         q <= {16'd0, nesState};
     end
 
     //Keyboard1
-    if (busy && address == 27'hC01601)
+    if (busy && address == 27'hC02623)
     begin
         busy <= 0;
         q <= buttonState[31:16];
     end
 
     //Keyboard2
-    if (busy && address == 27'hC01602)
+    if (busy && address == 27'hC02624)
     begin
         busy <= 0;
         q <= buttonState[63:32];
     end
 
     //Keyboard3
-    if (busy && address == 27'hC01603)
+    if (busy && address == 27'hC02625)
     begin
         busy <= 0;
         q <= buttonState[78:64];

@@ -46,7 +46,10 @@ module FPGC4(
     output          nesc, nesl,
     input           nesd,
 	 
-    output led
+    output led,
+
+    output          tone1_out,
+    output          tone2_out
 
 );
 
@@ -59,11 +62,6 @@ wire int1;
 wire int2;
 wire int3;
 wire int4;
-
-assign int1 = ~nint1;
-assign int2 = 1'b0;//~nint2;
-assign int3 = 1'b0;//~nint3;
-assign int4 = frameDrawn;
 
 wire clk;
 
@@ -215,6 +213,9 @@ wire        start;
 wire        initDone;
 wire        busy;
 wire [31:0] q;
+wire        t1_interrupt;
+wire        t2_interrupt;
+wire        t3_interrupt;
 
 MemoryUnit mu(
 //clocks
@@ -272,12 +273,23 @@ MemoryUnit mu(
 //(S)NESpad
 .nesc(nesc), 
 .nesl(nesl),
-.nesd(nesd)
+.nesd(nesd),
+
+.t1_interrupt(t1_interrupt),
+.t2_interrupt(t2_interrupt),
+.t3_interrupt(t3_interrupt),
+
+.tone1_out(tone1_out),
+.tone2_out(tone2_out)
 );
 
 
 //---------------CPU----------------
 //CPU I/O
+assign int1 = t1_interrupt;
+assign int2 = t2_interrupt;
+assign int3 = t3_interrupt;
+assign int4 = frameDrawn;
 
 CPU cpu(
 .clk            (clk),

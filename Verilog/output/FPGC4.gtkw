@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v (Modified by Bart for High DPI displays) 3.3.103 (w)1999-2019 BSI
-[*] Thu Dec 12 11:22:40 2019
+[*] Tue Dec 17 19:06:57 2019
 [*]
 [dumpfile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/wave.vcd"
-[dumpfile_mtime] "Thu Dec 12 09:53:52 2019"
-[dumpfile_size] 8837729
+[dumpfile_mtime] "Tue Dec 17 19:05:39 2019"
+[dumpfile_size] 4175081
 [savefile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/FPGC4.gtkw"
-[timestart] 537170000
+[timestart] 0
 [size] 2736 1716
 [pos] -1 -1
-*-17.838461 538142000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-23.838461 538140000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] FPGC_tb.
 [treeopen] FPGC_tb.fpgc.
 [treeopen] FPGC_tb.fpgc.cpu.
@@ -135,22 +135,6 @@ FPGC_tb.fpgc.cpu.regbank.data_b[31:0]
 FPGC_tb.fpgc.cpu.regbank.data_d[31:0]
 @200
 -
-@22
-FPGC_tb.fpgc.cpu.regbank.reg1[31:0]
-FPGC_tb.fpgc.cpu.regbank.reg2[31:0]
-FPGC_tb.fpgc.cpu.regbank.reg3[31:0]
-FPGC_tb.fpgc.cpu.regbank.reg4[31:0]
-FPGC_tb.fpgc.cpu.regbank.reg5[31:0]
-FPGC_tb.fpgc.cpu.regbank.reg6[31:0]
-FPGC_tb.fpgc.cpu.regbank.reg7[31:0]
-FPGC_tb.fpgc.cpu.regbank.reg8[31:0]
-FPGC_tb.fpgc.cpu.regbank.reg9[31:0]
-FPGC_tb.fpgc.cpu.regbank.reg10[31:0]
-FPGC_tb.fpgc.cpu.regbank.reg11[31:0]
-FPGC_tb.fpgc.cpu.regbank.reg12[31:0]
-FPGC_tb.fpgc.cpu.regbank.reg13[31:0]
-FPGC_tb.fpgc.cpu.regbank.reg14[31:0]
-FPGC_tb.fpgc.cpu.regbank.reg15[31:0]
 @28
 FPGC_tb.fpgc.cpu.regbank.reset
 FPGC_tb.fpgc.cpu.regbank.read_mem
@@ -161,9 +145,7 @@ FPGC_tb.fpgc.cpu.regbank.mem_q[31:0]
 -ALU
 @22
 FPGC_tb.fpgc.cpu.alu.opcode[3:0]
-@23
 FPGC_tb.fpgc.cpu.alu.a[31:0]
-@22
 FPGC_tb.fpgc.cpu.alu.b[31:0]
 FPGC_tb.fpgc.cpu.alu.y[31:0]
 @28
@@ -297,9 +279,6 @@ FPGC_tb.fpgc.mu.spi_wp
 -VRAM32
 @28
 FPGC_tb.fpgc.mu.clk
-@22
-FPGC_tb.fpgc.mu.vram32_cpu_addr[11:0]
-@28
 FPGC_tb.fpgc.mu.vram32_cpu_we
 @22
 FPGC_tb.fpgc.mu.vram32_cpu_d[31:0]
@@ -310,7 +289,6 @@ FPGC_tb.fpgc.mu.vram32_cpu_q[31:0]
 @28
 FPGC_tb.fpgc.mu.clk
 @22
-FPGC_tb.fpgc.mu.vram8_cpu_addr[11:0]
 FPGC_tb.fpgc.mu.vram8_cpu_d[7:0]
 FPGC_tb.fpgc.mu.vram8_cpu_q[7:0]
 @28
@@ -327,61 +305,16 @@ FPGC_tb.fpgc.mu.rom_addr[8:0]
 FPGC_tb.fpgc.mu.rom_q[31:0]
 @200
 -
--VideoSignal
-@24
-FPGC_tb.fpgc.fsx.displayGen.clk
-FPGC_tb.fpgc.fsx.displayGen.h_count[11:0]
-FPGC_tb.fpgc.fsx.displayGen.v_count[11:0]
-FPGC_tb.fpgc.fsx.displayGen.o_de
-FPGC_tb.fpgc.fsx.displayGen.o_frame
-FPGC_tb.fpgc.fsx.displayGen.o_h[11:0]
-FPGC_tb.fpgc.fsx.displayGen.o_v[11:0]
-FPGC_tb.fpgc.fsx.displayGen.o_hs
-FPGC_tb.fpgc.fsx.displayGen.o_vs
-@200
--
 -FSX
 @28
 FPGC_tb.fpgc.fsx.vga_clk
+@29
 FPGC_tb.fpgc.fsx.vga_blk
+@28
 FPGC_tb.fpgc.fsx.vga_vs
 FPGC_tb.fpgc.fsx.vga_hs
 FPGC_tb.fpgc.fsx.vga_r[2:0]
 FPGC_tb.fpgc.fsx.vga_g[2:0]
 FPGC_tb.fpgc.fsx.vga_b[1:0]
-@200
--
-@28
-FPGC_tb.fpgc.fsx.fetchBGnameTable
-FPGC_tb.fpgc.fsx.fetchPatternTable
-FPGC_tb.fpgc.fsx.fetchBGPaletteTable
-FPGC_tb.fpgc.fsx.fetchPaletteTable
-FPGC_tb.fpgc.fsx.inDisplayArea
-FPGC_tb.fpgc.fsx.o_frame
-@200
--
-@28
-FPGC_tb.fpgc.fsx.ontile
-FPGC_tb.fpgc.fsx.ontile_h
-FPGC_tb.fpgc.fsx.ontile_v
-@200
--
-@24
-FPGC_tb.fpgc.fsx.CounterX[11:0]
-FPGC_tb.fpgc.fsx.CounterY[11:0]
-FPGC_tb.fpgc.fsx.alwaysVpixel[11:0]
-FPGC_tb.fpgc.fsx.alwaysVtilePixel[2:0]
-FPGC_tb.fpgc.fsx.currentHtilePixel[2:0]
-FPGC_tb.fpgc.fsx.currentVtilePixel[2:0]
-FPGC_tb.fpgc.fsx.paletteID[3:0]
-FPGC_tb.fpgc.fsx.reversevram32_q[31:0]
-FPGC_tb.fpgc.fsx.stateCounter[1:0]
-FPGC_tb.fpgc.fsx.tileClock
-FPGC_tb.fpgc.fsx.tileID[7:0]
-FPGC_tb.fpgc.fsx.vram8_addr[11:0]
-FPGC_tb.fpgc.fsx.vram8_q[7:0]
-FPGC_tb.fpgc.fsx.vram32_addr[11:0]
-@28
-FPGC_tb.fpgc.fsx.vram32_q[31:0]
 [pattern_trace] 1
 [pattern_trace] 0

@@ -33,6 +33,8 @@
 
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/Keyboard.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/NESpadReader.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/TonePlayer.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/CTCtimer.v"
 
 //Define testmodule
 module FPGC_tb;
@@ -40,7 +42,10 @@ module FPGC_tb;
 //I/O
 reg clk;
 reg nreset;
-reg int1, int2, int3, int4;
+
+//ToneGenerator
+wire tone1_out;
+wire tone2_out;
 
 //SPI Flash
 wire spi_clk;
@@ -132,11 +137,9 @@ FPGC4 fpgc (
 .spi_cs 	(spi_cs),
 
 
-//Interrupts
-.int1           (int1), 
-.int2           (int2), 
-.int3           (int3), 
-.int4           (int4)
+//ToneGenerators
+.tone1_out(tone1_out),
+.tone2_out(tone2_out)
 );
 
 
@@ -145,17 +148,13 @@ begin
     //Dump everything for GTKwave
     $dumpfile("/home/bart/Documents/FPGA/FPGC4/Verilog/output/wave.vcd");
     $dumpvars;
-    int1 = 0;
-    int2 = 0;
-    int3 = 0;
-    int4 = 0;
     clk = 0;
     nreset = 1;
 
     repeat(497) #20 clk = ~clk; //25MHz
-    //int3 = 1;
+
     repeat(100) #20 clk = ~clk; //25MHz
-    //int3 = 0;
+
     repeat(30000) #20 clk = ~clk; //25MHz
 
     #1 $finish;

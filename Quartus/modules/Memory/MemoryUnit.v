@@ -49,7 +49,16 @@ module MemoryUnit(
     
     //(S)NESpad
     output          nesc, nesl,
-    input           nesd
+    input           nesd,
+
+    //CTCtimers
+    output          t1_interrupt,
+    output          t2_interrupt,
+    output          t3_interrupt,
+
+    //ToneGenerators
+    output          tone1_out,
+    output          tone2_out
 );  
 
     //SDRAMcontroller, SPIreader, vram, and I/O should work on negedge clock
@@ -144,6 +153,66 @@ Keyboard keyboard(
 .buttonState(buttonState)   //pressed state of all buttons (79 buttons)
 );
 
+//----------------CTC timer 1----------------------
+//CTC timer 1 I/O
+wire [7:0] t1_controlReg;
+wire [31:0] t1_value;
+
+CTCtimer ctcTimer1(
+.clk(clk),
+.timerValue(t1_value),
+.controlReg(t1_controlReg),
+.interrupt(t1_interrupt)
+);
+
+//----------------CTC timer 2----------------------
+//CTC timer 2 I/O
+wire [7:0] t2_controlReg;
+wire [31:0] t2_value;
+
+CTCtimer ctcTimer2(
+.clk(clk),
+.timerValue(t2_value),
+.controlReg(t2_controlReg),
+.interrupt(t2_interrupt)
+);
+
+//----------------CTC timer 3----------------------
+//CTC timer 3 I/O
+wire [7:0] t3_controlReg;
+wire [31:0] t3_value;
+
+CTCtimer ctcTimer3(
+.clk(clk),
+.timerValue(t3_value),
+.controlReg(t3_controlReg),
+.interrupt(t3_interrupt)
+);
+
+//---------------Tone Generator 1-------------------
+//CTC timer 3 I/O
+wire [6:0] tg1_note;
+wire tg1_we;
+
+TonePlayer tonePlayer1(
+.clk(clk),
+.we(tg1_we),
+.noteID(tg1_note),
+.lineOut(tone1_out)
+);
+
+//---------------Tone Generator 2-------------------
+//Tone Generator 2 I/O
+wire [6:0] tg2_note;
+wire tg2_we;
+
+TonePlayer tonePlayer2(
+.clk(clk),
+.we(tg2_we),
+.noteID(tg2_note),
+.lineOut(tone2_out)
+);
+
 
 assign initDone         = (sr_initDone && sd_initDone);
 
@@ -165,6 +234,18 @@ assign vram8_cpu_d      = (address >= 27'hC00420 && address < 27'hC02422)   ? da
 assign vram8_cpu_we     = (address >= 27'hC00420 && address < 27'hC02422)   ? we                        : 1'd0;
 
 assign rom_addr         = (address >= 27'hC02422 && address < 27'hC02622)   ? address - 27'hC02422      : 9'd0;
+
+assign t1_value         = (address == 27'hC02626)                           ? data                      : 32'd0;
+assign t1_controlReg    = (address == 27'hC02627)                           ? data                      : 8'd0;
+assign t2_value         = (address == 27'hC02628)                           ? data                      : 32'd0;
+assign t2_controlReg    = (address == 27'hC02629)                           ? data                      : 8'd0;
+assign t3_value         = (address == 27'hC0262A)                           ? data                      : 32'd0;
+assign t3_controlReg    = (address == 27'hC0262B)                           ? data                      : 8'd0;
+
+assign tg1_note         = (address == 27'hC0262C)                           ? data                      : 7'd0;
+assign tg1_we           = (address == 27'hC0262C)                           ? 1'b1                      : 1'b0;
+assign tg2_note         = (address == 27'hC0262D)                           ? data                      : 7'd0;
+assign tg2_we           = (address == 27'hC0262D)                           ? 1'b1                      : 1'b0;
 
 initial
 begin
@@ -238,6 +319,20 @@ begin
     begin
         busy <= 0;
         q <= buttonState[78:64];
+    end
+
+    //CTCtimers and NotePlayers
+    if (busy && address >= 27'hC02626 && address < 27'hC0262E)
+    begin
+        busy <= 0;
+        q <= 32'd0;
+    end
+
+    //Prevent lockups
+    if (busy && address >= 27'hC0262E)
+    begin
+        busy <= 0;
+        q <= 32'd0;
     end
 end
 

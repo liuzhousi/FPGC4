@@ -34,11 +34,8 @@ module FPGC4(
     inout           spi_wp, 
     inout           spi_hold,
 
-    //Interrupts
-    input           int1,
-    input           int2,
-    input           int3,
-    input           int4
+    output          tone1_out,
+    output          tone2_out
 
 );
 
@@ -198,6 +195,9 @@ wire        start;
 wire        initDone;
 wire        busy;
 wire [31:0] q;
+wire        t1_interrupt;
+wire        t2_interrupt;
+wire        t3_interrupt;
 
 MemoryUnit mu(
 //clocks
@@ -255,7 +255,14 @@ MemoryUnit mu(
 //(S)NESpad
 .nesc(nesc), 
 .nesl(nesl),
-.nesd(nesd)
+.nesd(nesd),
+
+.t1_interrupt(t1_interrupt),
+.t2_interrupt(t2_interrupt),
+.t3_interrupt(t3_interrupt),
+
+.tone1_out(tone1_out),
+.tone2_out(tone2_out)
 );
 
 
@@ -265,9 +272,9 @@ MemoryUnit mu(
 CPU cpu(
 .clk            (clk),
 .reset          (reset),
-.int1           (int1), 
-.int2           (int2), 
-.int3           (int3), 
+.int1           (t1_interrupt), 
+.int2           (t2_interrupt), 
+.int3           (t3_interrupt), 
 .int4           (frameDrawn),
 .address        (address),
 .data           (data),

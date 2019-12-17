@@ -16,13 +16,13 @@ These are the current specifications of the FPGC4:
 - 9MHz GPU clock
 - 16MiB SPI flash. 32bit addresses. Read only
 - 32MiB SDRAM @ 25MHz. 32bit addresses. Readable and writeable
-- 8.24KB VRAM (SRAM). 1024+16 addresses @ 32bit and 2x2040 addresses @ 8bit
+- 8.24KB VRAM (SRAM). TODO(fix info) 1024+16 addresses @ 32bit and 2x2040 addresses @ 8bit
 - 2KiB ROM as bootloader. 32bit addresses
 - 16 32bit registers
 - 32bit instructions
 - 27bit program counter, for a possible future address space of 0.5GiB
-- 480x272 resolution with 256 colors (60 (currently 57) x 34 tiles of 8x8 pixels)
-- rendered on a 4.3 inch TFT screen (with the worst viewing angle EVER!) over a 40pin TTL interface
+- 480x256 resolution with 256 colors (60 x 32 tiles of 8x8 pixels)
+- rendered on a 480x272 4.3 inch TFT screen (with the worst viewing angles EVER!) over a 40pin TTL interface
 
 ### Computer Architecture
 The FPGC4 consists of three main parts: the CPU, GPU and MU.
@@ -75,6 +75,7 @@ There are two different memory maps. One for the CPU and one for the GPU.
 
 ##### CPU memory map
 This memory map is used when the CPU accesses memory
+TODO(fix addresses)
 
 ```
 $000000 +------------------------+ 
@@ -123,6 +124,7 @@ $C01600 +------------------------+
 
 ##### GPU memory map
 This memory map is only used in the GPU
+TODO(fix addresses)
 ```
 VRAM32
 $000 +------------------------+ 
@@ -303,17 +305,15 @@ Internally on the FPGA, 2KiB of SRAM/Block RAM is used as ROM. It contains the b
 VRAM32 is the 32 bit wide dual port dual clock video RAM used by the CPU and the GPU. It contains the pattern table and palette table for the GPU. It is implemented using internal SRAM/Block RAM.
 
 ##### VRAM8
-VRAM8 is the 8 bit wide dual port dual clock video RAM used by the CPU and the GPU. It contains the background tile table and background color table for the GPU. It is implemented using internal SRAM/Block RAM. Currently there are no tables for sprites or registers (for things like scrolling or flipping), because these are not implemented yet in the FSX2.
+VRAM8 is the 8 bit wide dual port dual clock video RAM used by the CPU and the GPU. It contains the background tile table, background color table, window tile table and window color table for the GPU. It is implemented using internal SRAM/Block RAM. The final two addresses are the horizontal tile offset and horizontal pixel offset for scrolling.
 
 ##### I/O
 Currently there are three I/O devices that can be accessed by the MU. (Note: all three still have yet to be implemented)
 
 ###### NESpad
-TODO reimplement this.
 A NES/SNES controller reader. Tested on both NES and SNES controllers. All button pressed states are written to a 16 bit register, and is readable from the memory map. The button values are stored on the right side of the 32 bit word.
 
 ###### PS/2 Keyboard
-TODO reimplement this.
 A PS/2 Keyboard reader. Reads 79 buttons from the keyboard. The pressed states are readable from three adjacent addresses on the memory map.
 
 ###### GPIO
@@ -321,7 +321,9 @@ TODO implement this.
 This one address on the memory map is mapped to GPIO pins on the FPGA. Only the right 16 bits are used. The left 8 of these 16 bits are read only and are the state of the 8 input ports. The right 8 of these 16 bits are the state of the 8 output ports. The output ports can also be read.
 
 #### GPU (FSX2)
-The GPU generates a 480x272@60-ish hz TTL signal (or as I like to call it, digital VGA) using a pixel clock of 9MHz. For each tile, the GPU has to read the BG Tile table, Pattern table, BG Color table and Palette table (in this order) to know which color to draw. This is heavily inspired by the PPU of the NES, which uses the same principle. One big difference is that I currently implemented a line buffer which is being filled each line. This line buffer takes a lot of space and delay in the FPGA, and is temporarily. The color contents of the current pixel are then read from this line buffer. Because the linebuffer is only being filled when the pixel clock is on the most left pixel (outside blanking), the first tile cannot be shown. Therefore the actual horizontal resolution is currently 480-16, which means 58 tiles instead of 60. Currently the code is a complete mess with registers clocking the VRAM and bad things like that. Eventually I will rewrite everything specifically for this 480x272 display (or another if I can find a better one). Then I can also think about sprite rendering and HW scrolling support, which are not available now.
+TODO(rewrite this for new gpu)
+...
+The GPU generates a 480x272@60-ish hz TTL signal (or as I like to call it, digital VGA) using a pixel clock of 9MHz. For each tile, the GPU has to read the BG Tile table, Pattern table, BG Color table, Palette table, Window Tile table, Pattern table, Window Color table and Palette table (in this order) to know which color to draw. This is heavily inspired by the PPU of the NES, which uses the same principle. One big difference is that I currently implemented a line buffer which is being filled each line. This line buffer takes a lot of space and delay in the FPGA, and is temporarily. The color contents of the current pixel are then read from this line buffer. Because the linebuffer is only being filled when the pixel clock is on the most left pixel (outside blanking), the first tile cannot be shown. Therefore the actual horizontal resolution is currently 480-16, which means 58 tiles instead of 60. Currently the code is a complete mess with registers clocking the VRAM and bad things like that. Eventually I will rewrite everything specifically for this 480x272 display (or another if I can find a better one). Then I can also think about sprite rendering and HW scrolling support, which are not available now.
 
 The GPU currently allows for 57x34 tiles of 8x8 pixels with 8 bit colors.
 The pattern table allows for 256 different tiles.
@@ -358,7 +360,7 @@ And that translates to these instructions:
 00001001100000000001000100000001 //Compute r1 + 1 and write result to r1
 00001001100000000001001000000010 //Compute r2 + 1 and write result to r2
 01100000000000000010001000110000 //If r2 == r3, then jump to offset 2
-10010001100000000010100000000110 //Jump to constant address 3 of ROM
+10010001100000000100100001001010 //Jump to constant address 3 of ROM
 10010000000000000000000000000000 //Jump to constant address 0
 11111111111111111111111111111111 //Halt
 ```
@@ -520,17 +522,18 @@ All Verilog related files are in the Verilog folder. The Quartus files are in th
 - Assembler updated for B322
 - Tested in hardware, simple bootloader written that copies some SPI data to SDRAM and jumps to SDRAM. Somehow it worked first try, which means the SPI and SDRAM timings are somewhat correct
 - Created documentation
+- Bootloader works
+- Added SNES and Keyboard back
+- Rewritten FSX2
 
 ### Future plans
 These are kinda ordered based on priority
 
-- Finish complete bootloader code (with or without splash screen)
-- Add SNES, PS/2 and GPIO I/O back from FPGC3 to MU
-- Change Regbank to two seperate 16 bit M9K units
-- Rebuild and improve FSX
-- Add sprites
-- Add hardware scrolling
+- Update documentation again
+- Add GPIO I/O back to MU
 - Add "library" support for assembler (Using include copy paste?)
+- Create a logo
+- Add boot screen animation in bootloader
 - Add mass storage (SDCARD)
 - Create a pattern and palette table generator
 - Change SPI Flash for SDCARD

@@ -48,14 +48,14 @@ module FPGC4(
 	 
     output led,
 
-    output          tone1_out,
-    output          tone2_out
+    output          tone1_out1, tone1_out2, tone1_out3, tone1_out4,
+    output          tone2_out1, tone2_out2, tone2_out3, tone2_out4
 
 );
 
 wire frameDrawn;    //high when frame just rendered
                     //needs to be stabilized
-
+					  
 assign led = 1'b1;
 
 wire int1;
@@ -279,8 +279,14 @@ MemoryUnit mu(
 .t2_interrupt(t2_interrupt),
 .t3_interrupt(t3_interrupt),
 
-.tone1_out(tone1_out),
-.tone2_out(tone2_out)
+.tone1_out1(tone1_out1),
+.tone1_out2(tone1_out2),
+.tone1_out3(tone1_out3),
+.tone1_out4(tone1_out4),
+.tone2_out1(tone2_out1),
+.tone2_out2(tone2_out2),
+.tone2_out3(tone2_out3),
+.tone2_out4(tone2_out4)
 );
 
 

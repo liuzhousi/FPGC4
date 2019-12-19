@@ -57,8 +57,8 @@ module MemoryUnit(
     output          t3_interrupt,
 
     //ToneGenerators
-    output          tone1_out,
-    output          tone2_out
+    output          tone1_out1, tone1_out2, tone1_out3, tone1_out4,
+    output          tone2_out1, tone2_out2, tone2_out3, tone2_out4
 );  
 
     //SDRAMcontroller, SPIreader, vram, and I/O should work on negedge clock
@@ -191,26 +191,32 @@ CTCtimer ctcTimer3(
 
 //---------------Tone Generator 1-------------------
 //CTC timer 3 I/O
-wire [6:0] tg1_note;
+wire [31:0] tg1_note;
 wire tg1_we;
 
 TonePlayer tonePlayer1(
 .clk(clk),
 .we(tg1_we),
 .noteID(tg1_note),
-.lineOut(tone1_out)
+.lineOut1(tone1_out1),
+.lineOut2(tone1_out2),
+.lineOut3(tone1_out3),
+.lineOut4(tone1_out4)
 );
 
 //---------------Tone Generator 2-------------------
 //Tone Generator 2 I/O
-wire [6:0] tg2_note;
+wire [31:0] tg2_note;
 wire tg2_we;
 
 TonePlayer tonePlayer2(
 .clk(clk),
 .we(tg2_we),
 .noteID(tg2_note),
-.lineOut(tone2_out)
+.lineOut1(tone2_out1),
+.lineOut2(tone2_out2),
+.lineOut3(tone2_out3),
+.lineOut4(tone2_out4)
 );
 
 
@@ -242,9 +248,9 @@ assign t2_controlReg    = (address == 27'hC02629)                           ? da
 assign t3_value         = (address == 27'hC0262A)                           ? data                      : 32'd0;
 assign t3_controlReg    = (address == 27'hC0262B)                           ? data                      : 8'd0;
 
-assign tg1_note         = (address == 27'hC0262C)                           ? data                      : 7'd0;
+assign tg1_note         = (address == 27'hC0262C)                           ? data                      : 32'd0;
 assign tg1_we           = (address == 27'hC0262C)                           ? 1'b1                      : 1'b0;
-assign tg2_note         = (address == 27'hC0262D)                           ? data                      : 7'd0;
+assign tg2_note         = (address == 27'hC0262D)                           ? data                      : 32'd0;
 assign tg2_we           = (address == 27'hC0262D)                           ? 1'b1                      : 1'b0;
 
 initial

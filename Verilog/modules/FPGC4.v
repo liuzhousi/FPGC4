@@ -34,8 +34,8 @@ module FPGC4(
     inout           spi_wp, 
     inout           spi_hold,
 
-    output          tone1_out,
-    output          tone2_out
+    output          tone1_out1, tone1_out2, tone1_out3, tone1_out4,
+    output          tone2_out1, tone2_out2, tone2_out3, tone2_out4
 
 );
 
@@ -261,8 +261,14 @@ MemoryUnit mu(
 .t2_interrupt(t2_interrupt),
 .t3_interrupt(t3_interrupt),
 
-.tone1_out(tone1_out),
-.tone2_out(tone2_out)
+.tone1_out1(tone1_out1),
+.tone1_out2(tone1_out2),
+.tone1_out3(tone1_out3),
+.tone1_out4(tone1_out4),
+.tone2_out1(tone2_out1),
+.tone2_out2(tone2_out2),
+.tone2_out3(tone2_out3),
+.tone2_out4(tone2_out4)
 );
 
 

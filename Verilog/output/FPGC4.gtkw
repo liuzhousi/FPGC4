@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v (Modified by Bart for High DPI displays) 3.3.103 (w)1999-2019 BSI
-[*] Tue Dec 17 19:06:57 2019
+[*] Tue Dec 17 21:17:05 2019
 [*]
 [dumpfile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/wave.vcd"
-[dumpfile_mtime] "Tue Dec 17 19:05:39 2019"
-[dumpfile_size] 4175081
+[dumpfile_mtime] "Tue Dec 17 20:18:37 2019"
+[dumpfile_size] 6362647
 [savefile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/FPGC4.gtkw"
-[timestart] 0
+[timestart] 75060000
 [size] 2736 1716
 [pos] -1 -1
-*-23.838461 538140000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-22.838461 114560000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] FPGC_tb.
 [treeopen] FPGC_tb.fpgc.
 [treeopen] FPGC_tb.fpgc.cpu.
@@ -152,6 +152,57 @@ FPGC_tb.fpgc.cpu.alu.y[31:0]
 FPGC_tb.fpgc.cpu.alu.bea
 FPGC_tb.fpgc.cpu.alu.bga
 FPGC_tb.fpgc.cpu.alu.skip
+@200
+-
+-CTCtimer1
+@24
+FPGC_tb.fpgc.mu.t1_controlReg[7:0]
+FPGC_tb.fpgc.mu.t1_interrupt
+FPGC_tb.fpgc.mu.t1_value[31:0]
+@200
+-
+-CTCtimer2
+@24
+FPGC_tb.fpgc.mu.t2_controlReg[7:0]
+FPGC_tb.fpgc.mu.t2_interrupt
+FPGC_tb.fpgc.mu.t2_value[31:0]
+@200
+-
+-CTCtimer3
+@24
+FPGC_tb.fpgc.mu.t3_controlReg[7:0]
+FPGC_tb.fpgc.mu.t3_interrupt
+FPGC_tb.fpgc.mu.t3_value[31:0]
+@200
+-
+-Tone1
+@29
+FPGC_tb.fpgc.mu.tonePlayer1.clk
+@22
+FPGC_tb.fpgc.mu.tonePlayer1.counter_note[8:0]
+FPGC_tb.fpgc.mu.tonePlayer1.counter_octave[9:0]
+@c00024
+FPGC_tb.fpgc.mu.tg1_note[6:0]
+@28
+(0)FPGC_tb.fpgc.mu.tg1_note[6:0]
+(1)FPGC_tb.fpgc.mu.tg1_note[6:0]
+(2)FPGC_tb.fpgc.mu.tg1_note[6:0]
+(3)FPGC_tb.fpgc.mu.tg1_note[6:0]
+(4)FPGC_tb.fpgc.mu.tg1_note[6:0]
+(5)FPGC_tb.fpgc.mu.tg1_note[6:0]
+(6)FPGC_tb.fpgc.mu.tg1_note[6:0]
+@1401200
+-group_end
+@24
+FPGC_tb.fpgc.mu.tg1_we
+FPGC_tb.fpgc.mu.tone1_out
+@200
+-
+-Tone2
+@24
+FPGC_tb.fpgc.mu.tg2_note[6:0]
+FPGC_tb.fpgc.mu.tg2_note[6:0]
+FPGC_tb.fpgc.mu.tone2_out
 @200
 -
 -PC
@@ -308,9 +359,7 @@ FPGC_tb.fpgc.mu.rom_q[31:0]
 -FSX
 @28
 FPGC_tb.fpgc.fsx.vga_clk
-@29
 FPGC_tb.fpgc.fsx.vga_blk
-@28
 FPGC_tb.fpgc.fsx.vga_vs
 FPGC_tb.fpgc.fsx.vga_hs
 FPGC_tb.fpgc.fsx.vga_r[2:0]

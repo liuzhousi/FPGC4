@@ -1,5 +1,42 @@
 module TonePlayer(
     input clk,
+    input [31:0] noteID,
+    input we,
+    output lineOut1, lineOut2, lineOut3, lineOut4
+);
+
+SingleTonePlayer stp1(
+.clk(clk),
+.noteID(noteID[6:0]),
+.we(we),
+.lineOut(lineOut1)
+);
+
+SingleTonePlayer stp2(
+.clk(clk),
+.noteID(noteID[14:8]),
+.we(we),
+.lineOut(lineOut2)
+);
+
+SingleTonePlayer stp3(
+.clk(clk),
+.noteID(noteID[22:16]),
+.we(we),
+.lineOut(lineOut3)
+);
+
+SingleTonePlayer stp4(
+.clk(clk),
+.noteID(noteID[30:24]),
+.we(we),
+.lineOut(lineOut4)
+);
+
+endmodule
+
+module SingleTonePlayer(
+    input clk,
     input [6:0] noteID,
     input we,
     output reg lineOut

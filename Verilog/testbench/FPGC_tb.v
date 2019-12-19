@@ -44,8 +44,8 @@ reg clk;
 reg nreset;
 
 //ToneGenerator
-wire tone1_out;
-wire tone2_out;
+wire tone1_out1, tone1_out2, tone1_out3, tone1_out4;
+wire tone2_out1, tone2_out2, tone2_out3, tone2_out4;
 
 //SPI Flash
 wire spi_clk;
@@ -138,8 +138,14 @@ FPGC4 fpgc (
 
 
 //ToneGenerators
-.tone1_out(tone1_out),
-.tone2_out(tone2_out)
+.tone1_out1(tone1_out1),
+.tone1_out2(tone1_out2),
+.tone1_out3(tone1_out3),
+.tone1_out4(tone1_out4),
+.tone2_out1(tone2_out1),
+.tone2_out2(tone2_out2),
+.tone2_out3(tone2_out3),
+.tone2_out4(tone2_out4)
 );
 
 

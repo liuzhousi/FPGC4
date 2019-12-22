@@ -58,7 +58,12 @@ module MemoryUnit(
 
     //ToneGenerators
     output          tone1_out1, tone1_out2, tone1_out3, tone1_out4,
-    output          tone2_out1, tone2_out2, tone2_out3, tone2_out4
+    output          tone2_out1, tone2_out2, tone2_out3, tone2_out4,
+
+    //UART
+    output          uart_out,
+    output          uart_rx_interrupt,
+    input           uart_in
 );  
 
     //SDRAMcontroller, SPIreader, vram, and I/O should work on negedge clock
@@ -219,6 +224,32 @@ TonePlayer tonePlayer2(
 .lineOut4(tone2_out4)
 );
 
+//-------------------UART TX-----------------------
+//UART TX I/O
+wire r_Tx_DV, w_Tx_Done;
+wire [7:0] r_Tx_Byte;
+
+UARTtx uart_tx(
+.i_Clock    (clk),
+.i_Tx_DV    (r_Tx_DV),
+.i_Tx_Byte  (r_Tx_Byte),
+.o_Tx_Active(),
+.o_Tx_Serial(uart_out),
+.o_Tx_Done_l(w_Tx_Done)
+);
+
+//-------------------UART RX-----------------------
+//UART RX I/O
+wire [7:0] w_Rx_Byte;
+
+
+UARTrx uart_rx(
+.i_Clock    (clk),
+.i_Rx_Serial(uart_in),
+.o_Rx_DV    (uart_rx_interrupt),
+.o_Rx_Byte  (w_Rx_Byte)
+);
+
 
 assign initDone         = (sr_initDone && sd_initDone);
 
@@ -252,6 +283,9 @@ assign tg1_note         = (address == 27'hC0262C)                           ? da
 assign tg1_we           = (address == 27'hC0262C)                           ? 1'b1                      : 1'b0;
 assign tg2_note         = (address == 27'hC0262D)                           ? data                      : 32'd0;
 assign tg2_we           = (address == 27'hC0262D)                           ? 1'b1                      : 1'b0;
+
+assign r_Tx_DV          = (address == 27'hC0262E)                           ? 1'b1                      : 1'b0;
+assign r_Tx_Byte        = (address == 27'hC0262E)                           ? data                      : 8'd0;
 
 initial
 begin
@@ -334,8 +368,25 @@ begin
         q <= 32'd0;
     end
 
+    //UART TX
+    if (busy && address == 27'hC0262E)
+    begin
+        if (w_Tx_Done)
+        begin
+            busy <= 0;
+            q <=32'd0;
+        end
+    end
+
+    //UART TX
+    if (busy && address == 27'hC0262F)
+    begin
+        busy <= 0;
+        q <= w_Rx_Byte;
+    end
+
     //Prevent lockups
-    if (busy && address >= 27'hC0262E)
+    if (busy && address >= 27'hC02630)
     begin
         busy <= 0;
         q <= 32'd0;

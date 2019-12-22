@@ -789,7 +789,7 @@ def main():
     parser.add_argument('-l', type=hex_dec, dest='length', default=DEFAULT_FLASH_SIZE,
                         help='length to read/write in bytes, use -1 to write entire file')
 
-    parser.add_argument('--rate', type=int, dest='baud_rate', default=57600,
+    parser.add_argument('--rate', type=int, dest='baud_rate', default=115200,
                         help='baud-rate of serial connection')
     parser.add_argument('--flash-offset', type=hex_dec, dest='flash_offset', default=0,
                         help='offset for flash read/write in bytes')

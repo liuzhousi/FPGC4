@@ -21,8 +21,11 @@ These are the current specifications of the FPGC4:
 - 16 32bit registers
 - 32bit instructions
 - 27bit program counter, for a possible future address space of 0.5GiB
-- 480x256 resolution with 256 colors (60 x 32 tiles of 8x8 pixels)
-- rendered on a 480x272 4.3 inch TFT screen (with the worst viewing angles EVER!) over a 40pin TTL interface
+- 480x256 frames with 256 colors (60 x 32 tiles of 8x8 pixels)
+- Frames rendered on a 480x272 4.3 inch TFT screen (with the worst viewing angles EVER!) over a 40pin TTL interface
+- Three CTC timers
+- 4 interrupt pins (currently attached to all three timers and the frameDrawn signal of the FSX2)
+- 2 square wave tone generators with each 4 tones
 
 ### Computer Architecture
 The FPGC4 consists of three main parts: the CPU, GPU and MU.
@@ -75,7 +78,6 @@ There are two different memory maps. One for the CPU and one for the GPU.
 
 ##### CPU memory map
 This memory map is used when the CPU accesses memory
-TODO(fix addresses)
 
 ```
 $000000 +------------------------+ 
@@ -96,58 +98,91 @@ $C00000 +------------------------+
         |                        | 
         | $C04000                | 
         |     Palette Table      | 
-        |                $C0040F | 
-        |                        | $C0040F 
-$C00410 +------------------------+ 
+        |                $C0041F | 
+        |                        | $C0041F 
+$C00420 +------------------------+ 
         |                        | 
         |         VRAM8          | 
         |                        | 
-        | $C00410                | 
-        |     Pattern Table      | 
-        |                $C00C07 | 
+        | $C00420                | 
+        |    BG Pattern Table    | 
+        |                $C00C1F | 
         |                        | 
-        | $C00C08                | 
-        |     Palette Table      | 
-        |                $C013FF | 
-        |                        | $C013FF 
-$C01400 +------------------------+ 
+        | $C00C20                | 
+        |    BG Palette Table    | 
+        |                $C0141F | 
+        |                        | $C02421 
+        | $C01420                | 
+        |  Window Pattern Table  | 
+        |                $C01C1F | 
+        |                        | 
+        | $C01C20                | 
+        |  Window Palette Table  | 
+        |                $C0241F | 
+        | $C02420                | 
+        |       Parameters       | 
+        |                $C02421 |  
+        |                        | $C02421 
+$C02422 +------------------------+ 
         |                        | 
         |          ROM           | 
-        |                        | $C015FF 
-$C01600 +------------------------+ 
+        |                        | $C02621
+$C02622 +------------------------+ 
         |                        | 
         |          I/O           | 
-        |                        | $?????? 
+        |                        |
+        | NESpad         $C02622 |
+        | Keyboard[0]    $C02623 |
+        | Keyboard[1]    $C02624 |
+        | Keyboard[2]    $C02625 |
+        | Timer1_val     $C02626 |
+        | Timer1_ctrl    $C02627 |
+        | Timer2_val     $C02628 |
+        | Timer2_ctrl    $C02629 |
+        | Timer3_val     $C0262A |
+        | Timer3_ctrl    $C0262B |
+        | TonePlayer1    $C0262C |
+        | TonePlayer2    $C0262D |
+        | GPIO (TODO)    $C0262E |
+        |                        |
+        |                        | $C0262E 
         +------------------------+ 
 
 ```
 
 ##### GPU memory map
 This memory map is only used in the GPU
-TODO(fix addresses)
 ```
 VRAM32
-$000 +------------------------+ 
-     |                        | 
-     |     Pattern Table      | 
-     |                        | $3FF
-$400 +------------------------+ 
-     |                        |
-     |     Palette Table      |
-     |                        | $40F
-     +------------------------+
+$000  +------------------------+ 
+      |                        | 
+      |     Pattern Table      | 
+      |                        | $3FF
+$400  +------------------------+ 
+      |                        |
+      |     Palette Table      |
+      |                        | $41F
+      +------------------------+
 
 
 VRAM8
-$000 +------------------------+
-     |                        | 
-     |     BG Tile Table      | 
-     |                        | $7F7
-$7F8 +------------------------+ 
-     |                        |
-     |     BG Color Table     |
-     |                        | $FF0
-     +------------------------+
+$000  +------------------------+
+      |                        | 
+      |     BG Tile Table      | 
+      |                        | $7FF
+$800  +------------------------+ 
+      |                        |
+      |     BG Color Table     |
+      |                        | $FFF
+$1000 +------------------------+
+      |                        | 
+      |   Window Tile Table    | 
+      |                        | $17FF
+$1800 +------------------------+ 
+      |                        |
+      |   Window Color Table   |
+      |                        | $1FFF
+      +------------------------+
 ```
 
 #### CPU (B322)
@@ -241,9 +276,9 @@ The 16 32 bit registers have the current functions:
 The register bank has two read ports and one write port. Internally on the FPGA, the registers are not implemented in block RAM, but I might change this in the future to save elements.
 
 ###### Stack
-Stack memory with internal stack pointer.
+Stack memory with internal stack pointer. The stack is mostly used for backing up and restoring registers in interrupt handlers or functions. In combination with the SavPC instruction, one can jump to (and return from) functions.
 
-The stack is 1024 words deep. The stack pointer is not accessable by the rest of the CPU. The stack pointer wraps around in case of a push when the stack is full or in case of a pop when the stack is empty.
+The stack is 1024 words deep. The stack pointer is not accessable by the rest of the CPU. The pointer wraps around in case of a push when the stack is full or in case of a pop when the stack is empty.
 
 ###### ALU
 Can execute 16 different operations on two 32 bit inputs. Has two flags.
@@ -289,12 +324,12 @@ The MU, or memory unit, handles all memory access between the CPU and all the di
 The MU is connected to the following memories:
 
 ##### SPI flash
-The SPI flash contains the program of FPGC4, since it is located on a modular chip which can be easily removed and then reprogrammed by something like an Arduino. The size of the flash we use is currently 16MiB. The MU makes use of an SPI flash controller which accesses the flash chip in quad SPI mode with continuous reading for the fastest performance possible. The maximum speed without modifying the amount of dummy clocks for each read is 25MHz, which is currently the speed of most of the FPGC4, which is very convenient. Only read instructions are implemented, so no writing or erasing is possible on the FPGC4. Because of the SPI interface, it takes many cycles to read one 32 bit instruction. Therefore, the contents are copied to the faster SDRAM by the bootloader. While the SPI flash chip uses 8 bit addresses internally, the controller can be addressed by 32 bit words.
+The SPI flash contains the program of FPGC4, since it is located on a modular chip which can be easily removed and then reprogrammed by something like an Arduino. The size of the flash we use is currently 16MiB. The MU makes use of an SPI flash controller which accesses the flash chip in quad SPI mode with continuous reading for the fastest performance possible. The maximum speed without modifying the amount of dummy clocks for each read is 25MHz, which is currently the speed of most of the FPGC4, which is very convenient. Only read instructions are implemented, so no writing or erasing is possible on the FPGC4. Because of the SPI interface, it takes many cycles to read one 32 bit instruction. Therefore, the contents are copied to the faster SDRAM by the bootloader. While the SPI flash chip uses 8 bit addresses internally, the controller can be addressed by 32 bit words. The values of 'empty' addresses are all ones.
 
 To test the timing system, I added a simulation model of a W25Q128JV SPI chip, which is compatible with the W25Q128BV I use in hardware. The SPI flash controller reads from this chip when a trigger occurs. When done reading it sets a recvDone signal high. Before all of this can happen, the chip has to be initialized. This is done by sending a 'reset continuous reading' command and a read command with the continuous reading bits set. This way each read does not have to start with an 8 cycle instruction. After initialization, an initDone signal is set high. When the MU gets a request from the CPU to read from SPI flash while the chip is not initialized yet, then the MU will wait until initialization is done before reading.
 
 ##### SDRAM
-The SDRAM is used as the main memory for the FPGC4. It has a size of 32MiB. Since it is SDRAM, it requires a controller that handles all access and refreshes. The MU contains such controller to interface with the SDRAM. During initialization, the chip is set to a CAS latency of 2 and a programmable burst length of 2 (since we have 32bit words). The controller also handles refreshes. To reduce the amount of latency, the MU sets its busy flag low right after the read data is available or the written data is sent to the SDRAM chip. This way the CPU does not have to wait for row closing operations to be performed. If the MU gets a request from the CPU to read from or write to SDRAM, while the SDRAM controller is busy, then the MU will wait until the SDRAM controller is ready. While the SDRAM chip uses 16 bit addresses internally, the controller can be addressed by 32 bit words.
+The SDRAM is used as the main memory for the FPGC4. It has a size of 32MiB. Since it is SDRAM, it requires a controller that handles all access and refreshes. The MU contains such controller to interface with the SDRAM. During initialization, the chip is set to a CAS latency of 2 and a programmable burst length of 2 (since we have 32bit words). The controller also handles refreshes. To reduce the amount of latency, the MU sets its busy flag low right after the read data is available or the written data is sent to the SDRAM chip. This way the CPU does not have to wait for row closing operations to be performed. If the MU gets a request from the CPU to read from or write to SDRAM, while the SDRAM controller is busy, then the MU will wait until the SDRAM controller is ready. While the SDRAM chip uses 16 bit addresses internally, the controller can be addressed by 32 bit words. The data of the SDRAM at powerup is undefined, but probably zero.
 
 The first addresses of the SDRAM contain the program copied from SPI flash by the bootloader. I also added a simulation model of the SDRAM to the project. The currently used SDRAM chip is the Micron MT48LC16M16A2. The Winbond SDRAM chip will be tested later.
 
@@ -303,26 +338,53 @@ Internally on the FPGA, 2KiB of SRAM/Block RAM is used as ROM. It contains the b
 
 ##### VRAM32
 VRAM32 is the 32 bit wide dual port dual clock video RAM used by the CPU and the GPU. It contains the pattern table and palette table for the GPU. It is implemented using internal SRAM/Block RAM.
+The values of this memory at powerup are all zero.
 
 ##### VRAM8
 VRAM8 is the 8 bit wide dual port dual clock video RAM used by the CPU and the GPU. It contains the background tile table, background color table, window tile table and window color table for the GPU. It is implemented using internal SRAM/Block RAM. The final two addresses are the horizontal tile offset and horizontal pixel offset for scrolling.
+The values of this memory at powerup are all zero.
 
 ##### I/O
-Currently there are three I/O devices that can be accessed by the MU. (Note: all three still have yet to be implemented)
+Several registers of I/O devices are mapped to the I/O memory block
 
 ###### NESpad
-A NES/SNES controller reader. Tested on both NES and SNES controllers. All button pressed states are written to a 16 bit register, and is readable from the memory map. The button values are stored on the right side of the 32 bit word.
+A NES/SNES controller reader. Tested with both NES and SNES controllers. All button pressed states are written to a 16 bit register, and is readable from the memory map. The button values are stored on the right side of the 32 bit word.
+```
+TODO: Test the button values!!!
+Button | Bit
+------------------
+A      | 00000000000X
+B      | 0000000000X0
+Sel    | 000000000X00
+Start  | 00000000X000
+Up     | 0000000X0000
+Down   | 000000X00000
+Left   | 00000X000000
+Right  | 0000X0000000
+X      | 000X00000000
+Y      | 00X000000000
+L      | 0X0000000000
+R      | X00000000000
+```
 
 ###### PS/2 Keyboard
 A PS/2 Keyboard reader. Reads 79 buttons from the keyboard. The pressed states are readable from three adjacent addresses on the memory map.
+```
+TODO: Rethink this way of having keyboard buttons, and change the layout of all buttons
+      Then, write a table here with all the buttons with bit addresses
+```
 
 ###### GPIO
 TODO implement this.
 This one address on the memory map is mapped to GPIO pins on the FPGA. Only the right 16 bits are used. The left 8 of these 16 bits are read only and are the state of the 8 input ports. The right 8 of these 16 bits are the state of the 8 output ports. The output ports can also be read.
+```
+TODO: Make a list pins with bit value and in/out
+```
 
 #### GPU (FSX2)
+```
 TODO(rewrite this for new gpu)
-...
+```
 The GPU generates a 480x272@60-ish hz TTL signal (or as I like to call it, digital VGA) using a pixel clock of 9MHz. For each tile, the GPU has to read the BG Tile table, Pattern table, BG Color table, Palette table, Window Tile table, Pattern table, Window Color table and Palette table (in this order) to know which color to draw. This is heavily inspired by the PPU of the NES, which uses the same principle. One big difference is that I currently implemented a line buffer which is being filled each line. This line buffer takes a lot of space and delay in the FPGA, and is temporarily. The color contents of the current pixel are then read from this line buffer. Because the linebuffer is only being filled when the pixel clock is on the most left pixel (outside blanking), the first tile cannot be shown. Therefore the actual horizontal resolution is currently 480-16, which means 58 tiles instead of 60. Currently the code is a complete mess with registers clocking the VRAM and bad things like that. Eventually I will rewrite everything specifically for this 480x272 display (or another if I can find a better one). Then I can also think about sprite rendering and HW scrolling support, which are not available now.
 
 The GPU currently allows for 57x34 tiles of 8x8 pixels with 8 bit colors.
@@ -331,7 +393,7 @@ The palette table allows for 16 different palettes with four colors per palette.
 Each address in the background tile table and the background color table is mapped to one tile of the 57x34 tiles (actually 60x34 tiles, but the last 3x24 tiles are not used)
 
 ## Bootloader code
-The bootloader is the first thing that is executed by the CPU. The bootloader is used to copy data from the slow SPI flash to the faster SDRAM, and to jump to address 0 on the SDRAM. Since the bootloader has room for 512 instructions, I might add a boot screen.
+The bootloader is the first thing that is executed by the CPU. The bootloader is used to copy data from the slow SPI flash to the faster SDRAM, and to jump to address 0 on the SDRAM. Since the bootloader has room for 512 instructions, I will probably add a boot screen with logo.
 
 This is the assembly code of the bootloader:
 ```
@@ -360,14 +422,15 @@ And that translates to these instructions:
 00001001100000000001000100000001 //Compute r1 + 1 and write result to r1
 00001001100000000001001000000010 //Compute r2 + 1 and write result to r2
 01100000000000000010001000110000 //If r2 == r3, then jump to offset 2
-10010001100000000100100001001010 //Jump to constant address 3 of ROM
+10010001100000000100100001001010 //Jump to constant address 3 of ROM*
 10010000000000000000000000000000 //Jump to constant address 0
 11111111111111111111111111111111 //Halt
+* Note: change this address when the memory map changes
 ```
 
 ## Assembler for B322
 To simplify writing code for the B322, one can use the B322 assembly language.
-The assembler compiles the assembly code to 32 bit machine instructions. The input file is currently code.asm, and the output is currently printed to stdout.
+The assembler compiles the assembly code to 32 bit machine instructions. The input file is currently code.asm, and the output is printed to stdout.
 
 ### Line types
 Each line is parsed on its own. There are four types of lines:
@@ -489,7 +552,7 @@ The assembler does the following things the the following order:
 7. Write result to output file
 
 #### Input and output files
-Currently one cannot pass arguments to the assembler. The assembler will read the code from code.asm and write the result to stdout. While arguments and file handling are easy to implement, I do not need it right now and will implement later when I restructure my build process.
+Currently one cannot pass arguments to the assembler. The assembler will read the code from code.asm and write the result to stdout. While arguments and file handling are easy to implement, I do not need it right now and have not plans to change this unless I restructure the build/flash process (most likely to happen if I change SPI flash for SDcard.
 
 ### Important notes
 One important assumption is that the code will be executed from addr 0 of the SDRAM. Otherwise the label addresses will not be calculated correctly. In the future I might add an offset argument where all labels are offsetted by this argument, and a flag to disable the required Interrupt handlers
@@ -503,13 +566,11 @@ The Quartus folder contains all files for actually implementing the FPGC4 into h
 There are some slight changes between the code in the Verilog folder and the code in the Quartus folder. For example, the Verilog folder contains simulation files for the SPI flash and SDRAM memory. The Quartus project is on the top level slightly modified to work on an actual FPGA. This also includes the use of PLLs for creating clocks.
 
 ## Programmer
-The Programmer folder contains all files related to programming the SPI flash. To do this, I use an Arduino (In my case an Teensy++ 2.0) and the code from https://github.com/nfd/spi-flash-programmer (Credits to Nicholas FitzRoy-Dale). 
+The Programmer folder contains all files related to programming the SPI flash. To do this, I use an Arduino (In my case an Teensy 2.0) and the code from https://github.com/nfd/spi-flash-programmer (Credits to Nicholas FitzRoy-Dale). 
 
-TODO move arduino code to folder
+The compileROM.sh script converts the code.list file, the file with machine instructions, to the code.bin file. The file size will be a multiple of 4096 bytes, because the SPI flash programmer expects a file of this size. Then, the flash.sh file uses the SPI flash programmer client Python file to program the code.bin file to the SPI flash chip using the Arduino.
 
-The compileROM.sh script converts the code.list file, the file with machine instructions, to the code.bin file. The file size will be a multiple of 1024 bytes, because the SPI flash programmer expects a file of this size. Then, the flash.sh file (which wil need to be updated!) uses the SPI flash programmer client Python file to program the code.bin file to the SPI flash chip using the Arduino.
-
-TODO add more information about the functionality of the flash.sh file when it is done.
+TODO add more information about the functionality of the flash.sh file.
 
 ## About the Project
 ### Structure of project files
@@ -524,7 +585,11 @@ All Verilog related files are in the Verilog folder. The Quartus files are in th
 - Created documentation
 - Bootloader works
 - Added SNES and Keyboard back
+- Improved flasher
 - Rewritten FSX2
+- Created logo
+- Created Timers and Sound
+- Created MIDI to assembly data converter
 
 ### Future plans
 These are kinda ordered based on priority
@@ -532,14 +597,12 @@ These are kinda ordered based on priority
 - Update documentation again
 - Add GPIO I/O back to MU
 - Add "library" support for assembler (Using include copy paste?)
-- Create a logo
-- Add boot screen animation in bootloader
-- Add mass storage (SDCARD)
 - Create a pattern and palette table generator
+- Add logo to boot screen animation in bootloader
+- Add mass storage (SDCARD)
 - Change SPI Flash for SDCARD
 - Add usb serial for communication with PC
 - Write a simplistic C compiler. Use software stack with dedicated stack pointer register.
 - Add Gameboy printer via Arduino to I/O
 - Write an OS
-- Add sound
-
+- 

@@ -146,7 +146,19 @@ set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to ps2c
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nesc
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nesl
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to nesd
+set_location_assignment PIN_M19 -to tone1_out1
+set_location_assignment PIN_N19 -to tone1_out2
+set_location_assignment PIN_B21 -to tone1_out3
+set_location_assignment PIN_C21 -to tone1_out4
+set_location_assignment PIN_D21 -to tone2_out1
+set_location_assignment PIN_E21 -to tone2_out2
+set_location_assignment PIN_F21 -to tone2_out3
+set_location_assignment PIN_H21 -to tone2_out4
+set_location_assignment PIN_J21 -to uart_out
+set_location_assignment PIN_K21 -to uart_in
 set_global_assignment -name VERILOG_FILE modules/FPGC4.v
+set_global_assignment -name VERILOG_FILE modules/IO/UARTrx.v
+set_global_assignment -name VERILOG_FILE modules/IO/UARTtx.v
 set_global_assignment -name VERILOG_FILE modules/IO/TonePlayer.v
 set_global_assignment -name VERILOG_FILE modules/IO/CTCtimer.v
 set_global_assignment -name VERILOG_FILE modules/IO/NESpadReader.v
@@ -170,12 +182,4 @@ set_global_assignment -name VERILOG_FILE modules/Stabilizer.v
 set_global_assignment -name VERILOG_FILE modules/ClockDivider.v
 set_global_assignment -name SDC_FILE FPGC4.sdc
 set_global_assignment -name QIP_FILE pll.qip
-set_location_assignment PIN_M19 -to tone1_out1
-set_location_assignment PIN_N19 -to tone1_out2
-set_location_assignment PIN_B21 -to tone1_out3
-set_location_assignment PIN_C21 -to tone1_out4
-set_location_assignment PIN_D21 -to tone2_out1
-set_location_assignment PIN_E21 -to tone2_out2
-set_location_assignment PIN_F21 -to tone2_out3
-set_location_assignment PIN_H21 -to tone2_out4
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

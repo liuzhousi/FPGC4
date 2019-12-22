@@ -49,7 +49,10 @@ module FPGC4(
     output led,
 
     output          tone1_out1, tone1_out2, tone1_out3, tone1_out4,
-    output          tone2_out1, tone2_out2, tone2_out3, tone2_out4
+    output          tone2_out1, tone2_out2, tone2_out3, tone2_out4,
+	 
+	 output          uart_out,
+	 input 			  uart_in
 
 );
 
@@ -216,6 +219,7 @@ wire [31:0] q;
 wire        t1_interrupt;
 wire        t2_interrupt;
 wire        t3_interrupt;
+wire 			uart_rx_interrupt;
 
 MemoryUnit mu(
 //clocks
@@ -286,7 +290,11 @@ MemoryUnit mu(
 .tone2_out1(tone2_out1),
 .tone2_out2(tone2_out2),
 .tone2_out3(tone2_out3),
-.tone2_out4(tone2_out4)
+.tone2_out4(tone2_out4),
+
+.uart_out(uart_out),
+.uart_in(uart_in),
+.uart_rx_interrupt(uart_rx_interrupt)
 );
 
 
@@ -302,7 +310,7 @@ CPU cpu(
 .reset          (reset),
 .int1           (int1), 
 .int2           (int2), 
-.int3           (int3), 
+.int3           (uart_rx_interrupt), 
 .int4           (int4),
 .address        (address),
 .data           (data),

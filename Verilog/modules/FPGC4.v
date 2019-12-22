@@ -46,6 +46,10 @@ module FPGC4(
     wire    nesc, nesl;
     wire    nesd;
 
+    wire uart_out;
+    wire uart_in;
+    wire uart_rx_interrupt;
+
 
 //----------------Reset Stabilizer-------------------
 //Reset stabilizer I/O
@@ -268,7 +272,11 @@ MemoryUnit mu(
 .tone2_out1(tone2_out1),
 .tone2_out2(tone2_out2),
 .tone2_out3(tone2_out3),
-.tone2_out4(tone2_out4)
+.tone2_out4(tone2_out4),
+
+.uart_out(uart_out),
+.uart_in(uart_in),
+.uart_rx_interrupt(uart_rx_interrupt)
 );
 
 
@@ -280,7 +288,7 @@ CPU cpu(
 .reset          (reset),
 .int1           (t1_interrupt), 
 .int2           (t2_interrupt), 
-.int3           (t3_interrupt), 
+.int3           (uart_rx_interrupt), 
 .int4           (frameDrawn),
 .address        (address),
 .data           (data),

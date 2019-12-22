@@ -8,12 +8,12 @@ Memory Map:
 0xC02622  		 	 -> (S)NES controller
 0xC02623 to hC02625  -> PS/2 Keyboard
 0xC02626 			 -> Timer1 value
-0xC02627 			 -> Timer1 value
+0xC02627 			 -> Timer1 status
 0xC02628 			 -> Timer2 value
-0xC02629 			 -> Timer2 value
+0xC02629 			 -> Timer2 status
 0xC0262A 			 -> Timer3 value
-0xC0262B 			 -> Timer3 value
+0xC0262B 			 -> Timer3 status
 0xC0262C 			 -> TonePlayer1
 0xC0262D 			 -> TonePlayer2
-0xC0262D 			 -> GPIO
+0xC0262E 			 -> GPIO
 0xC02630 to 0x?????? -> Future I/O

@@ -28,3 +28,7 @@ printf "Appending $NEEDED bytes to code.bin\n"
 	dd if=<(yes $'\xFF' | tr -d "\n") bs=1 count=$NEEDED >> code.bin
 
 printf "\nDone compiling binary files\n"
+
+printf "\nWriting to FPGC4 over serial\n"
+
+	python3 uartFlasher.py

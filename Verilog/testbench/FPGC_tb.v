@@ -35,6 +35,8 @@
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/NESpadReader.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/TonePlayer.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/CTCtimer.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/UARTtx.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/UARTrx.v"
 
 //Define testmodule
 module FPGC_tb;

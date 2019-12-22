@@ -18,6 +18,7 @@ Main:
     write 1 r2 r1
     write 0 r2 r0
     write 2 r2 r0
+    write 3 r2 r0
 
     load 0x2626 r1
     loadhi 0xC0 r1      ; r1 = Timer1 value register
@@ -948,6 +949,39 @@ Int2:
     reti
 
 Int3:
+    push r1
+    push r2
+    push r3
+    push r4
+    push r5
+
+    load 0x262E r1
+    loadhi 0xC0 r1
+
+    read 1 r1 r2
+
+    ; vram address
+    load 0x1420 r1
+    loadhi 0xC0 r1          ; r1 = vram addr 1056+2048 0xC01420
+
+    load 0x0003 r3
+    loadhi 0x08 r3      ; r2 =  0x80003 | counter
+
+    read 0 r3 r4
+
+    add r4 r1 r1
+    write 0 r1 r2
+
+    add r4 1 r4
+    write 0 r3 r4
+
+
+    ; restore registers
+    pop r5
+    pop r4
+    pop r3
+    pop r2
+    pop r1
     reti
 
 Int4:

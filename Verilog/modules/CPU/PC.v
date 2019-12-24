@@ -22,29 +22,41 @@ reg int1_prev, int2_prev, int3_prev, int4_prev; //previous values to detect risi
 
 always @(negedge clk) 
 begin
-    writeBack_prev <= writeBack;
-    int1_prev <= int1;
-    int2_prev <= int2;
-    int3_prev <= int3;
-    int4_prev <= int4;
-
-    if (int1 && ~int1_prev)
-        rising_int1 <= 1'b1;
-    if (int2 && ~int2_prev)
-        rising_int2 <= 1'b1;
-    if (int3 && ~int3_prev)
-        rising_int3 <= 1'b1;
-    if (int4 && ~int4_prev)
-        rising_int4 <= 1'b1;
 
     if (reset)
     begin
         pc_out <= PCstart;
         int_en <= 1'b1;
+        PCintBackup     <= 27'd0;
+        writeBack_prev  <= 1'b0;
+        int1_prev       <= 1'b0;
+        int2_prev       <= 1'b0;
+        int3_prev       <= 1'b0;
+        int4_prev       <= 1'b0;
+        rising_int1     <= 1'b0; 
+        rising_int2     <= 1'b0; 
+        rising_int3     <= 1'b0;
+        rising_int4     <= 1'b0;
     end
-    else
+    else 
     begin
-        if (writeBack && ~writeBack_prev)
+        writeBack_prev <= writeBack;
+        int1_prev <= int1;
+        int2_prev <= int2;
+        int3_prev <= int3;
+        int4_prev <= int4;
+
+        if (int1 && ~int1_prev)
+            rising_int1 <= 1'b1;
+        if (int2 && ~int2_prev)
+            rising_int2 <= 1'b1;
+        if (int3 && ~int3_prev)
+            rising_int3 <= 1'b1;
+        if (int4 && ~int4_prev)
+            rising_int4 <= 1'b1;
+    end
+
+    if (writeBack && ~writeBack_prev)
         begin
             //Restore PC and re-enable interrupts when reti is high
             if (reti)
@@ -127,6 +139,11 @@ begin
             else 
                 pc_out <= pc_out + 1'b1;   //if all these cases fail, then just increase the PC
         end
+
+
+    else
+    begin
+        
     end
 end
 

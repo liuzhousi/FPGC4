@@ -16,6 +16,7 @@ ClockDivider #(
 .DIVISOR(25))
  clkDivKeyboard(
 .clk_in(clk),
+.reset(reset),
 .clk_out(slow_clk)
 );
 
@@ -27,18 +28,26 @@ reg [2:0] counter;
 reg delayed_ready;
 
 //delay processing scan codes to make sure the codes are ready
-always @(posedge slow_clk)
+always @(posedge slow_clk or posedge reset)
 begin
-    if (scan_code_ready)
+    if (reset)
+    begin
         counter <= 3'b0;
-    
-    if (counter == 3'b110)
-        delayed_ready <= 1'b1;
-    
-    if (counter == 3'b111)
         delayed_ready <= 1'b0;
-    else
-        counter <= counter + 1'b1;
+    end
+    else 
+    begin
+        if (scan_code_ready)
+            counter <= 3'b0;
+        
+        if (counter == 3'b110)
+            delayed_ready <= 1'b1;
+        
+        if (counter == 3'b111)
+            delayed_ready <= 1'b0;
+        else
+            counter <= counter + 1'b1;
+    end
 end
     
 

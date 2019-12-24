@@ -1,3 +1,5 @@
+; Graphics, sound and UART printing test ROM
+
 ; Graphics library test
 ; Should eventually become a real library when library support is added in assembler
 
@@ -64,7 +66,7 @@ Main:
     addr2reg WINDOWTEXT r1   ; data to copy
     load 25 r2              ; length of data
     load 26 r3               ; offset from start
-    load 0 r4               ; palette idx
+    load 1 r4               ; palette idx
 
     savpc r15
     push r15
@@ -89,7 +91,7 @@ Main:
     halt    
 
 WINDOWTEXT:
-.ds "Graphics printing test :)"
+.ds "Graphics printing test :P"
 
 BACKGROUNDTILES:
 .db 176 176 177 177 178 178

@@ -34,7 +34,14 @@ assign recvDoneWire = (initDone && phase == 2 && counter == 2);
 
 always @(negedge clk)
 begin
+  if (reset)
+  begin
+    recvDone <= 1'b0;
+  end
+  else 
+  begin
     recvDone <= recvDoneWire;
+  end
 end
 
 
@@ -127,9 +134,9 @@ always @(negedge clk)
 begin
     if (reset)
     begin
-       phase <= 3'd0;
-       counter <= 7'd0;
-       initDone <= 1'd0;
+      phase <= 3'd0;
+      counter <= 7'd0;
+      initDone <= 1'd0;
     end
     else 
     begin 
@@ -164,7 +171,7 @@ begin
          //idle - ready to read when triggered (after some instruction delay)
          3'd2:
          begin
-            if (counter == 7'd3)
+            if (counter == 7'd4) //could be 3, but one extra cycle delay to wait for start from MU to go low
             begin
                initDone <= 1'b1;
                if (start)
@@ -238,13 +245,24 @@ end
 
 always @(posedge clk)
 begin
-   if (phase == 3'd4)
-   begin
+  if (reset)
+  begin
+    b0 <= 8'd0;
+    b1 <= 8'd0;
+    b2 <= 8'd0;
+    b3 <= 8'd0;
+  end
+  else 
+  begin
+    if (phase == 3'd4)
+    begin
       b0[7-counter] <= io0_in;
       b1[7-counter] <= io1_in;
       b2[7-counter] <= io2_in;
       b3[7-counter] <= io3_in;
-   end
+    end
+  end
+   
 end
 
 endmodule

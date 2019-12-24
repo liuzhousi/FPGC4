@@ -102,6 +102,9 @@ wire [2:0] 	vga_g;
 wire [1:0] 	vga_b;
 wire 		vga_blk;
 
+wire [7:0] 	GPO;
+reg  [7:0] 	GPI;
+
 FPGC4 fpgc (
 //Clock and reset
 .clk 		(clk),
@@ -147,7 +150,11 @@ FPGC4 fpgc (
 .tone2_out1(tone2_out1),
 .tone2_out2(tone2_out2),
 .tone2_out3(tone2_out3),
-.tone2_out4(tone2_out4)
+.tone2_out4(tone2_out4),
+
+//GPIO
+.GPI(GPI),
+.GPO(GPO)
 );
 
 
@@ -159,9 +166,15 @@ begin
     clk = 0;
     nreset = 1;
 
-    repeat(497) #20 clk = ~clk; //25MHz
+    GPI = 8'b00000001;
+
+    repeat(4000) #20 clk = ~clk; //25MHz
+
+    nreset = 0;
 
     repeat(100) #20 clk = ~clk; //25MHz
+
+    nreset = 1;
 
     repeat(30000) #20 clk = ~clk; //25MHz
 

@@ -77,7 +77,7 @@ set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_RO
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_location_assignment PIN_T2 -to clock
 set_location_assignment PIN_E4 -to led
-set_location_assignment PIN_AB19 -to nreset
+set_location_assignment PIN_B19 -to nreset
 set_location_assignment PIN_Y13 -to nint1
 set_location_assignment PIN_M1 -to vga_b[1]
 set_location_assignment PIN_M2 -to vga_b[0]
@@ -156,6 +156,30 @@ set_location_assignment PIN_F21 -to tone2_out3
 set_location_assignment PIN_H21 -to tone2_out4
 set_location_assignment PIN_J21 -to uart_out
 set_location_assignment PIN_K21 -to uart_in
+set_location_assignment PIN_A19 -to GPI[0]
+set_location_assignment PIN_A18 -to GPI[1]
+set_location_assignment PIN_A17 -to GPI[2]
+set_location_assignment PIN_A16 -to GPI[3]
+set_location_assignment PIN_A15 -to GPI[4]
+set_location_assignment PIN_A14 -to GPI[5]
+set_location_assignment PIN_A13 -to GPI[6]
+set_location_assignment PIN_A10 -to GPI[7]
+set_location_assignment PIN_A9 -to GPO[0]
+set_location_assignment PIN_A8 -to GPO[1]
+set_location_assignment PIN_A7 -to GPO[2]
+set_location_assignment PIN_A6 -to GPO[3]
+set_location_assignment PIN_A5 -to GPO[4]
+set_location_assignment PIN_C3 -to GPO[5]
+set_location_assignment PIN_A4 -to GPO[6]
+set_location_assignment PIN_A3 -to GPO[7]
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to GPI[0]
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to GPI[1]
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to GPI[2]
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to GPI[3]
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to GPI[4]
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to GPI[5]
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to GPI[6]
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to GPI[7]
 set_global_assignment -name VERILOG_FILE modules/FPGC4.v
 set_global_assignment -name VERILOG_FILE modules/IO/UARTrx.v
 set_global_assignment -name VERILOG_FILE modules/IO/UARTtx.v
@@ -171,7 +195,6 @@ set_global_assignment -name VERILOG_FILE modules/CPU/InstructionDecoder.v
 set_global_assignment -name VERILOG_FILE modules/CPU/CPU.v
 set_global_assignment -name VERILOG_FILE modules/CPU/ControlUnit.v
 set_global_assignment -name VERILOG_FILE modules/CPU/ALU.v
-set_global_assignment -name VERILOG_FILE modules/GPU/VGA.v
 set_global_assignment -name VERILOG_FILE modules/GPU/FSX.v
 set_global_assignment -name VERILOG_FILE modules/Memory/VRAM.v
 set_global_assignment -name VERILOG_FILE modules/Memory/SPIreader.v

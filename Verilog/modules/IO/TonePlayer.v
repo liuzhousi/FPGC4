@@ -1,5 +1,6 @@
 module TonePlayer(
     input clk,
+    input reset,
     input [31:0] noteID,
     input we,
     output lineOut1, lineOut2, lineOut3, lineOut4
@@ -7,6 +8,7 @@ module TonePlayer(
 
 SingleTonePlayer stp1(
 .clk(clk),
+.reset(reset),
 .noteID(noteID[6:0]),
 .we(we),
 .lineOut(lineOut1)
@@ -14,6 +16,7 @@ SingleTonePlayer stp1(
 
 SingleTonePlayer stp2(
 .clk(clk),
+.reset(reset),
 .noteID(noteID[14:8]),
 .we(we),
 .lineOut(lineOut2)
@@ -21,6 +24,7 @@ SingleTonePlayer stp2(
 
 SingleTonePlayer stp3(
 .clk(clk),
+.reset(reset),
 .noteID(noteID[22:16]),
 .we(we),
 .lineOut(lineOut3)
@@ -28,6 +32,7 @@ SingleTonePlayer stp3(
 
 SingleTonePlayer stp4(
 .clk(clk),
+.reset(reset),
 .noteID(noteID[30:24]),
 .we(we),
 .lineOut(lineOut4)
@@ -37,6 +42,7 @@ endmodule
 
 module SingleTonePlayer(
     input clk,
+    input reset,
     input [6:0] noteID,
     input we,
     output reg lineOut
@@ -49,10 +55,18 @@ reg [6:0] toneID;
 
 always @(negedge clk)
 begin
-    if (we)
+    if (reset)
     begin
-        toneID <= noteID;
+        toneID <= 7'd0;
     end
+    else 
+    begin
+        if (we)
+        begin
+            toneID <= noteID;
+        end
+    end
+   
 end
 
 
@@ -86,23 +100,46 @@ reg [9:0] counter_octave;
 
 always @(posedge clk) 
 begin
-    counter_note <= (counter_note == 0 ? clkdivider : counter_note - 9'd1);
+    if (reset)
+    begin
+        counter_note <= 9'd0;
+    end
+    else 
+    begin
+        counter_note <= (counter_note == 0 ? clkdivider : counter_note - 9'd1);
+    end
 end
 
 always @(posedge clk)
 begin
-    if(counter_note==0) 
+    if (reset)
     begin
-        counter_octave <= (counter_octave == 0 ? 10'd1023 >> octave : counter_octave - 10'd1);
+        counter_octave <= 10'd0;
     end
+    else 
+    begin
+        if(counter_note==0) 
+        begin
+            counter_octave <= (counter_octave == 0 ? 10'd1023 >> octave : counter_octave - 10'd1);
+        end 
+    end
+    
 end
 
 always @(posedge clk) 
 begin
-    if(counter_note == 0 && counter_octave == 0 && toneID != 0) 
+    if (reset)
     begin
-        lineOut <= ~lineOut;
+        lineOut <= 1'b0;
     end
+    else 
+    begin
+        if(counter_note == 0 && counter_octave == 0 && toneID != 0) 
+        begin
+            lineOut <= ~lineOut;
+        end
+    end
+    
 end
 
 initial
@@ -111,7 +148,7 @@ begin
     counter_note = 9'd0;
     counter_octave = 10'd0;
     clkdivider = 9'd0;
-    lineOut <= 1'b0;
+    lineOut = 1'b0;
 end
 
 endmodule

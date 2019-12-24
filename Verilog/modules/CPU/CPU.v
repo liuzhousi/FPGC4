@@ -150,6 +150,7 @@ wire [26:0] const27;
 
 InstructionDecoder instDec(
 .clk(clk),
+.reset(reset),
 .fetch(fetch),
 .getRegs(getRegs),
 .q(q),

@@ -6,6 +6,7 @@
 
 module NESpadReader(
     clk,
+    reset,
     nesc,
     nesl,
     nesd,
@@ -14,6 +15,7 @@ module NESpadReader(
 
 //General I/O
 input clk;                      //clock for reading in controller
+input reset;
 
 //get slower clock from 25MHz clock
 wire slow_clk;
@@ -21,6 +23,7 @@ ClockDivider #(
 .DIVISOR(128))
  clkDivNES(
 .clk_in(clk),
+.reset(reset),
 .clk_out(slow_clk)
 );
 
@@ -28,8 +31,9 @@ ClockDivider #(
 initial
 begin
     state <= WAIT_STATE;
-    button_index <= 4'b0;
+    button_index <= 4'd0;
     button_state <= 16'hFFFF;
+    nesState <= 16'd0;
 end
 
 //Controller I/O
@@ -50,33 +54,49 @@ parameter READ_STATE    = 2;
 
 
 //State transitions at positive edge of 1.2KHz clock
-always @(posedge slow_clk) 
+always @(posedge slow_clk or posedge reset) 
 begin
-    if (state == WAIT_STATE)
-        state <= LATCH_STATE;
-    else if (state == LATCH_STATE)
-        state <= READ_STATE;
-    else if (state == READ_STATE) 
+    if (reset)
     begin
-        if (button_index == 15) //if all 16 button bits are read
-            state <= WAIT_STATE;
+        state <= WAIT_STATE;
     end
-  end
+    else
+    begin
+        if (state == WAIT_STATE)
+            state <= LATCH_STATE;
+        else if (state == LATCH_STATE)
+            state <= READ_STATE;
+        else if (state == READ_STATE) 
+        begin
+            if (button_index == 15) //if all 16 button bits are read
+                state <= WAIT_STATE;
+        end
+    end
+end
   
 
 //Button reading at negative edge of 1.2KHz clock,
 //to give values from the controller time to settle.
-always @(negedge slow_clk) 
+always @(negedge slow_clk or posedge reset) 
 begin
-    if (state == WAIT_STATE)
+    if (reset)
     begin
-        button_index <= 4'b0;   //reset
-        nesState <= {4'd0, ~button_state[11:0]}; //Write button data to reg
+        button_index <= 4'd0;
+        button_state <= 16'hFFFF;
+        nesState <= 16'd0;
     end
-    else if (state == READ_STATE) 
+    else
     begin
-        button_state[button_index] <= nesd;
-        button_index <= button_index + 1;
+        if (state == WAIT_STATE)
+        begin
+            button_index <= 4'b0;   //reset
+            nesState <= {4'd0, ~button_state[11:0]}; //Write button data to reg
+        end
+        else if (state == READ_STATE) 
+        begin
+            button_state[button_index] <= nesd;
+            button_index <= button_index + 1;
+        end
     end
 end
 

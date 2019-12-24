@@ -1,6 +1,6 @@
 import serial
 
-port = serial.Serial("/dev/ttyUSB0", baudrate=115200, timeout=10.0)
+port = serial.Serial("/dev/ttyUSB0", baudrate=115200, timeout=3.0)
 
 
 # parse byte file
@@ -11,38 +11,34 @@ with open("code.bin", "rb") as f:
 for b in bytes_read:
     ba.append(b)
 
+# combine each 4 bytes into a word
 n = 4
-
 wordList = [ba[i * n:(i + 1) * n] for i in range((len(ba) + n - 1) // n )]  
 
+# size of program is in address 5
 fileSize = bytes(wordList[5])
 
 print(int.from_bytes(fileSize, "big") )
 
-#write filesize
+# write filesize
 port.write(fileSize)
 
-#read four bytes
+# read four bytes
 rcv = port.read(4)
 
+# to verify if communication works
 print(rcv)
 
 
+# send all words
 doneSending = False
 
 wordCounter = 0
 
 while not doneSending:
-    #write word
-    #print(bytes(wordList[wordCounter]))
     port.write(bytes(wordList[wordCounter]))
     wordCounter = wordCounter + 1
-    #read one byte
-    #rcv = port.read(1)
-    #print(rcv)
-    #print()
 
-    #if (rcv == b'd'):
     if (wordCounter == int.from_bytes(fileSize, "big")):
         doneSending = True
 

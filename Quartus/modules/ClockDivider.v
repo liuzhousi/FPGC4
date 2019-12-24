@@ -7,16 +7,25 @@ module ClockDivider
 ) 
 (
     input clk_in,
+    input reset,
     output wire clk_out
 );
 
-reg[15:0] counter;
+reg [15:0] counter;
 
 always @(posedge clk_in)
 begin
-    counter <= counter + 16'd1;
-    if (counter >= (DIVISOR-1))
-        counter <= 16'd0;
+	if (reset)
+	begin
+		counter <= 16'd0;
+	end
+	else 
+	begin
+		 counter <= counter + 16'd1;
+	    if (counter >= (DIVISOR-1))
+	        counter <= 16'd0;
+	end
+   
 end
 
 assign clk_out = (counter < DIVISOR/2) ? 1'b0:

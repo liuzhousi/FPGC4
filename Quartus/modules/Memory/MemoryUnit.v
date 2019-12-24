@@ -63,7 +63,11 @@ module MemoryUnit(
     //UART
     output          uart_out,
     output          uart_rx_interrupt,
-    input           uart_in
+    input           uart_in,
+
+    //GPIO
+    input [7:0]     GPI,
+    output reg [7:0]GPO
 );  
 
     //SDRAMcontroller, SPIreader, vram, and I/O should work on negedge clock
@@ -135,6 +139,7 @@ wire [15:0] nesState;
 
 NESpadReader npr (
 .clk(clk),
+.reset(reset),
 .nesc(nesc),
 .nesl(nesl),
 .nesd(nesd),
@@ -165,6 +170,7 @@ wire [31:0] t1_value;
 
 CTCtimer ctcTimer1(
 .clk(clk),
+.reset(reset),
 .timerValue(t1_value),
 .controlReg(t1_controlReg),
 .interrupt(t1_interrupt)
@@ -177,6 +183,7 @@ wire [31:0] t2_value;
 
 CTCtimer ctcTimer2(
 .clk(clk),
+.reset(reset),
 .timerValue(t2_value),
 .controlReg(t2_controlReg),
 .interrupt(t2_interrupt)
@@ -189,6 +196,7 @@ wire [31:0] t3_value;
 
 CTCtimer ctcTimer3(
 .clk(clk),
+.reset(reset),
 .timerValue(t3_value),
 .controlReg(t3_controlReg),
 .interrupt(t3_interrupt)
@@ -201,6 +209,7 @@ wire tg1_we;
 
 TonePlayer tonePlayer1(
 .clk(clk),
+.reset(reset),
 .we(tg1_we),
 .noteID(tg1_note),
 .lineOut1(tone1_out1),
@@ -216,6 +225,7 @@ wire tg2_we;
 
 TonePlayer tonePlayer2(
 .clk(clk),
+.reset(reset),
 .we(tg2_we),
 .noteID(tg2_note),
 .lineOut1(tone2_out1),
@@ -231,6 +241,7 @@ wire [7:0] r_Tx_Byte;
 
 UARTtx uart_tx(
 .i_Clock    (clk),
+.reset      (reset),
 .i_Tx_DV    (r_Tx_DV),
 .i_Tx_Byte  (r_Tx_Byte),
 .o_Tx_Active(),
@@ -245,6 +256,7 @@ wire [7:0] w_Rx_Byte;
 
 UARTrx uart_rx(
 .i_Clock    (clk),
+.reset      (reset),
 .i_Rx_Serial(uart_in),
 .o_Rx_DV    (uart_rx_interrupt),
 .o_Rx_Byte  (w_Rx_Byte)
@@ -291,106 +303,131 @@ initial
 begin
     busy <= 0;
     q <= 32'd0;
+    GPO <= 8'd0;
 end
 
 always @(negedge clk)
 begin
-    if (start)
-        busy <= 1;
-        
-    //SDRAM
-    if (busy && sr_recvDone)
-    begin
-        busy <= 0;
-        q <= sr_q;
-    end
-
-    //SPI FLASH
-    if (busy && sd_q_ready)
-    begin
-        busy <= 0;
-        q <= sd_q;
-    end
-
-    //VRAM32
-    if (busy && address >= 27'hC00000 && address < 27'hC00420)
-    begin
-        busy <= 0;
-        q <= vram32_cpu_q;
-    end
-
-    //VRAM8
-    if (busy && address >= 27'hC00420 && address < 27'hC02422)
-    begin
-        busy <= 0;
-        q <= {24'd0, vram8_cpu_q};
-    end
-
-    //ROM
-    if (busy && address >= 27'hC02422 && address < 27'hC02622)
-    begin
-        busy <= 0;
-        q <= rom_q;
-    end
-
-    //NESPAD
-    if (busy && address == 27'hC02622)
-    begin
-        busy <= 0;
-        q <= {16'd0, nesState};
-    end
-
-    //Keyboard1
-    if (busy && address == 27'hC02623)
-    begin
-        busy <= 0;
-        q <= buttonState[31:16];
-    end
-
-    //Keyboard2
-    if (busy && address == 27'hC02624)
-    begin
-        busy <= 0;
-        q <= buttonState[63:32];
-    end
-
-    //Keyboard3
-    if (busy && address == 27'hC02625)
-    begin
-        busy <= 0;
-        q <= buttonState[78:64];
-    end
-
-    //CTCtimers and NotePlayers
-    if (busy && address >= 27'hC02626 && address < 27'hC0262E)
+    if (reset)
     begin
         busy <= 0;
         q <= 32'd0;
+        GPO <= 8'd0;
     end
-
-    //UART TX
-    if (busy && address == 27'hC0262E)
+    else 
     begin
-        if (w_Tx_Done)
+        
+        if (start)
+            busy <= 1;
+            
+        //SDRAM
+        if (busy && sr_recvDone)
         begin
             busy <= 0;
-            q <=32'd0;
+            q <= sr_q;
         end
-    end
 
-    //UART TX
-    if (busy && address == 27'hC0262F)
-    begin
-        busy <= 0;
-        q <= w_Rx_Byte;
-    end
+        //SPI FLASH
+        if (busy && sd_q_ready)
+        begin
+            busy <= 0;
+            q <= sd_q;
+        end
 
-    //Prevent lockups
-    if (busy && address >= 27'hC02630)
-    begin
-        busy <= 0;
-        q <= 32'd0;
+        //VRAM32
+        if (busy && address >= 27'hC00000 && address < 27'hC00420)
+        begin
+            busy <= 0;
+            q <= vram32_cpu_q;
+        end
+
+        //VRAM8
+        if (busy && address >= 27'hC00420 && address < 27'hC02422)
+        begin
+            busy <= 0;
+            q <= {24'd0, vram8_cpu_q};
+        end
+
+        //ROM
+        if (busy && address >= 27'hC02422 && address < 27'hC02622)
+        begin
+            busy <= 0;
+            q <= rom_q;
+        end
+
+        //NESPAD
+        if (busy && address == 27'hC02622)
+        begin
+            busy <= 0;
+            q <= {16'd0, nesState};
+        end
+
+        //Keyboard1
+        if (busy && address == 27'hC02623)
+        begin
+            busy <= 0;
+            q <= buttonState[31:16];
+        end
+
+        //Keyboard2
+        if (busy && address == 27'hC02624)
+        begin
+            busy <= 0;
+            q <= buttonState[63:32];
+        end
+
+        //Keyboard3
+        if (busy && address == 27'hC02625)
+        begin
+            busy <= 0;
+            q <= buttonState[78:64];
+        end
+
+        //CTCtimers and NotePlayers
+        if (busy && address >= 27'hC02626 && address < 27'hC0262E)
+        begin
+            busy <= 0;
+            q <= 32'd0;
+        end
+
+        //UART TX
+        if (busy && address == 27'hC0262E)
+        begin
+            if (w_Tx_Done)
+            begin
+                busy <= 0;
+                q <=32'd0;
+            end
+        end
+
+        //UART RX
+        if (busy && address == 27'hC0262F)
+        begin
+            busy <= 0;
+            q <= w_Rx_Byte;
+        end
+
+        //GPIO
+        if (busy && address == 27'hC02630)
+        begin
+            if (we)
+            begin
+                GPO <= data[15:8];
+            end
+            busy <= 0;
+            q <= {GPO,GPI};
+        end
+
+        //Prevent lockups
+        if (busy && address >= 27'hC02631)
+        begin
+            busy <= 0;
+            q <= 32'd0;
+        end
+
+
     end
+    
 end
 
 endmodule

@@ -17,17 +17,25 @@ reg [31:0] stack [1023:0];  //stack
 
 always @(negedge clk)
 begin
-    if (push)
+    if (reset)
     begin
-        stack[ptr] <= d;
-        ptr <= ptr + 1'b1;
+        ptr <= 10'd0;
     end
+    else 
+    begin
+        if (push)
+        begin
+            stack[ptr] <= d;
+            ptr <= ptr + 1'b1;
+        end
 
-    if (pop)
-    begin
-        q <= stack[ptr - 1'b1]; //simulation does not like this when ptr = 0
-        ptr <= ptr - 1'b1;
+        if (pop)
+        begin
+            q <= stack[ptr - 1'b1]; //simulation does not like this when ptr = 0
+            ptr <= ptr - 1'b1;
+        end
     end
+    
 end
 
 integer i;

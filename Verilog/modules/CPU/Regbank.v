@@ -7,7 +7,7 @@ module Regbank(
 
     input       [3:0]   addr_a, addr_b, addr_d,
     input       [31:0]  data_d,
-    output reg  [31:0]  data_a, data_b, 
+    output      [31:0]  data_a, data_b, 
 
     input               we, we_high,
     //Memory
@@ -15,31 +15,24 @@ module Regbank(
     input       [31:0]  mem_q
 );
 
+assign data_a = (addr_a == 4'd0) ? 32'd0 : {data_a_h, data_a_l};
+assign data_b = (addr_b == 4'd0) ? 32'd0 : {data_b_h, data_b_l};
+
 reg [15:0] regsH [0:15];    //highest 16 bits of regbank
 reg [15:0] regsL [0:15];    //lowest 16 bits of regbank
+
+reg [15:0] data_a_l, data_a_h, data_b_l, data_b_h;
 
 //read at negedge clock
 always @(negedge clk) 
 begin
     if (getRegs)
     begin
-        if (addr_a == 4'd0)
-        begin
-            data_a <= 32'd0;
-        end
-        else
-        begin
-            data_a <= {regsH[addr_a], regsL[addr_a]};
-        end
+        data_a_l <= regsL[addr_a];
+        data_a_h <= regsH[addr_a]; 
 
-        if (addr_b == 4'd0)
-        begin
-            data_b <= 32'd0;
-        end
-        else
-        begin
-            data_b <= {regsH[addr_b], regsL[addr_b]};
-        end
+        data_b_l <= regsL[addr_b];
+        data_b_h <= regsH[addr_b]; 
     end
 end
 
@@ -71,15 +64,17 @@ end
 integer i;
 initial
 begin
-    data_a = 32'd0;
-    data_b = 32'd0;
+    data_a_l = 16'd0;
+    data_b_l = 16'd0;
+    data_a_h = 16'd0;
+    data_b_h = 16'd0;
 
     for (i = 0; i < 16; i = i + 1)
     begin
         regsL[i] = 16'd0;
         regsH[i] = 16'd0;
     end
-
+ 
 end
 
 endmodule

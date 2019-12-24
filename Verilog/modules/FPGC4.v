@@ -35,7 +35,10 @@ module FPGC4(
     inout           spi_hold,
 
     output          tone1_out1, tone1_out2, tone1_out3, tone1_out4,
-    output          tone2_out1, tone2_out2, tone2_out3, tone2_out4
+    output          tone2_out1, tone2_out2, tone2_out3, tone2_out4,
+
+    input [7:0]     GPI,
+    output [7:0]    GPO
 
 );
 
@@ -185,6 +188,7 @@ wire [31:0] rom_q;
 
 ROM rom(
 .clk            (clk),
+.reset          (reset),
 .address        (rom_addr),
 .q              (rom_q)
 );
@@ -276,7 +280,10 @@ MemoryUnit mu(
 
 .uart_out(uart_out),
 .uart_in(uart_in),
-.uart_rx_interrupt(uart_rx_interrupt)
+.uart_rx_interrupt(uart_rx_interrupt),
+
+.GPI(GPI),
+.GPO(GPO)
 );
 
 

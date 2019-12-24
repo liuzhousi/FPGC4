@@ -2,7 +2,7 @@
 * Decodes the instruction by selecting bits
 */
 module InstructionDecoder(
-    input clk, fetch, getRegs,
+    input clk, reset, fetch, getRegs,
     input [31:0] q,
     
     output [3:0] instrOP,
@@ -27,9 +27,16 @@ reg [31:0] instructionReg;
 //Save instruction just after fetch
 always @(negedge clk)
 begin
-    if (getRegs)
+    if (reset)
     begin
-        instructionReg <= q;
+        instructionReg <= 32'd0;
+    end
+    else
+    begin
+        if (getRegs)
+        begin
+            instructionReg <= q;
+        end
     end
 end
 

@@ -44,6 +44,7 @@ while not doneSending:
 
 print("Done programming")
 port.read(1)
+print("\nSerial monitor:")
 
 while True:
     rcv = port.read(1)

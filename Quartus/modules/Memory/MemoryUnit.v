@@ -314,19 +314,19 @@ assign vram8_cpu_we     = (address >= 27'hC00420 && address < 27'hC02422)   ? we
 
 assign rom_addr         = (address >= 27'hC02422 && address < 27'hC02622)   ? address - 27'hC02422      : 9'd0;
 
-assign t1_value         = (address == 27'hC02626)                           ? data                      : 32'd0;
-assign t1_controlReg    = (address == 27'hC02627)                           ? data                      : 8'd0;
-assign t2_value         = (address == 27'hC02628)                           ? data                      : 32'd0;
-assign t2_controlReg    = (address == 27'hC02629)                           ? data                      : 8'd0;
-assign t3_value         = (address == 27'hC0262A)                           ? data                      : 32'd0;
-assign t3_controlReg    = (address == 27'hC0262B)                           ? data                      : 8'd0;
+assign t1_value         = (address == 27'hC02626 && we)                     ? data                      : 32'd0;
+assign t1_controlReg    = (address == 27'hC02627 && we)                     ? data                      : 8'd0;
+assign t2_value         = (address == 27'hC02628 && we)                     ? data                      : 32'd0;
+assign t2_controlReg    = (address == 27'hC02629 && we)                     ? data                      : 8'd0;
+assign t3_value         = (address == 27'hC0262A && we)                     ? data                      : 32'd0;
+assign t3_controlReg    = (address == 27'hC0262B && we)                     ? data                      : 8'd0;
 
 assign tg1_note         = (address == 27'hC0262C)                           ? data                      : 32'd0;
-assign tg1_we           = (address == 27'hC0262C)                           ? 1'b1                      : 1'b0;
+assign tg1_we           = (address == 27'hC0262C)                           ? we                        : 1'b0;
 assign tg2_note         = (address == 27'hC0262D)                           ? data                      : 32'd0;
-assign tg2_we           = (address == 27'hC0262D)                           ? 1'b1                      : 1'b0;
+assign tg2_we           = (address == 27'hC0262D)                           ? we                        : 1'b0;
 
-assign r_Tx_DV          = (address == 27'hC0262E)                           ? 1'b1                      : 1'b0;
+assign r_Tx_DV          = (address == 27'hC0262E && we)                     ? start                     : 1'b0;
 assign r_Tx_Byte        = (address == 27'hC0262E)                           ? data                      : 8'd0;
 
 assign s_in             = (address == 27'hC02631)                           ? data                      : 8'd0;

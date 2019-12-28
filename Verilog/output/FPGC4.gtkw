@@ -1,29 +1,29 @@
 [*]
 [*] GTKWave Analyzer v (Modified by Bart for High DPI displays) 3.3.103 (w)1999-2019 BSI
-[*] Tue Dec 24 11:23:54 2019
+[*] Thu Dec 26 22:34:44 2019
 [*]
 [dumpfile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/wave.vcd"
-[dumpfile_mtime] "Tue Dec 24 09:56:36 2019"
-[dumpfile_size] 7903793
+[dumpfile_mtime] "Thu Dec 26 22:32:06 2019"
+[dumpfile_size] 8049371
 [savefile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/FPGC4.gtkw"
-[timestart] 79732000
+[timestart] 31240000
 [size] 2736 1716
 [pos] -1 -1
-*-19.987394 80807000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-23.987394 54100000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] FPGC_tb.
 [treeopen] FPGC_tb.fpgc.
 [treeopen] FPGC_tb.fpgc.cpu.
 [treeopen] FPGC_tb.fpgc.fsx.
 [treeopen] FPGC_tb.fpgc.mu.
 [sst_width] 474
-[signals_width] 638
+[signals_width] 716
 [sst_expanded] 1
 [sst_vpaned_height] 505
 @28
 FPGC_tb.fpgc.clk
 FPGC_tb.fpgc.nreset
 FPGC_tb.fpgc.reset
-@23
+@24
 FPGC_tb.fpgc.cpu.pc_out[26:0]
 @200
 -
@@ -239,6 +239,25 @@ FPGC_tb.fpgc.mu.uart_rx_interrupt
 @28
 FPGC_tb.GPI[7:0]
 FPGC_tb.GPO[7:0]
+@200
+-
+-SPI
+@24
+FPGC_tb.fpgc.mu.spi.clk
+FPGC_tb.fpgc.mu.spi.t_start
+@28
+FPGC_tb.fpgc.mu.spi.slow_start
+@24
+FPGC_tb.fpgc.mu.spi.busy
+FPGC_tb.fpgc.mu.spi.count[3:0]
+FPGC_tb.fpgc.mu.spi.state[2:0]
+FPGC_tb.fpgc.mu.spi.d_in[7:0]
+FPGC_tb.fpgc.mu.spi.d_out[7:0]
+@25
+FPGC_tb.fpgc.mu.spi.spi_clk
+@24
+FPGC_tb.fpgc.mu.spi.miso
+FPGC_tb.fpgc.mu.spi.mosi
 @200
 -
 -SDRAMcontroller

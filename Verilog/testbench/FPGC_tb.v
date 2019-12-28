@@ -37,6 +37,7 @@
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/CTCtimer.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/UARTtx.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/UARTrx.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/SimpleSPI.v"
 
 //Define testmodule
 module FPGC_tb;
@@ -166,15 +167,15 @@ begin
     clk = 0;
     nreset = 1;
 
+
     GPI = 8'b00000001;
-
-    repeat(4000) #20 clk = ~clk; //25MHz
-
-    nreset = 0;
 
     repeat(100) #20 clk = ~clk; //25MHz
 
-    nreset = 1;
+
+    repeat(4000) #20 clk = ~clk; //25MHz
+
+    repeat(100) #20 clk = ~clk; //25MHz
 
     repeat(30000) #20 clk = ~clk; //25MHz
 

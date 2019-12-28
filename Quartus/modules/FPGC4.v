@@ -26,7 +26,7 @@ module FPGC4(
     output [1:0]    SDRAM_DQM,
     inout  [15:0]   SDRAM_DQ,
 
-    //SPI
+    //SPI flash
     output          spi_cs,
     output          spi_clk,
     inout           spi_data, 
@@ -46,17 +46,25 @@ module FPGC4(
     output          nesc, nesl,
     input           nesd,
 	 
+	 //Led for debugging
     output led,
 
+	 //Tone generator PWM output
     output          tone1_out1, tone1_out2, tone1_out3, tone1_out4,
     output          tone2_out1, tone2_out2, tone2_out3, tone2_out4,
 	 
+	 //UART
 	 output          uart_out,
 	 input 			  uart_in,
 	 
+	 //GPIO
 	 input [7:0]     GPI,
-    output [7:0]    GPO
-
+    output [7:0]    GPO,
+	 
+    //SPI
+    output          s_clk,
+    input           s_miso,
+    output          s_mosi
 );
 
 wire frameDrawn;    //high when frame just rendered
@@ -301,7 +309,11 @@ MemoryUnit mu(
 .uart_rx_interrupt(uart_rx_interrupt),
 
 .GPI(GPI),
-.GPO(GPO)
+.GPO(GPO),
+
+.s_clk(s_clk),
+.s_mosi(s_mosi),
+.s_miso(s_miso)
 );
 
 
@@ -309,7 +321,7 @@ MemoryUnit mu(
 //CPU I/O
 assign int1 = t1_interrupt;
 assign int2 = t2_interrupt;
-assign int3 = t3_interrupt;
+assign int3 = uart_rx_interrupt;
 assign int4 = frameDrawn;
 
 CPU cpu(

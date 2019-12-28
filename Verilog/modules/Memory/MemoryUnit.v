@@ -31,7 +31,7 @@ module MemoryUnit(
     output [8:0]    rom_addr,
     input  [31:0]   rom_q,
 
-    //SPI
+    //SPI Flash
     inout           spi_data, spi_q, spi_wp, spi_hold,
     output          spi_cs, 
     output          spi_clk,
@@ -67,12 +67,17 @@ module MemoryUnit(
 
     //GPIO
     input [7:0]     GPI,
-    output reg [7:0]GPO
+    output reg [7:0]GPO,
+
+    //SPI
+    output          s_clk,
+    input           s_miso,
+    output          s_mosi
 );  
 
     //SDRAMcontroller, SPIreader, vram, and I/O should work on negedge clock
 
-    assign spi_clk = clk;
+    assign spi_clk = clk;           //run SPI flash at 25MHz
 
     wire [23:0] sr_addr;            //address of spi
     wire        sr_start;           //start of spi
@@ -262,6 +267,31 @@ UARTrx uart_rx(
 .o_Rx_Byte  (w_Rx_Byte)
 );
 
+//----------------SPI-(USB disk)-------------------
+//SPI I/O
+wire s_start;
+wire [7:0] s_in;
+wire [7:0] s_out;
+wire s_busy;
+
+SimpleSPI
+#(
+.reg_width(8), //1Byte
+.speed_div(100) //250KHz
+) spi
+(
+.clk        (clk),
+.reset      (reset),
+.t_start    (s_start),
+.d_in       (s_in),
+.d_out      (s_out),
+.cs         (),         //We do this with GPIO
+.spi_clk    (s_clk),
+.miso       (s_miso),
+.mosi       (s_mosi),
+.busy       (s_busy)
+);
+
 
 assign initDone         = (sr_initDone && sd_initDone);
 
@@ -298,6 +328,10 @@ assign tg2_we           = (address == 27'hC0262D)                           ? 1'
 
 assign r_Tx_DV          = (address == 27'hC0262E)                           ? 1'b1                      : 1'b0;
 assign r_Tx_Byte        = (address == 27'hC0262E)                           ? data                      : 8'd0;
+
+assign s_in             = (address == 27'hC02631)                           ? data                      : 8'd0;
+assign s_start          = (address == 27'hC02631 && we)                     ? start                     : 1'b0;
+
 
 initial
 begin
@@ -418,8 +452,14 @@ begin
             q <= {GPO,GPI};
         end
 
+        if (busy && address == 27'hC02631 && !s_busy)
+        begin
+            busy <= 0;
+            q <= s_out;
+        end
+
         //Prevent lockups
-        if (busy && address >= 27'hC02631)
+        if (busy && address >= 27'hC02632)
         begin
             busy <= 0;
             q <= 32'd0;

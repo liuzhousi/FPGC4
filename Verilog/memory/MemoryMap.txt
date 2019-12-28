@@ -17,5 +17,6 @@ Memory Map:
 0xC0262D 			 -> TonePlayer2
 0xC0262E 			 -> UART tx
 0xC0262F 			 -> UART rx
-0xC02630 			 -> GPIO
-0xC02631 to 0x?????? -> Future I/O
+0xC02630 			 -> GPIO ({GPO,GPI})
+0xC02631 			 -> SPI (USB DISK)
+0xC02632 to 0x?????? -> Future I/O

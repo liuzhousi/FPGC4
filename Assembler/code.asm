@@ -1,13 +1,3 @@
-   ; all required addresses
-    ;load 0x2631 r1
-    ;loadhi 0xC0 r1      ; r1 = 0xC02631 | SPI address
-
-    ;load 0x262E r2
-    ;loadhi 0xC0 r2      ; r2 = 0xC0262E | UART tx
-
-    ;spi_write and spi_read are just a single write and read operation,
-    ; and therefore do not need seperate functions
-
 define CMD_GET_IC_VER           =   0x01
 define CMD_SET_BAUDRATE         =   0x02
 define CMD_ENTER_SLEEP          =   0x03
@@ -87,10 +77,736 @@ Main:
     push r15
     jump CH376_Check_drive
 
+    ; read load filename argument
+    addr2reg CH376_String_Init r1
+    read 0 r1 r2
+    add r1 1 r1
+
+    savpc r15
+    push r15
+    jump CH376_Send_filename
+
+    ;savpc r15
+    ;push r15
+    ;jump CH376_Create_file
+
+    savpc r15
+    push r15
+    jump CH376_Open_file
+
+    ;load 0xffff r1
+    ;loadhi 0xffff r1
+    ;savpc r15
+    ;push r15
+    ;jump CH376_Set_cursor
+
+    ; set write data and length args
+    ;addr2reg CH376_String_Mounting_drive r1
+    ;read 0 r1 r2
+    ;add r1 1 r1
+
+    ;savpc r15
+    ;push r15
+    ;jump CH376_Write_file
+
+    load 0x0000 r1
+    loadhi 0x08 r1
+    load 8 r2
+    savpc r15
+    push r15
+    jump CH376_Read_file
+
+
+    savpc r15
+    push r15
+    jump CH376_Close_file
+
+    load 0x0000 r1
+    loadhi 0x08 r1
+
+    load 0x262E r3
+    loadhi 0xC0 r3              ; r3 = 0xC0262E | UART tx
+
+    read 0 r1 r2
+    write 0 r3 r2
+    add r1 1 r1
+    read 0 r1 r2
+    write 0 r3 r2
+    add r1 1 r1
+    read 0 r1 r2
+    write 0 r3 r2
+    add r1 1 r1
+    read 0 r1 r2
+    write 0 r3 r2
+    add r1 1 r1
+    read 0 r1 r2
+    write 0 r3 r2
+    add r1 1 r1
+    read 0 r1 r2
+    write 0 r3 r2
+    add r1 1 r1
+    read 0 r1 r2
+    write 0 r3 r2
+    add r1 1 r1
+    read 0 r1 r2
+    write 0 r3 r2
+
+
     halt
 
 
 ; --------------CH376-------------
+
+; Sets cursor to position in r1
+; INPUT:
+;   r1: cursor position
+; OUTPUT:
+;   r1: status code
+CH376_Set_cursor:
+    ; backup regs
+    push r1
+    push r2
+    push r3
+
+    or r1 r0 r3
+
+    addr2reg CH376_String_Set_cursor r1
+    read 0 r1 r2
+    add r1 1 r1
+    savpc r15
+    push r15
+    jump UART_print_text
+
+
+
+    load CMD_BYTE_LOCATE r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    shiftr r3 24 r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    shiftr r3 16 r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    shiftr r3 8 r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    shiftr r3 0 r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    CH376_Set_cursor_check_status:
+        ; get status
+        savpc r15
+        push r15
+        jump CH376_Get_status
+
+        ; copy status code to r3
+        or r1 r0 r3
+
+        ; print received char over uart
+        savpc r15
+        push r15
+        jump STD_Byte2_to_Hex
+
+        savpc r15
+        push r15
+        jump UART_print_reg
+
+        ; keep checking until response
+        load CMD_GET_STATUS r2
+        bne r3 r2 5
+            savpc r15
+            push r15
+            jump CH376_Delay_100ms
+            jump CH376_Set_cursor_check_status
+
+    or r3 r0 r1     ; set status code back to r1
+
+    ; restore regs
+    pop r3
+    pop r2
+    pop r1
+
+    ; return
+    pop r15
+    jumpr 3 r15
+
+; Read from file to buffer address.
+; Currently writes each byte to a seperate word
+; INPUT:
+;   r1: address of buffer to write to
+;   r2: length of data to read, max 255
+; OUTPUT:
+;   r1: status code (TODO)
+CH376_Read_file:
+    ; backup regs
+    push r1
+    push r2
+    push r3
+    push r4
+    push r5
+
+    or r2 r0 r4             ; backup length
+    or r1 r0 r5             ; backup data address
+
+    addr2reg CH376_String_Read_file r1
+    read 0 r1 r2
+    add r1 1 r1
+    savpc r15
+    push r15
+    jump UART_print_text
+
+    load CMD_BYTE_READ r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    or r4 r0 r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    load 0x00 r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    CH376_Read_file_check_status:
+        ; get status
+        savpc r15
+        push r15
+        jump CH376_Get_status
+
+        ; copy status code to r3
+        or r1 r0 r3
+
+        ; print received char over uart
+        savpc r15
+        push r15
+        jump STD_Byte2_to_Hex
+
+        savpc r15
+        push r15
+        jump UART_print_reg
+
+        ; keep checking until response
+        load CMD_GET_STATUS r2
+        bne r3 r2 5
+            savpc r15
+            push r15
+            jump CH376_Delay_100ms
+            jump CH376_Read_file_check_status
+
+    load CMD_RD_USB_DATA0 r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    load 0x00 r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    ; print received char over uart
+    savpc r15
+    push r15
+    jump STD_Byte2_to_Hex
+
+    savpc r15
+    push r15
+    jump UART_print_reg
+
+    CH376_Read_file_write_away:
+        ; end copying when done reading (when r4 reached 0)
+        bne r0 r4 2
+            jump CH376_Read_file_write_away_done
+
+        load 0x00 r1
+        savpc r15
+        push r15
+        jump SPI_transfer
+
+        ; write away
+        write 0 r5 r1 
+
+        ; increase address
+        add r5 1 r5
+
+        ; go read next byte
+        sub r4 1 r4
+        jump CH376_Read_file_write_away
+
+    CH376_Read_file_write_away_done:
+
+    ; restore regs
+    pop r5
+    pop r4
+    pop r3
+    pop r2
+    pop r1
+
+    ; return
+    pop r15
+    jumpr 3 r15
+
+; Writes to file
+; INPUT:
+;   r1: address of first byte to write
+;   r2: length of data to write, max 255
+; OUTPUT:
+;   r1: status code
+CH376_Write_file:
+    ; backup regs
+    push r1
+    push r2
+    push r3
+    push r4
+    push r5
+    push r6
+
+    or r2 r0 r4             ; backup length
+    or r1 r0 r5             ; backup data address
+
+    addr2reg CH376_String_Request_write r1
+    read 0 r1 r2
+    add r1 1 r1
+    savpc r15
+    push r15
+    jump UART_print_text
+
+
+    load CMD_BYTE_WRITE r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    or r4 r0 r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    load 0x00 r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    CH376_Write_file_check_status:
+        ; get status
+        savpc r15
+        push r15
+        jump CH376_Get_status
+
+        ; copy status code to r3
+        or r1 r0 r3
+
+        ; print received char over uart
+        savpc r15
+        push r15
+        jump STD_Byte2_to_Hex
+
+        savpc r15
+        push r15
+        jump UART_print_reg
+
+        ; keep checking until response
+        load CMD_GET_STATUS r2
+        bne r3 r2 5
+            savpc r15
+            push r15
+            jump CH376_Delay_100ms
+            jump CH376_Write_file_check_status
+
+
+    addr2reg CH376_String_Write_data r1
+    read 0 r1 r2
+    add r1 1 r1
+    savpc r15
+    push r15
+    jump UART_print_text
+
+    load CMD_WR_REQ_DATA r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    load 0x00 r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    ; print received char over uart
+    savpc r15
+    push r15
+    jump STD_Byte2_to_Hex
+
+    savpc r15
+    push r15
+    jump UART_print_reg
+
+
+    or r4 r0 r2             ; write length back to r2
+    or r5 r0 r1             ; write data address back to r1
+
+    load 0 r5               ; r5 = loopvar
+    load 32 r6              ; r6 = shift variable
+
+    load 0x2631 r3
+    loadhi 0xC0 r3          ; r3 = 0xC02631 | SPI address
+
+    ; copy loop
+    CH376_Write_file_loop:
+        sub r6 8 r6             ; remove 8 from shift variable
+        read 0 r1 r4            ; read 32 bits
+        shiftr r4 r6 r4         ; shift to right
+
+        savpc r15
+        push r15
+        jump SPI_beginTransfer
+        write 0 r3 r4           ; send char over SPI
+        savpc r15
+        push r15
+        jump SPI_endTransfer
+
+        bne r0 r6 3             ; if we shifted the last byte
+            add r1 1 r1             ; incr data address 
+            load 32 r6              ; set shift variable back to 24
+
+        add r5 1 r5             ; incr counter
+        bge r5 r2 2             ; keep looping until all chars are written
+        jump CH376_Write_file_loop
+
+    savpc r15
+    push r15
+    jump SPI_endTransfer
+
+
+    addr2reg CH376_String_Write_WR_go r1
+    read 0 r1 r2
+    add r1 1 r1
+    savpc r15
+    push r15
+    jump UART_print_text
+
+
+    load CMD_BYTE_WR_GO r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    CH376_Write_file_WR_check_status:
+        ; get status
+        savpc r15
+        push r15
+        jump CH376_Get_status
+
+        ; copy status code to r3
+        or r1 r0 r3
+
+        ; print received char over uart
+        savpc r15
+        push r15
+        jump STD_Byte2_to_Hex
+
+        savpc r15
+        push r15
+        jump UART_print_reg
+
+        ; keep checking until response
+        load CMD_GET_STATUS r2
+        bne r3 r2 5
+            savpc r15
+            push r15
+            jump CH376_Delay_100ms
+            jump CH376_Write_file_WR_check_status
+
+    or r3 r0 r1     ; set status code back to r1
+
+    ; restore regs
+    pop r6
+    pop r5
+    pop r4
+    pop r3
+    pop r2
+    pop r1
+
+    ; return
+    pop r15
+    jumpr 3 r15
+
+; Opens file
+; OUTPUT:
+;   r1: status code
+CH376_Open_file:
+    ; backup regs
+    push r2
+    push r3
+
+    ; opening file
+    addr2reg CH376_String_Opening_file r1
+    read 0 r1 r2
+    add r1 1 r1
+    savpc r15
+    push r15
+    jump UART_print_text
+
+    load CMD_FILE_OPEN r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    CH376_Open_file_check_opened:
+        ; get status
+        savpc r15
+        push r15
+        jump CH376_Get_status
+
+        ; copy status code to r3
+        or r1 r0 r3
+
+        ; print received char over uart
+        savpc r15
+        push r15
+        jump STD_Byte2_to_Hex
+
+        savpc r15
+        push r15
+        jump UART_print_reg
+
+        ; keep checking until response
+        load CMD_GET_STATUS r2
+        bne r3 r2 5
+            savpc r15
+            push r15
+            jump CH376_Delay_100ms
+            jump CH376_Open_file_check_opened
+        
+    ; move status code back to r1
+    or r3 r0 r1
+
+    ; restore regs
+    pop r3
+    pop r2
+
+    ; return
+    pop r15
+    jumpr 3 r15
+
+
+; Closes file
+; OUTPUT:
+;   r1: status code
+CH376_Close_file:
+    ; backup regs
+    push r2
+    push r3
+
+    ; opening file
+    addr2reg CH376_String_Closing_file r1
+    read 0 r1 r2
+    add r1 1 r1
+    savpc r15
+    push r15
+    jump UART_print_text
+
+    load CMD_FILE_CLOSE r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    CH376_Open_file_check_closed:
+        ; get status
+        savpc r15
+        push r15
+        jump CH376_Get_status
+
+        ; copy status code to r3
+        or r1 r0 r3
+
+        ; print received char over uart
+        savpc r15
+        push r15
+        jump STD_Byte2_to_Hex
+
+        savpc r15
+        push r15
+        jump UART_print_reg
+
+        ; keep checking until response
+        load CMD_GET_STATUS r2
+        bne r3 r2 5
+            savpc r15
+            push r15
+            jump CH376_Delay_100ms
+            jump CH376_Open_file_check_closed
+        
+    ; move status code back to r1
+    or r3 r0 r1
+
+    ; restore regs
+    pop r3
+    pop r2
+
+    ; return
+    pop r15
+    jumpr 3 r15
+
+
+; Creates file
+; OUTPUT:
+;   r1: status code
+CH376_Create_file:
+    ; backup regs
+    push r2
+    push r3
+
+    ; opening file
+    addr2reg CH376_String_Creating_file r1
+    read 0 r1 r2
+    add r1 1 r1
+    savpc r15
+    push r15
+    jump UART_print_text
+
+    load CMD_FILE_CREATE r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    CH376_Open_file_check_created:
+        ; get status
+        savpc r15
+        push r15
+        jump CH376_Get_status
+
+        ; copy status code to r3
+        or r1 r0 r3
+
+        ; print received char over uart
+        savpc r15
+        push r15
+        jump STD_Byte2_to_Hex
+
+        savpc r15
+        push r15
+        jump UART_print_reg
+
+        ; keep checking until response
+        load CMD_GET_STATUS r2
+        bne r3 r2 5
+            savpc r15
+            push r15
+            jump CH376_Delay_100ms
+            jump CH376_Open_file_check_created
+        
+    ; move status code back to r1
+    or r3 r0 r1
+
+    ; restore regs
+    pop r3
+    pop r2
+
+    ; return
+    pop r15
+    jumpr 3 r15
+
+
+; Send filename
+; INPUT:
+;   r1: address of filename
+;   r2: length of filename
+CH376_Send_filename:
+    ; backup regs
+    push r1
+    push r2
+    push r3
+    push r4
+    push r5
+    push r6
+
+    savpc r15
+    push r15
+    jump SPI_beginTransfer
+
+    load 0x2631 r3
+    loadhi 0xC0 r3          ; r3 = 0xC02631 | SPI address
+
+    load CMD_SET_FILE_NAME r4
+    write 0 r3 r4
+    load 47 r4              ; '/'
+    write 0 r3 r4
+
+    load 0 r5               ; r5 = loopvar
+    load 32 r6              ; r6 = shift variable
+
+    ; copy loop
+    CH376_Send_filename_loop:
+        sub r6 8 r6             ; remove 8 from shift variable
+        read 0 r1 r4            ; read 32 bits
+        shiftr r4 r6 r4         ; shift to right
+        write 0 r3 r4           ; send char over SPI
+
+        bne r0 r6 3             ; if we shifted the last byte
+            add r1 1 r1             ; incr data address 
+            load 32 r6              ; set shift variable back to 24
+
+        add r5 1 r5             ; incr counter
+        bge r5 r2 2             ; keep looping until all chars are written
+        jump CH376_Send_filename_loop
+
+    write 0 r3 r0           ; end with 0x00
+
+    savpc r15
+    push r15
+    jump SPI_endTransfer
+
+    addr2reg CH376_String_Sent_filename r1
+    read 0 r1 r2
+    add r1 1 r1
+    savpc r15
+    push r15
+    jump UART_print_text
+
+    ; restore regs
+    pop r6
+    pop r5
+    pop r4
+    pop r3
+    pop r2
+    pop r1
+
+    ; return
+    pop r15
+    jumpr 3 r15
+
  
 ; Initialize CH376 module
 CH376_init:
@@ -152,24 +868,28 @@ CH376_init:
     jumpr 3 r15
     
  
-; Check drive connection and mound
+; Check drive connection and mount
 CH376_Check_drive:
     ; backup regs
     push r1
     push r2
     push r3
 
-    addr2reg CH376_String_Checking_drive r1
+    addr2reg CH376_String_Checking_connection r1
     read 0 r1 r2
     add r1 1 r1
     savpc r15
     push r15
     jump UART_print_text
 
+    CH376_Check_drive_check_connection:
     ; get status
     savpc r15
     push r15
     jump CH376_Get_status
+
+    ; copy status code to r3
+    or r1 r0 r3
 
     ; print received char over uart
     savpc r15
@@ -179,6 +899,183 @@ CH376_Check_drive:
     savpc r15
     push r15
     jump UART_print_reg
+
+    ; keep checking until device connected
+    load ANSW_USB_INT_CONNECT r2
+    beq r3 r2 5
+        savpc r15
+        push r15
+        jump CH376_Delay_100ms
+        jump CH376_Check_drive_check_connection
+
+
+    ; wait a bit so device is properly connected
+    savpc r15
+    push r15
+    jump CH376_Delay_100ms
+
+    ; set usb mode
+    savpc r15
+    push r15
+    jump CH376_Set_USB_Mode
+
+    ; set mode host 1
+    savpc r15
+    push r15
+    jump CH376_Set_Mode_Host_1
+
+    ; print received char over uart
+    savpc r15
+    push r15
+    jump STD_Byte2_to_Hex
+
+    savpc r15
+    push r15
+    jump UART_print_reg
+
+
+    ; set usb mode
+    savpc r15
+    push r15
+    jump CH376_Set_USB_Mode
+
+    ; set mode host 2
+    savpc r15
+    push r15
+    jump CH376_Set_Mode_Host_2
+
+    ; print received char over uart
+    savpc r15
+    push r15
+    jump STD_Byte2_to_Hex
+
+    savpc r15
+    push r15
+    jump UART_print_reg
+
+
+    ; checking for drive in new usb mode
+    addr2reg CH376_String_Checking_connection r1
+    read 0 r1 r2
+    add r1 1 r1
+    savpc r15
+    push r15
+    jump UART_print_text
+
+    CH376_Check_drive_check_connection_2:
+    ; get status
+    savpc r15
+    push r15
+    jump CH376_Get_status
+
+    ; copy status code to r3
+    or r1 r0 r3
+
+    ; print received char over uart
+    savpc r15
+    push r15
+    jump STD_Byte2_to_Hex
+
+    savpc r15
+    push r15
+    jump UART_print_reg
+
+    ; keep checking until device connected
+    load ANSW_USB_INT_CONNECT r2
+    beq r3 r2 5
+        savpc r15
+        push r15
+        jump CH376_Delay_100ms
+        jump CH376_Check_drive_check_connection_2
+
+
+    ; wait a bit so device is properly connected
+    savpc r15
+    push r15
+    jump CH376_Delay_100ms
+
+
+    ; check if drive is ready
+    addr2reg CH376_String_Checking_drive_ready r1
+    read 0 r1 r2
+    add r1 1 r1
+    savpc r15
+    push r15
+    jump UART_print_text
+
+    load CMD_DISK_CONNECT r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    CH376_Check_drive_check_ready:
+    ; get status
+    savpc r15
+    push r15
+    jump CH376_Get_status
+
+    ; copy status code to r3
+    or r1 r0 r3
+
+    ; print received char over uart
+    savpc r15
+    push r15
+    jump STD_Byte2_to_Hex
+
+    savpc r15
+    push r15
+    jump UART_print_reg
+
+    ; keep checking until device ready
+    load ANSW_USB_INT_SUCCESS r2
+    beq r3 r2 5
+        savpc r15
+        push r15
+        jump CH376_Delay_100ms
+        jump CH376_Check_drive_check_ready
+
+
+    ; mounting drive
+    addr2reg CH376_String_Mounting_drive r1
+    read 0 r1 r2
+    add r1 1 r1
+    savpc r15
+    push r15
+    jump UART_print_text
+
+    load CMD_DISK_MOUNT r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    CH376_Check_drive_check_mounted:
+    ; get status
+    savpc r15
+    push r15
+    jump CH376_Get_status
+
+    ; copy status code to r3
+    or r1 r0 r3
+
+    ; print received char over uart
+    savpc r15
+    push r15
+    jump STD_Byte2_to_Hex
+
+    savpc r15
+    push r15
+    jump UART_print_reg
+
+    ; keep checking until drive mounted
+    load ANSW_USB_INT_SUCCESS r2
+    beq r3 r2 5
+        savpc r15
+        push r15
+        jump CH376_Delay_100ms
+        jump CH376_Check_drive_check_mounted
+        
 
     ; restore regs
     pop r3
@@ -197,29 +1094,21 @@ CH376_Get_status:
     ; backup regs
     push r2
 
-    savpc r15
-    push r15
-    jump SPI_beginTransfer
-
-    load 0x2631 r1
-    loadhi 0xC0 r1          ; r1 = 0xC02631 | SPI address
-    load CMD_GET_STATUS r2
-    write 0 r1 r2
+    load CMD_GET_STATUS r1
 
     savpc r15
     push r15
-    jump SPI_endTransfer
+    jump SPI_transfer
 
     savpc r15
     push r15
-    jump SPI_beginTransfer
-    
-    write 0 r1 r0
-    read 0 r1 r1
+    jump CH376_Delay_40us
+
+    load 0x00 r1
 
     savpc r15
     push r15
-    jump SPI_endTransfer
+    jump SPI_transfer
 
     ; restore regs
     pop r2
@@ -234,18 +1123,11 @@ CH376_Reset:
     push r1
     push r2
 
-    savpc r15
-    push r15
-    jump SPI_beginTransfer
-
-    load 0x2631 r1
-    loadhi 0xC0 r1          ; r1 = 0xC02631 | SPI address
-    load CMD_RESET_ALL r2
-    write 0 r1 r2
+    load CMD_RESET_ALL r1
 
     savpc r15
     push r15
-    jump SPI_endTransfer
+    jump SPI_transfer
 
     savpc r15
     push r15
@@ -273,18 +1155,11 @@ CH376_Set_USB_Mode:
     push r1
     push r2
 
-    savpc r15
-    push r15
-    jump SPI_beginTransfer
-
-    load 0x2631 r1
-    loadhi 0xC0 r1          ; r1 = 0xC02631 | SPI address
-    load CMD_SET_USB_MODE r2
-    write 0 r1 r2
+    load CMD_SET_USB_MODE r1
 
     savpc r15
     push r15
-    jump SPI_endTransfer
+    jump SPI_transfer
 
     savpc r15
     push r15
@@ -314,18 +1189,11 @@ CH376_Set_Mode_Host_0:
     push r2
     push r3
 
-    savpc r15
-    push r15
-    jump SPI_beginTransfer
-
-    load 0x2631 r1
-    loadhi 0xC0 r1          ; r1 = 0xC02631 | SPI address
-    load MODE_HOST_0 r2
-    write 0 r1 r2
+    load MODE_HOST_0 r1
 
     savpc r15
     push r15
-    jump SPI_endTransfer
+    jump SPI_transfer
 
     ; delay 40us
     savpc r15
@@ -341,18 +1209,97 @@ CH376_Set_Mode_Host_0:
     jump UART_print_text
 
     ; read from SPI
-    savpc r15
-    push r15
-    jump SPI_beginTransfer
-
-    load 0x2631 r1
-    loadhi 0xC0 r1          ; r1 = 0xC02631 | SPI address
-    write 0 r1 r0
-    read 0 r1 r1
+    load 0x00 r1
 
     savpc r15
     push r15
-    jump SPI_endTransfer
+    jump SPI_transfer
+
+    ; restore regs
+    pop r3
+    pop r2
+
+    ; return
+    pop r15
+    jumpr 3 r15
+
+
+; Set mode host 1, wait 40us and read status
+; OUTPUT:
+;   r1: Received status code
+CH376_Set_Mode_Host_1:
+    ; backup regs
+    push r2
+    push r3
+
+    load MODE_HOST_1 r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    ; delay 40us
+    savpc r15
+    push r15
+    jump CH376_Delay_40us
+
+    ; print to uart
+    addr2reg CH376_String_Mode_Host_1_set r1
+    read 0 r1 r2
+    add r1 1 r1
+    savpc r15
+    push r15
+    jump UART_print_text
+
+    ; read from SPI
+    load 0x00 r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    ; restore regs
+    pop r3
+    pop r2
+
+    ; return
+    pop r15
+    jumpr 3 r15
+
+
+; Set mode host 2, wait 40us and read status
+; OUTPUT:
+;   r1: Received status code
+CH376_Set_Mode_Host_2:
+    ; backup regs
+    push r2
+    push r3
+
+    load MODE_HOST_2 r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
+
+    ; delay 40us
+    savpc r15
+    push r15
+    jump CH376_Delay_40us
+
+    ; print to uart
+    addr2reg CH376_String_Mode_Host_2_set r1
+    read 0 r1 r2
+    add r1 1 r1
+    savpc r15
+    push r15
+    jump UART_print_text
+
+    ; read from SPI
+    load 0x00 r1
+
+    savpc r15
+    push r15
+    jump SPI_transfer
 
     ; restore regs
     pop r3
@@ -469,7 +1416,45 @@ CH376_String_Mode_Host_2_set:
 .dw 18
 .ds "Host mode set to 2"
 
+CH376_String_Sent_filename:
+.dw 13
+.ds "Filename sent"
 
+CH376_String_Opening_file:
+.dw 12
+.ds "Opening file"
+
+CH376_String_Closing_file:
+.dw 12
+.ds "Closing file"
+
+CH376_String_Creating_file:
+.dw 13
+.ds "Creating file"
+
+CH376_String_Deleting_file:
+.dw 13
+.ds "Deleting file"
+
+CH376_String_Request_write:
+.dw 16
+.ds "Requesting write"
+
+CH376_String_Write_data:
+.dw 10
+.ds "Write data"
+
+CH376_String_Write_WR_go:
+.dw 18
+.ds "Updating file size"
+
+CH376_String_Set_cursor:
+.dw 14
+.ds "Setting cursor"
+
+CH376_String_Read_file:
+.dw 9
+.ds "Read file"
 
 ; --------------UART-------------
 
@@ -618,6 +1603,35 @@ SPI_endTransfer:
     pop r15
     jumpr 3 r15
 
+
+; Writes byte over SPI
+; INPUT:
+;   r1: byte to write
+; OUTPUT:
+;   r1: read value
+SPI_transfer:
+    ; backup regs
+    push r2
+
+    savpc r15
+    push r15
+    jump SPI_beginTransfer
+
+    load 0x2631 r2
+    loadhi 0xC0 r2          ; r2 = 0xC02631 | SPI address
+    write 0 r2 r1           ; write r1 over SPI
+    read 0 r2 r1            ; read return value
+
+    savpc r15
+    push r15
+    jump SPI_endTransfer
+
+    ; restore regs
+    pop r2
+
+    ; return
+    pop r15
+    jumpr 3 r15
 
 ; --------------STD-------------
 

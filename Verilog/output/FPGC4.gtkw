@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v (Modified by Bart for High DPI displays) 3.3.103 (w)1999-2019 BSI
-[*] Thu Dec 26 22:34:44 2019
+[*] Sat Dec 28 15:59:02 2019
 [*]
 [dumpfile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/wave.vcd"
-[dumpfile_mtime] "Thu Dec 26 22:32:06 2019"
-[dumpfile_size] 8049371
+[dumpfile_mtime] "Sat Dec 28 15:38:03 2019"
+[dumpfile_size] 7869418
 [savefile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/FPGC4.gtkw"
-[timestart] 31240000
+[timestart] 83100000
 [size] 2736 1716
 [pos] -1 -1
-*-23.987394 54100000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-24.987394 264200000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] FPGC_tb.
 [treeopen] FPGC_tb.fpgc.
 [treeopen] FPGC_tb.fpgc.cpu.
@@ -218,7 +218,7 @@ FPGC_tb.fpgc.mu.we
 @200
 -
 -UARTtx
-@22
+@29
 FPGC_tb.fpgc.mu.r_Tx_Byte[7:0]
 @28
 FPGC_tb.fpgc.mu.r_Tx_DV
@@ -253,9 +253,7 @@ FPGC_tb.fpgc.mu.spi.count[3:0]
 FPGC_tb.fpgc.mu.spi.state[2:0]
 FPGC_tb.fpgc.mu.spi.d_in[7:0]
 FPGC_tb.fpgc.mu.spi.d_out[7:0]
-@25
 FPGC_tb.fpgc.mu.spi.spi_clk
-@24
 FPGC_tb.fpgc.mu.spi.miso
 FPGC_tb.fpgc.mu.spi.mosi
 @200

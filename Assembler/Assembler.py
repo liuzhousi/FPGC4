@@ -3,9 +3,14 @@
 import sys
 import CompileInstruction
 
-def parseLines():
+#List of already inserted libraries. 
+#To prevent multiple insertions of the same library.
+#Global to allow access in recursion
+libraryList = []
+
+def parseLines(fileName):
     parsedLines = []
-    with open('code.asm', 'r') as f:
+    with open(fileName, 'r') as f:
         for i, line in enumerate(f, start=1):
             # do something special in case of a .ds instruction
             if (len(line) > 4 and line.split(" ",maxsplit=1)[0] == ".ds"):
@@ -15,6 +20,21 @@ def parseLines():
                 if (parsedLine != []):
                     parsedLines.append((i, parsedLine))
     return parsedLines
+
+def insertLibraries(parsedLines):
+    returnList = []
+    returnList.extend(parsedLines)
+
+    for line in parsedLines:
+        if (len(line[1]) == 2):
+            if (line[1][0]) == "`include":
+                if (line[1][1] not in libraryList):
+                    libraryList.append(line[1][1])
+                    insertList = insertLibraries(parseLines(line[1][1])) #recursion to include libraries within libraries
+                    for i in range(len(insertList)): 
+                        returnList.insert(i, insertList[i]) 
+
+    return returnList
 
 
 def compileLine(line):
@@ -56,7 +76,8 @@ def compileLine(line):
         ".db"       : CompileInstruction.compileDb,
         ".ds"       : CompileInstruction.compileDs,
         "loadlabellow" : CompileInstruction.compileLoadLabelLow,
-        "loadlabelhigh" : CompileInstruction.compileLoadLabelHigh
+        "loadlabelhigh" : CompileInstruction.compileLoadLabelHigh,
+        "`include" : CompileInstruction.compileNothing
     }
 
 
@@ -92,7 +113,8 @@ def passOne(parsedLines):
                     if i != "data":
                         passOneResult.append((line[0], i + " //data"))
             else:
-                passOneResult.append((line[0], compiledLine))
+                if (compiledLine is not "ignore"):
+                    passOneResult.append((line[0], compiledLine))
         except Exception as e:
             print("Error in line " + str(line[0]) + ": " + " ".join(line[1]))
             print("The error is: {0}".format(e))
@@ -246,7 +268,10 @@ def checkNoLabels(parsedLines):
 def main():
 
     #parse lines from file
-    parsedLines = parseLines()
+    parsedLines = parseLines("code.asm")
+
+    #insert libraries
+    parsedLines = insertLibraries(parsedLines)
 
     #obtain and remove the define statements
     defines, parsedLines = obtainDefines(parsedLines)

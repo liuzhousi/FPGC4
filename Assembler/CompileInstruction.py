@@ -1203,3 +1203,7 @@ def compileDs(line):
         raise Exception("Invalid string: " + line[1])
     
     return compileDb(dbList)
+
+#compile nothing
+def compileNothing(line):
+    return "ignore"

@@ -5,7 +5,7 @@ The fourth version of the FPGC, based on the FPGC3, which is designed from scrat
 The FPGC4 as a whole is designed for use on a QMTECH EP4CE15 board (old revision with Micron SDRAM. Newer version has Winbond SDRAM and has not been tested yet). However, the CPU of the project is completely modular and should work on any FPGA.
 
 The FPGC4 is a game console/PC that is implemented in an FPGA. 
-The console runs on a self designed CPU called the B322 (B4rt 32bit processor v2) and a self designed GPU called the FSX2 (Frame Synthesizer v2). As reference for the performance of this system, one should expect something similar to a Commodore 64 or NES, but with a relative huge amount of memory.
+The console runs on a self designed CPU called the B322 (B4rt 32bit processor v2) and a self designed GPU called the FSX2 (Frame Synthesizer v2). As reference for the performance of this system, one should expect something similar to a Commodore 64 or NES, but with a relatively huge amount of memory.
 
 ## Hardware description
 
@@ -14,17 +14,17 @@ These are the current specifications of the FPGC4:
 
 - 25MHz CPU clock   
 - 9MHz GPU clock
-- 16MiB SPI flash. 32bit addresses. Read only
+- 16MiB SPI flash (QSPI) @ 25MHz. 32bit addresses. Read only
 - 32MiB SDRAM @ 25MHz. 32bit addresses. Readable and writeable
-- 8.24KB VRAM (SRAM). TODO(fix info) 1024+16 addresses @ 32bit and 2x2040 addresses @ 8bit
+- 8.24KB VRAM (SRAM). 1024+32 addresses @ 32bit and 4x2048 + 2 addresses @ 8bit
 - 2KiB ROM as bootloader. 32bit addresses
 - 16 32bit registers
 - 32bit instructions
 - 27bit program counter, for a possible future address space of 0.5GiB
 - 480x256 frames with 256 colors (60 x 32 tiles of 8x8 pixels)
 - Frames rendered on a 480x272 4.3 inch TFT screen (with the worst viewing angles EVER!) over a 40pin TTL interface
-- Three CTC timers
-- 4 interrupt pins (currently attached to all three timers and the frameDrawn signal of the FSX2)
+- Three CTC timers, third timer currently not a ttached to an interrupt
+- 4 interrupt pins (two timers, UART rx and the frameDrawn signal of the FSX2)
 - 2 square wave tone generators with each 4 tones
 
 ### Computer Architecture
@@ -143,9 +143,12 @@ $C02622 +------------------------+
         | Timer3_ctrl    $C0262B |
         | TonePlayer1    $C0262C |
         | TonePlayer2    $C0262D |
-        | GPIO (TODO)    $C0262E |
+        | UART tx        $C0262E |
+        | UART rx        $C0262F |
+        | GPIO           $C02630 |
+        | SPI (CH376s)   $C02631 |
         |                        |
-        |                        | $C0262E 
+        |                        | $C02631 
         +------------------------+ 
 
 ```
@@ -182,6 +185,10 @@ $1800 +------------------------+
       |                        |
       |   Window Color Table   |
       |                        | $1FFF
+$2000 +------------------------+
+      |                        |
+      |       Parameters       |
+      |                        | $2001
       +------------------------+
 ```
 
@@ -257,10 +264,10 @@ Contains 16 32 bit registers.
 The 16 32 bit registers have the current functions:
 ```
 0 : Always zero
-1 : GP/Arg1
-2 : GP/Arg2
-3 : GP/Arg3
-4 : GP/Arg4
+1 : GP/Argument or retval
+2 : GP/Argument or retval
+3 : GP/Argument or retval
+4 : GP
 5 : GP
 6 : GP
 7 : GP
@@ -268,9 +275,9 @@ The 16 32 bit registers have the current functions:
 9 : GP
 10: GP
 11: GP
-12: GP/Return Value 3
-13: GP/Return Value 2
-14: GP/Return Value 1
+12: GP
+13: GP
+14: GP
 15: Return pointer/GP
 ```
 The register bank has two read ports and one write port. Internally on the FPGA, the registers are not implemented in block RAM, but I might change this in the future to save elements.
@@ -282,7 +289,7 @@ The stack is 1024 words deep. The stack pointer is not accessable by the rest of
 
 ###### ALU
 Can execute 16 different operations on two 32 bit inputs. Has two flags.
-
+/Argument or retval/Argument or retval
 The 4 bit opcode can specify the following operations:
 ```
 Operation|Opcode|Description
@@ -324,7 +331,7 @@ The MU, or memory unit, handles all memory access between the CPU and all the di
 The MU is connected to the following memories:
 
 ##### SPI flash
-The SPI flash contains the program of FPGC4, since it is located on a modular chip which can be easily removed and then reprogrammed by something like an Arduino. The size of the flash we use is currently 16MiB. The MU makes use of an SPI flash controller which accesses the flash chip in quad SPI mode with continuous reading for the fastest performance possible. The maximum speed without modifying the amount of dummy clocks for each read is 25MHz, which is currently the speed of most of the FPGC4, which is very convenient. Only read instructions are implemented, so no writing or erasing is possible on the FPGC4. Because of the SPI interface, it takes many cycles to read one 32 bit instruction. Therefore, the contents are copied to the faster SDRAM by the bootloader. While the SPI flash chip uses 8 bit addresses internally, the controller can be addressed by 32 bit words. The values of 'empty' addresses are all ones.
+The SPI flash contains the program of FPGC4, since it is located on a modular chip which can be easily removed and then reprogrammed by something like an Arduino. The size of the flash we use is currently 16MiB. The MU makes use of an SPI flash controller which accesses the flash chip in quad SPI mode with continuous reading for faster performance. The maximum speed without modifying the amount of dummy clocks for each read is 25MHz, which is currently the speed of most of the FPGC4, which is very convenient. Only read instructions are implemented, so no writing or erasing is possible on the FPGC4. Because of the SPI interface, it takes many cycles to read one 32 bit instruction. Therefore, the contents are copied to the faster SDRAM by the bootloader. While the SPI flash chip uses 8 bit addresses internally, the controller can be addressed by 32 bit words. The values of 'empty' addresses are all ones.
 
 To test the timing system, I added a simulation model of a W25Q128JV SPI chip, which is compatible with the W25Q128BV I use in hardware. The SPI flash controller reads from this chip when a trigger occurs. When done reading it sets a recvDone signal high. Before all of this can happen, the chip has to be initialized. This is done by sending a 'reset continuous reading' command and a read command with the continuous reading bits set. This way each read does not have to start with an 8 cycle instruction. After initialization, an initDone signal is set high. When the MU gets a request from the CPU to read from SPI flash while the chip is not initialized yet, then the MU will wait until initialization is done before reading.
 

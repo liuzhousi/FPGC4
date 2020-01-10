@@ -24,6 +24,8 @@ module FSX(
     output [13:0]       vram8_addr,
     input  [7:0]        vram8_q,
 
+    //TODO sprite write port
+
     //Interrupt signal
     output wire         frameDrawn
 );
@@ -150,6 +152,55 @@ BGWrenderer #(
     .frameDrawn(frameDrawn)
 );
 
+wire [2:0] SPR_r;
+wire [2:0] SPR_g;
+wire [1:0] SPR_b;
+
+wire       draw_sprite;
+wire       draw_behind_bg;
+
+Spriterenderer #(
+    .H_RES(480),      // horizontal resolution (pixels)
+    .V_RES(272),      // vertical resolution (lines)
+    .H_FP(2),        // horizontal front porch
+    .H_SYNC(41),       // horizontal sync
+    .H_BP(2),        // horizontal back porch
+    .V_FP(2),        // vertical front porch
+    .V_SYNC(10),       // vertical sync
+    .V_BP(2),        // vertical back porch
+    .H_POL(0),        // horizontal sync polarity (0:neg, 1:pos)
+    .V_POL(0)         // vertical sync polarity (0:neg, 1:pos)
+) spriterenderer(
+    //VGA I/O
+    .vga_clk(vga_clk),            //9MHz
+    .vga_hs(vga_hs),
+    .vga_vs(vga_vs),
+    
+    .vga_r(SPR_r),
+    .vga_g(SPR_g),
+    .vga_b(SPR_b),
+
+    .h_count(h_count),  // line position in pixels including blanking 
+    .v_count(v_count),  // frame position in lines including blanking 
+
+    .o_hs(o_hs), 
+    .o_vs(o_vs), 
+    .o_de(o_de), 
+    .o_h(o_h), 
+    .o_v(o_v), 
+    .o_frame(o_frame),
+
+    //VRAM32
+    .vram32_addr(vram322_addr), //use copy of vram32 here
+    .vram32_q(vram322_q), //use copy of vram32 here
+
+    //TODO sprite write port
+    
+    //Drawing signals
+    .draw_sprite(draw_sprite),
+    .draw_behind_bg(draw_behind_bg)
+);
+
 //FRAME TO PICTURE IN SIMULATION
 
 integer file;
@@ -171,10 +222,13 @@ begin
     end
 end
 
+//temporary for testing. Should implement some kind of pixelvalid in spriterenderer
+wire sprite_drawn;
+assign sprite_drawn = (SPR_r != 3'd0 || SPR_g != 3'd0 || SPR_b != 2'd0) ? 1'b1:
+                    1'b0;
 
-
-assign vga_r =  BGW_r;
-assign vga_g =  BGW_g;
-assign vga_b =  BGW_b;
+assign vga_r =  (sprite_drawn) ?  SPR_r: BGW_r;
+assign vga_g =  (sprite_drawn) ?  SPR_g: BGW_g;
+assign vga_b =  (sprite_drawn) ?  SPR_b: BGW_b;
 
 endmodule

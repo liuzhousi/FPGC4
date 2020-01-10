@@ -14,9 +14,10 @@
 
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/GPU/FSX.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/GPU/BGWrenderer.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/GPU/Spriterenderer.v"
 
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/VRAM.v"
-`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/mt48lc16m16a2.v"
+/*`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/mt48lc16m16a2.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/w25q128jv.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/SDRAMcontroller.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/SPIreader.v"
@@ -38,7 +39,7 @@
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/CTCtimer.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/UARTtx.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/UARTrx.v"
-`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/SimpleSPI.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/SimpleSPI.v"*/
 
 //Define testmodule
 module FPGC_tb;

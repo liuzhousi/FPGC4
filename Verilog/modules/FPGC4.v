@@ -112,6 +112,39 @@ VRAM #(
 );
 
 
+//---------------------------VRAM322--------------------------------
+//VRAM322 I/O
+wire        vram322_gpu_clk;
+wire [13:0] vram322_gpu_addr;
+wire [31:0] vram322_gpu_d;
+wire        vram322_gpu_we;
+wire [31:0] vram322_gpu_q;
+
+//because FSX will not write to VRAM
+assign vram322_gpu_we    = 1'b0;
+assign vram322_gpu_d     = 32'd0;
+
+VRAM #(
+.WIDTH(32), 
+.WORDS(1056), 
+.LIST("/home/bart/Documents/FPGA/FPGC4/Verilog/memory/vram32.list")
+)   vram322(
+//CPU port
+.cpu_clk    (clk),
+.cpu_d      (vram32_cpu_d),
+.cpu_addr   (vram32_cpu_addr),
+.cpu_we     (vram32_cpu_we),
+.cpu_q      (vram32_cpu_q),
+
+//GPU port
+.gpu_clk    (vga_clk),
+.gpu_d      (vram322_gpu_d),
+.gpu_addr   (vram322_gpu_addr),
+.gpu_we     (vram322_gpu_we),
+.gpu_q      (vram322_gpu_q)
+);
+
+
 //--------------------------VRAM8--------------------------------
 //VRAM8 I/O
 wire        vram8_gpu_clk;
@@ -172,9 +205,16 @@ FSX fsx(
 .vram32_addr    (vram32_gpu_addr),
 .vram32_q       (vram32_gpu_q),
 
+//VRAM32
+.vram322_addr   (vram322_gpu_addr),
+.vram322_q      (vram322_gpu_q),
+
 //VRAM8
 .vram8_addr     (vram8_gpu_addr),
 .vram8_q        (vram8_gpu_q),
+
+//TODO
+//sprite register write logic port
 
 //Interrupt signal
 .frameDrawn     (frameDrawn)
@@ -185,14 +225,14 @@ FSX fsx(
 //ROM I/O
 wire [8:0] rom_addr;
 wire [31:0] rom_q;
-
+/*
 ROM rom(
 .clk            (clk),
 .reset          (reset),
 .address        (rom_addr),
 .q              (rom_q)
 );
-
+*/
 
 //----------------Memory Unit--------------------
 //Memory Unit I/O
@@ -206,7 +246,7 @@ wire [31:0] q;
 wire        t1_interrupt;
 wire        t2_interrupt;
 wire        t3_interrupt;
-
+/*
 MemoryUnit mu(
 //clocks
 .clk            (clk),
@@ -285,10 +325,12 @@ MemoryUnit mu(
 .GPI(GPI),
 .GPO(GPO)
 );
-
+*/
 
 //---------------CPU----------------
 //CPU I/O
+
+/*
 
 CPU cpu(
 .clk            (clk),
@@ -304,5 +346,7 @@ CPU cpu(
 .start          (start),
 .busy           (busy)
 );
+
+*/
 
 endmodule

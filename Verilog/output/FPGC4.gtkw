@@ -1,20 +1,20 @@
 [*]
 [*] GTKWave Analyzer v3.3.86 (w)1999-2017 BSI
-[*] Fri Jan 10 13:50:49 2020
+[*] Fri Jan 10 16:10:25 2020
 [*]
 [dumpfile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/wave.vcd"
-[dumpfile_mtime] "Fri Jan 10 13:50:16 2020"
-[dumpfile_size] 46205479
+[dumpfile_mtime] "Fri Jan 10 16:09:46 2020"
+[dumpfile_size] 17938763
 [savefile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/FPGC4.gtkw"
-[timestart] 588900
+[timestart] 860709
 [size] 1920 1024
 [pos] -1 -1
-*-16.838461 650980 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-6.838461 861020 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] FPGC_tb.
 [treeopen] FPGC_tb.fpgc.
 [treeopen] FPGC_tb.fpgc.fsx.
-[sst_width] 474
-[signals_width] 351
+[sst_width] 272
+[signals_width] 653
 [sst_expanded] 1
 [sst_vpaned_height] 505
 @28
@@ -63,9 +63,7 @@ FPGC_tb.fpgc.fsx.v_count[8:0]
 FPGC_tb.fpgc.fsx.spriterenderer.h_count[9:0]
 FPGC_tb.fpgc.fsx.spriterenderer.h_count_visible[9:0]
 FPGC_tb.fpgc.fsx.spriterenderer.h_tile_next[5:0]
-@25
 FPGC_tb.fpgc.fsx.spriterenderer.h_tile[5:0]
-@24
 FPGC_tb.fpgc.fsx.spriterenderer.h_tile_pixel[2:0]
 @200
 -
@@ -82,14 +80,86 @@ FPGC_tb.fpgc.fsx.spriterenderer.tile_next[10:0]
 @200
 -
 @24
-FPGC_tb.fpgc.fsx.spriterenderer.sprite0phase[5:0]
-FPGC_tb.fpgc.fsx.spriterenderer.sprite0phaseOffset[5:0]
+FPGC_tb.fpgc.fsx.spriterenderer.spritephase[5:0]
+FPGC_tb.fpgc.fsx.spriterenderer.spritephaseOffset[5:0]
 @200
 -
 @24
+FPGC_tb.fpgc.fsx.spriterenderer.h_count_div2[9:0]
+FPGC_tb.fpgc.fsx.spriterenderer.h_count_div2_offset[9:0]
+@25
+FPGC_tb.fpgc.fsx.spriterenderer.sprite0Hpixel[3:0]
+@24
 FPGC_tb.fpgc.fsx.spriterenderer.sprite0Vpixel[3:0]
+@c00028
+FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
 @28
-FPGC_tb.fpgc.fsx.spriterenderer.rendered_sprite[63:0]
+(0)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(1)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(2)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(3)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(4)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(5)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(6)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(7)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(8)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(9)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(10)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(11)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(12)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(13)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(14)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(15)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(16)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(17)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(18)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(19)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(20)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(21)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(22)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(23)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(24)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(25)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(26)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(27)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(28)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(29)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(30)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(31)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(32)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(33)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(34)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(35)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(36)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(37)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(38)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(39)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(40)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(41)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(42)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(43)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(44)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(45)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(46)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(47)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(48)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(49)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(50)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(51)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(52)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(53)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(54)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(55)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(56)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(57)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(58)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(59)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(60)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(61)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(62)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+(63)FPGC_tb.fpgc.fsx.spriterenderer.rendered0[63:0]
+@1401200
+-group_end
 @200
 -
 -Memory

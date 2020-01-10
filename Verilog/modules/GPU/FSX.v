@@ -105,10 +105,11 @@ initial begin
     v_count = 12'd0;
 end
 
-wire [2:0] BGW_r;
-wire [2:0] BGW_g;
-wire [1:0] BGW_b;
+reg [2:0] BGW_r = 0;
+reg [2:0] BGW_g = 0;
+reg [1:0] BGW_b = 0;
 
+/*
 BGWrenderer #(
     .H_RES(480),      // horizontal resolution (pixels)
     .V_RES(272),      // vertical resolution (lines)
@@ -150,7 +151,7 @@ BGWrenderer #(
 
     //Interrupt signal
     .frameDrawn(frameDrawn)
-);
+);*/
 
 wire [2:0] SPR_r;
 wire [2:0] SPR_g;

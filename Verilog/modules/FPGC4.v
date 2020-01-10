@@ -134,7 +134,7 @@ VRAM #(
 .cpu_d      (vram32_cpu_d),
 .cpu_addr   (vram32_cpu_addr),
 .cpu_we     (vram32_cpu_we),
-.cpu_q      (vram32_cpu_q),
+.cpu_q      (),
 
 //GPU port
 .gpu_clk    (vga_clk),

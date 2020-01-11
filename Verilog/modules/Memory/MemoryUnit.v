@@ -318,9 +318,9 @@ assign vram8_cpu_addr   = (address >= 27'hC00420 && address < 27'hC02422)   ? ad
 assign vram8_cpu_d      = (address >= 27'hC00420 && address < 27'hC02422)   ? data                      : 8'd0;
 assign vram8_cpu_we     = (address >= 27'hC00420 && address < 27'hC02422)   ? we                        : 1'd0;
 
-assign vramSPR_cpu_addr   = (address >= 27'hC02632 && address < 27'hC02672) ? address - 27'hC02632      : 14'd0;
-assign vramSPR_cpu_d      = (address >= 27'hC02632 && address < 27'hC02672) ? data                      : 9'd0;
-assign vramSPR_cpu_we     = (address >= 27'hC02632 && address < 27'hC02672) ? we                        : 1'd0;
+assign vramSPR_cpu_addr   = (address >= 27'hC02632 && address < 27'hC02732) ? address - 27'hC02632      : 14'd0;
+assign vramSPR_cpu_d      = (address >= 27'hC02632 && address < 27'hC02732) ? data                      : 9'd0;
+assign vramSPR_cpu_we     = (address >= 27'hC02632 && address < 27'hC02732) ? we                        : 1'd0;
 
 assign rom_addr         = (address >= 27'hC02422 && address < 27'hC02622)   ? address - 27'hC02422      : 9'd0;
 
@@ -469,14 +469,14 @@ begin
         end
 
         //VRAM8
-        if (busy && address >= 27'hC02632 && address < 27'hC02672)
+        if (busy && address >= 27'hC02632 && address < 27'hC02732)
         begin
             busy <= 0;
             q <= {23'd0, vramSPR_cpu_q};
         end
 
         //Prevent lockups
-        if (busy && address >= 27'hC02672)
+        if (busy && address >= 27'hC02732)
         begin
             busy <= 0;
             q <= 32'd0;

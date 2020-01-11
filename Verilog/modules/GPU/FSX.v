@@ -37,7 +37,7 @@ assign vga_blk = 1'b1;
 parameter
     H_RES=480,      // horizontal resolution (pixels)
     V_RES=272,      // vertical resolution (lines)
-    H_FP=82,        // horizontal front porch
+    H_FP=2,        // horizontal front porch
     H_SYNC=41,      // horizontal sync
     H_BP=2,        // horizontal back porch
     V_FP=2,        // vertical front porch
@@ -106,6 +106,12 @@ initial begin
     h_count = 12'd0;
     v_count = 12'd0;
 end
+
+/*
+reg [2:0] BGW_r = 0;
+reg [2:0] BGW_g = 0;
+reg [1:0] BGW_b = 0;
+*/
 
 wire [2:0] BGW_r;
 wire [2:0] BGW_g;

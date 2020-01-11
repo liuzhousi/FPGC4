@@ -13,7 +13,6 @@
 define MUSIC_LEN                    = 12        ; number of notes
 
 Main:
-    jump SkipTEST
 
     savpc r15
     push r15
@@ -122,7 +121,76 @@ Main:
     ;END CRAPPY MUSIC TEST INIT CODE
 
 
-    SkipTEST:
+    ; INIT SPRITES TEST
+    load 0x2632 r1
+    loadhi 0xC0 r1
+
+    load 46 r2
+    write 0 r1 r2
+    load 43 r2
+    write 1 r1 r2
+    load 1 r2
+    write 2 r1 r2
+    load 0b100000 r2
+    write 3 r1 r2
+
+    add r1 4 r1 
+
+    load 127 r2
+    write 0 r1 r2
+    load 47 r2
+    write 1 r1 r2
+    load 2 r2
+    write 2 r1 r2
+    load 0b010000 r2
+    write 3 r1 r2
+
+    add r1 4 r1 
+
+    load 376 r2
+    write 0 r1 r2
+    load 221 r2
+    write 1 r1 r2
+    load 3 r2
+    write 2 r1 r2
+    load 0b000000 r2
+    write 3 r1 r2
+
+    add r1 4 r1 
+
+    load 276 r2
+    write 0 r1 r2
+    load 121 r2
+    write 1 r1 r2
+    load 4 r2
+    write 2 r1 r2
+    load 0b000000 r2
+    write 3 r1 r2
+
+    add r1 4 r1 
+
+    load 256 r2
+    write 0 r1 r2
+    load 171 r2
+    write 1 r1 r2
+    load 5 r2
+    write 2 r1 r2
+    load 0b100000 r2
+    write 3 r1 r2
+
+    add r1 4 r1 
+
+    load 260 r2
+    write 0 r1 r2
+    load 175 r2
+    write 1 r1 r2
+    load 6 r2
+    write 2 r1 r2
+    load 0b010000 r2
+    write 3 r1 r2
+
+
+
 
     savpc r15
     push r15
@@ -342,13 +410,13 @@ Int4:
     load 0x2632 r1
     loadhi 0xC0 r1
 
-    read 0 r1 r2
+    read 164 r1 r2
     add r2 1 r2
-    write 0 r1 r2
+    write 164 r1 r2
 
-    read 1 r1 r2
+    read 165 r1 r2
     add r2 1 r2
-    write 1 r1 r2
+    write 165 r1 r2
 
     pop r5
     pop r4

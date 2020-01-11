@@ -204,7 +204,7 @@ assign vramSPR_gpu_d      = 9'd0;
 
 VRAM #(
 .WIDTH(9), 
-.WORDS(64), 
+.WORDS(256), 
 .LIST("/home/bart/Documents/FPGA/FPGC4/Verilog/memory/vramSPR.list")
 )   vramSPR(
 //CPU port

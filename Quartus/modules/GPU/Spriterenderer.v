@@ -61,43 +61,131 @@ module Spriterenderer
 parameter MAX_SPRITES = 16;
 //currently two sprites
 reg [33:0] sprites [0:MAX_SPRITES-1];
+reg [33:0] sprites_next [0:MAX_SPRITES-1];
 reg [5:0] spriteIdx = 0;
 
 
-integer x=0;
-initial
-begin
-    for (x=0; x<MAX_SPRITES; x=x+1)
-    begin
-        sprites[x] = 34'd0;
-    end
-end
 
-
-assign vramSPR_addr = (v_count == 21) ? h_count:
-                        14'd0;
 
 reg [9:0] h_count_delay;
+reg [9:0] h_count_visible_delay;
 reg [8:0] v_count_delay;
+reg [8:0] v_count_visible_delay;
 
 always @(negedge vga_clk)
 begin
     h_count_delay <= h_count;
     v_count_delay <= v_count;
+    h_count_visible_delay <= h_count_visible;
+    v_count_visible_delay <= v_count_visible;
 end
 
-//fetch during vcount == 21
+reg [5:0] spriteSelectionList [0:MAX_SPRITES-1];
+reg [5:0] spriteSelectionCount;
 
+//DEBUG
+/*
+wire [5:0] spriteSelectionList0;
+assign spriteSelectionList0 = spriteSelectionList[0];
+wire [5:0] spriteSelectionList1;
+assign spriteSelectionList1 = spriteSelectionList[1];
+wire [5:0] spriteSelectionList2;
+assign spriteSelectionList2 = spriteSelectionList[2];
+wire [5:0] spriteSelectionList3;
+assign spriteSelectionList3 = spriteSelectionList[3];
+wire [5:0] spriteSelectionList4;
+assign spriteSelectionList4 = spriteSelectionList[4];
+wire [5:0] spriteSelectionList5;
+assign spriteSelectionList5 = spriteSelectionList[5];
+wire [5:0] spriteSelectionList6;
+assign spriteSelectionList6 = spriteSelectionList[6];
+wire [33:0] sprite0;
+assign sprite0 = sprites[0];
+wire [33:0] sprite1;
+assign sprite1 = sprites[1];
+wire [33:0] sprite2;
+assign sprite2 = sprites[2];
+wire [33:0] sprite3;
+assign sprite3 = sprites[3];
+wire [33:0] sprite4;
+assign sprite4 = sprites[4];
+wire [33:0] sprite5;
+assign sprite5 = sprites[5];
+wire [33:0] sprite6;
+assign sprite6 = sprites[6];
+*/
+
+//select for next line during h_count_visible (delay)
+
+integer x=0;
 always @(posedge vga_clk)
 begin
-    if (v_count_delay == 21 && h_count_delay < MAX_SPRITES*4)
+    if (h_count_visible_delay > 512) //do somewhere at end of hline
     begin
-        case (h_count_delay[1:0])
-            2'd0 : sprites[h_count_delay/4][33:25]   <= vramSPR_q[8:0];
-            2'd1 : sprites[h_count_delay/4][24:17]   <= vramSPR_q[7:0];
-            2'd2 : sprites[h_count_delay/4][16:9]    <= vramSPR_q[7:0];
-            2'd3 : sprites[h_count_delay/4][8:0]     <= vramSPR_q[8:0];
-        endcase
+        spriteSelectionCount <= 6'd0;
+        for (x=0; x<MAX_SPRITES; x=x+1)
+        begin
+            spriteSelectionList[x] <= 6'd0;
+        end
+    end
+    else 
+    begin
+        if (v_count_visible_delay < 256 || v_count_visible == 511)
+        begin
+            if (spriteSelectionCount < MAX_SPRITES)
+            begin
+                if (h_count_visible_delay < 64)
+                begin
+                    if ((v_count_visible_delay + 1) >= vramSPR_q && (v_count_visible_delay + 1) < vramSPR_q + 8)
+                    begin
+                        spriteSelectionList[spriteSelectionCount] <= h_count_visible_delay;
+                        spriteSelectionCount <= spriteSelectionCount + 1'b1;
+                    end
+                end
+            end
+        end
+    end
+end
+
+assign vramSPR_addr =   (v_count_visible != 511 && v_count_visible > 256) ? 15'd0:
+                        (h_count_visible > 0 && h_count_visible < 128) ? (h_count_visible * 4) + 1'b1:
+                        (spriteSelectionList[(h_count_visible-128)>>2]<<2) + h_count_visible[1:0];
+
+
+integer v=0;
+always @(posedge vga_clk)
+begin
+    if (h_count_visible_delay == 127) //right before writing the sprites
+    begin
+        for (v=0; v<MAX_SPRITES; v=v+1)
+        begin
+            sprites_next[v] <= 34'd0;
+        end
+    end
+    else 
+    begin
+        if (h_count_visible_delay >= 128 && h_count_visible_delay < 192)
+        begin
+            case (h_count_visible_delay[1:0])
+                2'd0 : sprites_next[(h_count_visible_delay-128)/4][33:25]   <= vramSPR_q[8:0];
+                2'd1 : sprites_next[(h_count_visible_delay-128)/4][24:17]   <= vramSPR_q[7:0];
+                2'd2 : sprites_next[(h_count_visible_delay-128)/4][16:9]    <= vramSPR_q[7:0];
+                2'd3 : sprites_next[(h_count_visible_delay-128)/4][8:0]     <= vramSPR_q[8:0];
+            endcase
+            
+        end
+    end
+end
+
+integer b=0;
+always @(negedge vga_clk)
+begin
+    if (h_count == 524)
+    begin
+        for (b=0; b<MAX_SPRITES; b=b+1)
+        begin
+            sprites[b] <= sprites_next[b];
+        end
     end
 end
 
@@ -197,6 +285,9 @@ endgenerate
 
 reg [63:0] rendered_sprite [0:MAX_SPRITES-1];
 
+wire [63:0] rendered_sprite0;
+assign rendered_sprite0 = rendered_sprite[0];
+
 
 reg [15:0] pattern;
 reg [31:0] palette;
@@ -281,6 +372,12 @@ wire [3:0] sprite_r [0:MAX_SPRITES-1];
 wire [3:0] sprite_g [0:MAX_SPRITES-1];
 wire [2:0] sprite_b [0:MAX_SPRITES-1];
 
+
+wire spriteVisible0;
+assign spriteVisible0 = spriteVisible[0];
+
+wire [2:0] spriteHpixel0;
+assign spriteHpixel0 = spriteHpixel[0];
 
 //For generating sprite rgb assignments
 genvar j;

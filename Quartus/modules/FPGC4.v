@@ -143,6 +143,39 @@ VRAM #(
 );
 
 
+//---------------------------VRAM322--------------------------------
+//VRAM322 I/O
+wire        vram322_gpu_clk;
+wire [13:0] vram322_gpu_addr;
+wire [31:0] vram322_gpu_d;
+wire        vram322_gpu_we;
+wire [31:0] vram322_gpu_q;
+
+//because FSX will not write to VRAM
+assign vram322_gpu_we    = 1'b0;
+assign vram322_gpu_d     = 32'd0;
+
+VRAM #(
+.WIDTH(32), 
+.WORDS(1056), 
+.LIST("/home/bart/Documents/FPGA/FPGC4/Verilog/memory/vram32.list")
+)   vram322(
+//CPU port
+.cpu_clk    (clk),
+.cpu_d      (vram32_cpu_d),
+.cpu_addr   (vram32_cpu_addr),
+.cpu_we     (vram32_cpu_we),
+.cpu_q      (),
+
+//GPU port
+.gpu_clk    (vga_clk),
+.gpu_d      (vram322_gpu_d),
+.gpu_addr   (vram322_gpu_addr),
+.gpu_we     (vram322_gpu_we),
+.gpu_q      (vram322_gpu_q)
+);
+
+
 //--------------------------VRAM8--------------------------------
 //VRAM8 I/O
 wire        vram8_gpu_clk;
@@ -182,6 +215,45 @@ VRAM #(
 );
 
 
+//--------------------------VRAMSPR--------------------------------
+//VRAMSPR I/O
+wire        vramSPR_gpu_clk;
+wire [13:0] vramSPR_gpu_addr;
+wire [8:0]  vramSPR_gpu_d;
+wire        vramSPR_gpu_we;
+wire [8:0]  vramSPR_gpu_q;
+
+wire        vramSPR_cpu_clk;
+wire [13:0] vramSPR_cpu_addr;
+wire [8:0]  vramSPR_cpu_d;
+wire        vramSPR_cpu_we;
+wire [8:0]  vramSPR_cpu_q;
+
+//because FSX will not write to VRAM
+assign vramSPR_gpu_we     = 1'b0;
+assign vramSPR_gpu_d      = 9'd0;
+
+VRAM #(
+.WIDTH(9), 
+.WORDS(64), 
+.LIST("/home/bart/Documents/FPGA/FPGC4/Verilog/memory/vramSPR.list")
+)   vramSPR(
+//CPU port
+.cpu_clk    (clk),
+.cpu_d      (vramSPR_cpu_d),
+.cpu_addr   (vramSPR_cpu_addr),
+.cpu_we     (vramSPR_cpu_we),
+.cpu_q      (vramSPR_cpu_q),
+
+//GPU port
+.gpu_clk    (vga_clk),
+.gpu_d      (vramSPR_gpu_d),
+.gpu_addr   (vramSPR_gpu_addr),
+.gpu_we     (vramSPR_gpu_we),
+.gpu_q      (vramSPR_gpu_q)
+);
+
+
 //-----------------------FSX-------------------------
 //FSX I/O
 
@@ -199,9 +271,17 @@ FSX fsx(
 .vram32_addr    (vram32_gpu_addr),
 .vram32_q       (vram32_gpu_q),
 
+//VRAM32
+.vram322_addr   (vram322_gpu_addr),
+.vram322_q      (vram322_gpu_q),
+
 //VRAM8
 .vram8_addr     (vram8_gpu_addr),
 .vram8_q        (vram8_gpu_q),
+
+//VRAMSPR
+.vramSPR_addr   (vramSPR_gpu_addr),
+.vramSPR_q      (vramSPR_gpu_q),
 
 //Interrupt signal
 .frameDrawn     (frameDrawn)
@@ -258,6 +338,12 @@ MemoryUnit mu(
 .vram8_cpu_addr (vram8_cpu_addr), 
 .vram8_cpu_we   (vram8_cpu_we),
 .vram8_cpu_q    (vram8_cpu_q),
+
+//vramSPR cpu side
+.vramSPR_cpu_d    (vramSPR_cpu_d),
+.vramSPR_cpu_addr (vramSPR_cpu_addr), 
+.vramSPR_cpu_we   (vramSPR_cpu_we),
+.vramSPR_cpu_q    (vramSPR_cpu_q),
 
 //ROM
 .rom_addr       (rom_addr),

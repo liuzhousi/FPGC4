@@ -184,6 +184,45 @@ VRAM #(
 );
 
 
+//--------------------------VRAMSPR--------------------------------
+//VRAMSPR I/O
+wire        vramSPR_gpu_clk;
+wire [13:0] vramSPR_gpu_addr;
+wire [8:0]  vramSPR_gpu_d;
+wire        vramSPR_gpu_we;
+wire [8:0]  vramSPR_gpu_q;
+
+wire        vramSPR_cpu_clk;
+wire [13:0] vramSPR_cpu_addr;
+wire [8:0]  vramSPR_cpu_d;
+wire        vramSPR_cpu_we;
+wire [8:0]  vramSPR_cpu_q;
+
+//because FSX will not write to VRAM
+assign vramSPR_gpu_we     = 1'b0;
+assign vramSPR_gpu_d      = 9'd0;
+
+VRAM #(
+.WIDTH(9), 
+.WORDS(64), 
+.LIST("/home/bart/Documents/FPGA/FPGC4/Verilog/memory/vramSPR.list")
+)   vramSPR(
+//CPU port
+.cpu_clk    (clk),
+.cpu_d      (vramSPR_cpu_d),
+.cpu_addr   (vramSPR_cpu_addr),
+.cpu_we     (vramSPR_cpu_we),
+.cpu_q      (vramSPR_cpu_q),
+
+//GPU port
+.gpu_clk    (vga_clk),
+.gpu_d      (vramSPR_gpu_d),
+.gpu_addr   (vramSPR_gpu_addr),
+.gpu_we     (vramSPR_gpu_we),
+.gpu_q      (vramSPR_gpu_q)
+);
+
+
 //-----------------------FSX-------------------------
 //FSX I/O
 wire frameDrawn;      //high when frame just rendered
@@ -213,8 +252,9 @@ FSX fsx(
 .vram8_addr     (vram8_gpu_addr),
 .vram8_q        (vram8_gpu_q),
 
-//TODO
-//sprite register write logic port
+//VRAMSPR
+.vramSPR_addr   (vramSPR_gpu_addr),
+.vramSPR_q      (vramSPR_gpu_q),
 
 //Interrupt signal
 .frameDrawn     (frameDrawn)
@@ -225,14 +265,14 @@ FSX fsx(
 //ROM I/O
 wire [8:0] rom_addr;
 wire [31:0] rom_q;
-/*
+
 ROM rom(
 .clk            (clk),
 .reset          (reset),
 .address        (rom_addr),
 .q              (rom_q)
 );
-*/
+
 
 //----------------Memory Unit--------------------
 //Memory Unit I/O
@@ -246,7 +286,7 @@ wire [31:0] q;
 wire        t1_interrupt;
 wire        t2_interrupt;
 wire        t3_interrupt;
-/*
+
 MemoryUnit mu(
 //clocks
 .clk            (clk),
@@ -272,6 +312,12 @@ MemoryUnit mu(
 .vram8_cpu_addr (vram8_cpu_addr), 
 .vram8_cpu_we   (vram8_cpu_we),
 .vram8_cpu_q    (vram8_cpu_q),
+
+//vramSPR cpu side
+.vramSPR_cpu_d    (vramSPR_cpu_d),
+.vramSPR_cpu_addr (vramSPR_cpu_addr), 
+.vramSPR_cpu_we   (vramSPR_cpu_we),
+.vramSPR_cpu_q    (vramSPR_cpu_q),
 
 //ROM
 .rom_addr       (rom_addr),
@@ -325,12 +371,11 @@ MemoryUnit mu(
 .GPI(GPI),
 .GPO(GPO)
 );
-*/
+
 
 //---------------CPU----------------
 //CPU I/O
 
-/*
 
 CPU cpu(
 .clk            (clk),
@@ -347,6 +392,5 @@ CPU cpu(
 .busy           (busy)
 );
 
-*/
 
 endmodule

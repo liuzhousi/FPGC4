@@ -180,7 +180,12 @@ set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to GPI[4]
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to GPI[5]
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to GPI[6]
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to GPI[7]
+set_location_assignment PIN_AA16 -to s_clk
+set_location_assignment PIN_AA15 -to s_mosi
+set_location_assignment PIN_AA14 -to s_miso
 set_global_assignment -name VERILOG_FILE modules/FPGC4.v
+set_global_assignment -name VERILOG_FILE modules/GPU/Spriterenderer.v
+set_global_assignment -name VERILOG_FILE modules/GPU/BGWrenderer.v
 set_global_assignment -name VERILOG_FILE modules/IO/SimpleSPI.v
 set_global_assignment -name VERILOG_FILE modules/IO/UARTrx.v
 set_global_assignment -name VERILOG_FILE modules/IO/UARTtx.v
@@ -206,7 +211,4 @@ set_global_assignment -name VERILOG_FILE modules/Stabilizer.v
 set_global_assignment -name VERILOG_FILE modules/ClockDivider.v
 set_global_assignment -name SDC_FILE FPGC4.sdc
 set_global_assignment -name QIP_FILE pll.qip
-set_location_assignment PIN_AA16 -to s_clk
-set_location_assignment PIN_AA15 -to s_mosi
-set_location_assignment PIN_AA14 -to s_miso
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

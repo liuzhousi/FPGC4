@@ -13,6 +13,7 @@
 define MUSIC_LEN                    = 12        ; number of notes
 
 Main:
+    jump SkipTEST
 
     savpc r15
     push r15
@@ -76,7 +77,6 @@ Main:
     jump UART_print_text
     
 
-
     ;CRAPPY MUSIC PLAYER TEST CODE
     load 0x0000 r2
     loadhi 0x08 r2      ; r2 =  0x80000 | music index
@@ -122,6 +122,7 @@ Main:
     ;END CRAPPY MUSIC TEST INIT CODE
 
 
+    SkipTEST:
 
     savpc r15
     push r15
@@ -334,6 +335,20 @@ Int4:
 
     add r3 1 r3
     write 0 r1 r3
+
+
+
+    ; Sprite move test
+    load 0x2632 r1
+    loadhi 0xC0 r1
+
+    read 0 r1 r2
+    add r2 1 r2
+    write 0 r1 r2
+
+    read 1 r1 r2
+    add r2 1 r2
+    write 1 r1 r2
 
     pop r5
     pop r4

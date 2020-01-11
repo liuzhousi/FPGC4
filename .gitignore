@@ -4,6 +4,7 @@ Quartus/db/
 Quartus/incremental_db/
 Quartus/simulation/
 Quartus/output_files/*
+Quartus/greybox_tmp/
 !Quartus/output_files/output_file.jic
 !Quartus/output_files/FPGC4.sof
 Programmer/verify.bin

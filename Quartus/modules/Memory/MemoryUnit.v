@@ -27,6 +27,12 @@ module MemoryUnit(
     output          vram8_cpu_we,
     input  [7:0]    vram8_cpu_q,
 
+    //vramSPR cpu side
+    output [8:0]    vramSPR_cpu_d,
+    output [13:0]   vramSPR_cpu_addr, 
+    output          vramSPR_cpu_we,
+    input  [8:0]    vramSPR_cpu_q,
+
     //ROM
     output [8:0]    rom_addr,
     input  [31:0]   rom_q,
@@ -312,6 +318,10 @@ assign vram8_cpu_addr   = (address >= 27'hC00420 && address < 27'hC02422)   ? ad
 assign vram8_cpu_d      = (address >= 27'hC00420 && address < 27'hC02422)   ? data                      : 8'd0;
 assign vram8_cpu_we     = (address >= 27'hC00420 && address < 27'hC02422)   ? we                        : 1'd0;
 
+assign vramSPR_cpu_addr   = (address >= 27'hC02632 && address < 27'hC02672) ? address - 27'hC02632      : 14'd0;
+assign vramSPR_cpu_d      = (address >= 27'hC02632 && address < 27'hC02672) ? data                      : 9'd0;
+assign vramSPR_cpu_we     = (address >= 27'hC02632 && address < 27'hC02672) ? we                        : 1'd0;
+
 assign rom_addr         = (address >= 27'hC02422 && address < 27'hC02622)   ? address - 27'hC02422      : 9'd0;
 
 assign t1_value         = (address == 27'hC02626 && we)                     ? data                      : 32'd0;
@@ -458,8 +468,15 @@ begin
             q <= s_out;
         end
 
+        //VRAM8
+        if (busy && address >= 27'hC02632 && address < 27'hC02672)
+        begin
+            busy <= 0;
+            q <= {23'd0, vramSPR_cpu_q};
+        end
+
         //Prevent lockups
-        if (busy && address >= 27'hC02632)
+        if (busy && address >= 27'hC02672)
         begin
             busy <= 0;
             q <= 32'd0;

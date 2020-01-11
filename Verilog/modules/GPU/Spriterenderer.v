@@ -37,8 +37,9 @@ module Spriterenderer
     output [13:0]       vram32_addr,
     input  [31:0]       vram32_q, 
 
-    //TODO
-    //Sprite register addresses
+    //VRAMSPR
+    output [13:0]       vramSPR_addr,
+    input  [8:0]        vramSPR_q, 
 
     //Draw pixel signal
     output wire         draw_sprite,
@@ -56,16 +57,48 @@ module Spriterenderer
 //------------ +
 //         34b
 
+
+parameter MAX_SPRITES = 16;
 //currently two sprites
-reg [33:0] sprites [0:3];
+reg [33:0] sprites [0:MAX_SPRITES-1];
 reg [5:0] spriteIdx = 0;
 
+
+integer x=0;
 initial
 begin
-    sprites[0] = 34'b000010000_00010000_00000001_00000_0_0_0_0;
-    sprites[1] = 34'b000001000_00110000_00000010_00000_0_0_0_0;
-    sprites[2] = 34'b000000000_00000000_00000011_00001_0_0_1_0;
-    sprites[3] = 34'b000000000_00000000_00000100_00000_0_0_0_0;
+    for (x=0; x<MAX_SPRITES; x=x+1)
+    begin
+        sprites[x] = 34'd0;
+    end
+end
+
+
+assign vramSPR_addr = (v_count == 21) ? h_count:
+                        14'd0;
+
+reg [9:0] h_count_delay;
+reg [8:0] v_count_delay;
+
+always @(negedge vga_clk)
+begin
+    h_count_delay <= h_count;
+    v_count_delay <= v_count;
+end
+
+//fetch during vcount == 21
+
+always @(posedge vga_clk)
+begin
+    if (v_count_delay == 21 && h_count_delay < MAX_SPRITES*4)
+    begin
+        case (h_count_delay[1:0])
+            2'd0 : sprites[h_count_delay/4][33:25]   <= vramSPR_q[8:0];
+            2'd1 : sprites[h_count_delay/4][24:17]   <= vramSPR_q[7:0];
+            2'd2 : sprites[h_count_delay/4][16:9]    <= vramSPR_q[7:0];
+            2'd3 : sprites[h_count_delay/4][8:0]     <= vramSPR_q[8:0];
+        endcase
+    end
 end
 
 // Horizontal: sync, active, and pixels
@@ -111,17 +144,15 @@ assign h_tile_next = ((h_count - H_FP - H_SYNC - H_BP + 8) / 8);
 wire [10:0] tile_next;
 assign tile_next = (v_tile * (H_RES/8)) + h_tile_next;
 
-wire [3:0] spriteVpixel [0:3];
-assign spriteVpixel[0] = (v_count_visible - sprites[0][24:17]);
-assign spriteVpixel[1] = (v_count_visible - sprites[1][24:17]);
-assign spriteVpixel[2] = (v_count_visible - sprites[2][24:17]);
-assign spriteVpixel[3] = (v_count_visible - sprites[3][24:17]);
-
-wire [3:0] spriteHpixel [0:3];
-assign spriteHpixel[0] = (h_count_visible - sprites[0][33:25]);
-assign spriteHpixel[1] = (h_count_visible - sprites[1][33:25]);
-assign spriteHpixel[2] = (h_count_visible - sprites[2][33:25]);
-assign spriteHpixel[3] = (h_count_visible - sprites[3][33:25]);
+wire [3:0] spriteVpixel [0:MAX_SPRITES-1];
+wire [3:0] spriteHpixel [0:MAX_SPRITES-1];
+genvar l;
+generate
+for (l=0; l<MAX_SPRITES; l=l+1) begin:o
+    assign spriteVpixel[l] = (v_count_visible - sprites[l][24:17]);
+    assign spriteHpixel[l] = (h_count_visible - sprites[l][33:25]);
+    end
+endgenerate
 
 wire [9:0] h_count_div2;
 assign h_count_div2 = h_count >> 1;
@@ -135,68 +166,37 @@ end
 wire [5:0] spritephase;
 reg [5:0] spritephaseOffset;
 
-//if (((h_count - H_FP - H_SYNC - H_BP) >= sprites[0][33:25] && (h_count - H_FP - H_SYNC - H_BP) + 8 < sprites[0][33:25]) && ((v_count - V_FP - V_SYNC - V_BP - 8) >= sprites[0][24:17] && (v_count - V_FP - V_SYNC - V_BP - 8) + 8 < sprites[0][24:17]))
-
 always @(negedge vga_clk)
 begin
     spritephaseOffset <= spritephase;
 end
 
 assign spritephase =    (v_count_visible >= 256) ? 0:
-                        (h_count >= 8) ? 0:             //TODO when more sprites, this should become sprites (future: per scanline) * 2. Max 22
+                        (h_count >= MAX_SPRITES*2) ? 0:
                         (h_count[0] == 0) ? 1:
                         (h_count[0] == 1) ? 2:
                         0;
 
-wire spriteVisible [3:0];
-assign spriteVisible[0] =  ( h_count_visible >= sprites[0][33:25] && h_count_visible < sprites[0][33:25] + 8 && v_count_visible >= sprites[0][24:17] && v_count_visible < sprites[0][24:17] + 8);
-assign spriteVisible[1] =  ( h_count_visible >= sprites[1][33:25] && h_count_visible < sprites[1][33:25] + 8 && v_count_visible >= sprites[1][24:17] && v_count_visible < sprites[1][24:17] + 8);
-assign spriteVisible[2] =  ( h_count_visible >= sprites[2][33:25] && h_count_visible < sprites[2][33:25] + 8 && v_count_visible >= sprites[2][24:17] && v_count_visible < sprites[2][24:17] + 8);
-assign spriteVisible[3] =  ( h_count_visible >= sprites[3][33:25] && h_count_visible < sprites[3][33:25] + 8 && v_count_visible >= sprites[3][24:17] && v_count_visible < sprites[3][24:17] + 8);
-
-/*
-always @(posedge vga_clk)
-begin
-    case (spritephase)
-
-        0:  begin
-                if ((h_count - H_FP - H_SYNC - H_BP + 3) == sprites[0][33:25] && v_count_visible >= sprites[0][24:17] && v_count_visible < sprites[0][24:17] + 8)
-                begin
-                    spritephase <= 1;
-                end
-            end
-
-        1:  spritephase <= 2;
-        2:  spritephase <= 3;
-        3:  spritephase <= 4;
-        4:  spritephase <= 5;
-        5:  spritephase <= 6;
-        6:  spritephase <= 7;
-        7:  spritephase <= 8;
-        8:  spritephase <= 9;
-        9:  spritephase <= 10;
-        10:  spritephase <= 0;
-    endcase
-end*/
+wire spriteVisible [0:MAX_SPRITES-1];
+genvar m;
+generate
+for (m=0; m<MAX_SPRITES; m=m+1) begin:p
+    assign spriteVisible[m] =  ( h_count_visible >= sprites[m][33:25] && h_count_visible < sprites[m][33:25] + 8 && v_count_visible >= sprites[m][24:17] && v_count_visible < sprites[m][24:17] + 8);
+    end
+endgenerate
 
 //For reversing the tile data
 wire [31:0] vram32_q_reverse;
 genvar i;
 generate
-for (i=0; i<=31; i=i+1) begin:m
+for (i=0; i<=31; i=i+1) begin:y
     assign vram32_q_reverse[31-i] = vram32_q[i];
     end
 endgenerate
 
 
-reg [63:0] rendered_sprite [0:3];
-initial
-begin
-    rendered_sprite[0] = 63'd0;
-    rendered_sprite[1] = 63'd0;
-    rendered_sprite[2] = 63'd0;
-    rendered_sprite[3] = 63'd0;
-end
+reg [63:0] rendered_sprite [0:MAX_SPRITES-1];
+
 
 reg [15:0] pattern;
 reg [31:0] palette;
@@ -275,46 +275,122 @@ assign vram32_addr =    (spritephase == 1) ? (sprites[h_count_div2][16:9] * 4) +
 assign draw_sprite = 1'b0;
 assign draw_behind_bg = 1'b0;
 
-wire [3:0] sprite0Hpixel;
-assign sprite0Hpixel = spriteHpixel[0];
-wire [3:0] sprite0Vpixel;
-assign sprite0Vpixel = spriteVpixel[0];
-wire [63:0] rendered0;
-assign rendered0 = rendered_sprite[0];
+//Render all sprites
+
+wire [3:0] sprite_r [0:MAX_SPRITES-1];
+wire [3:0] sprite_g [0:MAX_SPRITES-1];
+wire [2:0] sprite_b [0:MAX_SPRITES-1];
 
 
-assign vga_r =  (!spriteVisible[1]) ? 3'd0:
-                (spriteHpixel[1] == 0) ? rendered_sprite[1][0*8 +7: 0*8 +5]:
-                (spriteHpixel[1] == 1) ? rendered_sprite[1][1*8 +7: 1*8 +5]:
-                (spriteHpixel[1] == 2) ? rendered_sprite[1][2*8 +7: 2*8 +5]:
-                (spriteHpixel[1] == 3) ? rendered_sprite[1][3*8 +7: 3*8 +5]:
-                (spriteHpixel[1] == 4) ? rendered_sprite[1][4*8 +7: 4*8 +5]:
-                (spriteHpixel[1] == 5) ? rendered_sprite[1][5*8 +7: 5*8 +5]:
-                (spriteHpixel[1] == 6) ? rendered_sprite[1][6*8 +7: 6*8 +5]:
-                (spriteHpixel[1] == 7) ? rendered_sprite[1][7*8 +7: 7*8 +5]:
-            3'd0;
+//For generating sprite rgb assignments
+genvar j;
+generate
+for (j=0; j<MAX_SPRITES; j=j+1) 
+begin:n
+    
+    assign sprite_r[j] =  (!spriteVisible[j]) ? 3'd0:
+                    (spriteHpixel[j] == 0) ? rendered_sprite[j][0*8 +7: 0*8 +5]:
+                    (spriteHpixel[j] == 1) ? rendered_sprite[j][1*8 +7: 1*8 +5]:
+                    (spriteHpixel[j] == 2) ? rendered_sprite[j][2*8 +7: 2*8 +5]:
+                    (spriteHpixel[j] == 3) ? rendered_sprite[j][3*8 +7: 3*8 +5]:
+                    (spriteHpixel[j] == 4) ? rendered_sprite[j][4*8 +7: 4*8 +5]:
+                    (spriteHpixel[j] == 5) ? rendered_sprite[j][5*8 +7: 5*8 +5]:
+                    (spriteHpixel[j] == 6) ? rendered_sprite[j][6*8 +7: 6*8 +5]:
+                    (spriteHpixel[j] == 7) ? rendered_sprite[j][7*8 +7: 7*8 +5]:
+                3'd0;
 
-assign vga_g =  (!spriteVisible[1]) ? 3'd0:
-                (spriteHpixel[1] == 0) ? rendered_sprite[1][0*8 +4: 0*8 +2]:
-                (spriteHpixel[1] == 1) ? rendered_sprite[1][1*8 +4: 1*8 +2]:
-                (spriteHpixel[1] == 2) ? rendered_sprite[1][2*8 +4: 2*8 +2]:
-                (spriteHpixel[1] == 3) ? rendered_sprite[1][3*8 +4: 3*8 +2]:
-                (spriteHpixel[1] == 4) ? rendered_sprite[1][4*8 +4: 4*8 +2]:
-                (spriteHpixel[1] == 5) ? rendered_sprite[1][5*8 +4: 5*8 +2]:
-                (spriteHpixel[1] == 6) ? rendered_sprite[1][6*8 +4: 6*8 +2]:
-                (spriteHpixel[1] == 7) ? rendered_sprite[1][7*8 +4: 7*8 +2]:
-            3'd0;
+    assign sprite_g[j] =  (!spriteVisible[j]) ? 3'd0:
+                    (spriteHpixel[j] == 0) ? rendered_sprite[j][0*8 +4: 0*8 +2]:
+                    (spriteHpixel[j] == 1) ? rendered_sprite[j][1*8 +4: 1*8 +2]:
+                    (spriteHpixel[j] == 2) ? rendered_sprite[j][2*8 +4: 2*8 +2]:
+                    (spriteHpixel[j] == 3) ? rendered_sprite[j][3*8 +4: 3*8 +2]:
+                    (spriteHpixel[j] == 4) ? rendered_sprite[j][4*8 +4: 4*8 +2]:
+                    (spriteHpixel[j] == 5) ? rendered_sprite[j][5*8 +4: 5*8 +2]:
+                    (spriteHpixel[j] == 6) ? rendered_sprite[j][6*8 +4: 6*8 +2]:
+                    (spriteHpixel[j] == 7) ? rendered_sprite[j][7*8 +4: 7*8 +2]:
+                3'd0;
 
-assign vga_b =  (!spriteVisible[1]) ? 3'd0:
-                (spriteHpixel[1] == 0) ? rendered_sprite[1][0*8 +1: 0*8 +0]:
-                (spriteHpixel[1] == 1) ? rendered_sprite[1][1*8 +1: 1*8 +0]:
-                (spriteHpixel[1] == 2) ? rendered_sprite[1][2*8 +1: 2*8 +0]:
-                (spriteHpixel[1] == 3) ? rendered_sprite[1][3*8 +1: 3*8 +0]:
-                (spriteHpixel[1] == 4) ? rendered_sprite[1][4*8 +1: 4*8 +0]:
-                (spriteHpixel[1] == 5) ? rendered_sprite[1][5*8 +1: 5*8 +0]:
-                (spriteHpixel[1] == 6) ? rendered_sprite[1][6*8 +1: 6*8 +0]:
-                (spriteHpixel[1] == 7) ? rendered_sprite[1][7*8 +1: 7*8 +0]:
-            2'd0;
+    assign sprite_b[j] =  (!spriteVisible[j]) ? 3'd0:
+                    (spriteHpixel[j] == 0) ? rendered_sprite[j][0*8 +1: 0*8 +0]:
+                    (spriteHpixel[j] == 1) ? rendered_sprite[j][1*8 +1: 1*8 +0]:
+                    (spriteHpixel[j] == 2) ? rendered_sprite[j][2*8 +1: 2*8 +0]:
+                    (spriteHpixel[j] == 3) ? rendered_sprite[j][3*8 +1: 3*8 +0]:
+                    (spriteHpixel[j] == 4) ? rendered_sprite[j][4*8 +1: 4*8 +0]:
+                    (spriteHpixel[j] == 5) ? rendered_sprite[j][5*8 +1: 5*8 +0]:
+                    (spriteHpixel[j] == 6) ? rendered_sprite[j][6*8 +1: 6*8 +0]:
+                    (spriteHpixel[j] == 7) ? rendered_sprite[j][7*8 +1: 7*8 +0]:
+                2'd0;    
 
+end
+endgenerate
+
+
+
+//Select which pixel to render
+
+wire sprite_drawn [0:MAX_SPRITES-1];
+genvar k;
+generate
+for (k=0; k<MAX_SPRITES; k=k+1) 
+begin:z
+    
+    assign sprite_drawn[k] = (sprite_r[k] != 3'd0 || sprite_g[k] != 3'd0 || sprite_b[k] != 2'd0) ? 1'b1:
+                        1'b0;
+end
+endgenerate
+
+assign vga_r =  (sprite_drawn[0]) ? sprite_r[0]: 
+                (sprite_drawn[1]) ? sprite_r[1]: 
+                (sprite_drawn[2]) ? sprite_r[2]: 
+                (sprite_drawn[3]) ? sprite_r[3]: 
+                (sprite_drawn[4]) ? sprite_r[4]: 
+                (sprite_drawn[5]) ? sprite_r[5]: 
+                (sprite_drawn[6]) ? sprite_r[6]: 
+                (sprite_drawn[7]) ? sprite_r[7]: 
+                (sprite_drawn[8]) ? sprite_r[8]: 
+                (sprite_drawn[9]) ? sprite_r[9]: 
+                (sprite_drawn[10]) ? sprite_r[10]: 
+                (sprite_drawn[11]) ? sprite_r[11]: 
+                (sprite_drawn[12]) ? sprite_r[12]: 
+                (sprite_drawn[13]) ? sprite_r[13]: 
+                (sprite_drawn[14]) ? sprite_r[14]: 
+                (sprite_drawn[15]) ? sprite_r[15]: 
+                3'd0;
+
+assign vga_g =  (sprite_drawn[0]) ? sprite_g[0]: 
+                (sprite_drawn[1]) ? sprite_g[1]: 
+                (sprite_drawn[2]) ? sprite_g[2]: 
+                (sprite_drawn[3]) ? sprite_g[3]: 
+                (sprite_drawn[4]) ? sprite_g[4]: 
+                (sprite_drawn[5]) ? sprite_g[5]: 
+                (sprite_drawn[6]) ? sprite_g[6]: 
+                (sprite_drawn[7]) ? sprite_g[7]: 
+                (sprite_drawn[8]) ? sprite_g[8]: 
+                (sprite_drawn[9]) ? sprite_g[9]: 
+                (sprite_drawn[10]) ? sprite_g[10]: 
+                (sprite_drawn[11]) ? sprite_g[11]: 
+                (sprite_drawn[12]) ? sprite_g[12]: 
+                (sprite_drawn[13]) ? sprite_g[13]: 
+                (sprite_drawn[14]) ? sprite_g[14]: 
+                (sprite_drawn[15]) ? sprite_g[15]:
+                3'd0;
+
+assign vga_b =  (sprite_drawn[0]) ? sprite_b[0]: 
+                (sprite_drawn[1]) ? sprite_b[1]: 
+                (sprite_drawn[2]) ? sprite_b[2]: 
+                (sprite_drawn[3]) ? sprite_b[3]: 
+                (sprite_drawn[4]) ? sprite_b[4]: 
+                (sprite_drawn[5]) ? sprite_b[5]: 
+                (sprite_drawn[6]) ? sprite_b[6]: 
+                (sprite_drawn[7]) ? sprite_b[7]: 
+                (sprite_drawn[8]) ? sprite_b[8]: 
+                (sprite_drawn[9]) ? sprite_b[9]: 
+                (sprite_drawn[10]) ? sprite_b[10]: 
+                (sprite_drawn[11]) ? sprite_b[11]: 
+                (sprite_drawn[12]) ? sprite_b[12]: 
+                (sprite_drawn[13]) ? sprite_b[13]: 
+                (sprite_drawn[14]) ? sprite_b[14]: 
+                (sprite_drawn[15]) ? sprite_b[15]:
+                2'd0;
 
 endmodule

@@ -24,7 +24,9 @@ module FSX(
     output [13:0]       vram8_addr,
     input  [7:0]        vram8_q,
 
-    //TODO sprite write port
+    //VRAMSPR
+    output [13:0]       vramSPR_addr,
+    input  [8:0]        vramSPR_q,
 
     //Interrupt signal
     output wire         frameDrawn
@@ -35,7 +37,7 @@ assign vga_blk = 1'b1;
 parameter
     H_RES=480,      // horizontal resolution (pixels)
     V_RES=272,      // vertical resolution (lines)
-    H_FP=2,        // horizontal front porch
+    H_FP=82,        // horizontal front porch
     H_SYNC=41,      // horizontal sync
     H_BP=2,        // horizontal back porch
     V_FP=2,        // vertical front porch
@@ -105,22 +107,22 @@ initial begin
     v_count = 12'd0;
 end
 
-reg [2:0] BGW_r = 0;
-reg [2:0] BGW_g = 0;
-reg [1:0] BGW_b = 0;
+wire [2:0] BGW_r;
+wire [2:0] BGW_g;
+wire [1:0] BGW_b;
 
-/*
+
 BGWrenderer #(
-    .H_RES(480),      // horizontal resolution (pixels)
-    .V_RES(272),      // vertical resolution (lines)
-    .H_FP(2),        // horizontal front porch
-    .H_SYNC(41),       // horizontal sync
-    .H_BP(2),        // horizontal back porch
-    .V_FP(2),        // vertical front porch
-    .V_SYNC(10),       // vertical sync
-    .V_BP(2),        // vertical back porch
-    .H_POL(0),        // horizontal sync polarity (0:neg, 1:pos)
-    .V_POL(0)         // vertical sync polarity (0:neg, 1:pos)
+    .H_RES(H_RES),      // horizontal resolution (pixels)
+    .V_RES(V_RES),      // vertical resolution (lines)
+    .H_FP(H_FP),        // horizontal front porch
+    .H_SYNC(H_SYNC),       // horizontal sync
+    .H_BP(H_BP),        // horizontal back porch
+    .V_FP(V_FP),        // vertical front porch
+    .V_SYNC(V_SYNC),       // vertical sync
+    .V_BP(V_BP),        // vertical back porch
+    .H_POL(H_POL),        // horizontal sync polarity (0:neg, 1:pos)
+    .V_POL(V_POL)         // vertical sync polarity (0:neg, 1:pos)
 ) bgwrenderer(
     //VGA I/O
     .vga_clk(vga_clk),            //9MHz
@@ -151,7 +153,7 @@ BGWrenderer #(
 
     //Interrupt signal
     .frameDrawn(frameDrawn)
-);*/
+);
 
 wire [2:0] SPR_r;
 wire [2:0] SPR_g;
@@ -161,16 +163,16 @@ wire       draw_sprite;
 wire       draw_behind_bg;
 
 Spriterenderer #(
-    .H_RES(480),      // horizontal resolution (pixels)
-    .V_RES(272),      // vertical resolution (lines)
-    .H_FP(2),        // horizontal front porch
-    .H_SYNC(41),       // horizontal sync
-    .H_BP(2),        // horizontal back porch
-    .V_FP(2),        // vertical front porch
-    .V_SYNC(10),       // vertical sync
-    .V_BP(2),        // vertical back porch
-    .H_POL(0),        // horizontal sync polarity (0:neg, 1:pos)
-    .V_POL(0)         // vertical sync polarity (0:neg, 1:pos)
+    .H_RES(H_RES),      // horizontal resolution (pixels)
+    .V_RES(V_RES),      // vertical resolution (lines)
+    .H_FP(H_FP),        // horizontal front porch
+    .H_SYNC(H_SYNC),       // horizontal sync
+    .H_BP(H_BP),        // horizontal back porch
+    .V_FP(V_FP),        // vertical front porch
+    .V_SYNC(V_SYNC),       // vertical sync
+    .V_BP(V_BP),        // vertical back porch
+    .H_POL(H_POL),        // horizontal sync polarity (0:neg, 1:pos)
+    .V_POL(V_POL)         // vertical sync polarity (0:neg, 1:pos)
 ) spriterenderer(
     //VGA I/O
     .vga_clk(vga_clk),            //9MHz
@@ -195,7 +197,9 @@ Spriterenderer #(
     .vram32_addr(vram322_addr), //use copy of vram32 here
     .vram32_q(vram322_q), //use copy of vram32 here
 
-    //TODO sprite write port
+    //VRAMSPR
+    .vramSPR_addr(vramSPR_addr),
+    .vramSPR_q(vramSPR_q),
     
     //Drawing signals
     .draw_sprite(draw_sprite),

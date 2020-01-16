@@ -107,7 +107,7 @@ wire [5:0] h_tile_next_noscroll;
 assign h_tile_next_noscroll = ((h_count - H_FP - H_SYNC - H_BP + 8) / 8);
 
 wire [5:0] h_tile_next_noscroll2;
-assign h_tile_next_noscroll2 = (h_count < 40) ?  0:
+assign h_tile_next_noscroll2 = (h_count <  H_FP + H_SYNC + H_BP - 5) ?  0:
                             h_tile_next_noscroll;
 
 wire [10:0] tile_next;
@@ -480,10 +480,10 @@ assign vram8_addr = ((!vga_vs && !vga_hs) && fetchState == fetch_bg_tile) ? 8192
                     (fetchState == fetch_wind_tile && XfineOffset > 4 && h_tile_next_noscroll2 != 0) ? 4096 + tile_next_noscroll2 + 1:
                     (fetchState == fetch_wind_tile && XfineOffset > 4 && h_tile_next_noscroll2 == 0 && h_tile_next_noscroll == 0) ? 4096 + tile_next_noscroll2 + 1:
                     (fetchState == fetch_wind_tile && XfineOffset > 4 && h_tile_next_noscroll2 == 0 && h_tile_next_noscroll != 0) ? 4096 + tile_next_noscroll2:
-                    (fetchState == fetch_wind_color && XfineOffset <= 4) ? 6144 + tile_next_noscroll2:
-                    (fetchState == fetch_wind_color && XfineOffset > 4 && h_tile_next_noscroll2 != 0) ? 6144 + tile_next_noscroll2 + 1:
-                    (fetchState == fetch_wind_color && XfineOffset > 4 && h_tile_next_noscroll2 == 0 && h_tile_next_noscroll == 0) ? 6144 + tile_next_noscroll2 + 1:
-                    (fetchState == fetch_wind_color && XfineOffset > 4 && h_tile_next_noscroll2 == 0 && h_tile_next_noscroll != 0) ? 6144 + tile_next_noscroll2:
+                    (fetchState == fetch_wind_color && XfineOffset <= 6) ? 6144 + tile_next_noscroll2:
+                    (fetchState == fetch_wind_color && XfineOffset > 6 && h_tile_next_noscroll2 != 0) ? 6144 + tile_next_noscroll2 + 1:
+                    (fetchState == fetch_wind_color && XfineOffset > 6 && h_tile_next_noscroll2 == 0 && h_tile_next_noscroll == 0) ? 6144 + tile_next_noscroll2 + 1:
+                    (fetchState == fetch_wind_color && XfineOffset > 6 && h_tile_next_noscroll2 == 0 && h_tile_next_noscroll != 0) ? 6144 + tile_next_noscroll2:
                     14'd0;
 
 assign vram32_addr = (fetchState == fetch_pattern_bg) ? (tile_index * 4) + (v_tile_pixel/2): //*4 because 4 addresses per tile

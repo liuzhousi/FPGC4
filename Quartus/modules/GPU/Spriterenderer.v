@@ -83,38 +83,6 @@ end
 reg [5:0] spriteSelectionList [0:MAX_SPRITES-1];
 reg [5:0] spriteSelectionCount;
 
-//DEBUG
-
-wire [5:0] spriteSelectionList0;
-assign spriteSelectionList0 = spriteSelectionList[0];
-wire [5:0] spriteSelectionList1;
-assign spriteSelectionList1 = spriteSelectionList[1];
-wire [5:0] spriteSelectionList2;
-assign spriteSelectionList2 = spriteSelectionList[2];
-wire [5:0] spriteSelectionList3;
-assign spriteSelectionList3 = spriteSelectionList[3];
-wire [5:0] spriteSelectionList4;
-assign spriteSelectionList4 = spriteSelectionList[4];
-wire [5:0] spriteSelectionList5;
-assign spriteSelectionList5 = spriteSelectionList[5];
-wire [5:0] spriteSelectionList6;
-assign spriteSelectionList6 = spriteSelectionList[6];
-wire [33:0] sprite0;
-assign sprite0 = sprites[0];
-wire [33:0] sprite1;
-assign sprite1 = sprites[1];
-wire [33:0] sprite2;
-assign sprite2 = sprites[2];
-wire [33:0] sprite3;
-assign sprite3 = sprites[3];
-wire [33:0] sprite4;
-assign sprite4 = sprites[4];
-wire [33:0] sprite5;
-assign sprite5 = sprites[5];
-wire [33:0] sprite6;
-assign sprite6 = sprites[6];
-
-
 //select for next line during h_count_visible (delay)
 
 integer x=0;
@@ -178,9 +146,9 @@ begin
 end
 
 integer b=0;
-always @(negedge vga_clk)
+always @(posedge vga_clk)
 begin
-    if (h_count == 319)
+    if (h_count_visible_delay == 319)
     begin
         for (b=0; b<MAX_SPRITES; b=b+1)
         begin
@@ -285,10 +253,6 @@ endgenerate
 
 reg [63:0] rendered_sprite [0:MAX_SPRITES-1];
 
-wire [63:0] rendered_sprite0;
-assign rendered_sprite0 = rendered_sprite[0];
-
-
 reg [15:0] pattern;
 reg [31:0] palette;
 
@@ -371,13 +335,6 @@ assign draw_behind_bg = 1'b0;
 wire [3:0] sprite_r [0:MAX_SPRITES-1];
 wire [3:0] sprite_g [0:MAX_SPRITES-1];
 wire [2:0] sprite_b [0:MAX_SPRITES-1];
-
-
-wire spriteVisible0;
-assign spriteVisible0 = spriteVisible[1];
-
-wire [2:0] spriteHpixel0;
-assign spriteHpixel0 = spriteHpixel[0];
 
 //For generating sprite rgb assignments
 genvar j;

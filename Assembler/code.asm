@@ -18,26 +18,26 @@ Main:
     push r15
     jump CH376_init
 
-    ;savpc r15
-    ;push r15
-    ;jump CH376_Check_drive
+    savpc r15
+    push r15
+    jump CH376_Check_drive
 
     ; read load filename argument
-    ;addr2reg CH376_String_Init r1
-    ;read 0 r1 r2
-    ;add r1 1 r1
+    addr2reg CH376_String_Init r1
+    read 0 r1 r2
+    add r1 1 r1
 
-    ;savpc r15
-    ;push r15
-    ;jump CH376_Send_filename
+    savpc r15
+    push r15
+    jump CH376_Send_filename
 
     ;savpc r15
     ;push r15
     ;jump CH376_Create_file
 
-    ;savpc r15
-    ;push r15
-    ;jump CH376_Open_file
+    savpc r15
+    push r15
+    jump CH376_Open_file
 
     ;load 0xffff r1
     ;loadhi 0xffff r1
@@ -54,26 +54,26 @@ Main:
     ;push r15
     ;jump CH376_Write_file
 
-    ;load 0x0000 r1
-    ;loadhi 0x08 r1
-    ;load 28 r2
-    ;savpc r15
-    ;push r15
-    ;jump CH376_Read_file
+    load 0x0000 r1
+    loadhi 0x08 r1
+    load 14 r2
+    savpc r15
+    push r15
+    jump CH376_Read_file
 
 
-    ;savpc r15
-    ;push r15
-    ;jump CH376_Close_file
+    savpc r15
+    push r15
+    jump CH376_Close_file
 
 
     ; print read data over uart
-    ;load 0x0000 r1
-    ;loadhi 0x08 r1
-    ;load 28 r2
-    ;savpc r15CH376_String_Init
-    ;push r15
-    ;jump UART_print_text
+    load 0x0000 r1
+    loadhi 0x08 r1
+    load 14 r2
+    savpc r15
+    push r15
+    jump UART_print_text
     
 
     ;CRAPPY MUSIC PLAYER TEST CODE
@@ -199,8 +199,8 @@ Main:
     ; print some data to Window
     addr2reg WINDOWTEXT r1   ; data to copy
     load 25 r2              ; length of data
-    load 46 r3               ; offset from start
-    load 0 r4               ; palette idx
+    load 0 r3               ; offset from start
+    load 2 r4               ; palette idx
 
     savpc r15
     push r15

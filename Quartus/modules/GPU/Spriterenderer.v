@@ -3,16 +3,16 @@
 */
 module Spriterenderer
 #(
-    parameter H_RES = 480,      // horizontal resolution (pixels)
-    parameter V_RES = 272,      // vertical resolution (lines)
-    parameter H_FP  = 2,        // horizontal front porch
-    parameter H_SYNC= 41,       // horizontal sync
-    parameter H_BP  = 2,        // horizontal back porch
-    parameter V_FP  = 2,        // vertical front porch
-    parameter V_SYNC= 10,       // vertical sync
-    parameter V_BP  = 2,        // vertical back porch
-    parameter H_POL = 0,        // horizontal sync polarity (0:neg, 1:pos)
-    parameter V_POL = 0         // vertical sync polarity (0:neg, 1:pos)
+    parameter H_RES   = 320,      // horizontal resolution (pixels)
+    parameter V_RES   = 240,      // vertical resolution (lines)
+    parameter H_FP    = 23,       // horizontal front porch
+    parameter H_SYNC  = 28,       // horizontal sync
+    parameter H_BP    = 45,       // horizontal back porch
+    parameter V_FP    = 6,        // vertical front porch
+    parameter V_SYNC  = 3,        // vertical sync
+    parameter V_BP    = 20,       // vertical back porch
+    parameter H_POL   = 0,        // horizontal sync polarity (0:neg, 1:pos)
+    parameter V_POL   = 0         // vertical sync polarity
 ) 
 (
     //VGA I/O
@@ -84,7 +84,7 @@ reg [5:0] spriteSelectionList [0:MAX_SPRITES-1];
 reg [5:0] spriteSelectionCount;
 
 //DEBUG
-/*
+
 wire [5:0] spriteSelectionList0;
 assign spriteSelectionList0 = spriteSelectionList[0];
 wire [5:0] spriteSelectionList1;
@@ -113,14 +113,14 @@ wire [33:0] sprite5;
 assign sprite5 = sprites[5];
 wire [33:0] sprite6;
 assign sprite6 = sprites[6];
-*/
+
 
 //select for next line during h_count_visible (delay)
 
 integer x=0;
 always @(posedge vga_clk)
 begin
-    if (h_count_visible_delay > 512) //do somewhere at end of hline
+    if (h_count_visible_delay == 319) //do somewhere at end of hline
     begin
         spriteSelectionCount <= 6'd0;
         for (x=0; x<MAX_SPRITES; x=x+1)
@@ -130,7 +130,7 @@ begin
     end
     else 
     begin
-        if (v_count_visible_delay < 256 || v_count_visible == 511)
+        if (v_count_visible_delay < 240 || v_count_visible_delay == 511)
         begin
             if (spriteSelectionCount < MAX_SPRITES)
             begin
@@ -147,8 +147,8 @@ begin
     end
 end
 
-assign vramSPR_addr =   (v_count_visible != 511 && v_count_visible > 256) ? 15'd0:
-                        (h_count_visible > 0 && h_count_visible < 128) ? (h_count_visible * 4) + 1'b1:
+assign vramSPR_addr =   (v_count_visible != 511 && v_count_visible > 239) ? 15'd0:
+                        (h_count_visible >= 0 && h_count_visible < 128) ? (h_count_visible * 4) + 1'b1:
                         (spriteSelectionList[(h_count_visible-128)>>2]<<2) + h_count_visible[1:0];
 
 
@@ -180,7 +180,7 @@ end
 integer b=0;
 always @(negedge vga_clk)
 begin
-    if (h_count == 524)
+    if (h_count == 319)
     begin
         for (b=0; b<MAX_SPRITES; b=b+1)
         begin
@@ -206,7 +206,7 @@ localparam FRAME  = VA_END;             // frame lines
 
 // counters for tile and position
 wire [8:0] v_count_visible;
-assign v_count_visible = v_count - V_FP - V_SYNC - V_BP - 8; //-8 because we skip the first line
+assign v_count_visible = v_count - V_FP - V_SYNC - V_BP;
 
 wire [9:0] h_count_visible;
 assign h_count_visible = h_count - H_FP - H_SYNC - H_BP;
@@ -259,7 +259,7 @@ begin
     spritephaseOffset <= spritephase;
 end
 
-assign spritephase =    (v_count_visible >= 256) ? 0:
+assign spritephase =    (v_count_visible >= 240) ? 0:
                         (h_count >= MAX_SPRITES*2) ? 0:
                         (h_count[0] == 0) ? 1:
                         (h_count[0] == 1) ? 2:
@@ -374,7 +374,7 @@ wire [2:0] sprite_b [0:MAX_SPRITES-1];
 
 
 wire spriteVisible0;
-assign spriteVisible0 = spriteVisible[0];
+assign spriteVisible0 = spriteVisible[1];
 
 wire [2:0] spriteHpixel0;
 assign spriteHpixel0 = spriteHpixel[0];

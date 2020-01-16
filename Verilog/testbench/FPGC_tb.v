@@ -17,7 +17,7 @@
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/GPU/Spriterenderer.v"
 
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/VRAM.v"
-`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/mt48lc16m16a2.v"
+/*`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/mt48lc16m16a2.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/w25q128jv.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/SDRAMcontroller.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Memory/SPIreader.v"
@@ -39,7 +39,7 @@
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/CTCtimer.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/UARTtx.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/UARTrx.v"
-`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/SimpleSPI.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/SimpleSPI.v"*/
 
 //Define testmodule
 module FPGC_tb;
@@ -60,6 +60,7 @@ wire spi_wp;
 wire spi_q;  
 wire spi_hold; 
 
+/*
 W25Q128JV spiFlash (
 .CLK 	(spi_clk), 
 .DIO 	(spi_data), 
@@ -67,7 +68,7 @@ W25Q128JV spiFlash (
 .WPn 	(spi_wp), 
 .HOLDn 	(spi_hold), 
 .DO 	(spi_q)
-); 
+); */
 
 //SDRAM
 wire 			 sdram_clk;		// SDRAM clock
@@ -83,6 +84,7 @@ wire    [1 : 0]  sdram_dqm;     // Mask
 
 wire    [15 : 0] sdram_DQ = sdram_dq;
 
+/*
 mt48lc16m16a2 sdram (
 .Dq 	(sdram_DQ), 
 .Addr 	(sdram_addr), 
@@ -94,7 +96,7 @@ mt48lc16m16a2 sdram (
 .Cas_n 	(sdram_cas_n), 
 .We_n 	(sdram_we_n), 
 .Dqm 	(sdram_dqm)
-);
+);*/
 
 //VGA
 wire 		vga_clk;
@@ -172,7 +174,7 @@ begin
 
     GPI = 8'b00000001;
 
-    repeat(301000) #20 clk = ~clk; //25MHz
+    repeat(227000) #20 clk = ~clk; //25MHz
 
     #1 $finish;
 end

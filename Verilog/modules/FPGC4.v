@@ -14,6 +14,12 @@ module FPGC4(
     output [1:0]    vga_b,
     output          vga_blk,
 
+    //RGBs video
+    output          crt_sync,
+    output [2:0]    crt_r,
+    output [2:0]    crt_g,
+    output [1:0]    crt_b,
+
     //SDRAM
     output          SDRAM_CLK,
     output          SDRAM_CSn, 
@@ -232,6 +238,7 @@ assign vga_clk = clk; //should become 6 ish mhz eventually
 
 FSX fsx(
 //VGA
+/*
 .vga_clk        (vga_clk),
 .vga_r          (vga_r),
 .vga_g          (vga_g),
@@ -239,6 +246,13 @@ FSX fsx(
 .vga_hs         (vga_hs),
 .vga_vs         (vga_vs),
 .vga_blk        (vga_blk),
+*/
+
+.vga_clk(vga_clk),
+.crt_sync(crt_sync),
+.crt_r(crt_r),
+.crt_g(crt_g),
+.crt_b(crt_b),
 
 //VRAM32
 .vram32_addr    (vram32_gpu_addr),
@@ -266,12 +280,13 @@ FSX fsx(
 wire [8:0] rom_addr;
 wire [31:0] rom_q;
 
+/*
 ROM rom(
 .clk            (clk),
 .reset          (reset),
 .address        (rom_addr),
 .q              (rom_q)
-);
+);*/
 
 
 //----------------Memory Unit--------------------
@@ -286,7 +301,7 @@ wire [31:0] q;
 wire        t1_interrupt;
 wire        t2_interrupt;
 wire        t3_interrupt;
-
+/*
 MemoryUnit mu(
 //clocks
 .clk            (clk),
@@ -391,6 +406,6 @@ CPU cpu(
 .start          (start),
 .busy           (busy)
 );
-
+*/
 
 endmodule

@@ -4,13 +4,21 @@
 */
 module FSX(
     //VGA I/O
-    input               vga_clk,            //9MHz
+    input               vga_clk,
+    /*
     output wire [2:0]   vga_r,
     output wire [2:0]   vga_g,
     output wire [1:0]   vga_b,
     output wire         vga_hs,
     output wire         vga_vs,
     output wire         vga_blk,
+    */
+
+    //CRT Video
+    output          crt_sync,
+    output [2:0]    crt_r,
+    output [2:0]    crt_g,
+    output [1:0]    crt_b,
 
     //VRAM32
     output [13:0]       vram32_addr,
@@ -31,13 +39,15 @@ module FSX(
     //Interrupt signal
     output wire         frameDrawn
 );
-assign vga_blk = 1'b1;
+//assign vga_blk = 1'b1;
+assign frameDrawn = o_frame;
 
 //DISPLAY SIGNAL GENERATION
+/* 480x272 TFT screen
 parameter
     H_RES=480,      // horizontal resolution (pixels)
     V_RES=272,      // vertical resolution (lines)
-    H_FP=82,        // horizontal front porch
+    H_FP=2,        // horizontal front porch
     H_SYNC=41,      // horizontal sync
     H_BP=2,        // horizontal back porch
     V_FP=2,        // vertical front porch
@@ -45,6 +55,21 @@ parameter
     V_BP=2,        // vertical back porch
     H_POL=0,        // horizontal sync polarity (0:neg, 1:pos)
     V_POL=0;        // vertical sync polarity (0:neg, 1:pos)
+*/
+
+//CRT 240p
+parameter
+    H_RES   = 320,      // horizontal resolution (pixels)
+    V_RES   = 240,      // vertical resolution (lines)
+    H_FP    = 23,       // horizontal front porch
+    H_SYNC  = 28,       // horizontal sync
+    H_BP    = 45,       // horizontal back porch
+    V_FP    = 6,        // vertical front porch
+    V_SYNC  = 3,        // vertical sync
+    V_BP    = 20,       // vertical back porch
+    H_POL   = 0,        // horizontal sync polarity (0:neg, 1:pos)
+    V_POL   = 0;        // vertical sync polarity
+
     
 // Horizontal: sync, active, and pixels
 localparam HS_STA = H_FP - 1;           // sync start (first pixel is 0)
@@ -64,6 +89,7 @@ reg [9:0] h_count;  // line position in pixels including blanking
 reg [8:0] v_count;  // frame position in lines including blanking 
 
 wire o_hs, o_vs, o_de, o_h, o_v, o_frame;
+assign crt_sync = !(o_hs^o_vs);
 
 // generate sync signals with correct polarity
 assign o_hs = H_POL ? (h_count > HS_STA & h_count <= HS_END)
@@ -83,8 +109,8 @@ assign o_h = (o_de & h_count > HA_STA & h_count <= HA_END) ?
 assign o_v = (o_de & v_count > VA_STA & v_count <= VA_END) ? 
                 v_count - (VA_STA + 1): 0;
 
-// o_frame: high for one tick at the start of each frame
-assign o_frame = (v_count == 0 & h_count == 0);
+// o_frame: high for some ticks when last frame is drawn
+assign o_frame = (v_count == 0 & h_count < 8);
  
 always @ (posedge vga_clk)
 begin
@@ -107,6 +133,13 @@ initial begin
     v_count = 12'd0;
 end
 
+/*
+reg [2:0] BGW_r = 0;
+reg [2:0] BGW_g = 0;
+reg [1:0] BGW_b = 0;
+*/
+
+
 wire [2:0] BGW_r;
 wire [2:0] BGW_g;
 wire [1:0] BGW_b;
@@ -126,8 +159,8 @@ BGWrenderer #(
 ) bgwrenderer(
     //VGA I/O
     .vga_clk(vga_clk),            //9MHz
-    .vga_hs(vga_hs),
-    .vga_vs(vga_vs),
+    .vga_hs(o_hs),
+    .vga_vs(o_vs),
     
     .vga_r(BGW_r),
     .vga_g(BGW_g),
@@ -149,11 +182,14 @@ BGWrenderer #(
 
     //VRAM8
     .vram8_addr(vram8_addr),
-    .vram8_q(vram8_q),
-
-    //Interrupt signal
-    .frameDrawn(frameDrawn)
+    .vram8_q(vram8_q)
 );
+
+/*
+reg [2:0] SPR_r = 0;
+reg [2:0] SPR_g = 0;
+reg [1:0] SPR_b = 0;
+*/
 
 wire [2:0] SPR_r;
 wire [2:0] SPR_g;
@@ -176,8 +212,8 @@ Spriterenderer #(
 ) spriterenderer(
     //VGA I/O
     .vga_clk(vga_clk),            //9MHz
-    .vga_hs(vga_hs),
-    .vga_vs(vga_vs),
+    .vga_hs(o_hs),
+    .vga_vs(o_vs),
     
     .vga_r(SPR_r),
     .vga_g(SPR_g),
@@ -214,7 +250,7 @@ always @(negedge vga_vs)
 begin
     file = $fopen({"/home/bart/Documents/FPGA/FPGC4/Verilog/output/frame",framecounter,".ppm"}, "w");
     $fwrite(file, "P3\n");
-    $fwrite(file, "480 272\n");
+    $fwrite(file, "320 240\n");
     $fwrite(file, "7\n");
     framecounter = framecounter + 1;
 end
@@ -223,17 +259,17 @@ always @(posedge vga_clk)
 begin
     if (o_de)
     begin
-        $fwrite(file, "%d  %d  %d\n", vga_r, vga_g, {1'b1, vga_b});
+        $fwrite(file, "%d  %d  %d\n", crt_r, crt_g, {1'b1, crt_b});
     end
-end*/
-
+end
+*/
 //temporary for testing. Should implement some kind of pixelvalid in spriterenderer
 wire sprite_drawn;
 assign sprite_drawn = (SPR_r != 3'd0 || SPR_g != 3'd0 || SPR_b != 2'd0) ? 1'b1:
                     1'b0;
 
-assign vga_r =  (sprite_drawn) ?  SPR_r: BGW_r;
-assign vga_g =  (sprite_drawn) ?  SPR_g: BGW_g;
-assign vga_b =  (sprite_drawn) ?  SPR_b: BGW_b;
+assign crt_r =  (sprite_drawn) ?  SPR_r: BGW_r;
+assign crt_g =  (sprite_drawn) ?  SPR_g: BGW_g;
+assign crt_b =  (sprite_drawn) ?  SPR_b: BGW_b;
 
 endmodule

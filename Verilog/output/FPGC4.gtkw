@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v (Modified by Bart for High DPI displays) 3.3.103 (w)1999-2019 BSI
-[*] Sat Jan 11 19:05:06 2020
+[*] Tue Jan 14 15:24:54 2020
 [*]
 [dumpfile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/wave.vcd"
-[dumpfile_mtime] "Sat Jan 11 19:04:34 2020"
-[dumpfile_size] 30798848
+[dumpfile_mtime] "Tue Jan 14 15:24:40 2020"
+[dumpfile_size] 36232038
 [savefile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/FPGC4.gtkw"
-[timestart] 3274269000
+[timestart] 0
 [size] 2736 1716
 [pos] -1 -1
-*-18.838461 3274838000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-18.838461 2149000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] FPGC_tb.
 [treeopen] FPGC_tb.fpgc.
 [treeopen] FPGC_tb.fpgc.fsx.
@@ -42,6 +42,7 @@ FPGC_tb.fpgc.fsx.draw_sprite
 @28
 FPGC_tb.fpgc.fsx.vga_r[2:0]
 FPGC_tb.fpgc.fsx.vga_g[2:0]
+@29
 FPGC_tb.fpgc.fsx.vga_b[1:0]
 @200
 -
@@ -91,15 +92,10 @@ FPGC_tb.fpgc.fsx.spriterenderer.h_count_div2[9:0]
 FPGC_tb.fpgc.fsx.spriterenderer.h_count_div2_offset[9:0]
 @200
 -
-@24
-FPGC_tb.fpgc.fsx.spriterenderer.spriteSelectionList0[5:0]
-@28
-FPGC_tb.fpgc.fsx.spriterenderer.sprite0[33:0]
 @22
 FPGC_tb.fpgc.fsx.spriterenderer.rendered_sprite0[63:0]
 @24
 FPGC_tb.fpgc.fsx.spriterenderer.spriteHpixel0[2:0]
-@25
 FPGC_tb.fpgc.fsx.spriterenderer.spriteVisible0
 @200
 -Memory

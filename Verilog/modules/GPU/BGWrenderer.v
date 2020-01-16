@@ -3,16 +3,16 @@
 */
 module BGWrenderer
 #(
-    parameter H_RES = 480,      // horizontal resolution (pixels)
-    parameter V_RES = 272,      // vertical resolution (lines)
-    parameter H_FP  = 2,        // horizontal front porch
-    parameter H_SYNC= 41,       // horizontal sync
-    parameter H_BP  = 2,        // horizontal back porch
-    parameter V_FP  = 2,        // vertical front porch
-    parameter V_SYNC= 10,       // vertical sync
-    parameter V_BP  = 2,        // vertical back porch
-    parameter H_POL = 0,        // horizontal sync polarity (0:neg, 1:pos)
-    parameter V_POL = 0         // vertical sync polarity (0:neg, 1:pos)
+    parameter H_RES   = 320,      // horizontal resolution (pixels)
+    parameter V_RES   = 240,      // vertical resolution (lines)
+    parameter H_FP    = 23,       // horizontal front porch
+    parameter H_SYNC  = 28,       // horizontal sync
+    parameter H_BP    = 45,       // horizontal back porch
+    parameter V_FP    = 6,        // vertical front porch
+    parameter V_SYNC  = 3,        // vertical sync
+    parameter V_BP    = 20,       // vertical back porch
+    parameter H_POL   = 0,        // horizontal sync polarity (0:neg, 1:pos)
+    parameter V_POL   = 0         // vertical sync polarity
 ) 
 (
     //VGA I/O
@@ -39,10 +39,7 @@ module BGWrenderer
 
     //VRAM8
     output [13:0]       vram8_addr,
-    input  [7:0]        vram8_q,
-
-    //Interrupt signal
-    output wire         frameDrawn
+    input  [7:0]        vram8_q
 );
 
 // Horizontal: sync, active, and pixels
@@ -69,11 +66,9 @@ begin
     XfineOffset <= 3'd0;
 end
 
-assign frameDrawn = (v_tile == 32);
-
 
 wire [8:0] v_count_visible;
-assign v_count_visible = v_count - V_FP - V_SYNC - V_BP - 8; //-8 because we skip the first line
+assign v_count_visible = v_count - V_FP - V_SYNC - V_BP;
 
 wire [9:0] h_count_visible;
 assign h_count_visible = h_count - H_FP - H_SYNC - H_BP + XfineOffset; //+XfineOffset for fine scrolling
@@ -112,7 +107,7 @@ wire [5:0] h_tile_next_noscroll;
 assign h_tile_next_noscroll = ((h_count - H_FP - H_SYNC - H_BP + 8) / 8);
 
 wire [5:0] h_tile_next_noscroll2;
-assign h_tile_next_noscroll2 = (h_count < 40) ?  0:
+assign h_tile_next_noscroll2 = (h_count <  H_FP + H_SYNC + H_BP - 5) ?  0:
                             h_tile_next_noscroll;
 
 wire [10:0] tile_next;
@@ -485,10 +480,10 @@ assign vram8_addr = ((!vga_vs && !vga_hs) && fetchState == fetch_bg_tile) ? 8192
                     (fetchState == fetch_wind_tile && XfineOffset > 4 && h_tile_next_noscroll2 != 0) ? 4096 + tile_next_noscroll2 + 1:
                     (fetchState == fetch_wind_tile && XfineOffset > 4 && h_tile_next_noscroll2 == 0 && h_tile_next_noscroll == 0) ? 4096 + tile_next_noscroll2 + 1:
                     (fetchState == fetch_wind_tile && XfineOffset > 4 && h_tile_next_noscroll2 == 0 && h_tile_next_noscroll != 0) ? 4096 + tile_next_noscroll2:
-                    (fetchState == fetch_wind_color && XfineOffset <= 4) ? 6144 + tile_next_noscroll2:
-                    (fetchState == fetch_wind_color && XfineOffset > 4 && h_tile_next_noscroll2 != 0) ? 6144 + tile_next_noscroll2 + 1:
-                    (fetchState == fetch_wind_color && XfineOffset > 4 && h_tile_next_noscroll2 == 0 && h_tile_next_noscroll == 0) ? 6144 + tile_next_noscroll2 + 1:
-                    (fetchState == fetch_wind_color && XfineOffset > 4 && h_tile_next_noscroll2 == 0 && h_tile_next_noscroll != 0) ? 6144 + tile_next_noscroll2:
+                    (fetchState == fetch_wind_color && XfineOffset <= 6) ? 6144 + tile_next_noscroll2:
+                    (fetchState == fetch_wind_color && XfineOffset > 6 && h_tile_next_noscroll2 != 0) ? 6144 + tile_next_noscroll2 + 1:
+                    (fetchState == fetch_wind_color && XfineOffset > 6 && h_tile_next_noscroll2 == 0 && h_tile_next_noscroll == 0) ? 6144 + tile_next_noscroll2 + 1:
+                    (fetchState == fetch_wind_color && XfineOffset > 6 && h_tile_next_noscroll2 == 0 && h_tile_next_noscroll != 0) ? 6144 + tile_next_noscroll2:
                     14'd0;
 
 assign vram32_addr = (fetchState == fetch_pattern_bg) ? (tile_index * 4) + (v_tile_pixel/2): //*4 because 4 addresses per tile
@@ -505,14 +500,14 @@ wire window_drawn;
 assign window_drawn = (data_wind_r != 3'd0 || data_wind_g != 3'd0 || data_wind_b != 2'd0) ? 1'b1:
                     1'b0;
 
-assign vga_r =  (v_tile < 32 && o_de && window_drawn) ? data_wind_r: 
-                (v_tile < 32 && o_de && !window_drawn) ? data_bg_r: 
+assign vga_r =  (o_de && window_drawn) ? data_wind_r: 
+                (o_de && !window_drawn) ? data_bg_r: 
                 3'd0;
-assign vga_g =  (v_tile < 32 && o_de && window_drawn) ? data_wind_g: 
-                (v_tile < 32 && o_de && !window_drawn) ? data_bg_g: 
+assign vga_g =  (o_de && window_drawn) ? data_wind_g: 
+                (o_de && !window_drawn) ? data_bg_g: 
                 3'd0;
-assign vga_b =  (v_tile < 32 && o_de && window_drawn) ? data_wind_b: 
-                (v_tile < 32 && o_de && !window_drawn) ? data_bg_b: 
+assign vga_b =  (o_de && window_drawn) ? data_wind_b: 
+                (o_de && !window_drawn) ? data_bg_b: 
                 3'd0;
 
 endmodule

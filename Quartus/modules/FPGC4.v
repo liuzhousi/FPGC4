@@ -6,6 +6,7 @@ module FPGC4(
     input           nreset,
 
     //VGA for GM7123 module
+	 /*
     output          vga_clk,
     output          vga_hs,
     output          vga_vs,
@@ -13,6 +14,13 @@ module FPGC4(
     output [2:0]    vga_g,
     output [1:0]    vga_b,
     output          vga_blk,
+	 */
+	 
+	 //RGBs video
+	 output          crt_sync,
+    output [2:0]    crt_r,
+    output [2:0]    crt_g,
+    output [1:0]    crt_b,
 
     //SDRAM
     output          SDRAM_CLK,
@@ -64,8 +72,11 @@ module FPGC4(
     //SPI
     output          s_clk,
     input           s_miso,
-    output          s_mosi
+    output          s_mosi,
+	 output 			  s_cs 		//actually just a copy of GPO[0]
 );
+
+assign s_cs = GPO[0];
 
 wire frameDrawn;    //high when frame just rendered
                     //needs to be stabilized
@@ -259,6 +270,7 @@ VRAM #(
 
 FSX fsx(
 //VGA
+/*
 .vga_clk        (vga_clk),
 .vga_r          (vga_r),
 .vga_g          (vga_g),
@@ -266,6 +278,13 @@ FSX fsx(
 .vga_hs         (vga_hs),
 .vga_vs         (vga_vs),
 .vga_blk        (vga_blk),
+*/
+
+.vga_clk(vga_clk),
+.crt_sync(crt_sync),
+.crt_r(crt_r),
+.crt_g(crt_g),
+.crt_b(crt_b),
 
 //VRAM32
 .vram32_addr    (vram32_gpu_addr),

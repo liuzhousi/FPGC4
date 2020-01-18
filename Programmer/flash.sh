@@ -10,7 +10,7 @@ fi
 device=$1
 code=$2
 
-fileSize=$(stat -c %s code.bin)
+fileSize=$(stat -c %s $code)
 
 python3 spi_flash_programmer_client.py -d $device -l $fileSize -f $code write
 

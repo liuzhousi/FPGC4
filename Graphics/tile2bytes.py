@@ -1,6 +1,16 @@
 from PIL import Image
 
 
+def rgb_to_hsl(r, g, b):
+    r = float(r)
+    g = float(g)
+    b = float(b)
+    high = max(r, g, b)
+    low = min(r, g, b)
+    h, s, v = ((high + low) / 2,)*3
+
+    return v
+
 #img: image to process
 #x: starting x position
 #y: starting y position
@@ -15,6 +25,7 @@ def createPattern(img, x, y, idx):
         tile.append(tileLine)
 
     colorList = []
+    lumlist = []
 
     for a in range(8):
         for b in range(8):
@@ -23,6 +34,9 @@ def createPattern(img, x, y, idx):
 
     if len(colorList) > 4:
         print("tile ", idx, " has more than 4 colors")
+
+    #order color list from dark to light
+    colorList.sort(key=lambda x: rgb_to_hsl(x[0], x[1], x[2]) )
 
     print(".dw 0b", end = '')
     for a in range(8):
@@ -39,8 +53,7 @@ def createPattern(img, x, y, idx):
             print()
             print(".dw 0b", end = '')
 
-    print(" //tile ", idx)
-    return ""
+    print(" ; tile ", idx)
 
 
 im = Image.open('tiles.png')
@@ -85,6 +98,7 @@ for y in range(vtiles):
         createPattern(px, x, y, tile_i)
         tile_i = tile_i + 1
         
+#createPattern(px, 0, 0, 0)
 
 """
 def readChar(startx, starty):

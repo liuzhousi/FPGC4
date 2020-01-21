@@ -1,6 +1,6 @@
 import serial
 
-port = serial.Serial("/dev/ttyUSB0", baudrate=115200, timeout=None)
+port = serial.Serial("/dev/ttyUSB1", baudrate=115200, timeout=None)
 
 
 # parse byte file

@@ -5,6 +5,7 @@ define GFX_PATTERN_TABLE_SIZE       = 1024      ; size of pattern table
 define GFX_PALETTE_TABLE_SIZE       = 32        ; size of palette table
 define GFX_WINDOW_TILES             = 1920      ; number of tiles in window plane
 define GFX_BG_TILES                 = 2048      ; number of tiles in bg plane
+define GFX_SPRITES                  = 64        ; number of sprites in spriteVRAM
 
 ; Prints to screen in window plane, with color, data is accessed in bytes
 ; Reads each word from left to right
@@ -237,20 +238,6 @@ GFX_printBG:
 ; Initialize VRAM by copying pattern table and palette table
 ; also clears BG tile and BG palette table
 GFX_initVram:
-    ; ascii address
-    addr2reg ASCIITABLE r1 
-
-    savpc r15
-    push r15
-    jump GFX_copyPatternTable
-
-    ; palette address
-    addr2reg PALETTETABLE r1 
-
-    savpc r15
-    push r15
-    jump GFX_copyPaletteTable
-
     savpc r15
     push r15
     jump GFX_clearBGtileTable
@@ -266,6 +253,10 @@ GFX_initVram:
     savpc r15
     push r15
     jump GFX_clearWindowpaletteTable
+
+    savpc r15
+    push r15
+    jump GFX_clearSprites
 
     ; return
     pop r15
@@ -495,6 +486,47 @@ GFX_clearWindowpaletteTable:
         add r3 1 r3             ; incr counter
         beq r3 r4 2             ; keep looping until all tiles are cleared
         jump GFX_clearWindowpaletteTableLoop
+
+    ; restore registers
+    pop r5
+    pop r4
+    pop r3
+    pop r2
+    pop r1
+
+    ; return
+    pop r15
+    jumpr 3 r15
+
+
+; Clear Sprites
+GFX_clearSprites:
+    ; backup registers
+    push r1
+    push r2
+    push r3
+    push r4
+    push r5
+
+    ; vram address
+    load 0x2632 r1
+    loadhi 0xC0 r1          ; r1 = vram addr 0xC02632
+
+    ; loop variables
+    load 0 r3               ; r3 = loopvar
+    load GFX_SPRITES r4     ; r4 = loopmax
+    or r1 r0 r5             ; r5 = vram addr with offset
+
+    ; copy loop
+    GFX_clearSpritesLoop:
+        write 0 r5 r0           ; clear x
+        write 1 r5 r0           ; clear y
+        write 2 r5 r0           ; clear tile
+        write 3 r5 r0           ; clear color+attrib
+        add r5 4 r5             ; incr vram address by 4
+        add r3 1 r3             ; incr counter
+        beq r3 r4 2             ; keep looping until all tiles are cleared
+        jump GFX_clearSpritesLoop
 
     ; restore registers
     pop r5

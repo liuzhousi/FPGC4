@@ -14,8 +14,7 @@ UART_print_text:
     push r8
     push r9
 
-    load 0x262E r3
-    loadhi 0xC0 r3              ; r3 = 0xC0262E | UART tx
+    load32 0xC0262E r3          ; r3 = 0xC0262E | UART tx    
 
     ; loop variables
     load 0 r5                   ; r5 = loopvar
@@ -62,8 +61,7 @@ UART_print_reg:
     push r2
     push r3
 
-    load 0x262E r3
-    loadhi 0xC0 r3              ; r3 = 0xC0262E | UART tx
+    load32 0xC0262E r3          ; r3 = 0xC0262E | UART tx
 
     ; send leftmost byte
     shiftr r1 24 r2

@@ -1,7 +1,7 @@
 import mido
 
 #mid = mido.MidiFile('mario.mid')
-mid = mido.MidiFile('mario2.mid')
+mid = mido.MidiFile('stalk.mid')
 
 msgList = []
 
@@ -70,11 +70,11 @@ for x in timeStatusList:
             onNotes.append(key)
     noteOnList.append(onNotes)
 
-for i in noteOnList:
-    if len(i) > 4:
-        print("Got more than 4 notes at the same time!")
-        print("Program will exit now")
-        exit(1)
+#for i in noteOnList:
+#    if len(i) > 4:
+#        print("Got more than 4 notes at the same time!")
+#        print("Program will exit now")
+#        exit(1)
 
 dtimeNoteList = []
 for idx, t in enumerate(dtimeList):
@@ -89,8 +89,11 @@ for idx, x in enumerate(dtimeNoteList):
 
     print("0x", end = '')
     if len(x[1]) is not 0:
+        noteCounter = 0
         for note in x[1]:
-            print("{:02x}".format(note - 19), end = '')
+            if (noteCounter < 4):
+                print("{:02x}".format(note - 19), end = '')
+                noteCounter = noteCounter + 1
     else:
         print("0", end = '')
     print(" ", end = '')

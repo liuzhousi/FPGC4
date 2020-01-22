@@ -70,6 +70,7 @@ def compileLine(line):
         "mult"      : CompileInstruction.compileMult,
         "not"       : CompileInstruction.compileNot,
         "addr2reg"  : CompileInstruction.compileAddr2reg,
+        "load32"    : CompileInstruction.compileLoad32,
         "nop"       : CompileInstruction.compileNop,
         ".dw"       : CompileInstruction.compileDw,
         ".dd"       : CompileInstruction.compileDd,
@@ -104,6 +105,10 @@ def passOne(parsedLines):
             compiledLine = compileLine(line[1])
 
             #fix instructions that have multiple lines
+
+            if compiledLine.split()[0] == "loadBoth":
+                passOneResult.append((line[0], compileLine(["load", compiledLine.split()[2], compiledLine.split()[3]])))
+                compiledLine = compileLine(["loadhi", compiledLine.split()[1], compiledLine.split()[3]])
 
             if compiledLine.split()[0] == "loadLabelHigh":
                 passOneResult.append((line[0], "loadLabelLow " + " ".join(compiledLine.split()[1:])))

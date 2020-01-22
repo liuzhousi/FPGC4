@@ -99,23 +99,3 @@ for y in range(vtiles):
         tile_i = tile_i + 1
         
 #createPattern(px, 0, 0, 0)
-
-"""
-def readChar(startx, starty):
-    for y in range (8):
-        for x in range (8):
-            r, g, b = (px[startx*8 + x, starty*8 + y])
-            if r == 0 and g == 0 and b == 0:
-                print("00", end = '')
-            if r == 0 and g == 255 and b == 0:
-                print("01", end = '')
-            if r == 255 and g == 0 and b == 0:
-                print("10", end = '')
-            if r == 255 and g == 255 and b == 255:
-                print("11", end = '')
-        if y % 1 == 0:
-            print()
-
-
-readChar(0, 0)
-"""

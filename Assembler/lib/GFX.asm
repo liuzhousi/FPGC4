@@ -24,8 +24,7 @@ GFX_printWindowColored:
     push r10
 
     ; vram address
-    load 0x1420 r10
-    loadhi 0xC0 r10                 ; r10 = vram addr 1056+4096 0xC01420
+    load32 0xC01420 r10               ; r10 = vram addr 1056+4096 0xC01420             
 
     ; loop variables
     load 0 r5                       ; r5 = loopvar
@@ -81,8 +80,7 @@ GFX_printWindow:
     push r9
 
     ; vram address
-    load 0x1420 r4
-    loadhi 0xC0 r4                 ; r10 = vram addr 1056+4096 0xC01420
+    load32 0xC01420 r4                ; r10 = vram addr 1056+4096 0xC01420             
 
     ; loop variables
     load 0 r5                       ; r5 = loopvar
@@ -138,8 +136,7 @@ GFX_printBGColored:
     push r10
 
     ; vram address
-    load 0x0420 r10
-    loadhi 0xC0 r10                 ; r10 = vram addr 1056 0xC00420
+    load32 0xC00420 r10               ; r10 = vram addr 1056 0xC00420               
 
     ; loop variables
     load 0 r5                       ; r5 = loopvar
@@ -195,8 +192,7 @@ GFX_printBG:
     push r9
 
     ; vram address
-    load 0x0420 r4
-    loadhi 0xC0 r4                 ; r10 = vram addr 1056 0xC00420
+    load32 0xC00420 r4                ; r10 = vram addr 1056 0xC00420       
 
     ; loop variables
     load 0 r5                       ; r5 = loopvar
@@ -258,6 +254,10 @@ GFX_initVram:
     push r15
     jump GFX_clearSprites
 
+    savpc r15
+    push r15
+    jump GFX_clearParameters
+
     ; return
     pop r15
     jumpr 3 r15
@@ -275,8 +275,7 @@ GFX_copyPatternTable:
     push r6
 
     ; vram address
-    load 0x0000 r2
-    loadhi 0xC0 r2                  ; r2 = vram addr 0 0xC00000
+    load32 0xC00000 r2                ; r2 = vram addr 0 0xC00000               
 
     ; loop variables
     load 0 r3                       ; r3 = loopvar
@@ -317,8 +316,7 @@ GFX_copyPaletteTable:
     push r6
 
     ; vram address
-    load 0x0400 r2
-    loadhi 0xC0 r2                  ; r2 = vram addr 1024 0xC00400
+    load32 0xC00400 r2                ; r2 = vram addr 1024 0xC00400
 
     ; loop variables
     load 0 r3                       ; r3 = loopvar
@@ -357,8 +355,7 @@ GFX_clearBGtileTable:
     push r5
 
     ; vram address
-    load 0x0420 r1
-    loadhi 0xC0 r1          ; r1 = vram addr 1056 0xC00420
+    load32 0xC00420 r1        ; r1 = vram addr 1056 0xC00420         
 
     ; loop variables
     load 0 r3               ; r3 = loopvar
@@ -395,8 +392,7 @@ GFX_clearBGpaletteTable:
     push r5
 
     ; vram address
-    load 0x0C20 r1
-    loadhi 0xC0 r1          ; r1 = vram addr 1056+2048 0xC00C20
+    load32 0xC00C20 r1        ; r1 = vram addr 1056+2048 0xC00C20       
 
     ; loop variables
     load 0 r3               ; r3 = loopvar
@@ -433,8 +429,7 @@ GFX_clearWindowtileTable:
     push r5
 
     ; vram address
-    load 0x1420 r1
-    loadhi 0xC0 r1          ; r1 = vram addr 1056+2048 0xC01420
+    load32 0xC01420 r1        ; r1 = vram addr 1056+2048 0xC01420
 
     ; loop variables
     load 0 r3               ; r3 = loopvar
@@ -471,8 +466,7 @@ GFX_clearWindowpaletteTable:
     push r5
 
     ; vram address
-    load 0x0C20 r1
-    loadhi 0xC0 r1          ; r1 = vram addr 1056+2048 0xC00C20
+    load32 0xC00C20 r1        ; r1 = vram addr 1056+2048 0xC00C20 
 
     ; loop variables
     load 0 r3               ; r3 = loopvar
@@ -509,8 +503,7 @@ GFX_clearSprites:
     push r5
 
     ; vram address
-    load 0x2632 r1
-    loadhi 0xC0 r1          ; r1 = vram addr 0xC02632
+    load32 0xC02632 r1        ; r1 = vram addr 0xC02632     
 
     ; loop variables
     load 0 r3               ; r3 = loopvar
@@ -533,6 +526,24 @@ GFX_clearSprites:
     pop r4
     pop r3
     pop r2
+    pop r1
+
+    ; return
+    pop r15
+    jumpr 3 r15
+
+; Clear parameters
+GFX_clearParameters:
+    ; backup registers
+    push r1
+
+    ; vram address
+    load32 0xC02420 r1        ; r1 = vram addr 0xC02420
+
+    write 0 r1 r0           ; clear tile scroll
+    write 1 r1 r0           ; clear fine scroll
+
+    ; restore registers
     pop r1
 
     ; return

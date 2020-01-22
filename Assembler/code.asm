@@ -10,31 +10,12 @@
 ; DATA INCLUDES
 `include data_lv1.asm
 
+
 Main:
 
     savpc r15
     push r15
     jump GFX_initVram
-
-    ; print some data to Window
-    ;addr2reg WINDOWTEXT r1   ; data to copy
-    ;load 25 r2              ; length of data
-    ;load 40 r3              ; offset from start
-    ;load 2 r4               ; palette idx
-
-    ;savpc r15
-    ;push r15
-    ;jump GFX_printWindowColored   
-
-    ; print some data to BG
-    ;addr2reg BACKGROUNDTILES r1   ; data to copy
-    ;load 6 r2               ; length of data
-    ;load 16 r3              ; offset from start
-    ;load 1 r4               ; palette idx
-
-    ;savpc r15
-    ;push r15
-    ;jump GFX_printBGColored  
 
 
     ; load pattern table
@@ -55,6 +36,20 @@ Main:
     push r15
     jump CopyLevelToBG
 
+
+
+    ; Sprite movement test
+    load32 0xC02632 r1
+
+    load 64 r2
+    write 0 r1 r2
+    load 196 r2
+    write 1 r1 r2
+    load 21 r2
+    write 2 r1 r2
+    load 0 r2
+    shiftl r2 4 r2
+    write 3 r1 r2
     
 
     halt    
@@ -62,12 +57,15 @@ Main:
 
 ; level to copy in reg1
 CopyLevelToBG:
+
+    ; TODO HERE: READ X TILE OFFSET AND APPLY
+    add r1 0 r1
+
     load 26 r8                      ; lines in level
     load 0 r9                       ; line copy loop variable
 
     ; vram address
-    load 0x0420 r2
-    loadhi 0xC0 r2                 ; r2 = vram addr 1056+4096 0xC01420
+    load32 0xC00420 r2              ; r2 = vram addr 1056+4096 0xC01420          
 
     add r2 256 r2                 ; start at 4th line
 
@@ -77,17 +75,55 @@ CopyLevelToBG:
         load 40 r4                      ; r4 = loopmax
         or r2 r0 r5                     ; r5 = vram addr with offset
         or r1 r0 r6                     ; r6 = level addr with offset
-        load 1 r7                       ; r7 = temp hardcoded level palette
+        load 0 r7                       ; r7 = read tile data
+        load 0 r10                      ; r10 = tile id to compare against
+        load 0 r11                      ; r11 = palette value to write
 
         ; copy loop
-        copyleveltestloop:
-            copy 0 r6 r5            ; copy level to vram
-            write 2048 r5 r7        ; write palette index to vram
+        Copyleveltestloop:
+            read 0 r6 r7                ; read level tile
+            write 0 r5 r7               ; write tile to vram
+            
+            ; write palette based on tile id
+
+            ; background
+            load 5 r10
+            bne r7 r10 4
+                load 2 r11              ; palette to use for this tile
+                write 2048 r5 r11       ; write palette index to vram
+                jump Copyleveltestloop_EndPalette   ; skip to end
+
+            ; upward spikes
+            load 32 r10
+            bne r7 r10 4
+                load 3 r11              ; palette to use for this tile
+                write 2048 r5 r11       ; write palette index to vram
+                jump Copyleveltestloop_EndPalette   ; skip to end
+
+            ; downward spikes
+            load 40 r10
+            bne r7 r10 4
+                load 3 r11              ; palette to use for this tile
+                write 2048 r5 r11       ; write palette index to vram
+                jump Copyleveltestloop_EndPalette   ; skip to end
+
+            ; arrow shooters
+            load 8 r10
+            bne r7 r10 4
+                load 4 r11              ; palette to use for this tile
+                write 2048 r5 r11       ; write palette index to vram
+                jump Copyleveltestloop_EndPalette   ; skip to end
+
+
+            load 1 r11              ; default
+            write 2048 r5 r11       ; write palette index to vram
+            Copyleveltestloop_EndPalette:
+
             add r5 1 r5             ; incr vram address
             add r6 1 r6             ; incr level address 
             add r3 1 r3             ; incr counter
             beq r3 r4 2             ; keep looping until all data is copied
-            jump copyleveltestloop
+            jump Copyleveltestloop
 
 
 
@@ -136,11 +172,11 @@ Int4:
 
 
 PALETTETABLE:
-.dw 0b00000000000000000000000011111111
-.dw 0b01000000011001010110010001111000  ; 0
-.dw 0b00000000000000000000000000000000
-.dw 0b00000000000000000000000000000000
-.dw 0b00000000000000000000000000000000
+.dw 0b00000000111111110000000011111111
+.dw 0b01000100101011010110100011010101  ; Default/Ground
+.dw 0b00100100000000000100010000000000  ; Background cave
+.dw 0b00100100101110101001000111111111  ; Spikes
+.dw 0b00100100110011010100100100000000  ; Arrow shooters
 .dw 0b00000000000000000000000000000000
 .dw 0b00000000000000000000000000000000
 .dw 0b00000000000000000000000000000000

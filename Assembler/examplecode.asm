@@ -101,8 +101,8 @@ Main:
     write 0 r1 r2       ; write timer1 value
     write 1 r1 r3       ; start timer1
 
-    write 2 r1 r10      ; write timer2 value
-    write 3 r1 r3       ; start timer3
+    ;write 2 r1 r10      ; write timer2 value
+    ;write 3 r1 r3       ; start timer3
 
     addr2reg MUSICNOTES r4
     read 0 r4 r4

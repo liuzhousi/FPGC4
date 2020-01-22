@@ -8,8 +8,7 @@ SPI_beginTransfer:
     push r2
     push r3
 
-    load 0x2630 r3
-    loadhi 0xC0 r3              ; r3 = 0xC02630 | GPIO
+    load32 0xC02630 r3          ; r3 = 0xC02630 | GPIO
 
     read 0 r3 r1                ; r1 = GPIO values
     load 0b1111111011111111 r2  ; r2 = bitmask
@@ -33,8 +32,7 @@ SPI_endTransfer:
     push r2
     push r3
 
-    load 0x2630 r3
-    loadhi 0xC0 r3              ; r3 = 0xC02630 | GPIO
+    load32 0xC02630 r3          ; r3 = 0xC02630 | GPIO         
 
     read 0 r3 r1                ; r1 = GPIO values
     load 0b100000000 r2         ; r2 = bitmask
@@ -64,8 +62,8 @@ SPI_transfer:
     push r15
     jump SPI_beginTransfer
 
-    load 0x2631 r2
-    loadhi 0xC0 r2          ; r2 = 0xC02631 | SPI address
+    load32 0xC02631 r2      ; r2 = 0xC02631 | SPI address    
+
     write 0 r2 r1           ; write r1 over SPI
     read 0 r2 r1            ; read return value
 

@@ -410,8 +410,7 @@ CH376_Write_file:
     load 0 r5               ; r5 = loopvar
     load 32 r6              ; r6 = shift variable
 
-    load 0x2631 r3
-    loadhi 0xC0 r3          ; r3 = 0xC02631 | SPI address
+    load32 0xC02631 r3      ; r3 = 0xC02631 | SPI address
 
     ; copy loop
     CH376_Write_file_loop:
@@ -690,8 +689,7 @@ CH376_Send_filename:
     push r15
     jump SPI_beginTransfer
 
-    load 0x2631 r3
-    loadhi 0xC0 r3          ; r3 = 0xC02631 | SPI address
+    load32 0xC02631 r3      ; r3 = 0xC02631 | SPI address     
 
     load CMD_SET_FILE_NAME r4
     write 0 r3 r4
@@ -1252,8 +1250,7 @@ CH376_Delay_100ms:
     push r1
     push r2
 
-    load 0x046A r1
-    loadhi 0x1  r1              ; r1 = loop max, 200.000/3 = 66.666
+    load32 0x1046A r1           ; r1 = loop max, 200.000/3 = 66.666    
     load 0 r2                   ; r2 = loopvar
 
     ; delay loop

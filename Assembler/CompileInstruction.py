@@ -1043,6 +1043,42 @@ def compileAddr2reg(line):
 
     return instruction
 
+
+#compiles load32 instruction
+#should have 2 arguments
+#arg 1 should be a number within 32 bits
+#arg 2 should be a reg
+def compileLoad32(line):
+    if len(line) != 3:
+        raise Exception("Incorrect number of arguments. Expected 2, but got " + str(len(line)-1))
+
+    const32 = ""
+
+    #convert arg1 to number
+    arg1Int = getNumber(line[1])
+
+
+    #check if it fits in 16 bits, so we can skip the loadhi
+    try:
+        CheckFitsInBits(arg1Int, 16)
+        return compileLoad(line)
+    except:
+        pass #continue
+
+    #check if it fits in 32 bits
+    CheckFitsInBits(arg1Int, 32)
+
+    #convert to 32 bit
+    const32 = format(arg1Int, '032b')
+
+    constLow = int(const32[0:16], 2)
+    constHigh = int(const32[16:32], 2)
+
+    #create instruction
+    instruction = "loadBoth " + str(constLow) + " " + str(constHigh) + " " + line[2]
+
+    return instruction
+
 #compiles compileLoadLabelLow instruction
 def compileLoadLabelLow(line):
     if len(line) != 3:

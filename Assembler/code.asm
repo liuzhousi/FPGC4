@@ -1,5 +1,10 @@
 ; First FPGC4 game: a platformer
 
+; Memory locations:
+; 0x400_0000     Frame counter
+; 0x400_0001     Frame counter previous
+
+
 ; for debugging to pc
 `include lib/UART.asm
 ; for basic functions
@@ -38,7 +43,7 @@ Main:
 
 
 
-    ; Sprite movement test
+    ; Sprite test
     load32 0xC02632 r1
 
     load 64 r2
@@ -50,9 +55,44 @@ Main:
     load 0 r2
     shiftl r2 4 r2
     write 3 r1 r2
+
+    ; Reset RAM
+    load32 0x400000 r1
+    write 0 r1 r0
+    write 1 r1 r0
     
+    jump GameLoop
 
     halt    
+
+
+
+GameLoop:
+    ; SNES controller address
+    load32 0xC02622 r1      ; r1 = Controller address 0xC02622
+    read 0 r1 r2            ; r2 = button data
+
+    and r2 0b10000000 r3
+    beq r3 r0 5
+        load32 0xC02632 r1
+        read 0 r1 r2
+        add r2 1 r2
+        write 0 r1 r2
+
+
+
+
+    WaitNewFrame:
+        load32 0x400000 r1
+        read 1 r1 r2            ; r2 = frame cnt prev
+        read 0 r1 r3            ; r3 = current frame cnt
+
+        bne r2 r3 2             ; keep waiting until frame cnts differ
+            jump WaitNewFrame
+
+    write 1 r1 r3       ; write back new previous frame cnt
+    jump GameLoop
+
 
 
 ; level to copy in reg1
@@ -167,7 +207,21 @@ Int3:
     reti
 
 Int4:
-    reti
+    ; backup regs
+    push r1
+    push r2
+
+    load32 0x400000 r1      ; r1 = frame counter address
+
+    read 0 r1 r2            ; r2 = frame counter
+    add r2 1 r2             ; increase frame counter
+    write 0 r1 r2           ; write new frame counter back
+
+    ; restore regs
+    pop r2
+    pop r1
+
+    reti                    ; return from interrupt
 
 
 

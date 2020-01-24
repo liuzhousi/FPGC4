@@ -5,12 +5,12 @@ module Spriterenderer
 #(
     parameter H_RES   = 320,      // horizontal resolution (pixels)
     parameter V_RES   = 240,      // vertical resolution (lines)
-    parameter H_FP    = 23,       // horizontal front porch
-    parameter H_SYNC  = 28,       // horizontal sync
-    parameter H_BP    = 45,       // horizontal back porch
-    parameter V_FP    = 6,        // vertical front porch
-    parameter V_SYNC  = 3,        // vertical sync
-    parameter V_BP    = 20,       // vertical back porch
+    parameter H_FP    = 24,       // horizontal front porch
+    parameter H_SYNC  = 32,       // horizontal sync
+    parameter H_BP    = 46,       // horizontal back porch
+    parameter V_FP    = 3,        // vertical front porch
+    parameter V_SYNC  = 5,        // vertical sync
+    parameter V_BP    = 14,       // vertical back porch
     parameter H_POL   = 0,        // horizontal sync polarity (0:neg, 1:pos)
     parameter V_POL   = 0         // vertical sync polarity
 ) 

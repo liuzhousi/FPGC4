@@ -18,7 +18,7 @@ The console runs on a self designed CPU called the B322 (B4rt 32bit processor v2
 These are the current specifications of the FPGC4:
 
 - 25MHz CPU clock   
-- 6.7MHz GPU clock
+- 6.6272MHz GPU clock
 - 16MiB SPI flash (QSPI) @ 25MHz. 32bit addresses. Read only
 - 32MiB SDRAM @ 25MHz. 32bit addresses. Readable and writable, used as main memory
 - ~16.4KiB VRAM (SRAM). Combination of 32, 9 and 8bit addresses

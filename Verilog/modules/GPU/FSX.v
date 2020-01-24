@@ -61,12 +61,12 @@ parameter
 parameter
     H_RES   = 320,      // horizontal resolution (pixels)
     V_RES   = 240,      // vertical resolution (lines)
-    H_FP    = 23,       // horizontal front porch
-    H_SYNC  = 28,       // horizontal sync
-    H_BP    = 45,       // horizontal back porch
-    V_FP    = 6,        // vertical front porch
-    V_SYNC  = 3,        // vertical sync
-    V_BP    = 20,       // vertical back porch
+    H_FP    = 24,       // horizontal front porch
+    H_SYNC  = 32,       // horizontal sync
+    H_BP    = 46,       // horizontal back porch
+    V_FP    = 3,        // vertical front porch
+    V_SYNC  = 5,        // vertical sync
+    V_BP    = 14,       // vertical back porch
     H_POL   = 0,        // horizontal sync polarity (0:neg, 1:pos)
     V_POL   = 0;        // vertical sync polarity
 

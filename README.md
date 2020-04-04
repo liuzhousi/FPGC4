@@ -1,16 +1,27 @@
 # FPGC4
 
-## TODO in documentation
-- USB mass storage
-- Picture of setup
-- FPGA utilization stats
-
 ## Introduction
-The fourth version of the FPGC, somewhat based on the FPGC3, which is designed from scratch using Verilog.
-The FPGC4 as a whole is designed for use on a QMTECH EP4CE15 board (old revision with Micron SDRAM. Newer version has Winbond SDRAM and has not been tested yet). However, the CPU of the project is completely modular and should work on any FPGA. TODO: I should add a picture of the setup
+The FPGC4 is the fourth version of my game console/PC that is implemented in an FPGA. It runs on a self designed CPU called the B322 (B4rt 32bit processor v2) and a self designed GPU called the FSX2 (Frame Synthesizer v2). It has the performance of a computer from the 1980's, but with some newer features like a 32bit CPU architecture with an 0.5GiB address space, and a clock speed of 25MHz.
 
-The FPGC4 is a game console/PC that is implemented in an FPGA. 
-The console runs on a self designed CPU called the B322 (B4rt 32bit processor v2) and a self designed GPU called the FSX2 (Frame Synthesizer v2). As reference for the performance of this system, one should expect something similar to a Commodore 64 or NES, but with a relatively huge amount of memory.
+### Why?
+Nowadays computers are so immensely complex that it is hard to understand how they actually work. There are so many layers of abstraction, like CPU Microcode, BIOS and the Operating System, that it is hard to imagine how things works at a low level. As a Computer Science student, I usually am only working on higher level software, and not on hardware. So to answer questions like "What does a CPU do at each clock cycle?", "How does a CPU access different kinds of memory with different latencies?", "How does the CPU talk to the GPU?" and "How does a GPU render an image on the display?", I started this project to design a computer myself. 
+
+So the goal of this project is to understand how a computer works at a very low level, by designing and building one myself. 
+
+### How?
+Since I want to design my own hardware like a CPU and GPU, I need a way to actually build them. And since I do not own a factory that can make chips, and I do not want to buy and solder a bajillion transistors or logic ICs, I needed a magical device that allows me to create my own chips. Luckily, such magical device exists, and it is called an FPGA (Field Programmable Gate Array). An FPGA is a chip that consists out of many *configurable* logic building blocks. It usually has many pins to connect to other hardware, just like an Arduino. As a bonus, it usually also has some blocks of internal SRAM, and some other handy hardware like PLLs (for clock signal generation). FPGAs are usually "programmed" using a hardware description language (HDL) like VHDL or Verilog. These languages allow you (but do not require you) to abstract a bit away from the flip-flops and logic gates, but not by much. They allow you to design pretty complex hardware while still giving the designer control about what happens at each clock cycle. The most important part of these HDLs, is that you can use a simulator to "see inside the chip" and see what signals are high or low at any point in time! For this project, I chose Verilog, since it looked a bit more like "normal" programming languages like C. Eventually, this appeared to be a good decision, since the simulation models of the SDRAM and SPI flash I used for this project were also written in Verilog.
+
+### Performance
+Because current computers are so complex, it would be unfeasible for me, with no prior hardware design experience, to design a fast computer that will eventually run Windows or Linux. So I focused more on PCs and game consoles from around 1980, like the Commodore 64 and Nintendo Entertainment System (NES), since those are a lot less complex than the ones we have now. Using an FPGA from somewhere around 2010 built on a 60nm process instead of a few um process from the 1980's, allows me to add some features that were not usual in the 1980's. So instead of an 8 bit CPU architecture, I chose for an 32 bit architecture, so I can add more stuff in each instruction, vastly increasing the speed of the CPU. The FPGA also allows me to use a 25MHz clock instead of a 1MHz CPU like the Commodore 64 uses. My FPGA board also has a 32MiB SDRAM chip, which is a huge amount of memory compared to something like a Commodore 64 or NES. Furthermore, the 32 bit architecture allowed me to have a huge address space (currently 0.5GiB). It is important to note that because of the way I designed the architecture of the CPU and MU (Memory Unit), it is impossible to use pipelining to increase the performance. Complex tricks like pipelining and branch prediction were never the goal of this project and therefore will probably never be implemented.
+
+So as a performance reference, one should expect something similar to a Commodore 64 or NES, but using a 32 bit architecture with a relatively huge amount of memory and a higher clock speed.
+
+### FPGA Board
+There are different FPGA chips from different vendors, and there are many different development boards. The one I chose for this project is the [Cyclone IV EP4CE15 Core Board with 32MiB SDRAM from QMtech from Aliexpress](https://www.aliexpress.com/i/32949281189.html). The old revision of this board uses SDRAM from Micron. This old revision is the board I initially designed this project for. The newer revision uses Winbond SDRAM. I assume this newer revision is still compatible, however I have not verified yet. Eventually (very soon) I will switch to this newer revision and test the compatibility with my SDRAM controller.
+
+### PCB
+I have designed an I/O wing for the FPGA development board, as a replacement for the cardboard box where I used to glue everything in. Some components still have to arrive, so I have not tested everything yet. I will also use the newer revision of the FPGA development board with this I/O wing. The Kicad project files are in the PCB folder. I will add pictures when it is completely built.
+
 
 ## Hardware description
 
@@ -30,7 +41,7 @@ These are the current specifications of the FPGC4:
 - 320x240 video with 256 colors using 8x8 tiles
 - Video rendered over RGBs signal for CRT tv's using 'RGB scart'
 - Three CTC timers, third timer currently not attached to an interrupt
-- 4 interrupt pins (two timers, UART rx and the frameDrawn signal of the FSX2)
+- 4 interrupt pins (currently attached to two timers, UART rx and the frameDrawn signal of the FSX2)
 - 2 square wave tone generators with each 4 tones
 
 ### Computer Architecture
@@ -827,3 +838,8 @@ These are kinda ordered based on priority
 - Add Gameboy printer via Arduino to I/O
 - Write a simplistic C compiler. Use software stack with dedicated stack pointer register.
 - Change SPI Flash for SDCARD
+
+## TODO in documentation
+- USB mass storage
+- Picture of setup
+- FPGA utilization stats

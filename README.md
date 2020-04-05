@@ -879,4 +879,5 @@ These are kinda ordered based on priority
 ### TODO in documentation
 - USB mass storage
 - More PCB info
+- In circuit programming under programming
 - FPGA utilization stats

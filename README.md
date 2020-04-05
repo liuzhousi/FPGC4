@@ -1,6 +1,25 @@
 # FPGC4
+In this file you will find all the documentation of this project.
 
-## Introduction
+# Table of contents
+1. [Introduction](#introduction)
+2. [Hardware description](#hardwareDesc)
+    1. [Specifications](#specs)
+    2. [Architecture](#arch)
+    3. [Memory map](#memorymap)
+    4. [CPU](#cpu)
+    5. [MU](#mu)
+    6. [GPU](#gpu)
+3. [Bootloader](#bootloader)
+4. [Assembler](#assembler)
+5. [Quartus](#quartus)
+6. [Programmer](#programmer)
+7. [MIDI](#midi)
+8. [I/O Wing](#iowing)
+9. [More about the project](#moreInfo)
+
+
+## Introduction <a name="introduction"></a>
 The FPGC4 (Field Programmable Game Console v4) is the fourth version of my game console/PC that is implemented in an FPGA. It runs on a self designed CPU called the B322 (B4rt 32 bit processor v2) and a self designed GPU called the FSX2 (Frame Synthesizer v2). It has the performance of a computer from the 1980's, but with some newer features like a 32 bit CPU architecture with an 0.5GiB address space, and a clock speed of 25MHz.
 
 ### Why?
@@ -19,30 +38,14 @@ So as a performance reference, one should expect something similar to a Commodor
 ### FPGA Board
 There are different FPGA chips from different vendors, and there are many different development boards. The one I chose for this project is the [Cyclone IV EP4CE15 Core Board with 32MiB SDRAM from QMtech from Aliexpress](https://www.aliexpress.com/i/32949281189.html). The old revision of this board uses SDRAM from Micron. This old revision is the board I initially designed this project for. The newer revision uses Winbond SDRAM. I assume this newer revision is still compatible, however I have not verified yet. Eventually (very soon) I will switch to this newer revision and test the compatibility with my SDRAM controller.
 
-### PCB
-I have designed an I/O wing for the FPGA development board, as a replacement for the cardboard box where I used to glue everything in. Some components still have to arrive, so I have not tested everything yet. I will also use the newer revision of the FPGA development board with this I/O wing. The Kicad project files are in the PCB folder. More documentation about the I/O wing can be found under the section I/O Wing. (TODO link)
 
-### History of Project
-This project started around 2017 as the FPGC1, my first project on an FPGA. I just discovered that FPGAs were a thing and really wanted do learn how to use them. After some research I found that some people even recreated the entire NES in an FPGA! So I bought an Altera Cyclone IV EP4CE6 board from Aliexpress for 20 euros and decided I wanted to create some kind of game console myself, knowing it would be a very hard first project. I chose an Altera FPGA, since I heard that the IDE of Altera/Intel is subjectively better than Xilinx's IDE, though I probably would have chosen Altera anyways since their JTAG programmer has cheap clones you can buy for like 3 bucks. As of HDL choice, I thought Verilog looked a lot cleaner and more understandable than VHDL, so I chose Verilog. In contrast to software development, hardware development has a huge learning curve and requires a very different way of thinking, so my first project was not that much of a success if you look at the code. Most importantly, I did not know yet the importance of a simulator, so I did not simulate anything. I also did not know how to properly structure the code and that things like division and modulo do not translate well in hardware. However, I did learn a lot and that was the most important thing of the project.
+## Hardware description <a name="hardwareDesc"></a>
 
-About a year later, and some other simple FPGA projects later, I decided to make a better version of the FPGC, and so the FPGC2 was born. I still did not know how to use a simulator, so the project was a complete failure and never worked. After the failure of the FPGC2, I started working on some video conversion projects where I connect the FPGA to a Gameboy or Gameboy Advance, read the display signals to the LCD, store them in an dual port dual clock SRAM framebuffer (the easiest way), and display them on a CRT or VGA monitor. Those projects were kind of a success, since they did not really need simulator and were visually debuggable. 
-
-Some time later, in the summer of 2019, I discovered the beauty of the simulator. Using the simulator I could write tests and look per cycle if the hardware does what I want it to do. Since this is perfect for designing a CPU, I decided to do another retake at the FPGC project. The newly designed FPGC3 was made with the mistakes from the FPGC1 and FPGC2 in mind. I became a lot better at thinking how a line of code would translate in hardware. Every part of the FPGC3 was verified in the simulator and worked pretty solid. Well, at least in the simulations it worked. When I finally synthesized the code and programmed in into the FPGA, things were starting to fall apart. Things did not work as they should according to the simulation. These kind of problems are one of the hardest to debug, since you cannot simulate it. Apparently, simulation cannot guarantee that a design works in hardware. After a LOT of reading about FPGA development online, I found out that there are a lot of things you should not do if you want your design to actually work in hardware. Things like clock domain crossing and timing constraints where new terms I learning during that time. Luckily I found out you can "register" a clock signal in Quartus (the Altera IDE) and that it can tell where timing constraints are not met. I started to understand why things did not work and that logic gates have setup and hold timings that they must meet. Most importantly, you have to be really careful when two parts are running on different clock frequencies. I still do not understand why this is not clearly stated in all FPGA tutorials, since the problems they cause is so dang hard to debug when you do not know what clock domains are.
-
-After a few months of hard work, I finally had a solid design with a sprite/tile based GPU that was working pretty well. The program was executed from an SPI flash module that allowed me to change the program without recompiling the FPGA (which is slow). I eventually moved to the EP4CE15 board because it had more SRAM and I added I/O like a NES controller port and PS/2 keyboard port. I always had the struggle that the performance of the system was so severely bottlenecked by the SPI flash module, even in QSPI mode with continuous reading enabled. After considering all options for storage I decided that the SDRAM chip on the development board was the best solution. So I started to create an SDRAM controller. Luckily, there are many examples and tutorials on how to do this online, which really helped a lot, and in a day or two I had a basic but solid SDRAM controller that worked in simulation and hardware. At this point I wanted to redesign the FPGC around the SDRAM and rewrite many parts of the code using my improved Verilog skills. And so was the FPGC4 born.
-
-The FPGC4 uses a bootloader to copy the program from SPI flash to SDRAM and executes everything from SDRAM. The most important new addition was the Memory Unit (MU), which allowed me to separate all memory and I/O from the CPU. While it does include one cycle of overhead, it made the entire project so much more modular and structured. The GPU has also been improved by a lot and can now actually render 64 sprites with 16 sprites on the same line, which is better that any game console from the 1980's that I am aware of. The video RAM is still SRAM, which forces me to use a tile/sprite based rendering technique, but I (currently) prefer this over a framebuffer based rendering technique. Other new things in the FPGC4 are sound, hardware timers and more I/O things like SPI and UART. I even made a UART bootloader for super fast programming (like an Arduino does).
-
-Aside from FPGA programming, this project also includes some more software based sub-projects. To prevent having to write all my code by manually typing zeros and ones, I made an assembly language. And to compile the assembly back to zeros and ones, I made a compiler/assembler. I also created some scripts to convert graphics into tiles and MIDI into code. Eventually I decided to make a PCB for this project. This was a really fun learning experience, and luckily I have a dad that designs PCBs for work, so I got a lot of tips from him. After some weeks of designing, I finally created an order at JLCPCB in China to fabricate my PCB and ordered all the components I did not have already from Aliexpress. At the time of writing the PCB and most of the components have arrived, but I still need to wait for some resistors, video DACs and USB to Serial IC, so I do not know yet if the PCB "works" (at least it has no measuring errors, since everything seems to fit).
-
-
-## Hardware description
-
-### Specifications
+### Specifications <a name="specs"></a>
 These are the current specifications of the FPGC4:
 
 - 25MHz CPU clock   
-- 6.6272MHz GPU clock
+- 6.63MHz GPU clock
 - 16MiB SPI flash (QSPI) @ 25MHz. 32bit addresses. Read only
 - 32MiB SDRAM @ 25MHz. 32bit addresses. Readable and writable, used as main memory
 - ~16.4KiB VRAM (SRAM). Combination of 32, 9 and 8bit addresses
@@ -57,7 +60,7 @@ These are the current specifications of the FPGC4:
 - 4 interrupt pins (currently attached to two timers, UART rx and the frameDrawn signal of the FSX2)
 - 2 square wave tone generators with each 4 tones
 
-### Computer Architecture
+### Computer Architecture <a name="arch"></a>
 The FPGC4 consists of three main parts: the CPU, GPU and MU.
 
 The CPU, called the B322, is the main part that executes all instructions. It reads and writes to the MU. The CPU consists of an timer that handles the timing of the CPU phases, an instruction decoder that splits the 32 bits of each instructions, an PC unit that handles all program counter related functions like jumps and interrupts, an ALU that can do 16 different operations on two 32 bit inputs, a register bank that contains 16 32 bit registers, a stack and finally a control unit that directs certain signals based on the instruction.
@@ -103,7 +106,7 @@ Block diagram of FPGC4:
                     +-------+
 ```
 
-#### Memory map
+#### Memory map <a name="memorymap"></a>
 There are two different memory maps. One for the CPU and one for the GPU.
 
 ##### CPU memory map
@@ -236,7 +239,7 @@ $000  +------------------------+
       +------------------------+ 
 ```
 
-#### CPU (B322)
+#### CPU (B322) <a name="cpu"></a>
 The B322 (B4rt 32 bit processor v2) executes instructions from memory with the program counter as address. It is a 32 bit RISC CPU implementing the BR322 instruction set
 
 ##### B322 ISA
@@ -351,7 +354,7 @@ Operation|Opcode|Description
   MULT     1000  A  *   B
 ```
 
-The remaining seven Opcodes are reserved for future (signed?) operations.
+The remaining seven Opcodes are reserved for future (maybe signed?) operations.
 
 Internally, the CPU uses flags for executing the branch instructions. However these are not readable by other instructions, because they are not saved in a register:
 ```
@@ -371,7 +374,7 @@ The CPU has 4 interrupt pins. When a rising edge on one of these pins is detecte
 ###### CU
 The CU, or control unit, directs all signals to the corresponding components based on the instruction.
 
-#### MU
+#### MU <a name="mu"></a>
 The MU, or memory unit, handles all memory access between the CPU and all the different memories used in the FPGC4. The MU makes use of a memory map so it knows from or to which memory it should read or write. The goal of the MU is to have the CPU access all memories without the having to care about the type or timing of the memory, making an easy memory interface for the CPU. This is achieved using a start signal from the CPU to the MU to indicate the start of a memory read or write, and a busy signal from the MU to the CPU which only goes high when the start signal is received, and goes low when the data is read or written. However, there is one cycle of overhead per operation on the MU.
 
 The MU is connected to the following memories:
@@ -448,25 +451,26 @@ This one address on the memory map is mapped to GPIO pins on the FPGA. Only the 
 TODO: Make a list pins with bit value and in/out
 ```
 
-#### GPU (FSX2)
-The GPU generates a 320x240@60hz RGBs signal using a pixel clock of 6.7MHz. The timing of the video signal is as follows:
+#### GPU (FSX2) <a name="gpu"></a>
+The GPU generates a progressive 320x240@60hz RGBs signal using a pixel clock of 6.6MHz. The timing of the video signal is as follows:
 ```
-H_RES   = 320,      // horizontal resolution (pixels)
-V_RES   = 240,      // vertical resolution (lines)
-H_FP    = 23,       // horizontal front porch
-H_SYNC  = 28,       // horizontal sync
-H_BP    = 45,       // horizontal back porch
-V_FP    = 6,        // vertical front porch
-V_SYNC  = 3,        // vertical sync
-V_BP    = 20,       // vertical back porch
-H_POL   = 0,        // horizontal sync polarity (0:neg, 1:pos)
-V_POL   = 0;        // vertical sync polarity
+  H_RES   = 320,      // horizontal resolution (pixels)
+  V_RES   = 240,      // vertical resolution (lines)
+  H_FP    = 24,       // horizontal front porch
+  H_SYNC  = 32,       // horizontal sync
+  H_BP    = 46,       // horizontal back porch
+  V_FP    = 3,        // vertical front porch
+  V_SYNC  = 5,        // vertical sync
+  V_BP    = 14,       // vertical back porch
+  H_POL   = 0,        // horizontal sync polarity (0:neg, 1:pos)
+  V_POL   = 0;        // vertical sync polarity
 
 
-H_TOTAL = 320+23+28+45  = 416 //Horizontal total pixels
-V_TOTAL = 240+6+3+20    = 269 //Vertical total lines
+H_TOTAL = 320+24+32+46  = 422 //Horizontal total pixels
+V_TOTAL = 240+3+5+14    = 262 //Vertical total lines
 
-416 pixels * 269 lines * 60 FPS = 6714240 MHz (6.7MHz works fine)
+422 pixels * 262 lines * 60 FPS = 6.633840 MHz (6.632653MHz works fine)
+PLL is configured to multiply 50MHz by 13, and divide it by 98
 ```
 The GPU basically uses a tile based rendering system inspired by the NES PPU in order to save video RAM, since the FPGA only as a few KB of SRAM/block RAM. Tile rendering works as follows:
 
@@ -493,7 +497,7 @@ hflip, vflip, priority and disable are currently not implemented.
 The sprites are rendered on top of the window and background layers. When a pixel is black, it will not be rendered which makes the window or background visible. Sprites are useful for things that move per pixel on the screen independently, such as the ball in pong or a mouse cursor.
 
 
-## Bootloader code
+## Bootloader code <a name="bootloader"></a>
 The bootloader is the first thing that is executed by the CPU. The bootloader is used to copy data from the slow SPI flash to the faster SDRAM, and to jump to address 0 on the SDRAM. Since the bootloader has room for 512 instructions, I will probably add a boot screen with logo.
 There are two modes for the bootloader:
 - If GPI[0] is high (which should be by default, because of a pull-up resistor), then the bootloader will copy X addresses, where X is the number in (32 bit) address 5 of the SPI flash.
@@ -679,7 +683,7 @@ And that translates to these instructions:
 11111111111111111111111111111111 //Halt
 ```
 
-## Assembler for B322
+## Assembler for B322 <a name="assembler"></a>
 To simplify writing code for the B322, one can use the B322 assembly language.
 The assembler compiles the assembly code to 32 bit machine instructions. The input file is currently code.asm, and the output is printed to stdout.
 
@@ -815,12 +819,12 @@ One important assumption is that the code will be executed from addr 0 of the SD
 ### Other things
 I could create my own syntax highlighting for Sublime Text 3, however its Z80 syntax highlighting is already kinda decent. Might modify it in the future to support my assembly instead.
 
-## Quartus
+## Quartus <a name="quartus"></a>
 The Quartus folder contains all files for actually implementing the FPGC4 into hardware on an FPGA. The targeted development board is the QMTECH EP4CE15 core board with 32MiB Micron SDRAM.
 
 There are some slight changes between the code in the Verilog folder and the code in the Quartus folder. For example, the Verilog folder contains simulation files for the SPI flash and SDRAM memory. The Quartus project is on the top level slightly modified to work on an actual FPGA. This also includes the use of PLLs for creating clocks.
 
-## Programmer
+## Programmer <a name="programmer"></a>
 The Programmer folder contains all files related to programming the SPI flash. To do this, I use an Arduino (In my case an Teensy 2.0) and the code from https://github.com/nfd/spi-flash-programmer (Credits to Nicholas FitzRoy-Dale). 
 
 The compileROM.sh script converts the code.list file, the file with machine instructions, to the code.bin file. The file size will be a multiple of 4096 bytes, because the SPI flash programmer expects a file of this size. Then, the flash.sh file uses the SPI flash programmer client Python file to program the code.bin file to the SPI flash chip using the Arduino.
@@ -828,13 +832,27 @@ The compileROM.sh script converts the code.list file, the file with machine inst
 ### flash.sh
 The flash.sh script requires two arguments: the serial port of the Arduino and the filename of the binary. The script will check how long the binary file is and use python3 to send the binary to the Arduino. To verify that the flash was successful, it will read the binary from the Arduino afterwards and compare it to the file that was sent.
 
-## MIDI converter
+## MIDI converter <a name="midi"></a>
 The MIDI converter Python script can be used to convert basic MIDI files to notes and timings for the Timer and TonePlayer in the FPGC4. Only one channel is supported and not more than 4 notes should be played at the same time.
 
-## I/O Wing
-TODO: talk about PCB.
+## I/O Wing <a name="iowing"></a>
+I have designed an I/O wing for the FPGA development board, as a replacement for the cardboard box where I used to glue everything in. Some components still have to arrive, so I have not tested everything yet. I will also use the newer revision of the FPGA development board with this I/O wing. The Kicad project files are in the PCB folder. More documentation about the I/O wing can be added later
 
-## About the Project
+## More about the Project <a name="moreInfo"></a>
+
+### History of Project
+This project started around 2017 as the FPGC1, my first project on an FPGA. I just discovered that FPGAs were a thing and really wanted do learn how to use them. After some research I found that some people even recreated the entire NES in an FPGA! So I bought an Altera Cyclone IV EP4CE6 board from Aliexpress for 20 euros and decided I wanted to create some kind of game console myself, knowing it would be a very hard first project. I chose an Altera FPGA, since I heard that the IDE of Altera/Intel is subjectively better than Xilinx's IDE, though I probably would have chosen Altera anyways since their JTAG programmer has cheap clones you can buy for like 3 bucks. As of HDL choice, I thought Verilog looked a lot cleaner and more understandable than VHDL, so I chose Verilog. In contrast to software development, hardware development has a huge learning curve and requires a very different way of thinking, so my first project was not that much of a success if you look at the code. Most importantly, I did not know yet the importance of a simulator, so I did not simulate anything. I also did not know how to properly structure the code and that things like division and modulo do not translate well in hardware. However, I did learn a lot and that was the most important thing of the project.
+
+About a year later, and some other simple FPGA projects later, I decided to make a better version of the FPGC, and so the FPGC2 was born. I still did not know how to use a simulator, so the project was a complete failure and never worked. After the failure of the FPGC2, I started working on some video conversion projects where I connect the FPGA to a Gameboy or Gameboy Advance, read the display signals to the LCD, store them in an dual port dual clock SRAM framebuffer (the easiest way), and display them on a CRT or VGA monitor. Those projects were kind of a success, since they did not really need simulator and were visually debuggable. 
+
+Some time later, in the summer of 2019, I discovered the beauty of the simulator. Using the simulator I could write tests and look per cycle if the hardware does what I want it to do. Since this is perfect for designing a CPU, I decided to do another retake at the FPGC project. The newly designed FPGC3 was made with the mistakes from the FPGC1 and FPGC2 in mind. I became a lot better at thinking how a line of code would translate in hardware. Every part of the FPGC3 was verified in the simulator and worked pretty solid. Well, at least in the simulations it worked. When I finally synthesized the code and programmed in into the FPGA, things were starting to fall apart. Things did not work as they should according to the simulation. These kind of problems are one of the hardest to debug, since you cannot simulate it. Apparently, simulation cannot guarantee that a design works in hardware. After a LOT of reading about FPGA development online, I found out that there are a lot of things you should not do if you want your design to actually work in hardware. Things like clock domain crossing and timing constraints where new terms I learning during that time. Luckily I found out you can "register" a clock signal in Quartus (the Altera IDE) and that it can tell where timing constraints are not met. I started to understand why things did not work and that logic gates have setup and hold timings that they must meet. Most importantly, you have to be really careful when two parts are running on different clock frequencies. I still do not understand why this is not clearly stated in all FPGA tutorials, since the problems they cause is so dang hard to debug when you do not know what clock domains are.
+
+After a few months of hard work, I finally had a solid design with a sprite/tile based GPU that was working pretty well. The program was executed from an SPI flash module that allowed me to change the program without recompiling the FPGA (which is slow). I eventually moved to the EP4CE15 board because it had more SRAM and I added I/O like a NES controller port and PS/2 keyboard port. I always had the struggle that the performance of the system was so severely bottlenecked by the SPI flash module, even in QSPI mode with continuous reading enabled. After considering all options for storage I decided that the SDRAM chip on the development board was the best solution. So I started to create an SDRAM controller. Luckily, there are many examples and tutorials on how to do this online, which really helped a lot, and in a day or two I had a basic but solid SDRAM controller that worked in simulation and hardware. At this point I wanted to redesign the FPGC around the SDRAM and rewrite many parts of the code using my improved Verilog skills. And so was the FPGC4 born.
+
+The FPGC4 uses a bootloader to copy the program from SPI flash to SDRAM and executes everything from SDRAM. The most important new addition was the Memory Unit (MU), which allowed me to separate all memory and I/O from the CPU. While it does include one cycle of overhead, it made the entire project so much more modular and structured. The GPU has also been improved by a lot and can now actually render 64 sprites with 16 sprites on the same line, which is better that any game console from the 1980's that I am aware of. The video RAM is still SRAM, which forces me to use a tile/sprite based rendering technique, but I (currently) prefer this over a framebuffer based rendering technique. Other new things in the FPGC4 are sound, hardware timers and more I/O things like SPI and UART. I even made a UART bootloader for super fast programming (like an Arduino does).
+
+Aside from FPGA programming, this project also includes some more software based sub-projects. To prevent having to write all my code by manually typing zeros and ones, I made an assembly language. And to compile the assembly back to zeros and ones, I made a compiler/assembler. I also created some scripts to convert graphics into tiles and MIDI into code. Eventually I decided to make a PCB for this project. This was a really fun learning experience, and luckily I have a dad that designs PCBs for work, so I got a lot of tips from him. After some weeks of designing, I finally created an order at JLCPCB in China to fabricate my PCB and ordered all the components I did not have already from Aliexpress. At the time of writing the PCB and most of the components have arrived, but I still need to wait for some resistors, video DACs and USB to Serial IC, so I do not know yet if the PCB "works" (at least it has no measuring errors, since everything seems to fit).
+
 ### Structure of project files
 All Verilog related files are in the Verilog folder. The Quartus files are in the Quartus folder. The SPI flash programmer files are in the Programmer folder. The assembler files are in the Assembler folder. The SublimeText3 folder contains the build scripts I use for compiling certain files in this project. In the future, I might add a custom syntax highlighting file for the assembly language.
 
@@ -843,19 +861,22 @@ All Verilog related files are in the Verilog folder. The Quartus files are in th
 - Added sprites
 - Rewrote FSX2 for CRT display
 - Finally updated the documentation a bit
+- Created and ordered PCB
 
 ### Future plans
 These are kinda ordered based on priority
 
+- Finish and test PCB
 - Write a platformer game
 - Write an OS
 - Create a pattern and palette table generator
 - Add logo to boot screen animation in bootloader
+- Create a webserver with W5500 chip
 - Add Gameboy printer via Arduino to I/O
 - Write a simplistic C compiler. Use software stack with dedicated stack pointer register.
 - Change SPI Flash for SDCARD
 
-## TODO in documentation
+### TODO in documentation
 - USB mass storage
-- Picture of setup
+- More PCB info
 - FPGA utilization stats

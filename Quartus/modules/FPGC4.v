@@ -5,19 +5,17 @@ module FPGC4(
     input           clock, //50MHz
     input           nreset,
 
-    //VGA for GM7123 module
-	 /*
+    //VGA video
     output          vga_clk,
     output          vga_hs,
     output          vga_vs,
     output [2:0]    vga_r,
     output [2:0]    vga_g,
     output [1:0]    vga_b,
-    output          vga_blk,
-	 */
 	 
 	 //RGBs video
 	 output          crt_sync,
+	 output          crt_clk,
     output [2:0]    crt_r,
     output [2:0]    crt_g,
     output [1:0]    crt_b,
@@ -72,11 +70,14 @@ module FPGC4(
     //SPI
     output          s_clk,
     input           s_miso,
+	 input           s_nint,
     output          s_mosi,
-	 output 			  s_cs 		//actually just a copy of GPO[0]
+	 output 			  s_cs, 		//actually just a copy of GPO[0]
+	 output          s_rst
 );
 
 assign s_cs = GPO[0];
+assign s_rst = ~nreset;
 
 wire frameDrawn;    //high when frame just rendered
                     //needs to be stabilized
@@ -90,10 +91,17 @@ wire int4;
 
 wire clk;
 
+assign vga_clk = 1'b0;
+assign vga_hs = 1'b0;
+assign vga_vs = 1'b0;
+assign vga_r = 3'd0;
+assign vga_g = 3'd0;
+assign vga_b = 2'd0;
+
 //PLL for VGA @9MHz and clk @25MHz
 pll pll (
 .inclk0(clock),
-.c0(vga_clk),
+.c0(crt_clk),
 .c1(clk)
 );
 
@@ -146,7 +154,7 @@ VRAM #(
 .cpu_q      (vram32_cpu_q),
 
 //GPU port
-.gpu_clk    (vga_clk),
+.gpu_clk    (crt_clk),
 .gpu_d      (vram32_gpu_d),
 .gpu_addr   (vram32_gpu_addr),
 .gpu_we     (vram32_gpu_we),
@@ -179,7 +187,7 @@ VRAM #(
 .cpu_q      (),
 
 //GPU port
-.gpu_clk    (vga_clk),
+.gpu_clk    (crt_clk),
 .gpu_d      (vram322_gpu_d),
 .gpu_addr   (vram322_gpu_addr),
 .gpu_we     (vram322_gpu_we),
@@ -218,7 +226,7 @@ VRAM #(
 .cpu_q      (vram8_cpu_q),
 
 //GPU port
-.gpu_clk    (vga_clk),
+.gpu_clk    (crt_clk),
 .gpu_d      (vram8_gpu_d),
 .gpu_addr   (vram8_gpu_addr),
 .gpu_we     (vram8_gpu_we),
@@ -257,7 +265,7 @@ VRAM #(
 .cpu_q      (vramSPR_cpu_q),
 
 //GPU port
-.gpu_clk    (vga_clk),
+.gpu_clk    (crt_clk),
 .gpu_d      (vramSPR_gpu_d),
 .gpu_addr   (vramSPR_gpu_addr),
 .gpu_we     (vramSPR_gpu_we),
@@ -280,7 +288,7 @@ FSX fsx(
 .vga_blk        (vga_blk),
 */
 
-.vga_clk(vga_clk),
+.vga_clk(crt_clk),
 .crt_sync(crt_sync),
 .crt_r(crt_r),
 .crt_g(crt_g),

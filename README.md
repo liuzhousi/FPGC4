@@ -861,13 +861,13 @@ Powered by USB and using an USB flash drive, SPI flash with UART bootloader and 
 
 ##### Front view
 
-I/O from left to right: SPI flash (ROM), RX/TX header, GPIO, USB host, PS/2, SNES controller, buttons and RX/TX leds.
+I/O from left to right: SPI flash (ROM) header, RX/TX header, GPIO header, USB host, PS/2, SNES controller, buttons and RX/TX leds.
 
 ![front view](PCB/Images/front.jpg)
 
 ##### Rear view
 
-I/O from left to right: DSUB9 (carries RGBs), VGA, 3.5mm mono audio, USB for power and serial, power switch and SPI headers.
+I/O from left to right: DSUB9 (carries RGBs), VGA, 3.5mm mono audio, USB for power and serial, power switch and SPI header.
 
 ![rear view](PCB/Images/back.jpg)
 

@@ -33,10 +33,10 @@ Since I want to design my own hardware like a CPU and GPU, I need a way to actua
 ### Performance
 Because current computers are so complex, it would be unfeasible for me, with no prior hardware design experience, to design a fast computer that will eventually run Windows or Linux. So I focused more on PCs and game consoles from around 1980, like the Commodore 64 and Nintendo Entertainment System (NES), since those are a lot less complex than the ones we have now. Using an FPGA from somewhere around 2010 built on a 60nm process instead of a few um process from the 1980's, allows me to add some features that were not usual in the 1980's. So instead of an 8 bit CPU architecture, I chose for an 32 bit architecture, so I can add more stuff in each instruction, vastly increasing the throughput of the CPU. The FPGA also allows me to use a 25MHz clock instead of a 1MHz CPU like the Commodore 64 uses. My FPGA board also has a 32MiB SDRAM chip, which is a huge amount of memory compared to something like a Commodore 64 or NES. Furthermore, the 32 bit architecture allowed me to have a huge address space (currently 0.5GiB). It is important to note that because of the way I designed the architecture of the CPU and MU (Memory Unit), it is impossible to use pipelining to increase the performance. Complex tricks like pipelining and branch prediction were never the goal of this project and therefore will probably never be implemented.
 
-So as a performance reference, one should expect something similar to a beefed up Commodore 64 or NES.
+So as a performance reference, one should expect something similar to a Commodore 64 or NES.
 
 ### FPGA Board
-There are different FPGA chips from different vendors, and there are many different development boards. The one I chose for this project is the [Cyclone IV EP4CE15 Core Board with 32MiB SDRAM from QMtech from Aliexpress](https://www.aliexpress.com/i/32949281189.html). The old revision of this board uses SDRAM from Micron. This old revision is the board I initially designed this project for. The newer revision uses Winbond SDRAM. I assume this newer revision is still compatible, however I have not verified yet. Eventually (when all components for the PCB have arrived from China) I will switch to this newer revision and test the compatibility with my SDRAM controller.
+There are different FPGA chips from different vendors, and there are many different development boards. The one I chose for this project is the [Cyclone IV EP4CE15 Core Board with 32MiB SDRAM from QMtech from Aliexpress](https://www.aliexpress.com/i/32949281189.html). The old revision of this board uses SDRAM from Micron. This old revision is the board I initially designed this project for. The newer revision uses Winbond SDRAM. I currently use the newer revision board and the Winbond chip is completely compatible with my SDRAM controller.
 
 
 ## Hardware description <a name="hardwareDesc"></a>
@@ -387,7 +387,7 @@ To test the timing system, I added a simulation model of a W25Q128JV SPI chip, w
 ##### SDRAM
 The SDRAM is used as the main memory for the FPGC4. It has a size of 32MiB. Since it is SDRAM, it requires a controller that handles all access and refreshes. The MU contains such controller to interface with the SDRAM. During initialization, the chip is set to a CAS latency of 2 and a programmable burst length of 2 (since we have 32 bit words, and the chip uses 16 bit data). The controller also handles refreshes. To reduce the amount of latency, the MU sets its busy flag low right after the read data is available or the written data is sent to the SDRAM chip. This way the CPU does not have to wait for row closing operations to be performed. If the MU gets a request from the CPU to read from or write to SDRAM, while the SDRAM controller is busy, then the MU will wait until the SDRAM controller is ready. While the SDRAM chip uses 16 bit addresses internally, the controller can be addressed by 32 bit words. The data of the SDRAM at powerup is undefined, but probably zero.
 
-The first addresses of the SDRAM contain the program copied from SPI flash by the bootloader. I also added a simulation model of the SDRAM to the project. The currently used SDRAM chip is the Micron MT48LC16M16A2. The Winbond SDRAM chip will be tested later.
+The first addresses of the SDRAM contain the program copied from SPI flash by the bootloader. I also added a simulation model of the SDRAM to the project. The currently used SDRAM chip is the Winbond W9825G6KH-6 (an older revision uses the Micron MT48LC16M16A2 chip. I originally started with this chip and it also works. The Verilog SDRAM simulation model is even based on Micron chip).
 
 ##### ROM
 Internally on the FPGA, 2KiB of SRAM/Block RAM is used as ROM. It contains the bootloader of the FPGC4, which copies data from SPI flash to SDRAM, and jumps to SDRAM. This code is read only and can only be modified by reprogramming the FPGA.
@@ -502,6 +502,7 @@ The bootloader is the first thing that is executed by the CPU. The bootloader is
 There are two modes for the bootloader:
 - If GPI[0] is high (which should be by default, because of a pull-up resistor), then the bootloader will only copy the first 16 addresses, and the last 512 addresses. This is because the code of the UARTbootloader has to run at the end of the 16'th MiB of the SPI flash to prevent that the bootloader overwrites its own code (since it is ran from SDRAM). If all 16MiB is copied, then the copying would take about ten seconds, which is way to long. By only copying the start and end, the UARTbootloader still works, and is copied almost instantly.
 - If GPI[0] is low, then the bootloader will copy X addresses, where X is the number in (32 bit) address 5 of the SPI flash.
+
 I chose to make the UART mode the default mode, since this mode is currently used >99% of the time. This will likely change when I have developed an OS.
 Furthermore, all registers are reset before jumping to address 0, because the UARTbootloader has to halt in the first instruction and therefore has to assume all registers are empty. The code could be space optimized by jumping to one of the two clear registers code, if needed.
 
@@ -821,7 +822,7 @@ One important assumption is that the code will be executed from addr 0 of the SD
 I could create my own syntax highlighting for Sublime Text 3, however its Z80 syntax highlighting is already kinda decent. Might modify it in the future to support my assembly instead.
 
 ## Quartus <a name="quartus"></a>
-The Quartus folder contains all files for actually implementing the FPGC4 into hardware on an FPGA. The targeted development board is the QMTECH EP4CE15 core board with 32MiB Micron SDRAM.
+The Quartus folder contains all files for actually implementing the FPGC4 into hardware on an FPGA. The targeted development board is the QMTECH EP4CE15 core board with 32MiB SDRAM.
 
 There are some slight changes between the code in the Verilog folder and the code in the Quartus folder. For example, the Verilog folder contains simulation files for the SPI flash and SDRAM memory. The Quartus project is on the top level slightly modified to work on an actual FPGA. This also includes the use of PLLs for creating clocks.
 
@@ -837,7 +838,54 @@ The flash.sh script requires two arguments: the serial port of the Arduino and t
 The MIDI converter Python script can be used to convert basic MIDI files to notes and timings for the Timer and TonePlayer in the FPGC4. Only one channel is supported and not more than 4 notes should be played at the same time.
 
 ## I/O Wing <a name="iowing"></a>
-I have designed an I/O wing for the FPGA development board, as a replacement for the cardboard box where I used to glue everything in. Some components still have to arrive, so I have not tested everything yet. I will also use the newer revision of the FPGA development board with this I/O wing. The Kicad project files are in the PCB folder. More documentation about the I/O wing can be added later
+I have designed an I/O wing for the FPGA development board, as a replacement for the cardboard box where I used to glue everything in. Some components still have to arrive, so I have not tested everything yet. I will also use the newer revision of the FPGA development board with this I/O wing. The Kicad project files are in the PCB folder. More documentation about the I/O wing can be added later.
+
+### Pictures
+
+#### PCB
+<details>
+<summary>Picture of empty PCB</summary>
+
+![pcb](PCB/Images/pcb.jpg)
+
+</details>
+
+<details>
+<summary>Pictures of assembled PCB</summary>
+  
+- Top view
+Powered by USB and using an USB flash drive, SPI flash with UART bootloader and DSUB9 cable which eventually goes to the SCART connector of a CRT.
+
+![top view](PCB/Images/top.jpg)
+
+- Front view
+I/O from left to right: SPI flash (ROM), RX/TX header, GPIO, USB host, PS/2, SNES controller, buttons and RX/TX leds.
+
+![front view](PCB/Images/front.jpg)
+
+- Rear view
+I/O from left to right: DSUB9 (carries RGBs), VGA, 3.5mm mono audio, USB for power and serial, power switch and SPI headers.
+
+![rear view](PCB/Images/back.jpg)
+
+- Bottom view
+There is a 'breadboard' on the bottom, with pins to the FPGA and power. 
+
+![bottom view](PCB/Images/bottom.jpg)
+
+- Core
+The brain of the FPGC4: an EP4CE15 FPGA and 32MiB SDRAM.
+
+![core](PCB/Images/core.jpg)
+
+- Logo
+The logo of the project is printed on the PCB.
+
+![logo](PCB/Images/logo.jpg)
+
+
+</details>
+
 
 ## More about the Project <a name="moreInfo"></a>
 

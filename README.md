@@ -853,32 +853,38 @@ I have designed an I/O wing for the FPGA development board, as a replacement for
 <details>
 <summary>Pictures of assembled PCB</summary>
   
-- Top view
+##### Top view
+
 Powered by USB and using an USB flash drive, SPI flash with UART bootloader and DSUB9 cable which eventually goes to the SCART connector of a CRT.
 
 ![top view](PCB/Images/top.jpg)
 
-- Front view
+##### Front view
+
 I/O from left to right: SPI flash (ROM), RX/TX header, GPIO, USB host, PS/2, SNES controller, buttons and RX/TX leds.
 
 ![front view](PCB/Images/front.jpg)
 
-- Rear view
+##### Rear view
+
 I/O from left to right: DSUB9 (carries RGBs), VGA, 3.5mm mono audio, USB for power and serial, power switch and SPI headers.
 
 ![rear view](PCB/Images/back.jpg)
 
-- Bottom view
+##### Bottom view
+
 There is a 'breadboard' on the bottom, with pins to the FPGA and power. 
 
 ![bottom view](PCB/Images/bottom.jpg)
 
-- Core
+##### Core
+
 The brain of the FPGC4: an EP4CE15 FPGA and 32MiB SDRAM.
 
 ![core](PCB/Images/core.jpg)
 
-- Logo
+##### Logo
+
 The logo of the project is printed on the PCB.
 
 ![logo](PCB/Images/logo.jpg)

@@ -12,6 +12,14 @@
 
 define MUSIC_LEN                    = 12        ; number of notes
 
+CH376_Test_String:
+.dw 16
+.ds "Lorum Ipsum enzo"
+
+CH376_Test_Name:
+.dw 9
+.ds "Lorum.txt"
+
 Main:
 
     savpc r15
@@ -23,7 +31,7 @@ Main:
     jump CH376_Check_drive
 
     ; read load filename argument
-    addr2reg CH376_String_Init r1
+    addr2reg CH376_Test_Name r1
     read 0 r1 r2
     add r1 1 r1
 
@@ -46,7 +54,7 @@ Main:
     ;jump CH376_Set_cursor
 
     ; set write data and length args
-    ;addr2reg CH376_String_Mounting_drive r1
+    ;addr2reg CH376_Test_String r1
     ;read 0 r1 r2
     ;add r1 1 r1
 
@@ -56,7 +64,7 @@ Main:
 
     load 0x0000 r1
     loadhi 0x08 r1
-    load 14 r2
+    load 16 r2          ; read 16 bytes
     savpc r15
     push r15
     jump CH376_Read_file

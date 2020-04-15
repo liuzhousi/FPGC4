@@ -500,8 +500,9 @@ The sprites are rendered on top of the window and background layers. When a pixe
 ## Bootloader code <a name="bootloader"></a>
 The bootloader is the first thing that is executed by the CPU. The bootloader is used to copy data from the slow SPI flash to the faster SDRAM, and to jump to address 0 on the SDRAM. Since the bootloader has room for 512 instructions, I will probably add a boot screen with logo.
 There are two modes for the bootloader:
-- If GPI[0] is high (which should be by default, because of a pull-up resistor), then the bootloader will copy X addresses, where X is the number in (32 bit) address 5 of the SPI flash.
-- If GPI[0] is low, then the bootloader will only copy the first 16 addresses, and the last 512 addresses. This is because the code of the UARTbootloader has to run at the end of the 16'th MiB of the SPI flash to prevent that the bootloader overwrites its own code (since it is ran from SDRAM). If all 16MiB is copied, then the copying would take about ten seconds, which is way to long. By only copying the start and end, the UARTbootloader still works, and is copied almost instantly.
+- If GPI[0] is high (which should be by default, because of a pull-up resistor), then the bootloader will only copy the first 16 addresses, and the last 512 addresses. This is because the code of the UARTbootloader has to run at the end of the 16'th MiB of the SPI flash to prevent that the bootloader overwrites its own code (since it is ran from SDRAM). If all 16MiB is copied, then the copying would take about ten seconds, which is way to long. By only copying the start and end, the UARTbootloader still works, and is copied almost instantly.
+- If GPI[0] is low, then the bootloader will copy X addresses, where X is the number in (32 bit) address 5 of the SPI flash.
+I chose to make the UART mode the default mode, since this mode is currently used >99% of the time. This will likely change when I have developed an OS.
 Furthermore, all registers are reset before jumping to address 0, because the UARTbootloader has to halt in the first instruction and therefore has to assume all registers are empty. The code could be space optimized by jumping to one of the two clear registers code, if needed.
 
 This is the assembly code of the bootloader:
@@ -512,8 +513,8 @@ read 0 r1 r2            ; r2 = GPIO values
 load 0b00000001 r3      ; r3 = bitmask for GPI[0]
 and r2 r3 r3            ; r3 = GPI[0]
 
-; if GPI[0] is low (button has pullup), then jump to UART optimized copy function
-bne r0 r3 2
+; if GPI[0] is high (button has pullup), then jump to UART optimized copy function
+beq r0 r3 2
     jump CopyUartLoader
 
 
@@ -605,7 +606,7 @@ CopyUartLoader:
     load 0 r15
 
     jump 0                  ; copy is done, jump to sdram
-    halt                    ; should not get here, halt if we do 
+    halt                    ; should not get here, halt if we do
 ```
 And that translates to these instructions:
 ```
@@ -614,7 +615,7 @@ And that translates to these instructions:
 11100000000000000000000100000010 //Read at address in r1 with offset 0 to r2
 01110000000000000001000000000011 //Set r3 to 0b00000001
 00000000100000000000001000110011 //Compute r2 AND r3 and write result to r3
-01010000000000000010000000110000 //If r0 != r3, then jump to offset 2
+01100000000000000010000000110000 //If r0 == r3, then jump to offset 2
 10010001100000000100100010000110 //Jump to load r1 instruction in line 34 (0xC02422 + 34 - 1)
 01110000000000000000000000000001 //Set r1 to 0
 01110000000010000000000100000001 //Set highest 16 bits of r1 to 0x80

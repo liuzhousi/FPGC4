@@ -1,4 +1,4 @@
-; New bootloader code with UART option
+; New bootloader code with UART option, now defaults to UART
 ; copy SPI to SDRAM and jump to sdram
 
 Main:
@@ -8,8 +8,8 @@ Main:
     load 0b00000001 r3      ; r3 = bitmask for GPI[0]
     and r2 r3 r3            ; r3 = GPI[0]
 
-    ; if GPI[0] is low (button has pullup), then jump to UART optimized copy function
-    bne r0 r3 2
+    ; if GPI[0] is high (button has pullup), then jump to UART optimized copy function
+    beq r0 r3 2
         jump CopyUartLoader
 
 

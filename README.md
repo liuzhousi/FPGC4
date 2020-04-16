@@ -430,8 +430,7 @@ R      | X00000000000
 ###### PS/2 Keyboard
 A PS/2 Keyboard reader. Reads 79 buttons from the keyboard. The pressed states are readable from three adjacent addresses on the memory map.
 ```
-TODO: Rethink this way of having keyboard buttons, and change the layout of all buttons
-      Then, write a table here with all the buttons with bit addresses
+TODO: change this to just read the keycodes and interrupt the FPGC4, and do the rest in software (library) for stability and space.
 ```
 ###### Timer
 The timer can be used to generate an interrupt after a programmable amount of time. Each timer has to memory addresses. One specifies the time in milliseconds, the other one is a status register used for starting or stopping the timer.
@@ -445,12 +444,13 @@ Using the addresses mapped on the UART RX and UART TX modules, it is possible to
 ###### SPI (CH376)
 The SPI module is specifically made for hardware SPI mode. The chip select pin is currently unattached and should be used using GPIO pins so transferring multiple bytes per SPI transfer is possible. This module is currently attached to the CH376 USB chip for mass storage.
 
+Using the CH376T USB controller chip over SPI, it is relatively simple to read and write files to an USB stick with a FAT partition table. It is also possible to do other things, like reading USB MIDI keyboards and HID devices. 
+
 ###### GPIO
 This one address on the memory map is mapped to GPIO pins on the FPGA. Only the right 16 bits are used. The left 8 of these 16 bits are read only and are the state of the 8 input ports. The right 8 of these 16 bits are the state of the 8 output ports. The output ports can also be read.
 ```
 TODO: Make a list pins with bit value and in/out
 ```
-
 #### GPU (FSX2) <a name="gpu"></a>
 The GPU generates a progressive 320x240@60hz RGBs signal using a pixel clock of 6.6MHz. The timing of the video signal is as follows:
 ```
@@ -506,7 +506,9 @@ There are two modes for the bootloader:
 I chose to make the UART mode the default mode, since this mode is currently used >99% of the time. This will likely change when I have developed an OS.
 Furthermore, all registers are reset before jumping to address 0, because the UARTbootloader has to halt in the first instruction and therefore has to assume all registers are empty. The code could be space optimized by jumping to one of the two clear registers code, if needed.
 
-This is the assembly code of the bootloader:
+<details>
+<summary>The assembly code of the bootloader</summary>
+
 ```
 load 0x2630 r1
 loadhi 0xC0 r1          ; r1 = GPIO address: 0xC02630
@@ -609,7 +611,13 @@ CopyUartLoader:
     jump 0                  ; copy is done, jump to sdram
     halt                    ; should not get here, halt if we do
 ```
-And that translates to these instructions:
+
+</details>
+
+
+<details>
+<summary>Binary code of bootloader (with comments)</summary>
+
 ```
 01110010011000110000000000000001 //Set r1 to 0x2630   (this is address 0xC02422)
 01110000000011000000000100000001 //Set highest 16 bits of r1 to 0xC0
@@ -684,6 +692,9 @@ And that translates to these instructions:
 10010000000000000000000000000000 //Jump to constant address 0
 11111111111111111111111111111111 //Halt
 ```
+
+</details>
+
 
 ## Assembler for B322 <a name="assembler"></a>
 To simplify writing code for the B322, one can use the B322 assembly language.
@@ -800,6 +811,29 @@ Jump Int4
 *Length of program*
 ```
 
+### Libraries
+Using the include statements, you can include other files, which can be used as libraries.
+I started on making a few libraries, which I explain here.
+
+#### GFX.asm
+Contains basic graphics functions like printing text and copying VRAM tables
+Should write more here in the future.
+
+#### STD.asm
+Contains some standard functions. Currently only contains a function to convert a byte to a ASCII Hex string with 0x prefix.
+Should write more here in the future.
+
+#### UART.asm
+Contains functions to send certain data over UART. Receiving is done in interrupts and therefore not included in this library.
+Should write more here in the future.
+
+#### SPI.asm
+Library for writing and reading to the SPI module. Uses GPO[0] as CS and can read and send a byte. Should write more here in the future.
+
+#### CH376.asm
+Library for reading and writing files using the CH376 USB controller. Uses SPI for communication and UART/STD for debugging.
+Currently not finished. Should write more here in the future.
+
 ### Assembling process
 The assembler does the following things the the following order:
 
@@ -826,25 +860,89 @@ The Quartus folder contains all files for actually implementing the FPGC4 into h
 
 There are some slight changes between the code in the Verilog folder and the code in the Quartus folder. For example, the Verilog folder contains simulation files for the SPI flash and SDRAM memory. The Quartus project is on the top level slightly modified to work on an actual FPGA. This also includes the use of PLLs for creating clocks.
 
-## Programmer <a name="programmer"></a>
-The Programmer folder contains all files related to programming the SPI flash. To do this, I use an Arduino (In my case an Teensy 2.0) and the code from https://github.com/nfd/spi-flash-programmer (Credits to Nicholas FitzRoy-Dale). 
+The current design (as of writing this line in documentation) uses 8.4k LEs (55%), 110 pins, 1 PLL, 14 9-bit multipliers and 185kbit SRAM (35%).
 
-The compileROM.sh script converts the code.list file, the file with machine instructions, to the code.bin file. The file size will be a multiple of 4096 bytes, because the SPI flash programmer expects a file of this size. Then, the flash.sh file uses the SPI flash programmer client Python file to program the code.bin file to the SPI flash chip using the Arduino.
+## Programmer <a name="programmer"></a>
+The Programmer folder contains all files related to programming the FPGC4 and the SPI flash (ROM). 
+
+The compileROM.sh script converts the code.list file, the file with machine instructions, to the code.bin file. The file size will be a multiple of 4096 bytes, because the SPI flash programmer expects a file of this size. Now based on the last line of compileROM.sh, you can either flash the code.bin to the SPI flash (ROM) using an Arduino with flash.sh, or send the binary over UART to the FPGC4 using uartFlasher.py.
 
 ### flash.sh
+To flash the SPI flash (ROM), I use an Arduino (In my case an Teensy 2.0) and the code from https://github.com/nfd/spi-flash-programmer (Credits to Nicholas FitzRoy-Dale). 
 The flash.sh script requires two arguments: the serial port of the Arduino and the filename of the binary. The script will check how long the binary file is and use python3 to send the binary to the Arduino. To verify that the flash was successful, it will read the binary from the Arduino afterwards and compare it to the file that was sent.
+
+### uartFlasher.py
+The UART flasher is used to save A LOT of time by not having to turn off the FPGC4, take out the flash module, flash it with an Arduino, put it back in the FPGC4 and turn it back on. It sends the binary to the FPGC4 with an 115200 baud rate. However, this requires the inserted flash module to contain the SPI UART bootloader. Also the FPGC4 should boot in UART mode (see the bootloader section) to prevent having to wait for many seconds. One can quickly resend the code by pressing the soft-reset button on the FPGC4 (not the nConfig button), and sending the code over the serial port.
+
+All of this works by using some fancy tricks in the SPI UART bootloader. The goal is to receive the bitstream from UART and copying it to SDRAM, starting from address 0, and jumping to address 0 after all bits are received. This gives the first problem: the bootloader should not overwrite itself, since it is also located and executed from SDRAM. Since the SPI flash is 16MiB big, we place all the copy instructions to the end of the SPI flash. The first instruction is a HALT, so the PC will always be at the instruction. All the copy instructions are executed from the UART receive interrupt. When a byte is received, it is placed on SDRAM starting from 16MiB. This way the first HALT instruction remains the same. After all bytes are copied, a timer interrupt is used to copy the SDRAM from 16MiB to 0MiB. Then, when the interrupt has ended, the PC will start from the first instruction (where the HALT used to be), which should now be the first instruction of the sent code. See UARTSPIbootloader.asm for the code (warning: large file, because of the offset).
 
 ## MIDI converter <a name="midi"></a>
 The MIDI converter Python script can be used to convert basic MIDI files to notes and timings for the Timer and TonePlayer in the FPGC4. Only one channel is supported and not more than 4 notes should be played at the same time.
 
 ## I/O Wing <a name="iowing"></a>
-I have designed an I/O wing for the FPGA development board, as a replacement for the cardboard box where I used to glue everything in. Some components still have to arrive, so I have not tested everything yet. I will also use the newer revision of the FPGA development board with this I/O wing. The Kicad project files are in the PCB folder. More documentation about the I/O wing can be added later.
+I have designed an I/O wing for the FPGA development board, as a replacement for the cardboard box where I used to glue everything in. The PCB was designed using KiCad and manufactured by JLCPCB. The KiCad project files (including schematic, PCB and 3D models) are in the PCB folder.
+
+### Design choices
+During the development of the PCB, many design choices had to be made, which I will explain here.
+
+#### Layout
+I wanted to keep the PCB as small as possible, for practical and aesthetic reasons. The most practical way to do this was placing the core board on top and using all four sides of the PCB for I/O. I tried to place all the I/O on a logical position, so (diagonally) video, audio and power on one side, and buttons, controllers, LEDs and headers on the other side. I placed the most used I/O on the front, which are the buttons and controllers. The nConfig button of the FPGA is also routed (using a wire from resistor R244 to J10 on the PCB) to a button on the front. The DC jack on the core board does not have to be used anymore, only the JTAG interface is needed when the FPGA design needs to be changed. Finally, I opted for a black/white design, since it matches the core board.
+
+#### Components
+For the video DACs, I chose the GM713C (a clone of the ADV7123), since these are very cheap and very good (10 bits per color, can handle 1080P @60FPS without problem). Since this project only uses 8 bits for all colors, instead of 30 bits, it looks like it is a bit overkill. The alternative would be a resistor DAC, but that would put more load on the I/O of the FPGA (while terminating with 75 ohm) and does not protect the FPGA from ESD that well (I am not an expert on ESD, but using a dedicated chip seems a lot safer to me). 
+
+As for the audio DAC, I did choose to just use some resistors and DC removing capacitor, since the audio just consists of simple square waves (no PWM). While this heavily limits the audio the FPGC4 can produce, it can still play some cool polyphonic tunes. I decided to not go for a 'real' DAC, because this project is not about audio development. The components in the audio DAC can be replaced to act as a low pass filter, which would allow PWM audio if I ever decide to do audio development on this board. Alternatively, it is also possible to add a I2S DAC (or any other DAC) on the bottom of the PCB. The audio signal is also routed to the DSUB9 (video) connector to get audio from the CRT TV without extra cables.
+
+The entire board is powered from one mini USB port, which also is connected to an FT232RL. This way you only need one USB cable which you can plug into your PC to power the entire board and to communicate with it. I could have opted for a cheaper Chinese chip, but the FT232RL is just a really solid chip with good driver support, and does not cost that much either.
+
+The final big component decision was the USB controller. Before having a PCB, I used the CH376S over SPI. This chip does all the complicated USB stuff and is specialized for USB mass storage. It even handles all the file system stuff. This allows me to easily add non-volatile mass storage to the FPGC4 without having to spend months on implementing all the complicated USB and file system stacks. While the documentation of the chip is pretty bad, I was still able to read other simple USB devices using this chip (with an Arduino) like a USB mouse and USB MIDI keyboard. So using this chip over something like a MAX3421E was an easy choice. The CH376S is pretty bulky, but luckily there is a smaller variant without 8-bit parallel interface that is called the CH376T. I think a CH375 or something should also work (since I do not use the SDcard controller that is added in the CH376), but I could not find that chip for sale anymore.
+
+### Component buy list
+
+<details>
+<summary>List of the important components and where I bought them</summary>
+
+- [MF-MSMF050-2 1812 SMB PPTC 500mA fuses](https://www.aliexpress.com/item/Free-shipping-20PCS-MF-MSMF050-2-1812-SMD-PPTC-15V-0-5A-500mA-7905-resettable-fuses/32899546296.html)
+- [PS/2 Sockets](https://www.aliexpress.com/item/5pcs-PS2-socket-PS-2-socket-6P-PS-2-keyboard-mouse-holder-socket-outlet/32847566873.html)
+- [0805 Capacitor kit](https://www.aliexpress.com/item/MCIGICM-0805-SMD-Capacitor-assorted-kit-36values-20pcs-720pcs-1pF-10uF-Samples-kit-electronic-diy-kit/33011427492.html)
+- [0805 Resistor kit](https://www.aliexpress.com/item/33valuesX-20pcs-660pcs-0603-0805-1206-Resistor-Kit-Assorted-1R-to-1M-ohm-1-SMD-Sample/33029877427.html)
+- [0805 510 + 75 Ohm resistors](https://www.aliexpress.com/item/100pcs-0805-5-1-8W-SMD-chip-resistor-0R-10M-0-1R-10R-100R-220R-330R/32865947306.html)
+- [BSS138 Power Mosfets](https://www.aliexpress.com/item/100pcs-lot-BSS138-BSS138LT1G-J1-SOT23-5-Power-MOSFET/32770656298.html)
+- [Tactile push buttons](https://www.aliexpress.com/item/50Pcs-DIP-6-6-7mm-Tactile-Tact-Push-Button-Micro-Switch-Momentary-Vertical-Push/32710764066.html)
+- [FT232RL](https://www.aliexpress.com/item/IC-Chips-FT232RL-FT232R-FT232-USB-to-Serial-UART-28-SSOP-Original-Integrated-Circuits-for-Arduino/33021952216.html)
+- [HC-49S Crystal kit](https://www.aliexpress.com/item/hc-49s-Crystal-Oscillator-electronic-Kit-resonator-ceramic-quartz-resonator-hc-49-DIP-7-kinds-X/32844442076.html)
+- [0805 LED kit](https://www.aliexpress.com/item/100pcs-lot-5-Colors-SMD-0805-Led-DIY-kit-Ultra-Bright-Red-Green-Blue-Yellow-White/32888607342.html)
+- [GM7123C](https://www.aliexpress.com/item/1pcs-lot-GM7123C-GM7123-LQFP-48/4000120297839.html)
+- [CH376T](https://www.aliexpress.com/item/Brand-new-original-CH376-CH376T-SSOP20-quality-assurance/32955964901.html)
+- [QMTECH EP4CE15 Core board](https://www.aliexpress.com/item/QMTECH-Altera-Intel-FPGA-Core-Board-Cyclone-IV-CycloneIV-EP4CE15-SDRAM-Development-Board/32949281189.html)
+- [PCB](https://jlcpcb.com/)
+- SNES controller connector (I already had from Aliexpress. Now there is also a black version, which I recommend over the gray version)
+- USB female connectors, mini and full size (both scavenged from old hardware)
+- Other things like the power switch, headers, big capacitors and audio jack (which I had already bought before)
+
+</details>
+
+### Cost
+The PCB (or actually five of them) was made by JLCPCB for 7.44 Euro. Shipping to the Netherlands was 8.55 Euro.
+The FPGA core board including shipping was about 20 Euro.
+All other components (that I did not already have at home) including shipping did cost me 25 Euro.
+So the entire project did cost me about 60 Euro.
 
 ### Pictures
 
 #### PCB
 <details>
-<summary>Picture of empty PCB</summary>
+<summary>Pictures of PCB design</summary>
+
+##### KiCad design
+
+The PCB is designed in KiCad.
+
+![kicad](PCB/Images/kicad.png)
+
+##### Manufactured
+
+The result after sending the design to JLCPCB.
 
 ![pcb](PCB/Images/pcb.jpg)
 
@@ -895,7 +993,9 @@ The logo of the project is printed on the PCB.
 
 ## More about the Project <a name="moreInfo"></a>
 
-### History of Project
+<details>
+<summary>History of Project (long text)</summary>
+
 This project started around 2017 as the FPGC1, my first project on an FPGA. I just discovered that FPGAs were a thing and really wanted do learn how to use them. After some research I found that some people even recreated the entire NES in an FPGA! So I bought an Altera Cyclone IV EP4CE6 board from Aliexpress for 20 euros and decided I wanted to create some kind of game console myself, knowing it would be a very hard first project. I chose an Altera FPGA, since I heard that the IDE of Altera/Intel is subjectively better than Xilinx's IDE, though I probably would have chosen Altera anyways since their JTAG programmer has cheap clones you can buy for like 3 bucks. As of HDL choice, I thought Verilog looked a lot cleaner and more understandable than VHDL, so I chose Verilog. In contrast to software development, hardware development has a huge learning curve and requires a very different way of thinking, so my first project was not that much of a success if you look at the code. Most importantly, I did not know yet the importance of a simulator, so I did not simulate anything. I also did not know how to properly structure the code and that things like division and modulo do not translate well in hardware. However, I did learn a lot and that was the most important thing of the project.
 
 About a year later, and some other simple FPGA projects later, I decided to make a better version of the FPGC, and so the FPGC2 was born. I still did not know how to use a simulator, so the project was a complete failure and never worked. After the failure of the FPGC2, I started working on some video conversion projects where I connect the FPGA to a Gameboy or Gameboy Advance, read the display signals to the LCD, store them in an dual port dual clock SRAM framebuffer (the easiest way), and display them on a CRT or VGA monitor. Those projects were kind of a success, since they did not really need simulator and were visually debuggable. 
@@ -908,6 +1008,9 @@ The FPGC4 uses a bootloader to copy the program from SPI flash to SDRAM and exec
 
 Aside from FPGA programming, this project also includes some more software based sub-projects. To prevent having to write all my code by manually typing zeros and ones, I made an assembly language. And to compile the assembly back to zeros and ones, I made a compiler/assembler. I also created some scripts to convert graphics into tiles and MIDI into code. Eventually I decided to make a PCB for this project. This was a really fun learning experience, and luckily I have a dad that designs PCBs for work, so I got a lot of tips from him. After some weeks of designing, I finally created an order at JLCPCB in China to fabricate my PCB and ordered all the components I did not have already from Aliexpress. At the time of writing the PCB and most of the components have arrived, but I still need to wait for some resistors, video DACs and USB to Serial IC, so I do not know yet if the PCB "works" (at least it has no measuring errors, since everything seems to fit).
 
+</details>
+
+
 ### Structure of project files
 All Verilog related files are in the Verilog folder. The Quartus files are in the Quartus folder. The SPI flash programmer files are in the Programmer folder. The assembler files are in the Assembler folder. The SublimeText3 folder contains the build scripts I use for compiling certain files in this project. In the future, I might add a custom syntax highlighting file for the assembly language.
 
@@ -917,23 +1020,21 @@ All Verilog related files are in the Verilog folder. The Quartus files are in th
 - Rewrote FSX2 for CRT display
 - Finally updated the documentation a bit
 - Created and ordered PCB
+- PCB received, assembled and tested
+- Updated documentation quite a bit
 
 ### Future plans
 These are kinda ordered based on priority
 
-- Finish and test PCB
 - Create an Interrupt module to allow for >4 Interrupts
+- Add more interrupts using the new module
+- Improve and write more libraries
 - Write a platformer game
 - Create a pattern and palette table generator
 - Add logo to boot screen animation in bootloader
+- Create webpage on b4rt.nl with documentation, since this file is getting pretty big
 - Create a web server with W5500 chip
 - Write an OS
 - Add Gameboy printer via Arduino to I/O
 - Write a simplistic C compiler. Use software stack with dedicated stack pointer register.
 - Change SPI Flash for SDCARD
-
-### TODO in documentation
-- USB mass storage
-- More PCB info
-- In circuit programming under programming
-- FPGA utilization stats

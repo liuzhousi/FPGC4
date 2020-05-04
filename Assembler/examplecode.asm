@@ -129,6 +129,47 @@ Main:
     ;END CRAPPY MUSIC TEST INIT CODE
 
 
+
+    savpc r15
+    push r15
+    jump GFX_initVram
+
+    ; ascii address
+    addr2reg ASCIITABLE r1 
+
+    savpc r15
+    push r15
+    jump GFX_copyPatternTable
+
+    ; palette address
+    addr2reg PALETTETABLE r1 
+
+    savpc r15
+    push r15
+    jump GFX_copyPaletteTable
+
+    ; print some data to Window
+    addr2reg WINDOWTEXT r1   ; data to copy
+    load 25 r2              ; length of data
+    load 0 r3               ; offset from start
+    load 2 r4               ; palette idx
+
+    savpc r15
+    push r15
+    jump GFX_printWindowColored   
+
+    ; print some data to BG
+    addr2reg BACKGROUNDTILES r1   ; data to copy
+    load 6 r2               ; length of data
+    load 16 r3              ; offset from start
+    load 1 r4               ; palette idx
+
+    savpc r15
+    push r15
+    jump GFX_printBGColored  
+
+
+
     ; INIT SPRITES TEST
     load 0x2632 r1
     loadhi 0xC0 r1
@@ -200,43 +241,7 @@ Main:
 
 
 
-    savpc r15
-    push r15
-    jump GFX_initVram
 
-    ; ascii address
-    addr2reg ASCIITABLE r1 
-
-    savpc r15
-    push r15
-    jump GFX_copyPatternTable
-
-    ; palette address
-    addr2reg PALETTETABLE r1 
-
-    savpc r15
-    push r15
-    jump GFX_copyPaletteTable
-
-    ; print some data to Window
-    addr2reg WINDOWTEXT r1   ; data to copy
-    load 25 r2              ; length of data
-    load 0 r3               ; offset from start
-    load 2 r4               ; palette idx
-
-    savpc r15
-    push r15
-    jump GFX_printWindowColored   
-
-    ; print some data to BG
-    addr2reg BACKGROUNDTILES r1   ; data to copy
-    load 6 r2               ; length of data
-    load 16 r3              ; offset from start
-    load 1 r4               ; palette idx
-
-    savpc r15
-    push r15
-    jump GFX_printBGColored  
     
     ; SNES controller address
     load 0x2622 r1
@@ -342,7 +347,7 @@ Int2:
     add r4 r5 r4
     read 0 r4 r4        ; get note
 
-    write 7 r1 r4       ; 0xC0262C TonePlayer2
+    write 7 r1 r4       ; 0xC0262D TonePlayer2
 
     load 0x0002 r2
     loadhi 0x08 r2      ; r2 =  0x80002 | music index

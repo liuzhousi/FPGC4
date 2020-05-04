@@ -231,10 +231,10 @@ $2000 +------------------------+
 SpriteVRAM
 $000  +------------------------+
       |                        | 
-      |        %0: X pos       | 
-      |        %1: Y pos       | 
-      |        %2: Tile        | 
-      |        %3: Color       | 
+      |    %0: X pos           | 
+      |    %1: Y pos           | 
+      |    %2: Tile            | 
+      |    %3: Palette+flags   | 
       |                        | $FF
       +------------------------+ 
 ```
@@ -1038,3 +1038,6 @@ These are kinda ordered based on priority
 - Add Gameboy printer via Arduino to I/O
 - Write a simplistic C compiler. Use software stack with dedicated stack pointer register.
 - Change SPI Flash for SDCARD
+
+### Todo documentation
+- add DSUB9 pinout

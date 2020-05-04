@@ -133,13 +133,13 @@ initial begin
     v_count = 12'd0;
 end
 
-
+/*
 reg [2:0] BGW_r = 0;
 reg [2:0] BGW_g = 0;
 reg [1:0] BGW_b = 0;
+*/
 
 
-/*
 wire [2:0] BGW_r;
 wire [2:0] BGW_g;
 wire [1:0] BGW_b;
@@ -183,7 +183,7 @@ BGWrenderer #(
     //VRAM8
     .vram8_addr(vram8_addr),
     .vram8_q(vram8_q)
-);*/
+);
 
 /*
 reg [2:0] SPR_r = 0;

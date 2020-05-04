@@ -1,7 +1,7 @@
 import mido
 
 #mid = mido.MidiFile('mario.mid')
-mid = mido.MidiFile('stalk.mid')
+mid = mido.MidiFile('sanic2.mid')
 
 msgList = []
 

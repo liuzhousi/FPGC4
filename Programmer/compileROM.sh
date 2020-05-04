@@ -29,6 +29,18 @@ printf "Appending $NEEDED bytes to code.bin\n"
 
 printf "\nDone compiling binary files\n"
 
+printf "\nKilling previous process\n"
+	
+	ps aux | grep uartFlasher | grep python3 | awk '{print $2}' | xargs kill -9 > /dev/null 2>&1
+
+if [ $? -eq 0 ]
+then
+  echo "Previous process was killed"
+else
+  echo "No previous process found"
+fi
+
 printf "\nWriting to FPGC4 over serial\n"
 
-	python3 uartFlasher.py
+	#comment this line out when using simulator
+	#python3 uartFlasher.py

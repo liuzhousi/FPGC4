@@ -231,8 +231,7 @@ GFX_printBG:
     jumpr 3 r15
 
 
-; Initialize VRAM by copying pattern table and palette table
-; also clears BG tile and BG palette table
+; Initialize VRAM by clearing all VRAM except pattern and palette table
 GFX_initVram:
     savpc r15
     push r15
@@ -466,7 +465,7 @@ GFX_clearWindowpaletteTable:
     push r5
 
     ; vram address
-    load32 0xC00C20 r1        ; r1 = vram addr 1056+2048 0xC00C20 
+    load32 0xC01C20 r1        ; r1 = vram addr 1056+2048 0xC01C20 
 
     ; loop variables
     load 0 r3               ; r3 = loopvar

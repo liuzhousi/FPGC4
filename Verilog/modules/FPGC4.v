@@ -280,13 +280,13 @@ FSX fsx(
 wire [8:0] rom_addr;
 wire [31:0] rom_q;
 
-/*
+
 ROM rom(
 .clk            (clk),
 .reset          (reset),
 .address        (rom_addr),
 .q              (rom_q)
-);*/
+);
 
 
 //----------------Memory Unit--------------------
@@ -301,7 +301,7 @@ wire [31:0] q;
 wire        t1_interrupt;
 wire        t2_interrupt;
 wire        t3_interrupt;
-/*
+
 MemoryUnit mu(
 //clocks
 .clk            (clk),
@@ -406,6 +406,6 @@ CPU cpu(
 .start          (start),
 .busy           (busy)
 );
-*/
+
 
 endmodule

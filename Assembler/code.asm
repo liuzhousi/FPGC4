@@ -1,6 +1,11 @@
 Main: 
-    halt    
 
+    load32 0xC02626 r1 ; value address
+    load 7 r2
+    write 0 r1 r2
+
+    write 1 r1 r0   ; trigger
+    halt
 
 
 Int1:

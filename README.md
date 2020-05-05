@@ -434,8 +434,8 @@ A PS/2 Keyboard reader. Reads 79 buttons from the keyboard. The pressed states a
 ```
 TODO: change this to just read the keycodes and interrupt the FPGC4, and do the rest in software (library) for stability and space.
 ```
-###### Timer
-The timer can be used to generate an interrupt after a programmable amount of time. Each timer has to memory addresses. One specifies the time in milliseconds, the other one is a status register used for starting or stopping the timer.
+###### OSimer
+The OStimer (one stop timer) can be used to generate an interrupt after a programmable amount of time. Each timer has two memory addresses. One specifies the time in milliseconds by using a prescaler of 25000, the other address acts as a trigger if it is written to (it does not matter what value). An interrupt is raised for 16 clock cycles after the countdown has finished.
 
 ###### Tone player
 The tone player can play up to four notes at the same time. It generates square wave tones based on the contents written to the tone player via the memory map. Each 8 bits in the 32 bit data represents a note. Using the MidiConverter program it is possible to convert some basic MIDI's to note indexes.

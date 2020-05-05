@@ -174,42 +174,45 @@ Keyboard keyboard(
 .buttonState(buttonState)   //pressed state of all buttons (79 buttons)
 );
 
-//----------------CTC timer 1----------------------
-//CTC timer 1 I/O
-wire [7:0] t1_controlReg;
+//----------------OS timer 1----------------------
+//OS timer 1 I/O
+wire t1_trigger, t1_set;
 wire [31:0] t1_value;
 
-CTCtimer ctcTimer1(
+OStimer osTimer1(
 .clk(clk),
 .reset(reset),
 .timerValue(t1_value),
-.controlReg(t1_controlReg),
+.setValue(t1_set),
+.trigger(t1_trigger),
 .interrupt(t1_interrupt)
 );
 
-//----------------CTC timer 2----------------------
-//CTC timer 2 I/O
-wire [7:0] t2_controlReg;
+//----------------OS timer 2----------------------
+//OS timer 2 I/O
+wire t2_trigger, t2_set;
 wire [31:0] t2_value;
 
-CTCtimer ctcTimer2(
+OStimer osTimer2(
 .clk(clk),
 .reset(reset),
 .timerValue(t2_value),
-.controlReg(t2_controlReg),
+.setValue(t2_set),
+.trigger(t2_trigger),
 .interrupt(t2_interrupt)
 );
 
-//----------------CTC timer 3----------------------
-//CTC timer 3 I/O
-wire [7:0] t3_controlReg;
+//----------------OS timer 3----------------------
+//OS timer 3 I/O
+wire t3_trigger, t3_set;
 wire [31:0] t3_value;
 
-CTCtimer ctcTimer3(
+OStimer osTimer3(
 .clk(clk),
 .reset(reset),
 .timerValue(t3_value),
-.controlReg(t3_controlReg),
+.setValue(t3_set),
+.trigger(t3_trigger),
 .interrupt(t3_interrupt)
 );
 
@@ -325,11 +328,16 @@ assign vramSPR_cpu_we     = (address >= 27'hC02632 && address < 27'hC02732) ? we
 assign rom_addr         = (address >= 27'hC02422 && address < 27'hC02622)   ? address - 27'hC02422      : 9'd0;
 
 assign t1_value         = (address == 27'hC02626 && we)                     ? data                      : 32'd0;
-assign t1_controlReg    = (address == 27'hC02627 && we)                     ? data                      : 8'd0;
+assign t1_set           = (address == 27'hC02626 && we)                     ? 1'b1                      : 1'b0;
+assign t1_trigger       = (address == 27'hC02627 && we)                     ? 1'b1                      : 1'b0;
+
 assign t2_value         = (address == 27'hC02628 && we)                     ? data                      : 32'd0;
-assign t2_controlReg    = (address == 27'hC02629 && we)                     ? data                      : 8'd0;
+assign t2_set           = (address == 27'hC02628 && we)                     ? 1'b1                      : 1'b0;
+assign t2_trigger       = (address == 27'hC02629 && we)                     ? 1'b1                      : 1'b0;
+
 assign t3_value         = (address == 27'hC0262A && we)                     ? data                      : 32'd0;
-assign t3_controlReg    = (address == 27'hC0262B && we)                     ? data                      : 8'd0;
+assign t3_set           = (address == 27'hC0262A && we)                     ? 1'b1                      : 1'b0;
+assign t3_trigger       = (address == 27'hC0262B && we)                     ? 1'b1                      : 1'b0;
 
 assign tg1_note         = (address == 27'hC0262C)                           ? data                      : 32'd0;
 assign tg1_we           = (address == 27'hC0262C)                           ? we                        : 1'b0;
@@ -427,7 +435,7 @@ begin
             q <= buttonState[78:64];
         end
 
-        //CTCtimers and NotePlayers
+        //OStimers and NotePlayers
         if (busy && address >= 27'hC02626 && address < 27'hC0262E)
         begin
             busy <= 0;

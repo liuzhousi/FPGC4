@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.86 (w)1999-2017 BSI
-[*] Tue May  5 15:20:22 2020
+[*] Tue May  5 17:06:13 2020
 [*]
 [dumpfile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/wave.vcd"
-[dumpfile_mtime] "Tue May  5 15:20:13 2020"
-[dumpfile_size] 1619916
+[dumpfile_mtime] "Tue May  5 15:43:07 2020"
+[dumpfile_size] 1617672
 [savefile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/FPGC4CPU.gtkw"
-[timestart] 91930000
+[timestart] 48020000
 [size] 1920 1054
 [pos] -1 -1
-*-20.987394 92910000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-21.987394 60930000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] FPGC_tb.
 [treeopen] FPGC_tb.fpgc.
 [treeopen] FPGC_tb.fpgc.cpu.
@@ -240,15 +240,20 @@ FPGC_tb.fpgc.mu.we
 @200
 -
 -OSTimer1
-@25
+@28
+FPGC_tb.fpgc.mu.osTimer1.clk
+@24
 FPGC_tb.fpgc.mu.osTimer1.counterValue[46:0]
+@28
+FPGC_tb.fpgc.mu.osTimer1.setValue
+@24
 FPGC_tb.fpgc.mu.osTimer1.interrupt
-FPGC_tb.fpgc.mu.osTimer1.keepInterruptHighCounter[4:0]
 FPGC_tb.fpgc.mu.osTimer1.state[1:0]
 FPGC_tb.fpgc.mu.osTimer1.timerValue[31:0]
 FPGC_tb.fpgc.mu.osTimer1.trigger
 @200
 -
+@201
 -UARTtx
 @28
 FPGC_tb.fpgc.mu.r_Tx_Byte[7:0]

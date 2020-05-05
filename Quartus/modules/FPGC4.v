@@ -84,11 +84,6 @@ wire frameDrawn;    //high when frame just rendered
 					  
 assign led = 1'b1;
 
-wire int1;
-wire int2;
-wire int3;
-wire int4;
-
 wire clk;
 
 assign vga_clk = 1'b0;
@@ -432,18 +427,18 @@ MemoryUnit mu(
 
 //---------------CPU----------------
 //CPU I/O
-assign int1 = t1_interrupt;
-assign int2 = t2_interrupt;
-assign int3 = uart_rx_interrupt;
-assign int4 = frameDrawn;
 
 CPU cpu(
 .clk            (clk),
 .reset          (reset),
-.int1           (int1), 
-.int2           (int2), 
+.int1           (t1_interrupt), 
+.int2           (t2_interrupt), 
 .int3           (uart_rx_interrupt), 
-.int4           (int4),
+.int4           (frameDrawn),
+.ext_int1       (t3_interrupt),
+.ext_int2       (1'b0),
+.ext_int3       (1'b0),
+.ext_int4       (1'b0),
 .address        (address),
 .data           (data),
 .we             (we),

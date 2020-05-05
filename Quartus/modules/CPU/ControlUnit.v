@@ -6,7 +6,7 @@ module ControlUnit(
     input clk, reset,
     input fetch, getRegs, readMem, writeBack,
     //instr. decoder
-    input ce, oe, he,
+    input ce, oe, he, intf,
     input [3:0] areg, breg, dreg,
     input [10:0] const11,
     input [15:0] const16,
@@ -31,6 +31,7 @@ module ControlUnit(
     input [26:0] pc_in,
     output reti,
     output offset,
+    input [7:0] ext_int_id,
     //Regbank
     input [31:0] data_a, data_b,
     output dreg_we, dreg_we_high,
@@ -78,7 +79,7 @@ assign we           =   (instrOP == INSTR_WRITE && writeBack)           ? 1'b1:
                         (instrOP == INSTR_COPY && writeBack)            ? 1'b1:
                         1'b0;
 
-assign read_mem     =   (instrOP == INSTR_READ)                         ? 1'b1:
+assign read_mem     =   (instrOP == INSTR_READ && !intf)                ? 1'b1:
                         1'b0;
 
 //-----------ALU------------
@@ -86,11 +87,13 @@ assign input_b      =   (instrOP == INSTR_ARITH && ce)  ?   {21'd0, const11}    
                         (instrOP == INSTR_LOAD)         ?   {16'd0, const16}    :
                         (instrOP == INSTR_SAVPC)        ?   {5'd0, pc_in}       :
                         (instrOP == INSTR_POP)          ?   stack_q             :
+                        (instrOP == INSTR_READ && intf) ?   ext_int_id          :
                         data_b;
 
 assign skip         =   (instrOP == INSTR_LOAD)     ? 1'b1:
                         (instrOP == INSTR_SAVPC)    ? 1'b1:
                         (instrOP == INSTR_POP)      ? 1'b1:
+                        (instrOP == INSTR_READ && intf) ? 1'b1:
                         1'b0;
 
 assign dreg_we      =   (instrOP == INSTR_ARITH &&  writeBack)    ?   1'b1:

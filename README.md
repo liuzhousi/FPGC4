@@ -249,7 +249,7 @@ Each instruction is 32 bits and can be one of the following instructions:
          |31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|15|14|13|12|11|10|09|08|07|06|05|04|03|02|01|00|
 ----------------------------------------------------------------------------------------------------------
 1 HALT     1  1  1  1| 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
-2 READ     1  1  1  0||----------------16 BIT CONSTANT---------------||--A REG---| x  x  x  x |--D REG---|
+2 READ     1  1  1  0||----------------16 BIT CONSTANT---------------||--A REG---| x  x  x||I||--D REG---|
 3 WRITE    1  1  0  1||----------------16 BIT CONSTANT---------------||--A REG---||--B REG---| x  x  x  x
 4 COPY     1  1  0  0||----------------16 BIT CONSTANT---------------||--A REG---||--B REG---| x  x  x  x
 5 PUSH     1  0  1  1| x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x |--B REG---| x  x  x  x
@@ -267,7 +267,7 @@ Each instruction is 32 bits and can be one of the following instructions:
 ```
 
 1.  HALT:   Will prevent the CPU to go to the next instruction by jumping to the same address. Can be interrupted.
-2.  READ:   Read from memory at address in AREG + 16 bit offset. Store value in DREG.
+2.  READ:   If !I, read from memory at address in AREG + 16 bit offset. If I, read interrupt ID. In both cases: store value in DREG.
 3.  WRITE:  Write value from BREG to memory at address stored in AREG + 16 bit offset.
 4.  COPY:   Read memory from address in AREG + 16 bit offset, then write result to memory at address in BREG + 16 bit offset.
 7.  PUSH:   Pushes value in AREG to stack.
@@ -369,7 +369,9 @@ Handles all program counter related functions like jumps and interrupts.
 
 Every writeBack cycle, the PC is increased by one. In case of a jump, the PC is set to or increased by the jump address.
 
-The CPU has 4 interrupt pins. When a rising edge on one of these pins is detected and interrupts are enabled, interrupts will be disabled, the PC will be stored and the set to the value of the interrupt pin (1, 2, 3, or 4). When a RETI instruction is issued, the PC will be restored and interrupts re-enabled. Interrupts are only registered on the rising edge, to prevent the same interrupt from repeating itself when the handler is already done, but the signal is still high. In case of multiple interrupts at the same time, the lowest pin number has the highest priority.
+The CPU has 8 interrupt pins, of which 4 standard interrupts and 4 extended interrupts (extended has nothing to do with the duration of the interrupt, see it as an interrupt extension). When a rising edge on one of these pins is detected and interrupts are enabled, interrupts will be disabled, the PC will be stored and the set to the value of the interrupt pin (1, 2, 3, or 4, and 2 in case of an extended interrupt). When a RETI instruction is issued, the PC will be restored and interrupts re-enabled. Interrupts are only registered on the rising edge, to prevent the same interrupt from repeating itself when the handler is already done, but the signal is still high. In case of multiple interrupts at the same time, the lowest pin number has the highest priority. Interrupt 1 to 4 have priority over the extended interrupts. A flag for each rising interrupt is stored, even when interrupts are disabled. This causes the interrupt to be delayed until interrupts are enabled again. This way no interrupts are skipped.
+
+For the extended interrupts, the PC will still jump to address 2, but will also set an ID. This way the interrupt handler can check which interrupt was triggered. The ID can be read using the I (interrupt) flag in the READ instruction.
 
 ###### CU
 The CU, or control unit, directs all signals to the corresponding components based on the instruction.

@@ -1240,6 +1240,26 @@ def compileDs(line):
     
     return compileDb(dbList)
 
+
+#compiles readintid instruction
+#should have 1 argument
+#arg1 should be a valid register
+def compileReadIntID(line):
+    if len(line) != 2:
+        raise Exception("Incorrect number of arguments. Expected 1, but got " + str(len(line)-1))
+
+    #convert arg1 to number
+    arg1Int = getReg(line[1])
+
+    #convert arg1 to binary
+    dreg = format(arg1Int, '04b')
+
+    #create instruction
+    instruction = "1110" + "0000000000000000" + "0000" + "0001" + dreg + " //Read interrupt id to " + line[1]
+
+    return instruction
+
+
 #compile nothing
 def compileNothing(line):
     return "ignore"

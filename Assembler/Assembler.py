@@ -78,6 +78,7 @@ def compileLine(line):
         ".ds"       : CompileInstruction.compileDs,
         "loadlabellow" : CompileInstruction.compileLoadLabelLow,
         "loadlabelhigh" : CompileInstruction.compileLoadLabelHigh,
+        "readintid" : CompileInstruction.compileReadIntID,
         "`include" : CompileInstruction.compileNothing
     }
 

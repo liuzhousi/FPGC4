@@ -44,7 +44,10 @@ module FPGC4(
     output          tone2_out1, tone2_out2, tone2_out3, tone2_out4,
 
     input [7:0]     GPI,
-    output [7:0]    GPO
+    output [7:0]    GPO,
+
+    //DEBUG
+    input           ext_int1, ext_int2, ext_int3, ext_int4
 
 );
 
@@ -395,10 +398,14 @@ MemoryUnit mu(
 CPU cpu(
 .clk            (clk),
 .reset          (reset),
-.int1           (t1_interrupt), 
-.int2           (t2_interrupt), 
-.int3           (uart_rx_interrupt), 
-.int4           (frameDrawn),
+.int1           (t1_interrupt),             //t1_interrupt
+.int2           (t2_interrupt),             //t2_interrupt
+.int3           (uart_rx_interrupt),        //uart_rx_interrupt
+.int4           (frameDrawn),               //frameDrawn
+.ext_int1       (ext_int1),
+.ext_int2       (ext_int2),
+.ext_int3       (ext_int3),
+.ext_int4       (ext_int4),
 .address        (address),
 .data           (data),
 .we             (we),

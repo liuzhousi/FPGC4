@@ -2,7 +2,7 @@
 * B322 CPU
 */
 module CPU(
-    input clk, reset, int1, int2, int3, int4,
+    input clk, reset, int1, int2, int3, int4, ext_int1, ext_int2, ext_int3, ext_int4,
     output [26:0] address,
     output [31:0] data,
     output        we,
@@ -43,6 +43,36 @@ Stabilizer int4Stabilizer (
 .stable(int4_s)
 );
 
+wire ext_int1_s, ext_int2_s, ext_int3_s, ext_int4_s;
+
+Stabilizer ext_int1Stabilizer (
+.clk(clk),
+.reset(reset),
+.unstable(ext_int1),
+.stable(ext_int1_s)
+);
+
+Stabilizer ext_int2Stabilizer (
+.clk(clk),
+.reset(reset),
+.unstable(ext_int2),
+.stable(ext_int2_s)
+);
+
+Stabilizer ext_int3Stabilizer (
+.clk(clk),
+.reset(reset),
+.unstable(ext_int3),
+.stable(ext_int3_s)
+);
+
+Stabilizer ext_int4Stabilizer (
+.clk(clk),
+.reset(reset),
+.unstable(ext_int4),
+.stable(ext_int4_s)
+);
+
 
 //----------------------Timer------------------------
 //Timer I/O
@@ -65,6 +95,7 @@ Timer timer (
 wire [26:0] jump_addr;
 wire [26:0] pc_out;
 wire jump, reti, offset;
+wire [7:0] ext_int_id;
 
 PC pc(
 .clk(clk), 
@@ -75,10 +106,15 @@ PC pc(
 .offset(offset),
 .jump_addr(jump_addr),
 .pc_out(pc_out),
+.ext_int_id(ext_int_id),
 .int1(int1_s),
 .int2(int2_s),
 .int3(int3_s),
-.int4(int4_s)
+.int4(int4_s),
+.ext_int1(ext_int1_s),
+.ext_int2(ext_int2_s),
+.ext_int3(ext_int3_s),
+.ext_int4(ext_int4_s)
 );
 
 
@@ -143,7 +179,7 @@ ALU alu (
 //---------------InstructionDecoder----------------
 //InstructionDecoder I/O
 wire [3:0] instrOP;
-wire ce, he, oe;        //constant enable, high enable and offset enable
+wire ce, he, oe, intf;        //constant enable, high enable, offset enable and interruptFlag
 wire [10:0] const11;
 wire [15:0] const16;
 wire [26:0] const27;
@@ -164,7 +200,8 @@ InstructionDecoder instDec(
 .opcode(opcode),
 .ce(ce),
 .he(he),
-.oe(oe)
+.oe(oe),
+.intf(intf)
 );
 
 
@@ -184,6 +221,7 @@ ControlUnit cu(
 .ce(ce),
 .oe(oe),
 .he(he),
+.intf(intf),
 .instrOP(instrOP),
 .const11(const11),
 .const16(const16),
@@ -207,6 +245,7 @@ ControlUnit cu(
 .reti(reti),
 .pc_in(pc_out),
 .offset(offset),
+.ext_int_id(ext_int_id),
 //Regbank
 .data_a(data_a),
 .data_b(data_b),

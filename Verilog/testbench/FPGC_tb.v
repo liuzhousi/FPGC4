@@ -48,6 +48,8 @@ module FPGC_tb;
 reg clk;
 reg nreset;
 
+reg ext_int1, ext_int2, ext_int3, ext_int4;
+
 //ToneGenerator
 wire tone1_out1, tone1_out2, tone1_out3, tone1_out4;
 wire tone2_out1, tone2_out2, tone2_out3, tone2_out4;
@@ -157,7 +159,12 @@ FPGC4 fpgc (
 
 //GPIO
 .GPI(GPI),
-.GPO(GPO)
+.GPO(GPO),
+
+.ext_int1       (ext_int1),
+.ext_int2       (ext_int2),
+.ext_int3       (ext_int3),
+.ext_int4       (ext_int4)
 );
 
 
@@ -169,10 +176,31 @@ begin
     clk = 0;
     nreset = 1;
 
+    ext_int1 = 0;
+    ext_int2 = 0;
+    ext_int3 = 0;
+    ext_int4 = 0;
+
 
     GPI = 8'b00000000;
 
-    repeat(5000) #20 clk = ~clk; //25MHz
+    repeat(4600) #20 clk = ~clk; //25MHz
+
+    ext_int2 = 1;
+    repeat(15) #20 clk = ~clk; //25MHz
+
+    ext_int4 = 1;
+    repeat(15) #20 clk = ~clk; //25MHz
+    ext_int2 = 0;
+
+    repeat(20) #20 clk = ~clk; //25MHz
+    ext_int4 = 0;
+
+
+    repeat(70) #20 clk = ~clk; //25MHz
+    ext_int1 = 1;
+
+    repeat(400) #20 clk = ~clk; //25MHz
 
     #1 $finish;
 end

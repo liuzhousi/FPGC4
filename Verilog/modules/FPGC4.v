@@ -301,6 +301,7 @@ wire [31:0] q;
 wire        t1_interrupt;
 wire        t2_interrupt;
 wire        t3_interrupt;
+wire        scan_code_ready;
 
 MemoryUnit mu(
 //clocks
@@ -360,6 +361,7 @@ MemoryUnit mu(
 //PS/2
 .ps2d(ps2d), 
 .ps2c(ps2c),
+.scan_code_ready(scan_code_ready),
 
 //(S)NESpad
 .nesc(nesc), 
@@ -395,12 +397,12 @@ MemoryUnit mu(
 CPU cpu(
 .clk            (clk),
 .reset          (reset),
-.int1           (t1_interrupt),             //t1_interrupt
-.int2           (t2_interrupt),             //t2_interrupt
-.int3           (uart_rx_interrupt),        //uart_rx_interrupt
-.int4           (frameDrawn),               //frameDrawn
-.ext_int1       (t3_interrupt),
-.ext_int2       (1'b0),
+.int1           (t1_interrupt),             //timer1
+.int2           (t2_interrupt),             //timer2
+.int3           (uart_rx_interrupt),        //UART rx
+.int4           (frameDrawn),               //Frame Drawn
+.ext_int1       (t3_interrupt),             //timer3
+.ext_int2       (scan_code_ready),          //PS/2 scancode ready
 .ext_int3       (1'b0),
 .ext_int4       (1'b0),
 .address        (address),

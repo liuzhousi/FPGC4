@@ -165,9 +165,9 @@ $C02622 +------------------------+
         |          I/O           | 
         |                        |
         | NESpad         $C02622 |
-        | Keyboard[0]    $C02623 |
-        | Keyboard[1]    $C02624 |
-        | Keyboard[2]    $C02625 |
+        | Keyboard       $C02623 |
+        | Unused1        $C02624 |
+        | Unused2        $C02625 |
         | Timer1_val     $C02626 |
         | Timer1_ctrl    $C02627 |
         | Timer2_val     $C02628 |
@@ -430,10 +430,8 @@ R      | X00000000000
 ```
 
 ###### PS/2 Keyboard
-A PS/2 Keyboard reader. Reads 79 buttons from the keyboard. The pressed states are readable from three adjacent addresses on the memory map.
-```
-TODO: change this to just read the keycodes and interrupt the FPGC4, and do the rest in software (library) for stability and space.
-```
+A PS/2 Keyboard reader. Throws an interrupt when a scan code is received. The scan code can then be read from memory. A software library is required to keep track of which button is pressed.
+
 ###### OSimer
 The OStimer (one stop timer) can be used to generate an interrupt after a programmable amount of time. Each timer has two memory addresses. One specifies the time in milliseconds by using a prescaler of 25000, the other address acts as a trigger if it is written to (it does not matter what value). An interrupt is raised for 16 clock cycles after the countdown has finished.
 
@@ -786,6 +784,7 @@ MULT    | R     | C11/R | R     || Compute Arg1 *   Arg2, write result to Arg3
 NOT     | C11/R | R     |       || Compute NOT Arg1, write result to Arg3
 NOP     |       |       |       || Does nothing, is converted to the instruction OR r0 r0 r0
 ADDR2REG| L     | R     |       || Loads address from Arg1 to Arg2. Is converted into LOAD and LOADHI
+READINTID| R    |       |       || Reads the interrupt ID from memory to Arg1 by setting the I flag in a READ instruction
 .DW     | N32   | *     | *     || Data: Each argument is converted to 32bit binary
 .DD     | N16   | *     | *     || Data: Each argument is converted to 16bit binary **
 .DB     | N8    | *     | *     || Data: Each argument is converted to 8bit binary **

@@ -52,6 +52,7 @@ module MemoryUnit(
 
     //PS/2
     input           ps2d, ps2c,
+	 output          scan_code_ready,
     
     //(S)NESpad
     output          nesc, nesl,
@@ -161,18 +162,17 @@ NESpadReader npr (
 //-----------------PS/2 Keyboard-------------------
 //PS/2 Keyboard I/O
 wire [7:0] scanCode;
-wire scan_code_ready;
-wire [78:0] buttonState;
 
-Keyboard keyboard(
-.clk(clk),
-.reset(reset),
-.scan_code_ready(scan_code_ready),
-.ps2c(ps2c),                    //PS/2 clock
-.ps2d(ps2d),                    //PS/2 data
-.scanCode(scanCode),
-.buttonState(buttonState)   //pressed state of all buttons (79 buttons)
+Keyboard keyboard (
+.clk(clk), 
+.reset(reset), 
+.rx_en(1'b1), 
+.ps2d(ps2d), 
+.ps2c(ps2c), 
+.rx_done_tick(scan_code_ready), 
+.rx_data(scanCode)
 );
+
 
 //----------------OS timer 1----------------------
 //OS timer 1 I/O
@@ -414,25 +414,25 @@ begin
             q <= {16'd0, nesState};
         end
 
-        //Keyboard1
+        //Keyboard
         if (busy && address == 27'hC02623)
         begin
             busy <= 0;
-            q <= buttonState[31:16];
+            q <= {24'd0, scanCode};
         end
 
-        //Keyboard2
+        //Unused1
         if (busy && address == 27'hC02624)
         begin
             busy <= 0;
-            q <= buttonState[63:32];
+            q <= 32'd0;
         end
 
-        //Keyboard3
+        //Unused2
         if (busy && address == 27'hC02625)
         begin
             busy <= 0;
-            q <= buttonState[78:64];
+            q <= 32'd0;
         end
 
         //OStimers and NotePlayers

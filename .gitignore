@@ -10,3 +10,4 @@ Quartus/greybox_tmp/
 Programmer/verify.bin
 Quartus/*/*.bak
 Quartus/*/*/*.bak
+Documentation/site/

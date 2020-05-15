@@ -19,7 +19,7 @@ Comments can be added by using the ';' character. For each line, only the part u
 
 ### Defines
 Defines are the first type of lines that are processed by the assembler. A define line should have the following structure:
-```
+``` asm
 define TEXTTOREPLACE = textToReplaceWith
 ```
 It is not necessary for 'define' to be in lower caps and 'TEXTTOREPLACE' to be in all caps. However, it is recommended to do so as a coding style. Also, it is recommended to place all define statements at the top of the file before the first instruction or label.
@@ -28,7 +28,7 @@ Furthermore, 'TEXTTOREPLACE' should be unique for each define statement. If not,
 
 ### Labels
 Labels can be used to get the address in the assembled code of the instruction below the label. To define a label, one should use the following syntax:
-```
+``` asm
 LabelName:
 ```
 LabelName can consist of any character, including numbers and special characters, as long as it is just one word (so no spaces, newlines etc.) The label must end with a ':' character. On the same line after this ':' character, no other text is allowed, except comments.
@@ -37,12 +37,12 @@ A label can be referenced by using the LabelName in certain instructions at spec
 The assembler will eventually compute the address of the label and replace all LabelName occurrences with this address. One can make forward and backward references, which means that one does not have to define a label earlier in the code before referencing, as long as the label is defined somewhere in the code.
 
 Each program should at least contain the following labels (if not, the assembler will complain):
-```
-Main: (this is where the CPU will initially jump to)
-Int1: (interrupt 1 handler)
-Int2: (interrupt 2 handler)
-Int3: (interrupt 3 handler)
-Int4: (interrupt 4 handler)
+``` asm
+Main: ; this is where the CPU will initially jump to
+Int1: ; interrupt 1 handler
+Int2: ; interrupt 2 handler
+Int3: ; interrupt 3 handler
+Int4: ; interrupt 4 handler
 ```
 
 It is recommended to start each label with a capital letter, however this is not mandatory.
@@ -54,7 +54,7 @@ Each of the interrupt handler labels should 'end' with a reti instruction, other
 
 ### Instructions
 The instructions are the lines that will be assembled into machine code. Each instruction has its own format with the following description:
-```
+``` text
 Instr   | Arg1  | Arg2 | Arg3   || Description
 ================================||=====================================================================
 HALT    |       |       |       || Halts CPU by jumping to the current address
@@ -105,13 +105,13 @@ S   = String
 Each Cx type argument (constant) can be written in decimal, binary (with 0b prefix) or hex (with 0x prefix).
 
 The assembler creates the first six lines of the program, since these are always the same instructions plus the length of the program:
-```
+``` text
 Jump Main
 Jump Int1
 Jump Int2
 Jump Int3
 Jump Int4
-*Length of program*
+[Length of program]
 ```
 
 ## Libraries

@@ -38,4 +38,26 @@ Sublime Text 3 is used as text editor, with some handy build scripts to speed up
 - [Documentation (this site)](https://www.b4rt.nl/fpgc4)
 
 ## Structure of project files
-All Verilog related files are in the Verilog folder. The Quartus files are in the Quartus folder. The SPI flash programmer files are in the Programmer folder. The assembler files are in the Assembler folder. The SublimeText3 folder contains the build scripts I use for compiling certain files in this project. In the future, I might add a custom syntax highlighting file for the assembly language.
+The general structure of this project:
+``` text
+.
+├── Assembler 			// Assembler and assembly code files
+│   ├── bootloaders 	// Asm files of bootloaders
+│   └── lib 			// Asm libraries
+│
+├── Documentation 		// Documentation website files
+├── Graphics 			// Scripts for converting/generating graphics data
+├── MidiConverter 		// Scripts to convert .mid files into audio asm code
+├── PCB 				// PCB KiCad source files
+├── Programmer 			// Scripts for programming the FPGC4
+│   ├── flash.sh 		// Programs the SPI flash module
+│   └── uartFlasher.py  // Programs the FPGC4 via UART (ISP)
+│
+├── Quartus 			// Quartus project files
+├── SublimeText3 		// Project build scripts for Sublime Text 3
+└── Verilog 			// Verilog source files
+    ├── memory 			// Memory init related files
+    ├── modules 		// Hardware modules
+    ├── output 			// Simulation output
+    └── testbench 		// Simulation testbench
+```

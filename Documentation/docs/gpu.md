@@ -1,17 +1,16 @@
 # GPU (FSX2)
 The GPU generates a progressive 320x240@60hz RGBs signal using a pixel clock of 6.6MHz. The timing of the video signal is as follows:
-```
-  H_RES   = 320,      // horizontal resolution (pixels)
-  V_RES   = 240,      // vertical resolution (lines)
-  H_FP    = 24,       // horizontal front porch
-  H_SYNC  = 32,       // horizontal sync
-  H_BP    = 46,       // horizontal back porch
-  V_FP    = 3,        // vertical front porch
-  V_SYNC  = 5,        // vertical sync
-  V_BP    = 14,       // vertical back porch
-  H_POL   = 0,        // horizontal sync polarity (0:neg, 1:pos)
-  V_POL   = 0;        // vertical sync polarity
-
+``` text
+H_RES   = 320,      // horizontal resolution (pixels)
+V_RES   = 240,      // vertical resolution (lines)
+H_FP    = 24,       // horizontal front porch
+H_SYNC  = 32,       // horizontal sync
+H_BP    = 46,       // horizontal back porch
+V_FP    = 3,        // vertical front porch
+V_SYNC  = 5,        // vertical sync
+V_BP    = 14,       // vertical back porch
+H_POL   = 0,        // horizontal sync polarity (0:neg, 1:pos)
+V_POL   = 0;        // vertical sync polarity
 
 H_TOTAL = 320+24+32+46  = 422 //Horizontal total pixels
 V_TOTAL = 240+3+5+14    = 262 //Vertical total lines

@@ -20,6 +20,7 @@ These are kinda ordered based on priority
 - Write a platformer game
 - Create a pattern and palette table generator
 - Add logo to boot screen animation in bootloader
+- Add a custom syntax highlighting for the assembly language.
 - Create webpage on b4rt.nl with documentation, since this file is getting pretty big
 - Create a web server with W5500 chip
 - Write an OS
@@ -31,3 +32,5 @@ These are kinda ordered based on priority
 - add DSUB9 pinout
 - talk about memory bottleneck, Instruction per clock cycle.
 - add design mistakes for io wing (uart pulldown, no shield to ground)
+- add uart bootloader code/description to bootloader section
+- check if uart bootloader jumpt to addr 5 or addr 0 when done

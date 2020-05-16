@@ -7,9 +7,9 @@ On this page, you will find a brief introduction of this project. For (many) mor
 ## What it is
 The FPGC4 (Field Programmable Game Console v4) is an open source project, built around a completely self designed SoC (System on a Chip), implemented on an FPGA.
 
-Originally, the goal of this project, which started in 2017, was to design a simple game console for an FPGA (hence the name FPGC). Eventually this idea shifted more towards creating a PC, with the capabilities of a game console. 
+Originally, the goal of this project, which started in 2017, was to design a simple game console for an FPGA (hence the name FPGC). Eventually this idea shifted more towards creating an entire PC with the capabilities of a game console. 
 
-To keep the complexity of the project low, most features of the FPGC4 are very retro, like tile and sprite based rendering, RGBs video signals for CRT TVs, PS/2 Keyboard and SNES controller support. However, some more modern features were also added, like a 32 bit CPU, 32MiB SDRAM and USB host support (though a CH376T controller).
+To keep the complexity of the project low, most features of the FPGC4 are very retro, like tile and sprite based rendering, RGBs video signals for CRT TVs (using RGB SCART), PS/2 Keyboard and SNES controller support. However, some more modern features were also added, like a 32 bit CPU, 32MiB SDRAM and USB host support (though a CH376T controller).
 
 The main components of the FPGC4 are a self designed 32 bit CPU, a self designed GPU (tile/sprite based), and a self designed memory unit.
 
@@ -32,11 +32,6 @@ The Assembler and most other scripts are written in Python3. Code for the FPGC4 
 
 Sublime Text 3 is used as text editor, with some handy build scripts to speed up the development and to quickly send code to the FPGC4.
 
-## Project Links
-- [Github Repository](https://www.github.com/b4rt-dev/FPGC4)
-- [Gogs Mirror](https://www.b4rt.nl/git/bart/FPGC4-mirror)
-- [Documentation (this site)](https://www.b4rt.nl/fpgc4)
-
 ## Structure of project files
 The general structure of this project:
 ``` text
@@ -45,7 +40,7 @@ The general structure of this project:
 │   ├── bootloaders 	// Asm files of bootloaders
 │   └── lib 			// Asm libraries
 │
-├── Documentation 		// Documentation website files
+├── Documentation 		// Documentation website project
 ├── Graphics 			// Scripts for converting/generating graphics data
 ├── MidiConverter 		// Scripts to convert .mid files into audio asm code
 ├── PCB 				// PCB KiCad source files
@@ -61,3 +56,8 @@ The general structure of this project:
     ├── output 			// Simulation output
     └── testbench 		// Simulation testbench
 ```
+
+## Project Links
+- [Github Repository](https://www.github.com/b4rt-dev/FPGC4)
+- [Gogs Mirror](https://www.b4rt.nl/git/bart/FPGC4-mirror)
+- [Documentation (this site)](https://www.b4rt.nl/fpgc4)

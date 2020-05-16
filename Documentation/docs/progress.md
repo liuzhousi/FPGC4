@@ -17,6 +17,8 @@ Here I keep a simple list of my latest progress and a simple TODO list
 These are kinda ordered based on priority
 
 - Improve and write more libraries
+- Improve hardware stack (size, check usage, get pointer, etc.)
+- Enable second SPI and UART port
 - Write a platformer game
 - Create a pattern and palette table generator
 - Add logo to boot screen animation in bootloader

@@ -256,7 +256,7 @@ class AddrOf(ILCommand):
         r = get_reg([spotmap[self.output]])
         
         # if label (most likely)
-        print(type(self.var.ctype))
+        #print(type(self.var.ctype))
         if isinstance(self.var.ctype, ctypes.FunctionCType):
             asm_code.add(asm_cmds.Addr2Reg(home_spots[self.var], r))
 
@@ -271,7 +271,7 @@ class AddrOf(ILCommand):
         
 
         if r != spotmap[self.output]:
-            print("help (addrOf)")
+            #print("help (addrOf)")
             size = self.output.ctype.size
             asm_code.add(asm_cmds.Mov(spotmap[self.output], r, size))
 

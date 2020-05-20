@@ -148,7 +148,7 @@ class _GeneralCmp(ILCommand):
         if ctype.is_pointer() or (ctype.is_integral() and not ctype.signed):
             return self.unsigned_cmp_cmd
         else:
-            print("help: compare/jump uses signed numbers")
+            #print("help: compare/jump uses signed numbers")
             return self.signed_cmp_cmd
 
 

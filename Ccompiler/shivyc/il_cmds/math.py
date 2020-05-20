@@ -58,8 +58,8 @@ class _AddMult(ILCommand):
             
 
             if not self.comm:
-                print("todo3")
-                asm_code.add(asm_cmds.Neg(temp, None, size))
+                #print("todo3")
+                asm_code.add(asm_cmds.Neg(temp, size))
 
         else:
             if (not self._is_imm64(arg1_spot) and
@@ -167,13 +167,13 @@ class _BitShiftCmd(ILCommand):
             arg2_spot = spots.RCX
 
         if spotmap[self.output] == arg1_spot:
-            asm_code.add(self.Inst(arg1_spot, arg2_spot, arg1_size, 1))
+            asm_code.add(self.Inst(arg1_spot, arg2_spot, arg1_size))
         else:
             out_spot = spotmap[self.output]
             temp_spot = get_reg([out_spot, arg1_spot], [arg2_spot])
             if arg1_spot != temp_spot:
                 asm_code.add(asm_cmds.Mov(temp_spot, arg1_spot, arg1_size))
-            asm_code.add(self.Inst(temp_spot, arg2_spot, arg1_size, 1))
+            asm_code.add(self.Inst(temp_spot, arg2_spot, arg1_size))
             if temp_spot != out_spot:
                 asm_code.add(asm_cmds.Mov(out_spot, temp_spot, arg1_size))
 
@@ -183,7 +183,7 @@ class RBitShift(_BitShiftCmd):
     Shifts each bit in IL value left operand to the right by position
     indicated by right operand."""
 
-    Inst = asm_cmds.Sar
+    Inst = asm_cmds.Shiftr
 
 
 class LBitShift(_BitShiftCmd):
@@ -191,7 +191,7 @@ class LBitShift(_BitShiftCmd):
     Shifts each bit in IL value left operand to the left by position
     indicated by right operand."""
 
-    Inst = asm_cmds.Sal
+    Inst = asm_cmds.Shiftl
 
 
 class _DivMod(ILCommand):
@@ -224,47 +224,9 @@ class _DivMod(ILCommand):
                 self.arg1: [spots.RAX]}
 
     def make_asm(self, spotmap, home_spots, get_reg, asm_code): # noqa D102
-        ctype = self.arg1.ctype
-        size = ctype.size
-
-        output_spot = spotmap[self.output]
-        arg1_spot = spotmap[self.arg1]
-        arg2_spot = spotmap[self.arg2]
-
-        # Move first operand into RAX if we can do so without clobbering
-        # other argument
-        moved_to_rax = False
-        if spotmap[self.arg1] != spots.RAX and spotmap[self.arg2] != spots.RAX:
-            moved_to_rax = True
-            asm_code.add(asm_cmds.Mov(spots.RAX, arg1_spot, size))
-
-        # If the divisor is a literal or in a bad register, we must move it
-        # to a register.
-        if (self._is_imm(spotmap[self.arg2]) or
-             spotmap[self.arg2] in [spots.RAX, spots.RDX]):
-            r = get_reg([], [spots.RAX, spots.RDX])
-            asm_code.add(asm_cmds.Mov(r, arg2_spot, size))
-            arg2_final_spot = r
-        else:
-            arg2_final_spot = arg2_spot
-
-        # If we did not move to RAX above, do so here.
-        if not moved_to_rax and arg1_spot != self.return_reg:
-            asm_code.add(asm_cmds.Mov(spots.RAX, arg1_spot, size))
-
-        if ctype.signed:
-            if ctype.size == 4:
-                asm_code.add(asm_cmds.Cdq())
-            elif ctype.size == 8:
-                asm_code.add(asm_cmds.Cqo())
-            asm_code.add(asm_cmds.Idiv(arg2_final_spot, None, size))
-        else:
-            # zero out RDX register
-            asm_code.add(asm_cmds.Xor(spots.RDX, spots.RDX, size))
-            asm_code.add(asm_cmds.Div(arg2_final_spot, None, size))
-
-        if spotmap[self.output] != self.return_reg:
-            asm_code.add(asm_cmds.Mov(output_spot, self.return_reg, size))
+        raise NotImplementedError 
+        # div and mod are not implemented in b332
+        # to make them work, they need to be converted to a series of equivalent instructions
 
 
 class Div(_DivMod):
@@ -317,7 +279,7 @@ class _NegNot(ILCommand):
 
         if output_spot != arg_spot:
             asm_code.add(asm_cmds.Mov(output_spot, arg_spot, size))
-        asm_code.add(self.Inst(output_spot, None, size))
+        asm_code.add(asm_cmds.Not(output_spot, size))
 
 
 class Neg(_NegNot):
@@ -327,7 +289,8 @@ class Neg(_NegNot):
 
     """
 
-    Inst = asm_cmds.Neg
+    # for B322 we just do a not
+
 
 
 class Not(_NegNot):
@@ -337,4 +300,4 @@ class Not(_NegNot):
 
     """
 
-    Inst = asm_cmds.Not
+    # for B322 we just do a not

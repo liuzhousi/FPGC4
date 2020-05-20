@@ -96,7 +96,7 @@ class ASMCode:
 
         fullCode = "\n".join(header + code)
 
-        print(fullCode)
+        #print(fullCode)
         return fullCode
 
 
@@ -280,32 +280,32 @@ class ASMGen:
 
     def make_asm(self):
         """Generate ASM code."""
-        print("\nSymbol table:")
-        pprint.pprint(self.symbol_table.__dict__)
-        print()
+
+        #print("\nSymbol table:")
+        #pprint.pprint(self.symbol_table.__dict__)
+        #print()
 
         global_spotmap = self._get_global_spotmap()
 
-        print("global_spotmap:")
-        pprint.pprint(self.il_code.__dict__)
-
+        #print("global_spotmap:")
+        #pprint.pprint(self.il_code.__dict__)
 
         for func in self.il_code.commands:
-            print(func)
+            #print(func)
             self.asm_code.add(asm_cmds.Label(func))
 
-            for i in self.il_code.commands[func]:
-                print(i, i.__dict__)
+            #for i in self.il_code.commands[func]:
+                #print(i, i.__dict__)
 
             self._make_asm(self.il_code.commands[func], global_spotmap)
-            print()
+            #print()
 
     def _make_asm(self, commands, global_spotmap):
         """Generate ASM code for given command list."""
 
         # Get free values
         free_values = self._get_free_values(commands, global_spotmap)
-        print("\nfree values", free_values)
+        #print("\nfree values", free_values)
 
 
         # If any variable may have its address referenced, assign it a
@@ -317,14 +317,14 @@ class ASMGen:
                 for v in line:
                     if v not in refs:
                         move_to_mem.append(v)
-                        print(v, " was moved to mem")
+                        #print(v, " was moved to mem")
 
         # In addition, move all IL values of strange size to memory because
         # they won't fit in a register.
         for v in free_values:
             if v.ctype.size not in {1, 2, 4, 8}:
                 move_to_mem.append(v)
-                print(v, " was moved to mem because of size")
+                #print(v, " was moved to mem because of size")
 
         # TODO: All non-free IL values are automatically assigned distinct
         # memory spots. However, this is very inoptimal for structs.

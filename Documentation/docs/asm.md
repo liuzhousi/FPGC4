@@ -83,7 +83,7 @@ SUB     | R     | C11/R | R     || Compute Arg1 -   Arg2, write result to Arg3
 SHIFTL  | R     | C11/R | R     || Compute Arg1 <<  Arg2, write result to Arg3
 SHIFTR  | R     | C11/R | R     || Compute Arg1 >>  Arg2, write result to Arg3
 MULT    | R     | C11/R | R     || Compute Arg1 *   Arg2, write result to Arg3
-NOT     | C11/R | R     |       || Compute NOT Arg1, write result to Arg3
+NOT     | C11/R | R     |       || Compute NOT Arg1, write result to Arg2
 NOP     |       |       |       || Does nothing, is converted to the instruction OR r0 r0 r0
 ADDR2REG| L     | R     |       || Loads address from Arg1 to Arg2. Is converted into LOAD and LOADHI
 READINTID| R    |       |       || Reads the interrupt ID from memory to Arg1 by setting the I flag in a READ instruction

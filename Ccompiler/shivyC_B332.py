@@ -4,6 +4,7 @@ Main executable for C compiler.
 This compiler is a modified version of the ShivyC compiler (C to x86_64 compiler, written in Python, see https://github.com/ShivamSarodia/ShivyC) by Shivam Sarodia.
 It is modified to output B332 assembly instead of x86_64 assembly.
 New features are/will be added as well, compared to the original version.
+For more info see the documentation. (when it is written :P)
 """
 
 """
@@ -55,24 +56,29 @@ from shivyc.asm_gen import ASMCode, ASMGen
 def main():
     """Run the main compiler script."""
 
-    if platform.system() != "Linux":
-        err = "only x86_64 Linux is supported"
-        print(CompilerError(err))
-        return 1
+    asm = ""
 
     arguments = get_arguments()
 
-    for file in arguments.files:
-        process_file(file, arguments)
+    # currently supports compiling one .c file only
+    if len(arguments.files) is not 1:
+        print("Expected one input file, got ", str(len(arguments.files)))
+        return -1
+
+    asm = process_file(arguments.files[0], arguments)
+
+    # print complete assembly to stdout
+    print(asm)
 
     error_collector.show()
+
     
-    return 1
+    return 1 # check on this return value when compiler is used in a build script
 
 
 def process_file(file, args):
-    """Process single file into object file and return the object file name."""
-    print("processing file: ", file)
+    """Process single file into assembly code and return the code as string."""
+    #print("processing file: ", file)
     if file[-2:] == ".c":
         return process_c_file(file, args)
     else:
@@ -82,12 +88,10 @@ def process_file(file, args):
 
 
 def process_c_file(file, args):
-    """Compile a C file into an object file and return the object file name."""
+    """Compile a C file into assembly code and return the code as string."""
     code = read_file(file)
     if not error_collector.ok():
         return None
-
-    print("code:\n", code)
 
     token_list = lexer.tokenize(code, file)
     if not error_collector.ok():
@@ -116,7 +120,7 @@ def process_c_file(file, args):
 
     asm_code = ASMCode()
 
-    # This is the part we want to modify to generate B322 ASM code instead
+    # This is the part we mostly want to modify to generate B322 ASM code instead of x86_64 ASM code
     ASMGen(il_code, symbol_table, asm_code, args).make_asm()
     asm_source = asm_code.full_code()
     #print("asm_source:\n", asm_source)
@@ -134,7 +138,7 @@ def get_arguments():
     an object storing the argument values and a list of the file names
     provided on command line.
     """
-    desc = """Compile, assemble, and link C files. Option flags starting
+    desc = """Compile C files into B332 Assembly. Option flags starting
     with `-z` are primarily for debugging or diagnostic purposes."""
     parser = argparse.ArgumentParser(
         description=desc, usage="shivyc [-h] [options] files...")
@@ -173,59 +177,6 @@ def write_asm(asm_source, asm_filename):
     except IOError:
         descrip = f"could not write output file '{asm_filename}'"
         error_collector.add(CompilerError(descrip))
-
-
-def assemble(asm_name, obj_name):
-    """Assemble the given assembly file into an object file."""
-    try:
-        subprocess.check_call(["as", "-64", "-o", obj_name, asm_name])
-        return True
-    except subprocess.CalledProcessError:
-        err = "assembler returned non-zero status"
-        error_collector.add(CompilerError(err))
-        return False
-
-
-def link(binary_name, obj_names):
-    """Assemble the given object files into a binary."""
-
-    try:
-        crtnum = find_crtnum()
-        if not crtnum: return
-
-        crti = find_library_or_err("crti.o")
-        if not crti: return
-
-        linux_so = find_library_or_err("ld-linux-x86-64.so.2")
-        if not linux_so: return
-
-        crtn = find_library_or_err("crtn.o")
-        if not crtn: return
-
-        # find files to link
-        subprocess.check_call(
-            ["ld", "-dynamic-linker", linux_so, crtnum, crti, "-lc"]
-            + obj_names + [crtn, "-o", binary_name])
-
-        return True
-
-    except subprocess.CalledProcessError:
-        return False
-
-
-def find_crtnum():
-    """Search for the crt0, crt1, or crt2.o files on the system.
-
-    If one is found, return its path. Else, add an error to the
-    error_collector and return None.
-    """
-    for file in ["crt2.o", "crt1.o", "crt0.o"]:
-        crt = find_library(file)
-        if crt: return crt
-
-    err = "could not find crt0.o, crt1.o, or crt2.o for linking"
-    error_collector.add(CompilerError(err))
-    return None
 
 
 def find_library_or_err(file):

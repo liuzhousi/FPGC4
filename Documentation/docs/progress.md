@@ -38,6 +38,8 @@ These are kinda ordered based on priority
 - think about removing bootloader code in documentation
 - add some snippet of code + binary in assembler documentation
 - check if uart bootloader jumpt to addr 5 or addr 0 when done
+- add something about the nconf button remapping wire on the PCB page
+- add something about the SPI flash module modification to QIO on the PCB page
 - add new functions to assembler page
 	- rbp rsp mapped to r14 r15 for c compiler
 	- added negative offset option for read, write and copy instruction
@@ -47,6 +49,7 @@ These are kinda ordered based on priority
 	- note about the 4 word int offset because x86_64 has byte addressable memory (FPGC4 has word addressable memory). But because plenty of space and simplification for print statements in text, it is not worth it (for now) to change it to 1 word offset and risk more compiler bugs. This means that chars are stored in 32 bit spaces and therefore have no overflow. This also means that using variables longer that 32 bits (longs) are cutoff at 32 bits. Should not be a big issue, since we only have 27 bits addresses anyways.
 	- testing compiler: currently by hand using gtkwave. In the future: 1) create single command for compiling c -> asm, asm -> machine -> uploading to FPGC4. 2) add software reset over UART, so we can upload without user interaction. 3) add asm code in tests.c files (at end of main) that send return code over UART back to pc. 4) use automated compiling, reset+upload, listen for return code, to verify if a test was successful. 5) create muliple tests.c files to test all functionality.
 	- make a list of what is supported and some things that are not supported (division, switch)
+
 
 ## Todo C compiler related
 - [done] Add neg offset flag in READ and WRITE and COPY instructions

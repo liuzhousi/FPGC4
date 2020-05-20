@@ -182,6 +182,114 @@ class Mult:
         return s
 
 
+class Shiftl:
+    name = "shiftl"
+
+    def __init__(self, arg1=None, arg2=None, size=None):
+        self.arg1 = arg1.asm_str(size) if arg1 else None
+        self.arg2 = arg2.asm_str(size) if arg2 else None
+        self.size = size
+
+    def __str__(self):
+        s = "\t" + self.name
+        if self.arg1:
+            s += " " + self.arg1
+        if self.arg2:
+            s += " " + self.arg2
+        if self.arg1:
+            s += " " + self.arg1
+        return s
+
+
+class Shiftr:
+    name = "shiftr"
+
+    def __init__(self, arg1=None, arg2=None, size=None):
+        self.arg1 = arg1.asm_str(size) if arg1 else None
+        self.arg2 = arg2.asm_str(size) if arg2 else None
+        self.size = size
+
+    def __str__(self):
+        s = "\t" + self.name
+        if self.arg1:
+            s += " " + self.arg1
+        if self.arg2:
+            s += " " + self.arg2
+        if self.arg1:
+            s += " " + self.arg1
+        return s
+
+
+class And:
+    name = "and"
+
+    def __init__(self, arg1=None, arg2=None, size=None):
+        self.arg1 = arg1.asm_str(size) if arg1 else None
+        self.arg2 = arg2.asm_str(size) if arg2 else None
+        self.size = size
+
+    def __str__(self):
+        s = "\t" + self.name
+        if self.arg1:
+            s += " " + self.arg1
+        if self.arg2:
+            s += " " + self.arg2
+        if self.arg1:
+            s += " " + self.arg1
+        return s
+
+
+class Or:
+    name = "or"
+
+    def __init__(self, arg1=None, arg2=None, size=None):
+        self.arg1 = arg1.asm_str(size) if arg1 else None
+        self.arg2 = arg2.asm_str(size) if arg2 else None
+        self.size = size
+
+    def __str__(self):
+        s = "\t" + self.name
+        if self.arg1:
+            s += " " + self.arg1
+        if self.arg2:
+            s += " " + self.arg2
+        if self.arg1:
+            s += " " + self.arg1
+        return s
+
+
+class Xor:
+    name = "xor"
+
+    def __init__(self, arg1=None, arg2=None, size=None):
+        self.arg1 = arg1.asm_str(size) if arg1 else None
+        self.arg2 = arg2.asm_str(size) if arg2 else None
+        self.size = size
+
+    def __str__(self):
+        s = "\t" + self.name
+        if self.arg1:
+            s += " " + self.arg1
+        if self.arg2:
+            s += " " + self.arg2
+        if self.arg1:
+            s += " " + self.arg1
+        return s
+
+
+class Not:
+    name = "not"
+
+    def __init__(self, arg1=None, size=None):
+        self.arg1 = arg1.asm_str(size)
+
+    def __str__(self):
+        s = "\t" + self.name
+        s += " " + self.arg1
+        s += " " + self.arg1
+        return s
+
+
 class Cmp:
     name = "sub"
 
@@ -459,10 +567,10 @@ class Movzx(_ASMCommandMultiSize): name = "movzx"  # noqa: D101
 #class Sub(_ASMCommand): name = "sub"  # noqa: D101
 
 
-class Neg(_ASMCommand): name = "neg"  # noqa: D101
+#class Neg(_ASMCommand): name = "neg"  # noqa: D101
 
 
-class Not(_ASMCommand): name = "not"  # noqa: D101
+#class Not(_ASMCommand): name = "not"  # noqa: D101
 
 
 class Div(_ASMCommand): name = "div"  # noqa: D101
@@ -498,7 +606,7 @@ class Call(_ASMCommand): name = "call"  # noqa: D101
 class Ret(_ASMCommand): name = "ret"  # noqa: D101
 
 
-class Sar(_ASMCommandMultiSize): name = "sar"  # noqa: D101
+#class Sar(_ASMCommandMultiSize): name = "sar"  # noqa: D101
 
 
-class Sal(_ASMCommandMultiSize): name = "sal"  # noqa: D101
+#class Sal(_ASMCommandMultiSize): name = "sal"  # noqa: D101

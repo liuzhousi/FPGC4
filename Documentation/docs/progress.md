@@ -49,6 +49,7 @@ These are kinda ordered based on priority
 	- note about the 4 word int offset because x86_64 has byte addressable memory (FPGC4 has word addressable memory). But because plenty of space and simplification for print statements in text, it is not worth it (for now) to change it to 1 word offset and risk more compiler bugs. This means that chars are stored in 32 bit spaces and therefore have no overflow. This also means that using variables longer that 32 bits (longs) are cutoff at 32 bits. Should not be a big issue, since we only have 27 bits addresses anyways.
 	- testing compiler: currently by hand using gtkwave. In the future: 1) create single command for compiling c -> asm, asm -> machine -> uploading to FPGC4. 2) add software reset over UART, so we can upload without user interaction. 3) add asm code in tests.c files (at end of main) that send return code over UART back to pc. 4) use automated compiling, reset+upload, listen for return code, to verify if a test was successful. 5) create muliple tests.c files to test all functionality.
 	- make a list of what is supported and some things that are not supported (division, switch)
+	- note about bitwise and not having & as sign, because it is already taken by get pointer to var.
 
 
 ## Todo C compiler related

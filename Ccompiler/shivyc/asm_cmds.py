@@ -588,7 +588,7 @@ class Cdq(_ASMCommand): name = "cdq"  # noqa: D101
 class Cqo(_ASMCommand): name = "cqo"  # noqa: D101
 
 
-class Xor(_ASMCommand): name = "xor"  # noqa: D101
+#class Xor(_ASMCommand): name = "xor"  # noqa: D101
 
 
 #class Cmp(_ASMCommand): name = "cmp"  # noqa: D101

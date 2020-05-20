@@ -514,6 +514,37 @@ class LBitShift(_BitShift):
     default_il_cmd = math_cmds.LBitShift
 
 
+class _BitAndOrXor(_IntBinOp):
+    """Represents `|`, `&` and `^` bitwise operators.
+    Each of operands must have integer type.
+    """
+
+    def __init__(self, left, right, op):
+        """Initialize node."""
+        super().__init__(left, right, op)
+
+    def _nonarith(self, left, right, il_code):
+        err = "invalid operand types for bitwise AND, OR or XOR"
+        raise CompilerError(err, self.op.r)
+
+
+class Bor(_BitAndOrXor):
+    """Represent a `|` operator."""
+
+    default_il_cmd = math_cmds.Or
+
+
+class Band(_BitAndOrXor):
+    """Represent a `&` operator."""
+
+    default_il_cmd = math_cmds.And
+
+class Bxor(_BitAndOrXor):
+    """Represent a `^` operator."""
+
+    default_il_cmd = math_cmds.Xor
+
+
 class _Equality(_ArithBinOp):
     """Base class for == and != nodes."""
 

@@ -99,7 +99,10 @@ def parse_bitwise(index):
     return parse_series(
         index, parse_additive,
         {token_kinds.lbitshift: expr_nodes.LBitShift,
-         token_kinds.rbitshift: expr_nodes.RBitShift})
+         token_kinds.rbitshift: expr_nodes.RBitShift,
+         token_kinds.bor: expr_nodes.Bor,
+         token_kinds.band: expr_nodes.Band,
+         token_kinds.bxor: expr_nodes.Bxor})
 
 
 @add_range

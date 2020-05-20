@@ -6,7 +6,7 @@ module ControlUnit(
     input clk, reset,
     input fetch, getRegs, readMem, writeBack,
     //instr. decoder
-    input ce, oe, he, intf,
+    input ce, oe, he, intf, n1, n2,
     input [3:0] areg, breg, dreg,
     input [10:0] const11,
     input [15:0] const16,
@@ -61,9 +61,12 @@ parameter [3:0] INSTR_ARITH     = 4'b0000;
 
 //-----------MEMORY-----------
 assign address      =   (fetch)     ? pc_in:
-                        (readMem)   ? data_a + const16: //address is usually in areg
-                        (writeBack && instrOP == INSTR_WRITE) ? data_a + const16: //address is usually in areg
-                        (writeBack && instrOP == INSTR_COPY) ? data_b + const16: //for copy, the write address is in breg
+                        (readMem && !n2)   ? data_a + const16: //address is usually in areg
+                        (readMem && n2)   ? data_a - const16: //address is usually in areg
+                        (writeBack && instrOP == INSTR_WRITE && !n1) ? data_a + const16: //address is usually in areg
+                        (writeBack && instrOP == INSTR_WRITE && n1) ? data_a - const16: //address is usually in areg
+                        (writeBack && instrOP == INSTR_COPY && !n1) ? data_b + const16: //for copy, the write address is in breg
+                        (writeBack && instrOP == INSTR_COPY && n1) ? data_b - const16: //for copy, the write address is in breg
                         32'd0;
 
 assign data         =   (instrOP == INSTR_COPY) ? q: //for copy we want to write the read result

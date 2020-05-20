@@ -8,9 +8,9 @@ Each instruction is 32 bits and can be one of the following instructions:
          |31|30|29|28|27|26|25|24|23|22|21|20|19|18|17|16|15|14|13|12|11|10|09|08|07|06|05|04|03|02|01|00|
 ----------------------------------------------------------------------------------------------------------
 1 HALT     1  1  1  1| 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1  1
-2 READ     1  1  1  0||----------------16 BIT CONSTANT---------------||--A REG---| x  x  x||I||--D REG---|
-3 WRITE    1  1  0  1||----------------16 BIT CONSTANT---------------||--A REG---||--B REG---| x  x  x  x
-4 COPY     1  1  0  0||----------------16 BIT CONSTANT---------------||--A REG---||--B REG---| x  x  x  x
+2 READ     1  1  1  0||----------------16 BIT CONSTANT---------------||--A REG---| x  x |N||I||--D REG---|
+3 WRITE    1  1  0  1||----------------16 BIT CONSTANT---------------||--A REG---||--B REG---| x  x  x |N|
+4 COPY     1  1  0  0||----------------16 BIT CONSTANT---------------||--A REG---||--B REG---| x  x  x |N|
 5 PUSH     1  0  1  1| x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x |--B REG---| x  x  x  x
 6 POP      1  0  1  0| 0  0  0  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x  x |--D REG---|
 7 JUMP     1  0  0  1||--------------------------------27 BIT CONSTANT--------------------------------||O|
@@ -26,9 +26,9 @@ Each instruction is 32 bits and can be one of the following instructions:
 ```
 
 1.  HALT:   Will prevent the CPU to go to the next instruction by jumping to the same address. Can be interrupted.
-2.  READ:   If !I, read from memory at address in AREG + 16 bit offset. If I, read interrupt ID. In both cases: store value in DREG.
-3.  WRITE:  Write value from BREG to memory at address stored in AREG + 16 bit offset.
-4.  COPY:   Read memory from address in AREG + 16 bit offset, then write result to memory at address in BREG + 16 bit offset.
+2.  READ:   If !I, read from memory at address in AREG + 16 bit offset. If N == 1, then do - offset instead. If I, read interrupt ID. In both cases: store value in DREG.
+3.  WRITE:  Write value from BREG to memory at address stored in AREG + 16 bit offset. If N == 1, then do - offset instead.
+4.  COPY:   Read memory from address in AREG + 16 bit offset, then write result to memory at address in BREG + 16 bit offset. If N == 1, then do - offset instead.
 7.  PUSH:   Pushes value in AREG to stack.
 8.  POP:    Pops value from stack into DREG.
 9.  JUMP:   Set PC to 27 bit constant if O is 0. If O is 1, then add the 27 bit constant to PC. 

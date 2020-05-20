@@ -14,7 +14,7 @@ module InstructionDecoder(
     output [3:0] areg, breg, dreg,
 
     output [3:0] opcode,
-    output ce, he, oe, intf
+    output ce, he, oe, intf, n1, n2
 );
 
 wire [31:0] instruction;
@@ -55,6 +55,8 @@ assign ce       = instruction[27];
 assign he       = instruction[8];
 assign oe       = instruction[0];
 assign intf     = instruction[4];
+assign n1       = instruction[0];
+assign n2       = instruction[5];
 
 initial
 begin

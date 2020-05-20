@@ -43,4 +43,4 @@ fi
 printf "\nWriting to FPGC4 over serial\n"
 
 	#comment this line out when using simulator
-	python3 uartFlasher.py
+	#python3 uartFlasher.py

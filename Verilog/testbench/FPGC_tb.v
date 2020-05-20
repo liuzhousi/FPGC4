@@ -175,10 +175,10 @@ begin
 
     GPI = 8'b00000000;
 
-    repeat(4600) #20 clk = ~clk; //25MHz
+    repeat(20000) #20 clk = ~clk; //25MHz
 
 
-    repeat(400) #20 clk = ~clk; //25MHz
+    repeat(500) #20 clk = ~clk; //25MHz
 
     #1 $finish;
 end

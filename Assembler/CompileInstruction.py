@@ -4,7 +4,7 @@ Library for compiling single instructions
 
 #converts string to int
 #string can by binary, decimal or hex
-def getNumber(word):
+def getNumber(word, allowNeg=False):
     value = 0
     #check for binary number
     if len(word) > 2 and word[:2] == '0b':
@@ -28,9 +28,15 @@ def getNumber(word):
             raise ValueError(str(word) + " is not a valid decimal number")
 
     #check for negative numbers
-    if value < 0:
+    if value < 0 and not allowNeg:
         raise ValueError(str(word) + " is a negative number (which are not allowed)")
 
+    if allowNeg:
+
+        if value < 0:
+            return abs(value), True
+        else:
+            return value, False
     return value
 
 
@@ -42,6 +48,12 @@ def getReg(word):
     
     #check if first char starts with an r
     if word[0].lower() == 'r':
+        #check for rbp and rsp (rbp == r14, rsp == r15)
+        if word.lower() == "rbp":
+            return 14
+        if word.lower() == "rsp":
+            return 15
+
         #parse number after r
         try:
             value = int(word[1:], 10)
@@ -85,7 +97,13 @@ def compileRead(line):
     const16 = ""
 
     #convert arg1 to number
-    arg1Int = getNumber(line[1])
+    arg1Int, neg = getNumber(line[1], True)
+
+    negsString = ""
+    if neg:
+        negsString = "1"
+    else:
+        negsString = "0"
 
     #convert arg1 to binary
     CheckFitsInBits(arg1Int, 16)
@@ -104,7 +122,7 @@ def compileRead(line):
     dreg = format(arg3Int, '04b')
 
     #create instruction
-    instruction = "1110" + const16 + areg + "0000" + dreg + " //Read at address in " + line[2] + " with offset " + line[1] + " to " + line[3]
+    instruction = "1110" + const16 + areg + "00" + negsString + "0" + dreg + " //Read at address in " + line[2] + " with offset " + line[1] + " to " + line[3]
 
     return instruction
 
@@ -121,7 +139,13 @@ def compileWrite(line):
     const16 = ""
 
     #convert arg1 to number
-    arg1Int = getNumber(line[1])
+    arg1Int, neg = getNumber(line[1], True)
+
+    negsString = ""
+    if neg:
+        negsString = "1"
+    else:
+        negsString = "0"
 
     #convert arg1 to binary
     CheckFitsInBits(arg1Int, 16)
@@ -140,7 +164,7 @@ def compileWrite(line):
     breg = format(arg3Int, '04b')
 
     #create instruction
-    instruction = "1101" + const16 + areg + breg + "0000" + " //Write value in " + line[3] + " to address in " + line[2] + " with offset " + line[1]
+    instruction = "1101" + const16 + areg + breg + "000" + negsString + " //Write value in " + line[3] + " to address in " + line[2] + " with offset " + line[1]
 
     return instruction
 
@@ -157,7 +181,13 @@ def compileCopy(line):
     const16 = ""
 
     #convert arg1 to number
-    arg1Int = getNumber(line[1])
+    arg1Int, neg = getNumber(line[1], True)
+
+    negsString = ""
+    if neg:
+        negsString = "1"
+    else:
+        negsString = "0"
 
     #convert arg1 to binary
     CheckFitsInBits(arg1Int, 16)
@@ -176,7 +206,7 @@ def compileCopy(line):
     breg = format(arg3Int, '04b')
 
     #create instruction
-    instruction = "1100" + const16 + areg + breg + "0000" + " //Copy from address in " + line[2] + " to address in " + line[3] + " with offset " + line[1]
+    instruction = "1100" + const16 + areg + breg + "000" + negsString + " //Copy from address in " + line[2] + " to address in " + line[3] + " with offset " + line[1]
 
     return instruction
 

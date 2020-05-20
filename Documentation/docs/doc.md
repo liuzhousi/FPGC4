@@ -10,3 +10,40 @@
 		- copy the site directory to the server, with fpgc4 as name
 		- recursively set group to www-data
 	- just make sure you use public key authentication to the server, so no password prompts come up during the script
+
+
+
+
+
+## Notes for markdown documentation
+
+!!! note ""
+    Note example
+
+
+!!! info
+	yeet
+
+!!! tip
+    hot
+
+!!! success
+    Lorem
+
+!!! question
+    whomst'd've?
+
+!!! fail
+    f
+
+!!! danger
+    risk
+
+!!! bug
+    to fix
+
+!!! example
+    ```
+    code
+    ```
+

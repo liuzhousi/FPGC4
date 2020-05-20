@@ -1,139 +1,196 @@
-; Graphics, sound and UART printing test ROM
-
-; Graphics library test
-; Should eventually become a real library when library support is added in assembler
-
-`include lib/UART.asm
-`include lib/STD.asm
-
-
-
 Main:
-
- 
-    load32 0x74657374  r1
-    savpc r15
-    push r15
-    jump UART_print_reg
-    
-
+    load32 0x700000 rsp
+    jump Label_main
     halt    
 
 
 
+
+
+
+
+
+
+
+
+
+
+Label_sum:
+    sub rsp 4 rsp
+    write 0 rsp rbp
+    or r0 rsp rbp
+    sub rsp 0 rsp
+    ; LOADARG
+    ; LOADARG
+    ; ADD
+    or r0 r5 r1
+    add r1 r4 r1
+    ; RETURN
+    or r0 rbp rsp
+    read 0 rsp rbp
+    add rsp 4 rsp
+    read 0 rsp r12
+    add rsp 4 rsp
+    jumpr 4 r12
+Label_g:
+    sub rsp 4 rsp
+    write 0 rsp rbp
+    or r0 rsp rbp
+    sub rsp 0 rsp
+    ; ADDROF
+    addr2reg Label_sum r1
+    ; CALL
+    or r0 1 r5
+    or r0 2 r4
+    savpc r12
+    sub rsp 4 rsp
+    write 0 rsp r12
+    jumpr 0 r1
+    ; RETURN
+    or r0 rbp rsp
+    read 0 rsp rbp
+    add rsp 4 rsp
+    read 0 rsp r12
+    add rsp 4 rsp
+    jumpr 4 r12
+Label_main:
+    sub rsp 4 rsp
+    write 0 rsp rbp
+    or r0 rsp rbp
+    sub rsp 8 rsp
+    ; SET
+    load 5 r12
+    write -4 rbp r12
+    ; SET
+    load 0 r12
+    write -8 rbp r12
+    ; LABEL
+Label___shivyc_label1:
+    ; LESSCMP
+    or r0 1 r1
+    read -8 rbp r12
+    load 3 r13
+    bge r12 r13 2
+    jump Label___shivyc_label7
+    or r0 0 r1
+Label___shivyc_label7:
+    ; JUMPZERO
+    sub r1 0 r12
+    bne r0 r12 2
+    jump Label___shivyc_label3
+    ; ADDROF
+    addr2reg Label_sum r1
+    ; CALL
+    read -4 rbp r12
+    or r0 r12 r5
+    read -8 rbp r12
+    or r0 r12 r4
+    savpc r12
+    sub rsp 4 rsp
+    write 0 rsp r12
+    jumpr 0 r1
+    ; SET
+    write -4 rbp r1
+    ; LABEL
+Label___shivyc_label2:
+    ; SET
+    read -8 rbp r1
+    ; ADD
+    read -8 rbp r1
+    add r1 1 r1
+    ; SET
+    write -8 rbp r1
+    ; JUMP
+    jump Label___shivyc_label1
+    ; LABEL
+Label___shivyc_label3:
+    ; EQUALCMP
+    or r0 1 r1
+    read -4 rbp r12
+    load 8 r13
+    bne r13 r12 2
+    jump Label___shivyc_label8
+    or r0 0 r1
+Label___shivyc_label8:
+    ; JUMPZERO
+    sub r1 0 r12
+    bne r0 r12 2
+    jump Label___shivyc_label4
+    ; ADDROF
+    addr2reg Label_g r1
+    ; CALL
+    savpc r12
+    sub rsp 4 rsp
+    write 0 rsp r12
+    jumpr 0 r1
+    ; ADD
+    read -4 rbp r12
+    add r1 r12 r1
+    ; SET
+    write -4 rbp r1
+    ; LABEL
+Label___shivyc_label4:
+    ; SET
+    load 0 r1
+    ; LABEL
+Label___shivyc_label5:
+    ; GREATEROREQCMP
+    or r0 1 r2
+    read -4 rbp r12
+    load 9 r13
+    bgt r13 r12 2
+    jump Label___shivyc_label9
+    or r0 0 r2
+Label___shivyc_label9:
+    ; JUMPZERO
+    sub r2 0 r12
+    bne r0 r12 2
+    jump Label___shivyc_label6
+    ; SUBTR
+    read -4 rbp r2
+    sub r2 1 r2
+    ; SET
+    write -4 rbp r2
+    ; ADD
+    add r1 1 r1
+    ; SET
+    ; JUMP
+    jump Label___shivyc_label5
+    ; LABEL
+Label___shivyc_label6:
+    ; ADD
+    read -4 rbp r12
+    add r1 r12 r1
+    ; SET
+    ; RETURN
+    or r0 rbp rsp
+    read 0 rsp rbp
+    add rsp 4 rsp
+    read 0 rsp r12
+    add rsp 4 rsp
+    jumpr 4 r12
+
+
+
+
+
+
+
+
+
+
+
+
 Int1:
-    push r1
-    push r2
-    push r3
-    push r4
-    push r5
-
-    ; restore registers
-    pop r5
-    pop r4
-    pop r3
-    pop r2
-    pop r1
-
     reti
 
 Int2:
-    push r1
-    push r2
-    push r3
-    push r4
-    push r5
-
-    load32 0xC02623 r1  ; keycode address
-    read 0 r1 r1        ; read keycode
-
-    ; convert keycode to hex string
-    savpc r15
-    push r15
-    jump STD_Byte2_to_Hex
-
-    ; send hex string over uart
-    savpc r15
-    push r15
-    jump UART_print_reg
-
-
-    ; restore registers
-    pop r5
-    pop r4
-    pop r3
-    pop r2
-    pop r1
-
     reti
 
 Int3:
-    push r1
-    push r2
-    push r3
-    push r4
-    push r5
-
-
-
-
-    ; restore registers
-    pop r5
-    pop r4
-    pop r3
-    pop r2
-    pop r1
     reti
 
 Int4:
-    push r1
-    push r2
-    push r3
-    push r4
-    push r5
-
-    ; x fine address 0xC02421
-    load 0x2421 r1
-    loadhi 0xC0 r1
-
-    ; x offset address 0xC02420
-    load 0x2420 r2
-    loadhi 0xC0 r2
-
-    read 0 r1 r3 ; fine value
-    read 0 r2 r4 ; offset value
-
-    ; check if we have to increase tile offset
-    and r3 0b111 r5
-    sub r5 0b111 r5
-    bne r5 r0 3
-        add r4 1 r4
-        write 0 r2 r4
-
-
-    add r3 1 r3
-    write 0 r1 r3
-
-
-
-    ; Sprite move test
-    load 0x2632 r1
-    loadhi 0xC0 r1
-
-    read 0 r1 r2
-    add r2 1 r2
-    write 0 r1 r2
-
-    read 1 r1 r2
-    add r2 1 r2
-    write 1 r1 r2
-
-    pop r5
-    pop r4
-    pop r3
-    pop r2
-    pop r1
-
-    reti
+    reti                    ; return from interrupt
 
 

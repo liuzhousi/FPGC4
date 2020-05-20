@@ -179,7 +179,7 @@ ALU alu (
 //---------------InstructionDecoder----------------
 //InstructionDecoder I/O
 wire [3:0] instrOP;
-wire ce, he, oe, intf;        //constant enable, high enable, offset enable and interruptFlag
+wire ce, he, oe, intf, n1, n2;        //constant enable, high enable, offset enable and interruptFlag, neg offset (write/copy), neg offset (read)
 wire [10:0] const11;
 wire [15:0] const16;
 wire [26:0] const27;
@@ -201,6 +201,8 @@ InstructionDecoder instDec(
 .ce(ce),
 .he(he),
 .oe(oe),
+.n1(n1),
+.n2(n2),
 .intf(intf)
 );
 
@@ -222,6 +224,8 @@ ControlUnit cu(
 .oe(oe),
 .he(he),
 .intf(intf),
+.n1(n1),
+.n2(n2),
 .instrOP(instrOP),
 .const11(const11),
 .const16(const16),

@@ -11,5 +11,5 @@ Programmer/verify.bin
 Quartus/*/*.bak
 Quartus/*/*/*.bak
 Documentation/site/
- __pycache__/
- *.pyc
+**/ __pycache__/
+**/*.pyc

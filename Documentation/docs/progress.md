@@ -12,6 +12,7 @@ Here I keep a simple list of my latest progress and a simple TODO list
 - Added 4 extension interrupts
 - Changes PS/2 controller to only check for scan codes and send an interrupt
 - Reimplemented programmable timer
+- Modified an existing C compiler (written in python, outputs x86_64 asm) to output B322 asm
 
 ## Future plans
 These are kinda ordered based on priority
@@ -19,6 +20,7 @@ These are kinda ordered based on priority
 - Improve and write more libraries
 - Improve hardware stack (size, check usage, get pointer, etc.)
 - Enable second SPI and UART port
+- Write a USB bootloader
 - Write a platformer game
 - Create a pattern and palette table generator
 - Add logo to boot screen animation in bootloader
@@ -27,8 +29,7 @@ These are kinda ordered based on priority
 - Create a web server with W5500 chip
 - Write an OS
 - Add Gameboy printer via Arduino to I/O
-- Write a simplistic C compiler. Use software stack with dedicated stack pointer register.
-- Change SPI Flash for SDCARD
+- Change SPI Flash for SDCARD, or add a way to reprogram the flash directly from the FPGA
 
 ## Todo documentation
 - add DSUB9 pinout
@@ -56,19 +57,20 @@ These are kinda ordered based on priority
 - [done] Add neg offset flag in READ and WRITE and COPY instructions
 - [done] Implement neg offset for READ and WRITE and COPY instructions
 - [done] Map the name rbp and rsp to r14 and r15 in assembler
-- add int1-4 functions
-- add prefix with load 0x700000 rsp
+- add int1-4 functions, with automatic backup and restore of ALL registers to HW stack
+- add prefix main (as header) with load 0x700000 rsp
 - change return for hald on main
-- change main from int to void
+- in asm main prefix header, get return value from label_main and send it over UART
 - add more instructions and test files
 - eventually clean up code, remove size arg
 - add inline assembly
 - add static defines (apply before preprocessor)
 - add hex support!!! (and binary while at it) (better do this in preprocessing)
-- add bitwise | ^ and & operators (look at commit 31180511de0f95cf5dbda0bf98df71901a2fd1ed)
+- [done] add bitwise | ^ and & operators (look at commit 31180511de0f95cf5dbda0bf98df71901a2fd1ed)
 
 ## Future improvements (FPGC5?)
+- Better bus protocol between CPU and MU, with no cyles ovehead
 - Maybe byte addressable memory
 - Maybe pipelining
 - Maybe DMA controller
-- Maybe SDRAM for framebuffer (shared between CPU and GPU)
+- Maybe SDRAM for framebuffer (shared between CPU and GPU) and use framebuffer rendering

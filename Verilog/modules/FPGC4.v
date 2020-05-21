@@ -44,7 +44,9 @@ module FPGC4(
     output          tone2_out1, tone2_out2, tone2_out3, tone2_out4,
 
     input [7:0]     GPI,
-    output [7:0]    GPO
+    output [7:0]    GPO,
+
+    input           uart_dtr
 
 );
 
@@ -60,19 +62,34 @@ module FPGC4(
     wire uart_rx_interrupt;
 
 
-//----------------Reset Stabilizer-------------------
+//-------------------Reset----------------------
 //Reset stabilizer I/O
-wire nreset_stable, reset;
+wire nreset_stable, reset, dtr_stable;
 
-assign reset = ~nreset_stable;
 
 Stabilizer resStabilizer (
 .clk(clk),
-.reset(1'b0), //Since we stabilize the reset signal, we do NOT want to use it here
+.reset(1'b0), //Since we stabilize a reset signal, we do NOT want to use it here
 .unstable(nreset),
 .stable(nreset_stable)
 );
 
+Stabilizer dtrStabilizer (
+.clk(clk),
+.reset(1'b0), //Since we stabilize a reset signal, we do NOT want to use it here
+.unstable(uart_dtr),
+.stable(dtr_stable)
+);
+
+wire dtrRst;
+
+DtrReset dtrReset (
+.clk(clk),
+.dtr(uart_dtr),
+.dtrRst(dtrRst)
+);
+
+assign reset = (~nreset_stable) || dtrRst;
 
 //--------------------Clocks----------------------
 assign SDRAM_CLK = clk;

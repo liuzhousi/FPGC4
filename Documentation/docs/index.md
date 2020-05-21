@@ -9,11 +9,11 @@ The FPGC4 (Field Programmable Game Console v4) is an open source project, built 
 
 Originally, the goal of this project, which started in 2017, was to design a simple game console for an FPGA (hence the name FPGC). Eventually this idea shifted more towards creating an entire PC with the capabilities of a game console. 
 
-To keep the complexity of the project low, most features of the FPGC4 are very retro, like tile and sprite based rendering, RGBs video signals for CRT TVs (using RGB SCART), PS/2 Keyboard and SNES controller support. However, some more modern features were also added, like a 32 bit CPU, 32MiB SDRAM and USB host support (though a CH376T controller).
+To keep the complexity of the project low, most features of the FPGC4 are very retro, like tile and sprite based rendering, RGBs video signals for CRT TVs (using RGB SCART), PS/2 Keyboard and SNES controller support. However, some more modern features were also added, like a 32 bit CPU, 32MiB SDRAM and USB host support (through a CH376T controller).
 
-The main components of the FPGC4 are a self designed 32 bit CPU, a self designed GPU (tile/sprite based), and a self designed memory unit.
+The main components of the FPGC4 are a self designed 32 bit CPU, a self designed GPU (tile/sprite based), and a self designed Memory Unit.
 
-Aside from the hardware, this project also contains smaller software projects like an assembler, software libraries, programmer, MIDI converter and example code.
+Aside from the hardware, this project also contains smaller software projects like an assembler, C compiler, software libraries, programmer, MIDI converter and example code.
 
 ## What it can do
 Basically, the FPGC4 can run code, output video (with some basic audio), and can interact with certain peripherals using GPIO, SPI or UART. It also has a USB host port for mass storage, a PS/2 port for a keyboard and a SNES controller port for a SNES controller. It has 32MiB SDRAM and the program code is loaded from an SPI flash module. The board is powered from a single mini USB port, with UART capabilities for in-system programming.
@@ -28,7 +28,7 @@ This board is plugged into a self designed expansion PCB, which provides all I/O
 
 All hardware designs are written in Verilog. Iverilog and GTKwave are used to simulate these hardware designs before writing the design to the FPGA using Quartus Prime.
 
-The Assembler and most other scripts are written in Python3. Code for the FPGC4 is written using a self designed assembly language.
+The Assembler, C compiler and most other scripts are written in Python 3. The assembler assembles a self designed assembly language, and the C compiler compiles C to this assembly language.
 
 Sublime Text 3 is used as text editor, with some handy build scripts to speed up the development and to quickly send code to the FPGC4.
 
@@ -40,6 +40,7 @@ The general structure of this project:
 │   ├── bootloaders 	// Asm files of bootloaders
 │   └── lib 			// Asm libraries
 │
+├── Ccompiler 			// C compiler project
 ├── Documentation 		// Documentation website project
 ├── Graphics 			// Scripts for converting/generating graphics data
 ├── MidiConverter 		// Scripts to convert .mid files into audio asm code

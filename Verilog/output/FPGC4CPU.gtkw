@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.86 (w)1999-2017 BSI
-[*] Tue May 19 18:59:09 2020
+[*] Thu May 21 12:22:03 2020
 [*]
 [dumpfile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/wave.vcd"
-[dumpfile_mtime] "Tue May 19 18:08:14 2020"
-[dumpfile_size] 6928023
+[dumpfile_mtime] "Thu May 21 12:21:06 2020"
+[dumpfile_size] 463717
 [savefile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/FPGC4CPU.gtkw"
-[timestart] 397080000
-[size] 1920 1054
+[timestart] 1260000
+[size] 1920 1026
 [pos] -1 -1
-*-20.987394 403790000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-19.987394 2372000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] FPGC_tb.
 [treeopen] FPGC_tb.fpgc.
 [treeopen] FPGC_tb.fpgc.cpu.
@@ -25,6 +25,13 @@ FPGC_tb.fpgc.nreset
 FPGC_tb.fpgc.reset
 @24
 FPGC_tb.fpgc.cpu.pc_out[26:0]
+@200
+-
+-DTRreset
+@28
+FPGC_tb.fpgc.dtrReset.clk
+FPGC_tb.fpgc.dtrReset.dtr
+FPGC_tb.fpgc.dtrReset.dtrRst
 @200
 -
 -Timer
@@ -52,9 +59,7 @@ FPGC_tb.fpgc.cpu.instDec.instructionReg[31:0]
 FPGC_tb.fpgc.cpu.instDec.instruction[31:0]
 FPGC_tb.fpgc.cpu.instDec.instrOP[3:0]
 FPGC_tb.fpgc.cpu.instDec.areg[3:0]
-@29
 FPGC_tb.fpgc.cpu.instDec.breg[3:0]
-@28
 FPGC_tb.fpgc.cpu.instDec.dreg[3:0]
 FPGC_tb.fpgc.cpu.instDec.const11[10:0]
 FPGC_tb.fpgc.cpu.instDec.const16[15:0]

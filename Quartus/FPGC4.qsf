@@ -222,4 +222,6 @@ set_global_assignment -name VERILOG_FILE modules/Stabilizer.v
 set_global_assignment -name VERILOG_FILE modules/ClockDivider.v
 set_global_assignment -name SDC_FILE FPGC4.sdc
 set_global_assignment -name QIP_FILE pll.qip
+set_location_assignment PIN_B13 -to uart_dtr
+set_global_assignment -name VERILOG_FILE modules/DtrReset.v
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

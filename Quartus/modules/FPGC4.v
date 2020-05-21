@@ -62,6 +62,7 @@ module FPGC4(
 	 //UART
 	 output          uart_out,
 	 input 			  uart_in,
+	 input           uart_dtr,
 	 
 	 //GPIO
 	 input [7:0]     GPI,
@@ -76,13 +77,10 @@ module FPGC4(
 	 output          s_rst
 );
 
-assign s_cs = GPO[0];
-assign s_rst = ~nreset;
-
 wire frameDrawn;    //high when frame just rendered
                     //needs to be stabilized
 					  
-assign led = 1'b1;
+assign led = uart_dtr;
 
 wire clk;
 
@@ -101,19 +99,36 @@ pll pll (
 );
 
 
-//----------------Reset Stabilizer-------------------
+//--------------------Reset-----------------------
 //Reset stabilizer I/O
-wire nreset_stable, reset;
-
-assign reset = ~nreset_stable;
+wire nreset_stable, reset, dtr_stable;
 
 Stabilizer resStabilizer (
 .clk(clk),
-.reset(1'b0), //Since we stabilize the reset signal, we do NOT want to use it here
+.reset(1'b0), //Since we stabilize a reset signal, we do NOT want to use it here
 .unstable(nreset),
 .stable(nreset_stable)
 );
 
+Stabilizer dtrStabilizer (
+.clk(clk),
+.reset(1'b0), //Since we stabilize a reset signal, we do NOT want to use it here
+.unstable(uart_dtr),
+.stable(dtr_stable)
+);
+
+wire dtrRst;
+
+DtrReset dtrReset (
+.clk(clk),
+.dtr(uart_dtr),
+.dtrRst(dtrRst)
+);
+
+assign reset = (~nreset_stable) || dtrRst;
+
+assign s_cs = GPO[0];
+assign s_rst = reset;
 
 //--------------------Clocks----------------------
 assign SDRAM_CLK = clk;

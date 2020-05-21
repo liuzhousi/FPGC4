@@ -1,7 +1,9 @@
 import serial
+from time import sleep
 
 port = serial.Serial("/dev/ttyUSB0", baudrate=115200, timeout=None)
 
+sleep(0.1) # give the FPGC time to reset
 
 # parse byte file
 ba = bytearray()

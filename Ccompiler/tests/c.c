@@ -9,3 +9,23 @@ int main() {
 	int c = a + b;
 	return c;
 }
+
+void int1()
+{
+
+}
+
+void int2()
+{
+	
+}
+
+void int3()
+{
+	
+}
+
+void int4()
+{
+	
+}

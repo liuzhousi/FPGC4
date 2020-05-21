@@ -67,6 +67,8 @@ These are kinda ordered based on priority
 - add static defines (apply before preprocessor)
 - add hex support!!! (and binary while at it) (better do this in preprocessing)
 - [done] add bitwise | ^ and & operators (look at commit 31180511de0f95cf5dbda0bf98df71901a2fd1ed)
+- talk about the assembly wrapper for c program code (setup stack, interrupts)
+- note that the functions int1() int2() int3() and int4() should be present (void)
 
 ## Future improvements (FPGC5?)
 - Better bus protocol between CPU and MU, with no cyles ovehead

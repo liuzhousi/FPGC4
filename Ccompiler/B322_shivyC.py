@@ -72,8 +72,13 @@ def main():
 
     error_collector.show()
 
+    if len(error_collector.issues) is 0:
+        sys.exit(0)
     
-    return 1 # check on this return value when compiler is used in a build script
+    else:
+        sys.exit(-1)
+    
+    return 0
 
 
 def process_file(file, args):

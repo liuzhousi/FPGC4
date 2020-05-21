@@ -10,3 +10,23 @@ int main() {
 	c = c + 1; //7+1 = 8
 	return c;
 }
+
+void int1()
+{
+
+}
+
+void int2()
+{
+	
+}
+
+void int3()
+{
+	
+}
+
+void int4()
+{
+	
+}

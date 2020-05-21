@@ -18,6 +18,10 @@ int main() {
 	{
 		a = a + g(); //11
 	}
+	else
+	{
+		return 999;
+	}
 
 	int b = 0;
 

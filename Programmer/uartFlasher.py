@@ -1,9 +1,16 @@
 import serial
 from time import sleep
+import sys
+
+testReturnMode = False  # mode where we do not use a serial monitor,
+                        # but instead wait for one byte and use it as return code of this program
+if len(sys.argv) > 1:
+    if (sys.argv[1] == "testMode"):
+        testReturnMode = True
 
 port = serial.Serial("/dev/ttyUSB0", baudrate=115200, timeout=None)
 
-sleep(0.1) # give the FPGC time to reset
+sleep(0.1) # give the FPGC time to reset, even though it also works without this delay
 
 # parse byte file
 ba = bytearray()
@@ -44,13 +51,21 @@ while not doneSending:
     if (wordCounter == int.from_bytes(fileSize, "big")):
         doneSending = True
 
-print("Done programming")
+print("Done programming", flush=True)
 port.read(1)
-print("\nSerial monitor:")
 
-while True:
+if testReturnMode:
     rcv = port.read(1)
-    try:
-        print(rcv.decode("utf-8"), end = '', flush=True)
-    except:
-        print(rcv, end = '', flush=True)
+    retval = int.from_bytes(rcv, "little")
+    print("FPGC4 returned: ", retval)
+    sys.exit(retval)
+
+else:
+    print("\nSerial monitor:", flush=True)
+
+    while True:
+        rcv = port.read(1)
+        try:
+            print(rcv.decode("utf-8"), end = '', flush=True)
+        except:
+            print(rcv, end = '', flush=True)

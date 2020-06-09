@@ -74,8 +74,8 @@ class ASMCode:
     def add_string_literal(self, name, chars):
         """Add a string literal to the ASM code."""
         self.string_literals.append(f"Label_{name}:")
-        data = ",".join(str(char) for char in chars)
-        self.string_literals.append(f"\t.byte {data}")
+        data = " ".join(str(char) for char in chars)
+        self.string_literals.append(f"\t.dw {data}")
 
     def full_code(self):  # noqa: D202
         """Produce the full assembly code.

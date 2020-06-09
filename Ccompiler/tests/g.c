@@ -4,6 +4,7 @@ int main() {
 	{
 		a = 5;
 	}
+	return a; //2
 }
 
 void int1()

@@ -187,7 +187,10 @@ class Set(_ValueCmd):
             r = get_reg([spotmap[self.output], spotmap[self.arg]])
 
             # Move from arg_asm -> r_asm
+            # b332 currently does not have signed. we skip it for now
+            """
             if self.arg.ctype.signed:
+
                 asm_code.add(asm_cmds.Movsx(r, spotmap[self.arg],
                                             self.output.ctype.size,
                                             self.arg.ctype.size))
@@ -203,6 +206,7 @@ class Set(_ValueCmd):
 
                 asm_code.add(asm_cmds.Mov(spotmap[self.output],
                                           r, self.output.ctype.size))
+            """
 
     def _set_bool(self, spotmap, get_reg, asm_code):
         """Emit code for SET command if arg is boolean type."""

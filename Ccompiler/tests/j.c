@@ -11,7 +11,7 @@ int main() {
 	// write value at pointer address
 	*p = 20;
 	
-	return 0;
+	return (int)p;
 }
 
 void int1()

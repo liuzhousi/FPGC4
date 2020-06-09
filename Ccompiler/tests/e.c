@@ -8,7 +8,7 @@ int main() {
 	int b = 4;
 	int c = n(a, b); //3+4=7
 	c = c + 1; //7+1 = 8
-	return c;
+	return c; //8
 }
 
 void int1()

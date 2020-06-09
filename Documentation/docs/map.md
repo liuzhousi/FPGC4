@@ -1,8 +1,9 @@
 # Memory map
-There are two different memory maps. One for the CPU and one for the GPU.
+The FPGC4 uses two memory maps to access all different types of memory and I/O.
+One map is used by the CPU (and implemented by the MU) and the other map is used by the GPU. The GPU memory map is only useful when developing the GPU (in Verilog), so for writing code, you only need to understand the CPU memory map.
 
 ## CPU memory map
-This memory map is used when the CPU accesses memory
+When the CPU gets a `READ`, `WRITE` or `COPY` instruction, it will use the following memory map. This means that, for example, reading from address `0xC02622` will read the button states of the (S)NES controller, and writing to address `0xC0041F` will write an entry in the Palette Table for the GPU.
 
 ``` text
 $000000 +------------------------+ 
@@ -83,7 +84,7 @@ $C02632 +------------------------+
 ```
 
 ## GPU memory map
-This memory map is only used in the GPU
+This memory map is only used in the GPU. These are basically the content read from the GPU port of VRAM. This map is only internal to the GPU hardware, and should not be used when writing code (use the CPU memory map instead for this!). This map is only useful when making modifications to the GPU in Verilog (for example when adding VGA rendering)
 ``` text
 VRAM32
 $000  +------------------------+ 

@@ -7,7 +7,7 @@ int main() {
 	int a = 3;
 	int b = n();
 	int c = a + b;
-	return c;
+	return c; //12
 }
 
 void int1()

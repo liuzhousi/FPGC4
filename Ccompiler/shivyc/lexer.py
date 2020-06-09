@@ -11,6 +11,7 @@ from shivyc.errors import CompilerError, Position, Range, error_collector
 from shivyc.tokens import Token
 from shivyc.token_kinds import symbol_kinds, keyword_kinds
 
+defineDict = {}
 
 class Tagged:
     """Class representing tagged characters.
@@ -40,6 +41,7 @@ def tokenize(code, filename):
     lines = split_to_tagged_lines(code, filename)
     join_extended_lines(lines)
 
+
     in_comment = False
     for line in lines:
         try:
@@ -48,7 +50,7 @@ def tokenize(code, filename):
         except CompilerError as e:
             error_collector.add(e)
 
-    return tokens
+    return tokens, defineDict
 
 
 def split_to_tagged_lines(text, filename):
@@ -131,6 +133,9 @@ def tokenize_line(line, in_comment):
     # filename has been seen and succesfully parsed.
     seen_filename = False
 
+    # Flag for defines
+    define_line = False
+
     while chunk_end < len(line):
         symbol_kind = match_symbol_kind_at(line, chunk_end)
         next_symbol_kind = match_symbol_kind_at(line, chunk_end + 1)
@@ -138,6 +143,9 @@ def tokenize_line(line, in_comment):
         # Set include_line flag True as soon as a `#include` is detected.
         if match_include_command(tokens):
             include_line = True
+
+        if match_define_command(tokens):
+            define_line = True
 
         if in_comment:
             # If next characters end the comment...
@@ -168,6 +176,14 @@ def tokenize_line(line, in_comment):
             add_chunk(line[chunk_start:chunk_end], tokens)
             chunk_start = chunk_end + 1
             chunk_end = chunk_start
+
+        # Really hacky way to parse the define lines
+        elif define_line:
+            fullLine = ""
+            for i in line:
+                fullLine += i.c
+            defineDict[fullLine.split()[1]] = fullLine.split()[2]
+            break
 
         # If this is an include line, and not a comment or whitespace,
         # expect the line to match an include filename.
@@ -280,6 +296,14 @@ def match_include_command(tokens):
             tokens[-2].kind == token_kinds.pound and
             tokens[-1].kind == token_kinds.identifier and
             tokens[-1].content == "include")
+
+
+def match_define_command(tokens):
+    """Check if end of `tokens` is a `#define` directive."""
+    return (len(tokens) == 3 and
+            tokens[0].kind == token_kinds.pound and
+            tokens[1].kind == token_kinds.identifier and
+            tokens[1].content == "define")
 
 
 def read_string(line, start, delim, null):

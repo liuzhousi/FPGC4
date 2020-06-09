@@ -9,7 +9,7 @@ int main() {
    addr.local_street = 7;
    addr.town = "Agra";
 
-   return addr.local_street;
+   return addr.local_street; //7
 }
 
 void int1()

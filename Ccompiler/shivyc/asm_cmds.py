@@ -34,7 +34,7 @@ class _B322Base2Command:
 
 
 
-class Load(_B322Base2Command): name = "load"
+class Load(_B322Base2Command): name = "load32"
 
 class Write:
     name = None

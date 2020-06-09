@@ -14,9 +14,10 @@ import shivyc.token_kinds as token_kinds
 from shivyc.errors import error_collector, CompilerError
 
 
-def process(tokens, this_file):
+def process(tokens, this_file, defineDict={}):
     """Process the given tokens and return the preprocessed token list."""
-
+    #for token in tokens:
+    #    print(token)
     processed = []
     i = 0
     while i < len(tokens) - 2:
@@ -29,7 +30,8 @@ def process(tokens, this_file):
             # the included file.
             try:
                 file, filename = read_file(tokens[i + 2].content, this_file)
-                new_tokens = process(lexer.tokenize(file, filename), filename)
+                lexTokens, _ = lexer.tokenize(file, filename)
+                new_tokens = process(lexTokens, filename, defineDict)
                 processed += new_tokens
 
             except IOError:
@@ -40,7 +42,26 @@ def process(tokens, this_file):
 
             i += 3
 
+        # Ignore defines. Currently the value of the define is not in the token list
+        elif (tokens[i].kind == token_kinds.pound and
+            tokens[i + 1].kind == token_kinds.identifier and
+            tokens[i + 1].content == "define"):
+
+            i += 3
+
         else:
+            # Here we apply the Define dictionary
+
+            if str(tokens[i]) in defineDict:
+                if defineDict[str(tokens[i])].isdigit():
+                    tokens[i].kind = token_kinds.number
+                else:
+                    error_collector.add(CompilerError(
+                        "Define value is not a number",
+                        tokens[i].r
+                    ))
+                tokens[i].content = defineDict[str(tokens[i])]
+
             processed.append(tokens[i])
             i += 1
 

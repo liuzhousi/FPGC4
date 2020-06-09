@@ -52,7 +52,12 @@ class _AddMult(ILCommand):
             if not self._is_imm64(arg1_spot):
                 #print("todo2")
 
-                asm_code.add(asm_cmds.Read(arg1_spot, spots.RegSpot("r12"), size))
+                if isinstance(arg1_spot, spots.LiteralSpot):
+                    asm_code.add(asm_cmds.Load(arg1_spot, spots.RegSpot("r12"), size))
+                elif isinstance(arg1_spot, spots.MemSpot):
+                    asm_code.add(asm_cmds.Read(arg1_spot, spots.RegSpot("r12"), size))
+                elif isinstance(arg1_spot, spots.RegSpot):
+                    asm_code.add(asm_cmds.Mov(spots.RegSpot("r12"), arg1_spot, size))
 
                 asm_code.add(self.Inst(temp, spots.RegSpot("r12"), size))
             

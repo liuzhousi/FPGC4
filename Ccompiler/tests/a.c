@@ -15,7 +15,7 @@ int main() {
 	int b = 4;
 	f();
 	int c = a + b;
-	return c;
+	return c; //7
 }
 
 void int1()

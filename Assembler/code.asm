@@ -18,7 +18,10 @@ Return_UART:
 
 ; COMPILED C CODE HERE
 
-Label_sum:
+Label___strlit12:
+	.dw 103 104 105 106 107 108 0
+
+Label_add:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
@@ -35,16 +38,16 @@ Label_sum:
 	read 0 rsp r12
 	add rsp 4 rsp
 	jumpr 4 r12
-Label_g:
+Label_doo:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
 	sub rsp 0 rsp
+	; LOADARG
+	; LOADARG
 	; ADDROF
-	addr2reg Label_sum r1
+	addr2reg Label_add r1
 	; CALL
-	or r0 1 r5
-	or r0 2 r4
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
@@ -60,122 +63,22 @@ Label_main:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 8 rsp
+	sub rsp 0 rsp
 	; SET
-	load 5 r12
-	write -4 rbp r12
-	; SET
-	load 0 r12
-	write -8 rbp r12
-	; LABEL
-Label___shivyc_label1:
-	; LESSCMP
-	or r0 1 r1
-	read -8 rbp r12
-	load 3 r13
-	bge r12 r13 2
-	jump Label___shivyc_label8
-	or r0 0 r1
-Label___shivyc_label8:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label3
+	load32 48 r4
 	; ADDROF
-	addr2reg Label_sum r1
+	addr2reg Label_add r1
 	; CALL
-	read -4 rbp r12
-	or r0 r12 r5
-	read -8 rbp r12
-	or r0 r12 r4
+	or r0 23 r5
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
 	; SET
-	write -4 rbp r1
-	; LABEL
-Label___shivyc_label2:
-	; SET
-	read -8 rbp r1
-	; ADD
-	read -8 rbp r1
-	add r1 1 r1
-	; SET
-	write -8 rbp r1
-	; JUMP
-	jump Label___shivyc_label1
-	; LABEL
-Label___shivyc_label3:
-	; EQUALCMP
-	or r0 1 r1
-	read -4 rbp r12
-	load 8 r13
-	bne r13 r12 2
-	jump Label___shivyc_label9
-	or r0 0 r1
-Label___shivyc_label9:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label4
 	; ADDROF
-	addr2reg Label_g r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADD
-	read -4 rbp r12
-	add r1 r12 r1
+	addr2reg Label___strlit12 r2
 	; SET
-	write -4 rbp r1
-	; JUMP
-	jump Label___shivyc_label5
-	; LABEL
-Label___shivyc_label4:
-	; RETURN
-	or r0 999 r1
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 4 rsp
-	read 0 rsp r12
-	add rsp 4 rsp
-	jumpr 4 r12
-	; LABEL
-Label___shivyc_label5:
 	; SET
-	load 0 r1
-	; LABEL
-Label___shivyc_label6:
-	; GREATEROREQCMP
-	or r0 1 r2
-	read -4 rbp r12
-	load 9 r13
-	bgt r13 r12 2
-	jump Label___shivyc_label10
-	or r0 0 r2
-Label___shivyc_label10:
-	; JUMPZERO
-	sub r2 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label7
-	; SUBTR
-	read -4 rbp r2
-	sub r2 1 r2
-	; SET
-	write -4 rbp r2
-	; ADD
-	add r1 1 r1
-	; SET
-	; JUMP
-	jump Label___shivyc_label6
-	; LABEL
-Label___shivyc_label7:
-	; ADD
-	read -4 rbp r12
-	add r1 r12 r1
 	; RETURN
 	or r0 rbp rsp
 	read 0 rsp rbp

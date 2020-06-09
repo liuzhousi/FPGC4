@@ -98,11 +98,11 @@ def process_c_file(file, args):
     if not error_collector.ok():
         return None
 
-    token_list = lexer.tokenize(code, file)
+    token_list, defineDict = lexer.tokenize(code, file)
     if not error_collector.ok():
         return None
 
-    token_list = preproc.process(token_list, file)
+    token_list = preproc.process(token_list, file, defineDict)
     if not error_collector.ok():
         return None
 

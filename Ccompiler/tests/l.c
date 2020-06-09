@@ -29,7 +29,7 @@ int main() {
 
 	long d = lbuf[0]+lbuf[1];
 
-	return 0;
+	return (int)d; //61
 }
 
 void int1()

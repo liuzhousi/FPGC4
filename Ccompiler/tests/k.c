@@ -4,7 +4,7 @@ int main() {
 	
 	ptr = ptr + 4;
 	*ptr = 'a';
-	return 0;
+	return *ptr;
 }
 
 void int1()

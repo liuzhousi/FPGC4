@@ -1,5 +1,6 @@
 #!/bin/bash
 
+retList=()
 # loop though c file arguments, compile them and run them
 for filename in "$@"
 do
@@ -16,7 +17,10 @@ do
                 echo "B332 ASM code successfully assembled"
                 # convert list to binary files and send to FPGC4
                 (cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && python3 uartFlasher.py testMode)
-                echo "$filename exited with code: $?"
+                retVal="$?"
+                echo "$filename exited with code: $retVal"
+                retList+=("$retVal")
+
         else # assemble failed, run again to show error
             echo "Failed to assemble B332 ASM code"
             cd ../Assembler && python3 Assembler.py
@@ -26,3 +30,6 @@ do
         python3 B322_shivyC.py $filename
     fi
 done
+
+echo "Got the follwing return values:"
+echo ${retList[@]} 

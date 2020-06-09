@@ -20,6 +20,8 @@ These are kinda ordered based on priority
 - Improve and write more libraries
 - Improve hardware stack (size, check usage, get pointer, etc.)
 - Enable second SPI and UART port
+- Change all static paths in the project to relative ones
+- Optimize TonePlayer modules to not use division and therefore decrease size
 - Write a USB bootloader
 - Write a platformer game
 - Create a pattern and palette table generator
@@ -33,7 +35,9 @@ These are kinda ordered based on priority
 
 ## Todo documentation
 - add DSUB9 pinout
-- talk about memory bottleneck, Instruction per clock cycle.
+- add (probably in specs section) the FPGA usage statistics
+	- note that the sprite renderer takes almost half of the FPGA, because many big registers
+- talk about memory bottleneck, Instructions per clock cycle
 - add design mistakes for io wing (uart pulldown, no shield to ground)
 - add uart bootloader code/description to bootloader section
 - think about removing bootloader code in documentation
@@ -41,6 +45,7 @@ These are kinda ordered based on priority
 - check if uart bootloader jumpt to addr 5 or addr 0 when done
 - add something about the nconf button remapping wire on the PCB page
 - add something about the SPI flash module modification to QIO on the PCB page
+- add something about the automatic dtr reset
 - add new functions to assembler page
 	- rbp rsp mapped to r14 r15 for c compiler
 	- added negative offset option for read, write and copy instruction
@@ -51,24 +56,25 @@ These are kinda ordered based on priority
 	- testing compiler: currently by hand using gtkwave. In the future: 1) create single command for compiling c -> asm, asm -> machine -> uploading to FPGC4. 2) add software reset over UART, so we can upload without user interaction. 3) add asm code in tests.c files (at end of main) that send return code over UART back to pc. 4) use automated compiling, reset+upload, listen for return code, to verify if a test was successful. 5) create muliple tests.c files to test all functionality.
 	- make a list of what is supported and some things that are not supported (division, switch)
 	- note about bitwise and not having & as sign, because it is already taken by get pointer to var.
-
+	- talk about the assembly wrapper for c program code (setup stack, interrupts)
+	- note that the functions int1() int2() int3() and int4() should be present (void)
+	- talk about define only doing supporting integer values, without brackets.
 
 ## Todo C compiler related
 - [done] Add neg offset flag in READ and WRITE and COPY instructions
 - [done] Implement neg offset for READ and WRITE and COPY instructions
 - [done] Map the name rbp and rsp to r14 and r15 in assembler
-- add int1-4 functions, with automatic backup and restore of ALL registers to HW stack
-- add prefix main (as header) with load 0x700000 rsp
-- change return for hald on main
-- in asm main prefix header, get return value from label_main and send it over UART
+- [done] add int1-4 functions, with automatic backup and restore of ALL registers to HW stack
+- [done] add prefix main (as header) with load 0x700000 rsp
+- [done] in asm main prefix header, get return value from label_main and send it over UART
 - add more instructions and test files
 - eventually clean up code, remove size arg
-- add inline assembly
+- add inline assembly for fast code like copying tables
 - add static defines (apply before preprocessor)
 - add hex support!!! (and binary while at it) (better do this in preprocessing)
 - [done] add bitwise | ^ and & operators (look at commit 31180511de0f95cf5dbda0bf98df71901a2fd1ed)
-- talk about the assembly wrapper for c program code (setup stack, interrupts)
-- note that the functions int1() int2() int3() and int4() should be present (void)
+- print static string in correct asm format (.dw without commas)
+
 
 ## Future improvements (FPGC5?)
 - Better bus protocol between CPU and MU, with no cyles ovehead
@@ -76,3 +82,4 @@ These are kinda ordered based on priority
 - Maybe pipelining
 - Maybe DMA controller
 - Maybe SDRAM for framebuffer (shared between CPU and GPU) and use framebuffer rendering
+- Optimize SPI to SDRAM by using one (two including size) big sequential read

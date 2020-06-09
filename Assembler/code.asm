@@ -18,7 +18,7 @@ Return_UART:
 
 ; COMPILED C CODE HERE
 
-Label___strlit12:
+Label___strlit6:
 	.dw 103 104 105 106 107 108 0
 
 Label_add:
@@ -65,7 +65,7 @@ Label_main:
 	or r0 rsp rbp
 	sub rsp 0 rsp
 	; SET
-	load32 48 r4
+	load32 167 r4
 	; ADDROF
 	addr2reg Label_add r1
 	; CALL
@@ -76,10 +76,23 @@ Label_main:
 	jumpr 0 r1
 	; SET
 	; ADDROF
-	addr2reg Label___strlit12 r2
+	addr2reg Label___strlit6 r2
 	; SET
 	; SET
+	; SET
+	load32 243 r3
+	; SET
+	load32 69 r2
+	; SUBTR
+	or r0 r3 r12
+	sub r1 r12 r1
+	not r1 r1
+	add r1 1 r1
+	; ADD
+	or r0 r1 r12
+	add r2 r12 r2
 	; RETURN
+	or r0 r2 r1
 	or r0 rbp rsp
 	read 0 rsp rbp
 	add rsp 4 rsp

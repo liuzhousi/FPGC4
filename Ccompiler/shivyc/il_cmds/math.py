@@ -64,7 +64,9 @@ class _AddMult(ILCommand):
 
             if not self.comm:
                 #print("todo3")
-                asm_code.add(asm_cmds.Neg(temp, size))
+                # Need to test if this is correct. Added the +1 because usually 2's complement
+                asm_code.add(asm_cmds.Not(temp, size))
+                asm_code.add(asm_cmds.Add(temp, spots.LiteralSpot(1), size))
 
         else:
             if (not self._is_imm64(arg1_spot) and

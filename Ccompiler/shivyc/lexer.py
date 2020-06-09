@@ -182,7 +182,13 @@ def tokenize_line(line, in_comment):
             fullLine = ""
             for i in line:
                 fullLine += i.c
-            defineDict[fullLine.split()[1]] = fullLine.split()[2]
+
+            if fullLine.split()[2][0:2].lower() == "0x":
+                defineDict[fullLine.split()[1]] = str(int(fullLine.split()[2], 16))
+            elif fullLine.split()[2][0:2].lower() == "0b":
+                defineDict[fullLine.split()[1]] = str(int(fullLine.split()[2], 2))
+            else:
+                defineDict[fullLine.split()[1]] = fullLine.split()[2]
             break
 
         # If this is an include line, and not a comment or whitespace,
@@ -470,6 +476,11 @@ def match_number_string(token_repr):
 
     """
     token_str = chunk_to_str(token_repr)
+    
+    if token_str[0:2].lower() == "0x":
+        return str(int(token_str, 16))
+    if token_str[0:2].lower() == "0b":
+        return str(int(token_str, 2))
     return token_str if token_str.isdigit() else None
 
 

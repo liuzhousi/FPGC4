@@ -61,8 +61,18 @@ These are kinda ordered based on priority
 	- talk about define only doing supporting integer values, without brackets.
 	- inline assembly specification:
 		- the programmer is responsible to backup and restore the registers used in the asm code
-		- to be implemented
+		- note about how the code should be used (comments, semicolon and backslash)
 		- useful for quickly copying to VRAM, or optimizing slow functions
+	- includes guards are not implemented. However, a list is used to keep track of the files that are already included. This also fixes circular dependencies.
+	- only one source file is allowed. So all code of the includes need to be inside the .h files. So no object files are created and no linking needs to take place. Eventually the code is compiles as one big C file.
+	- defines are allowed, but may only be integers. must not have brackets, may have comments
+	- defines from included code carry over to the normal code (which is intended), so it is good to use prefixes.
+	- hex and binary integers are allowed, and should have a 0x or 0b prefix. They are also allowed in defines
+	- coding style recommendation:
+		- write at top of program/library which variables are stored where in the heap/memory
+		- show memory map of 32MiB RAM, with what to put where as a programmer, and why
+		- use prefixes for defines, as they carry over
+		- use specific (not generic) function names, as they otherwise may conflict with included code
 
 ## Todo C compiler related
 - [done] Add neg offset flag in READ and WRITE and COPY instructions
@@ -71,13 +81,13 @@ These are kinda ordered based on priority
 - [done] add int1-4 functions, with automatic backup and restore of ALL registers to HW stack
 - [done] add prefix main (as header) with load 0x700000 rsp
 - [done] in asm main prefix header, get return value from label_main and send it over UART
-- add more instructions and test files
+- [done] add more instructions and test files
 - eventually clean up code, remove size arg
-- add inline assembly for fast code like copying tables
-- add static defines (apply before preprocessor)
-- add hex support!!! (and binary while at it) (better do this in preprocessing)
+- [done] add inline assembly for fast code like copying tables
+- [done] add static defines
+- [done] add hex support!!! (and binary while at it) (also in defines)
 - [done] add bitwise | ^ and & operators (look at commit 31180511de0f95cf5dbda0bf98df71901a2fd1ed)
-- print static string in correct asm format (.dw without commas)
+- [done] print static string in correct asm format (.dw without commas)
 
 
 ## Future improvements (FPGC5?)
@@ -85,5 +95,5 @@ These are kinda ordered based on priority
 - Maybe byte addressable memory
 - Maybe pipelining
 - Maybe DMA controller
-- Maybe SDRAM for framebuffer (shared between CPU and GPU) and use framebuffer rendering
+- Maybe some way to use 3D rendering with a frame buffer
 - Optimize SPI to SDRAM by using one (two including size) big sequential read

@@ -14,7 +14,7 @@ import shivyc.token_kinds as token_kinds
 from shivyc.errors import error_collector, CompilerError
 
 
-def process(tokens, this_file, defineDict={}):
+def process(tokens, this_file, defineDict={}, includeList=[]):
     """Process the given tokens and return the preprocessed token list."""
     #for token in tokens:
     #    print(token)
@@ -30,9 +30,11 @@ def process(tokens, this_file, defineDict={}):
             # the included file.
             try:
                 file, filename = read_file(tokens[i + 2].content, this_file)
-                lexTokens, _ = lexer.tokenize(file, filename)
-                new_tokens = process(lexTokens, filename, defineDict)
-                processed += new_tokens
+                if filename not in includeList:
+                    includeList.append(filename)
+                    lexTokens, _ = lexer.tokenize(file, filename)
+                    new_tokens = process(lexTokens, filename, defineDict, includeList)
+                    processed += new_tokens
 
             except IOError:
                 error_collector.add(CompilerError(

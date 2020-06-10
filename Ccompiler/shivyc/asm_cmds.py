@@ -36,6 +36,19 @@ class _B322Base2Command:
 
 class Load(_B322Base2Command): name = "load32"
 
+
+
+class ASMline:
+    "Print line of ASM code"
+
+    def __init__(self, line):
+        self.line = line
+
+    def __str__(self):
+        return "\t" + self.line
+
+
+
 class Write:
     name = None
 

@@ -50,6 +50,8 @@ def tokenize(code, filename):
         except CompilerError as e:
             error_collector.add(e)
 
+    #for token in tokens:
+    #    print(token.__dict__)
     return tokens, defineDict
 
 
@@ -137,6 +139,27 @@ def tokenize_line(line, in_comment):
     define_line = False
 
     while chunk_end < len(line):
+        # First check (using a really hacky way) if this is ASM code
+
+        if chunk_start == 0:
+            fullLine = ""
+            for i in line:
+                fullLine += i.c
+            #print(fullLine)
+            fullLine = fullLine.strip() # remove leading and trailing whitespaces/tabs
+            if fullLine[0:5] == 'ASM("':
+                #print (fullLine)
+                chunk_start = len(line)
+                chunk_end = len(line)
+
+                # TODO: create a special ASM token, and add the full string to the token
+                tokens.append(Token(token_kinds.asmcode, fullLine, fullLine, r=Range(line[0].p, line[1].p)))
+                tokens.append(Token(token_kinds.semicolon, ";", ";", r=Range(line[0].p, line[1].p)))
+
+                break # break the while loop
+
+
+
         symbol_kind = match_symbol_kind_at(line, chunk_end)
         next_symbol_kind = match_symbol_kind_at(line, chunk_end + 1)
 
@@ -445,6 +468,8 @@ def add_chunk(chunk, tokens):
 
         identifier_name = match_identifier_name(chunk)
         if identifier_name:
+            if identifier_name == "ASM":
+                return
             tokens.append(Token(
                 token_kinds.identifier, identifier_name, r=range))
             return

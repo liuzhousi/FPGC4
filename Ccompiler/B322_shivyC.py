@@ -68,7 +68,8 @@ def main():
     asm = process_file(arguments.files[0], arguments)
 
     # print complete assembly to stdout
-    print(asm)
+    if asm:
+        print(asm)
 
     error_collector.show()
 

@@ -5,6 +5,7 @@ from copy import copy
 
 from shivyc.ctypes import CType
 import shivyc.il_cmds.control as control_cmds
+import shivyc.il_cmds.value as value_cmds
 from shivyc.errors import CompilerError
 
 
@@ -85,6 +86,14 @@ class ILCode:
         il_value.literal = StringLiteral(chars)
         self.string_literals[il_value] = chars
 
+    def register_asm_literal(self, il_value, code):
+        """Register an assembly literal IL value.
+
+        code (string) - unparsed assembly string
+
+        """
+        self.commands[self.cur_func].append(value_cmds.ASMcode(code))
+
     def static_initialize(self, il_value, init_val):
         """Initialize given value statically before program execution begins.
 
@@ -139,6 +148,11 @@ class IntegerLiteral(_Literal):
 
 class StringLiteral(_Literal):
     """Class for string literals."""
+    def __init__(self, val):
+        super().__init__(str(val))
+
+class ASMLiteral(_Literal):
+    """Class for asm literals."""
     def __init__(self, val):
         super().__init__(str(val))
 

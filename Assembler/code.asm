@@ -18,81 +18,18 @@ Return_UART:
 
 ; COMPILED C CODE HERE
 
-Label___strlit6:
-	.dw 103 104 105 106 107 108 0
-
-Label_add:
-	sub rsp 4 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 0 rsp
-	; LOADARG
-	; LOADARG
-	; ADD
-	or r0 r5 r1
-	add r1 r4 r1
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 4 rsp
-	read 0 rsp r12
-	add rsp 4 rsp
-	jumpr 4 r12
-Label_doo:
-	sub rsp 4 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 0 rsp
-	; LOADARG
-	; LOADARG
-	; ADDROF
-	addr2reg Label_add r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 4 rsp
-	read 0 rsp r12
-	add rsp 4 rsp
-	jumpr 4 r12
 Label_main:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
 	sub rsp 0 rsp
 	; SET
-	load32 167 r4
-	; ADDROF
-	addr2reg Label_add r1
-	; CALL
-	or r0 23 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	; ADDROF
-	addr2reg Label___strlit6 r2
-	; SET
-	; SET
-	; SET
-	load32 243 r3
-	; SET
-	load32 69 r2
-	; SUBTR
-	or r0 r3 r12
-	sub r1 r12 r1
-	not r1 r1
-	add r1 1 r1
-	; ADD
-	or r0 r1 r12
-	add r2 r12 r2
+	load32 7 r1
+	; ASMCODE
+	load 4 r2
+	add r1 r2 r3
+	sub r3 1 r1
 	; RETURN
-	or r0 r2 r1
 	or r0 rbp rsp
 	read 0 rsp rbp
 	add rsp 4 rsp

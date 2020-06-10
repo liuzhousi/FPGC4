@@ -280,6 +280,33 @@ class AddrOf(ILCommand):
             asm_code.add(asm_cmds.Mov(spotmap[self.output], r, size))
 
 
+class ASMcode(ILCommand):
+    """Places inline ASM code.
+
+    """
+
+    def __init__(self, code):  # noqa D102
+        self.code = code
+
+    def inputs(self):  # noqa D102
+        return []
+
+    def outputs(self):  # noqa D102
+        return []
+
+    def make_asm(self, spotmap, home_spots, get_reg, asm_code):  # noqa D102
+        # here we parse the asm code string into asm code lines
+        # then we add each line to asm_code
+
+        codeList = self.code[5:-3].split(";")
+        codeList = [code.split("//", 1)[0] for code in codeList]
+        codeList = [code.strip() for code in codeList]
+        codeList = list(filter(None, codeList))
+        
+        for line in codeList:
+            asm_code.add(asm_cmds.ASMline(line))
+
+
 class ReadAt(_ValueCmd):
     """Reads value at given address.
 

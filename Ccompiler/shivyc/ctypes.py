@@ -243,6 +243,28 @@ class ArrayCType(CType):
         """Check whether this is an array type."""
         return True
 
+class ASMCType(CType):
+    """Represents an Assembly C type.
+
+    el (CType) - Type of each element in array.
+    n (int) - Size of code (or None if this is incomplete)
+
+    """
+
+    def __init__(self, el, n):
+        """Initialize type."""
+        self.el = el
+        self.n = n
+        super().__init__((n or 1) * self.el.size)
+
+    def is_complete(self):
+        """Check if this is a complete type."""
+        return True
+
+    def is_asm(self):
+        """Check whether this is an array type."""
+        return True
+
 
 class FunctionCType(CType):
     """Represents a function C type.

@@ -7,7 +7,7 @@ import shivyc.il_cmds.control as control_cmds
 import shivyc.il_cmds.math as math_cmds
 import shivyc.il_cmds.value as value_cmds
 
-from shivyc.ctypes import ArrayCType, PointerCType
+from shivyc.ctypes import ArrayCType, PointerCType, ASMCType
 from shivyc.errors import CompilerError
 from shivyc.il_gen import ILValue
 from shivyc.tree.nodes import Declaration
@@ -187,6 +187,24 @@ class String(_LExprNode):
     def _lvalue(self, il_code, symbol_table, c):
         il_value = ILValue(ArrayCType(ctypes.char, len(self.chars)))
         il_code.register_string_literal(il_value, self.chars)
+        return DirectLValue(il_value)
+
+
+class ASMcode(_LExprNode):
+    """Expression that is a block of assembly code.
+
+    code is the unparsed assembly code
+
+    """
+
+    def __init__(self, code):
+        """Initialize Node."""
+        super().__init__()
+        self.code = code
+
+    def _lvalue(self, il_code, symbol_table, c):
+        il_value = ILValue(ASMCType(ctypes.integer, len(self.code)))
+        il_code.register_asm_literal(il_value, self.code)
         return DirectLValue(il_value)
 
 

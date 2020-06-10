@@ -59,6 +59,10 @@ These are kinda ordered based on priority
 	- talk about the assembly wrapper for c program code (setup stack, interrupts)
 	- note that the functions int1() int2() int3() and int4() should be present (void)
 	- talk about define only doing supporting integer values, without brackets.
+	- inline assembly specification:
+		- the programmer is responsible to backup and restore the registers used in the asm code
+		- to be implemented
+		- useful for quickly copying to VRAM, or optimizing slow functions
 
 ## Todo C compiler related
 - [done] Add neg offset flag in READ and WRITE and COPY instructions

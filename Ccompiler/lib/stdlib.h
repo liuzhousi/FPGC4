@@ -1,7 +1,9 @@
+#include "math.h" 
+
 /*
 uprintc(char c)
 
-Prints a single char by writing it to 0xC0262E
+Prints a single char c by writing it to 0xC0262E
 */
 void uprintc(char c) 
 {
@@ -45,37 +47,41 @@ void uprintln(char* str)
 }
 
 
+
 /*
-itoa(int value, char* str)
+itoar(int n, char *s)
 
-Currently do not know of a more solid implementation
-therefore it currently only supports numbers up to
-1 million, and is probably not that efficient
+Recursive helper function for itoa
+Eventually returns the number of digits in n
 */
-void itoa(int value, char* str)
+int itoar(int n, char *s)
 {
-	int tens = 0;
-	int singles = 0;
+	int digit = mod(n, 10);
+    int i = 0;
 
-	while(value >= 10)
-	{
-		tens++;
-		value = value - 10;
-	}
-	singles = value;
+    n = div(n,10);
+    if (n > 0)
+    	i += itoar(n, s);
 
-	*str = 'x';
+    s[i++] = digit + '0';
 
-	str++;
-	*str = 'y';
-
-	str++;
-	*str = 'z';
-
-	//TODO implement this function
-
-
-	// add a terminator
-	str++;
-	*str = 0;
+    return i;
 }
+
+
+/*
+itoa(int n, char *s)
+
+Converts integer n to a characters.
+The characters are placed in the buffer s.
+The buffer is terminated with a 0 value.
+Uses recursion, division and mod to compute.
+*/
+void itoa(int n, char *s)
+{
+	// compute and fill the buffer
+	int i = itoar(n, s);
+
+	// end with terminator
+	s[i] = 0;
+} 

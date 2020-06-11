@@ -136,7 +136,17 @@ class Return(ILCommand):
     def make_asm(self, spotmap, home_spots, get_reg, asm_code): # noqa D102
         if self.arg and spotmap[self.arg] != spots.RAX:
             size = self.arg.ctype.size
-            asm_code.add(asm_cmds.Mov(spots.RAX, spotmap[self.arg], size))
+
+            if isinstance(spotmap[self.arg], spots.LiteralSpot):
+                asm_code.add(asm_cmds.Load(spotmap[self.arg], spots.RAX, size))
+            elif isinstance(spotmap[self.arg], spots.MemSpot):
+                asm_code.add(asm_cmds.Read(spotmap[self.arg], spots.RegSpot("r12"), size))
+                asm_code.add(asm_cmds.Mov(spots.RAX, spots.RegSpot("r12"), size))
+            elif isinstance(spotmap[self.arg], spots.RegSpot):
+                asm_code.add(asm_cmds.Mov(spots.RAX, spotmap[self.arg], size))
+
+
+            
 
         asm_code.add(asm_cmds.Mov(spots.RSP, spots.RBP))
 

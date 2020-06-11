@@ -104,8 +104,10 @@ class LoadArg(ILCommand):
         if spotmap[self.output] == self.arg_reg:
             return
         else:
-            asm_code.add(asm_cmds.Mov(
-                spotmap[self.output], self.arg_reg, self.output.ctype.size))
+            if isinstance(spotmap[self.output], spots.MemSpot):
+                asm_code.add(asm_cmds.Write(spotmap[self.output], self.arg_reg, self.output.ctype.size))
+            else:
+                asm_code.add(asm_cmds.Mov(spotmap[self.output], self.arg_reg, self.output.ctype.size))
 
 
 class Set(_ValueCmd):

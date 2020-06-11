@@ -7,24 +7,15 @@ int main()
 	char* testString = "Hello? Is it me you're looking for?";
 	uprintln(testString);
 
-	char buffer[5];
+	char buffer[10];
 
-	buffer[0] = 'a';
-	buffer[1] = 'b';
-	buffer[2] = 'c';
-	buffer[3] = 'd';
-	buffer[4] = 0;
-
-	itoa(73, &buffer[0]);
+	int i = 197942;
+	itoa(i, &buffer[0]);
 
 	uprintln(&buffer[0]);
-
-
-	int divres = div(36, 5);
-	int modres = mod(39, 5);
 	
 
-	return 48; //modres + 48;
+	return 48;
 }
 
 void int1()

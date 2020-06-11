@@ -5,13 +5,13 @@ printf "\nConverting code.list to code.bin\n"
     perl -ne 'print pack("B32", $_)' < code.list > code.bin
 
 
-printf "to verify, use: \nxxd -b -c4 code.bin\n"
+#printf "to verify, use: \nxxd -b -c4 code.bin\n"
 
 
-printf "to create intel hex file for quartus, use: \nsrec_cat code.bin -binary -output -intel > code.hex\n"
+#printf "to create intel hex file for quartus, use: \nsrec_cat code.bin -binary -output -intel > code.hex\n"
 
 
-printf "\nPadding code.bin with ones until multiple of 4096\n"
+printf "Padding code.bin with ones until multiple of 4096\n"
 
 #get file size
     SIZE=$(wc -c < code.bin)
@@ -27,7 +27,7 @@ printf "Appending $NEEDED bytes to code.bin\n"
 
     dd if=<(yes $'\xFF' | tr -d "\n") bs=1 count=$NEEDED >> code.bin
 
-printf "\nDone compiling binary files\n"
+printf "Done compiling binary files\n"
 
 printf "\nKilling previous uartFlasher process\n"
     

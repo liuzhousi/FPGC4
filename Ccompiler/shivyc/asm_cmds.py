@@ -138,6 +138,25 @@ class Mov:
         return s
 
 
+class Lea:
+    """Class for lea command."""
+
+
+    def __init__(self, dest, source):  # noqa: D102
+        self.dest = dest
+        self.source = source
+
+    def __str__(self):  # noqa: D102
+        offset = int(self.source.offset + (self.source.chunk * self.source.count.value))
+        dstring = self.dest.asm_str(0)
+
+        if offset >= 0:
+            # do add
+            return ("\tadd " + str(self.source.base) + " " + str(offset) + " " + dstring)
+        else:
+            #do sub
+            return ("\tsub " + str(self.source.base) + " " + str(abs(offset)) + " " + dstring + " ;lea")
+
 
 
 class Add:
@@ -517,19 +536,6 @@ class Label:
     def __str__(self):  # noqa: D102
         return "Label_" + self.label + ":"
 
-
-class Lea:
-    """Class for lea command."""
-
-    name = "lea"
-
-    def __init__(self, dest, source):  # noqa: D102
-        self.dest = dest
-        self.source = source
-
-    def __str__(self):  # noqa: D102
-        return ("\t" + self.name + " " + self.dest.asm_str(8) + ", "
-                "" + self.source.asm_str(0))
 
 
 class Je(_JumpCommand): name = "je"  # noqa: D101

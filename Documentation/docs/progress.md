@@ -68,11 +68,15 @@ These are kinda ordered based on priority
 	- defines are allowed, but may only be integers. must not have brackets, may have comments
 	- defines from included code carry over to the normal code (which is intended), so it is good to use prefixes.
 	- hex and binary integers are allowed, and should have a 0x or 0b prefix. They are also allowed in defines
+	- note that using for example chars, still might cause the compiler to put the char in a 32 bits register.
+	- r12 and r13 (and possibly r7 in the future) are used as temp reg for translation purposes between x86_64 and B332
 	- coding style recommendation:
 		- write at top of program/library which variables are stored where in the heap/memory
 		- show memory map of 32MiB RAM, with what to put where as a programmer, and why
 		- use prefixes for defines, as they carry over
 		- use specific (not generic) function names, as they otherwise may conflict with included code
+		- use integers for pointers, since these are 32 bits
+		- use mostly integers, unless working with text or big arrays (to save stack space)
 
 ## Todo C compiler related
 - [done] Add neg offset flag in READ and WRITE and COPY instructions
@@ -88,6 +92,7 @@ These are kinda ordered based on priority
 - [done] add hex support!!! (and binary while at it) (also in defines)
 - [done] add bitwise | ^ and & operators (look at commit 31180511de0f95cf5dbda0bf98df71901a2fd1ed)
 - [done] print static string in correct asm format (.dw without commas)
+- Fix empty label problem in ASSEMBLER! (preprocessor) by adding a nop when detected
 
 
 ## Future improvements (FPGC5?)

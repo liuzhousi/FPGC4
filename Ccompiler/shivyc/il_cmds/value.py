@@ -258,19 +258,28 @@ class AddrOf(ILCommand):
 
     def make_asm(self, spotmap, home_spots, get_reg, asm_code):  # noqa D102
         r = get_reg([spotmap[self.output]])
+
+        #print(home_spots[self.var].__dict__)
+        #print(self.var.ctype)
+        #print(type(home_spots[self.var].base))
         
-        # if label (most likely)
+        # if function label (most likely)
         #print(type(self.var.ctype))
         if isinstance(self.var.ctype, ctypes.FunctionCType):
             asm_code.add(asm_cmds.Addr2Reg(home_spots[self.var], r))
 
-        # when getting data from stack
+        # when getting integer data from stack
         elif isinstance(self.var.ctype, ctypes.IntegerCType):
             asm_code.add(asm_cmds.Read(home_spots[self.var], r))
-        
-        # default to use addr2reg instruction
-        else:
+
+        # when we are working with a memspot with a string as base, we probably have a label
+        elif isinstance(home_spots[self.var], spots.MemSpot) and isinstance(home_spots[self.var].base, str):
             asm_code.add(asm_cmds.Addr2Reg(home_spots[self.var], r))
+            
+        # default to use a read instruction over an addr2reg instruction
+        else:
+            asm_code.add(asm_cmds.Read(home_spots[self.var], r))
+            #asm_code.add(asm_cmds.Addr2Reg(home_spots[self.var], r))
 
         
 

@@ -46,7 +46,14 @@ class _AddMult(ILCommand):
 
         if temp == arg1_spot:
             if not self._is_imm64(arg2_spot):
-                asm_code.add(self.Inst(temp, arg2_spot, size))
+                if isinstance(arg2_spot, spots.LiteralSpot):
+                    asm_code.add(asm_cmds.Load(arg2_spot, spots.RegSpot("r12"), size))
+                elif isinstance(arg2_spot, spots.MemSpot):
+                    asm_code.add(asm_cmds.Read(arg2_spot, spots.RegSpot("r12"), size))
+                elif isinstance(arg2_spot, spots.RegSpot):
+                    asm_code.add(asm_cmds.Mov(spots.RegSpot("r12"), arg2_spot, size))
+
+                asm_code.add(self.Inst(temp, spots.RegSpot("r12"), size))
             
         elif temp == arg2_spot:
             if not self._is_imm64(arg1_spot):
@@ -83,8 +90,16 @@ class _AddMult(ILCommand):
                         asm_code.add(asm_cmds.Mov(temp, arg1_spot, size))
                     asm_code.add(self.Inst(temp, arg2_spot, size))
 
+                elif isinstance(arg1_spot, spots.LiteralSpot) and isinstance(arg2_spot, spots.RegSpot):
+                    asm_code.add(asm_cmds.Load(arg1_spot, temp, size))
+                    asm_code.add(self.Inst(temp, arg2_spot, size))
 
-                else:    
+                elif isinstance(arg1_spot, spots.LiteralSpot) and isinstance(arg2_spot, spots.MemSpot):
+                    asm_code.add(asm_cmds.Load(arg1_spot, temp, size))
+                    asm_code.add(asm_cmds.Read(arg2_spot, spots.RegSpot("r12"), size))
+                    asm_code.add(self.Inst(temp, spots.RegSpot("r12"), size))
+
+                else:
                     asm_code.add(asm_cmds.Read(arg1_spot, temp, size))
                     asm_code.add(asm_cmds.Read(arg2_spot, spots.RegSpot("r12"), size))
                     asm_code.add(self.Inst(temp, spots.RegSpot("r12"), size))
@@ -177,7 +192,10 @@ class _BitShiftCmd(ILCommand):
             out_spot = spotmap[self.output]
             temp_spot = get_reg([out_spot, arg1_spot], [arg2_spot])
             if arg1_spot != temp_spot:
-                asm_code.add(asm_cmds.Mov(temp_spot, arg1_spot, arg1_size))
+                if isinstance(arg1_spot, spots.MemSpot):
+                    asm_code.add(asm_cmds.Read(arg1_spot, temp_spot, arg1_size))
+                else:
+                    asm_code.add(asm_cmds.Mov(temp_spot, arg1_spot, arg1_size))
             asm_code.add(self.Inst(temp_spot, arg2_spot, arg1_size))
             if temp_spot != out_spot:
                 asm_code.add(asm_cmds.Mov(out_spot, temp_spot, arg1_size))

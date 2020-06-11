@@ -24,6 +24,8 @@ class Label(ILCommand):
 
     def make_asm(self, spotmap, home_spots, get_reg, asm_code): # noqa D102
         asm_code.add(asm_cmds.Label(self.label))
+        # TODO, this is ugly, need to fix empty label problem in assembler (preprocessor?)
+        asm_code.add(asm_cmds.Mov(RegSpot("r0"), RegSpot("r0"))) 
 
 
 class Jump(ILCommand):

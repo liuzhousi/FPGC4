@@ -1,5 +1,6 @@
 # Assembler for B322
-To simplify writing code for the B322, one can use the B322 assembly language.
+The basic way to write code for the B322 is by using the B322 assembly language. Using the assembly language you can write the most optimal code, although it might not be the best way for big or complex programs. For high performance functions like copying VRAM tables, assembly is a good solution. For big and complex software, it is better to write the code in C. The C compiler compiles to this assembly language.
+
 The assembler compiles the assembly code to 32 bit machine instructions. The input file is currently code.asm, and the output is printed to stdout.
 
 ## Line types
@@ -58,9 +59,9 @@ The instructions are the lines that will be assembled into machine code. Each in
 Instr   | Arg1  | Arg2 | Arg3   || Description
 ================================||=====================================================================
 HALT    |       |       |       || Halts CPU by jumping to the current address
-READ    | C16   | R     | R     || Read from addr in Arg2 with 16 bit offset from Arg1. Write to Arg3
-WRITE   | C16   | R     | R     || Write to addr in Arg2 with 16 bit offset from Arg1. Data to write is in Arg3
-COPY    | C16   | R     | R     || Copy from address in Arg2 to addr in Arg3 with 16 bit offset from Arg1
+READ    | C16   | R     | R     || Read from addr in Arg2 with 16 bit offset*** from Arg1. Write to Arg3
+WRITE   | C16   | R     | R     || Write to addr in Arg2 with 16 bit offset*** from Arg1. Data to write is in Arg3
+COPY    | C16   | R     | R     || Copy from address in Arg2 to addr in Arg3 with 16 bit offset*** from Arg1
 PUSH    | R     |       |       || Push Arg1 to stack
 POP     | R     |       |       || Pop from stack to Arg1
 JUMP    | L/C27 |       |       || Jump to Label or 27 bit constant in Arg1
@@ -100,6 +101,7 @@ S   = String
 
 *  Optional argument with same type as Arg1. Has 'no limit' on number of arguments
 ** Data is placed after each other to make blocks of 32 bits. If a block cannot be made, it will be padded by zeros
+*** Offset can be negative as well. This is useful for the C compiler
 ```
 
 Each Cx type argument (constant) can be written in decimal, binary (with 0b prefix) or hex (with 0x prefix).

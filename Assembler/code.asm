@@ -18,9 +18,9 @@ Return_UART:
 
 ; COMPILED C CODE HERE
 
-Label___strlit8:
+Label___strlit34:
 	.dw 10 0
-Label___strlit39:
+Label___strlit45:
 	.dw 72 101 108 108 111 63 32 73 115 32 105 116 32 109 101 32 121 111 117 39 114 101 32 108 111 111 107 105 110 103 32 102 111 114 63 0
 
 Label_div:
@@ -237,7 +237,7 @@ Label_uprintln:
 	; ADDROF
 	addr2reg Label_uprint r1
 	; ADDROF
-	addr2reg Label___strlit8 r5
+	addr2reg Label___strlit34 r5
 	; SET
 	; CALL
 	savpc r12
@@ -388,7 +388,7 @@ Label_main:
 	or r0 rsp rbp
 	sub rsp 38 rsp
 	; ADDROF
-	addr2reg Label___strlit39 r5
+	addr2reg Label___strlit45 r5
 	; SET
 	; SET
 	; ADDROF
@@ -402,8 +402,9 @@ Label_main:
 	load32 197942 r5
 	; ADDROF
 	addr2reg Label_itoa r1
-	; ADDRREL
-	sub rbp 38 r4 ;lea
+	; ADDROF
+	read -38 rbp r4
+	; SET
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
@@ -411,8 +412,18 @@ Label_main:
 	jumpr 0 r1
 	; ADDROF
 	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 38 r5 ;lea
+	; ADDROF
+	read -38 rbp r5
+	; SET
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_uprintc r1
+	; READREL
+	read -32 rbp r5
 	; CALL
 	savpc r12
 	sub rsp 4 rsp

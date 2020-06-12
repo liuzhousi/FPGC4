@@ -10,10 +10,9 @@ int main()
 	char buffer[10];
 
 	int i = 197942;
-	itoa(i, &buffer[0]);
+	itoa(i, buffer);
 
-	uprintln(&buffer[0]);
-	
+	uprintln(buffer);
 
 	return 48;
 }

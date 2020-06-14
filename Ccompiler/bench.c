@@ -1,30 +1,73 @@
-#include "lib/stdlib.h" 
-#include "lib/math.h" 
-
+#include "lib/ch376.h"
 
 int main() 
 {
-	char* testString = "Hello? Is it me you're looking for?";
-	uprintln(testString);
+	CH376_init();
+	CH376_connectDrive();
 
-	char buffer[10];
 
-	int i = 197942;
-	itoa(i, buffer);
+	uprintln("------Sending filename------");
+	CH376_sendFileName();
+	uprintln("------Filename sent------");
 
-	uprintln(buffer);
+	
+	uprintln("------Opening File------");
+	CH376_openFile();
+	uprintln("------File Opened------");
+
+	uprintln("------Reading file------");
+	CH376_readFile();
+	uprintln("------Reading done------");
+
+	uprintln("------Closing File------");
+	CH376_closeFile();
+	uprintln("------Closing done------");
+	
+
+	/*
+	uprintln("------Deleting file------");
+	CH376_deleteFile();
+	uprintln("------File deleted------");
+	*/
+
+
+	/*
+	uprintln("------Creating File------");
+	CH376_createFile();
+	uprintln("------File Created------");
+	*/
+
+	/*
+	uprintln("------Opening File------");
+	CH376_openFile();
+	uprintln("------File Opened------");
+
+	uprintln("------Set cursor to end------");
+	CH376_setCursor();
+	uprintln("------Cursor set to end------");
+
+	uprintln("------Writing in File------");
+	CH376_writeFile();
+	uprintln("------Writing done------");
+
+	uprintln("------Closing File------");
+	CH376_closeFile();
+	uprintln("------Closing done------");
+	*/
 
 	return 48;
 }
 
+// timer1 interrupt handler
 void int1()
 {
-
+   int *p = (int *) 0x4C0000; // set address (timer1 state)
+   *p = 1; // write value
 }
 
 void int2()
 {
-   
+
 }
 
 void int3()

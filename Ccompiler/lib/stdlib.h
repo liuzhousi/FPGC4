@@ -72,7 +72,7 @@ int itoar(int n, char *s)
 /*
 itoa(int n, char *s)
 
-Converts integer n to a characters.
+Converts integer n to characters.
 The characters are placed in the buffer s.
 The buffer is terminated with a 0 value.
 Uses recursion, division and mod to compute.
@@ -85,3 +85,87 @@ void itoa(int n, char *s)
 	// end with terminator
 	s[i] = 0;
 } 
+
+
+
+
+
+/*
+itoahr(int n, char *s)
+
+Recursive helper function for itoa
+Eventually returns the number of digits in n
+*/
+int itoahr(int n, char *s)
+{
+	int digit = mod(n, 16);
+    int i = 0;
+
+    n = div(n,16);
+    if (n > 0)
+    	i += itoahr(n, s);
+
+    char c;
+    if (digit > 9)
+    {
+    	c = digit + 'A' - 10;
+    }
+    else
+    {
+    	c = digit + '0';
+    }
+    s[i++] = c;
+
+    return i;
+}
+
+
+/*
+itoah(int n, char *s)
+
+Converts integer n to hex string characters.
+The characters are placed in the buffer s.
+A prefix of 0x is added.
+The buffer is terminated with a 0 value.
+Uses recursion, division and mod to compute.
+*/
+void itoah(int n, char *s)
+{
+	// add prefix
+	s[0] = '0';
+	s[1] = 'x';
+	s+=2;
+
+	// compute and fill the buffer
+	int i = itoahr(n, s);
+
+	// end with terminator
+	s[i] = 0;
+} 
+
+
+
+// sleeps ms using timer1.
+// blocking.
+// requires int1() to set 0x4C0000 to 1:
+/*
+	int *p = (int *) 0x4C0000; // set address (timer1 state)
+	*p = 1; // write value
+*/
+void delay(int ms)
+{
+
+	// clear result
+	int *o = (int *) 0x4C0000;
+	*o = 0;
+
+	// set timer
+	int *p = (int *) 0xC02626;
+	*p = ms;
+	// start timer
+	int *q = (int *) 0xC02627;
+	*q = 1;
+
+	// wait until timer done
+	while (*o == 0);
+}

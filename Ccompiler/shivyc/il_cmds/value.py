@@ -188,6 +188,8 @@ class Set(_ValueCmd):
         else:
             r = get_reg([spotmap[self.output], spotmap[self.arg]])
 
+            asm_code.add(asm_cmds.Mov(r, spotmap[self.arg], 4))
+
             # Move from arg_asm -> r_asm
             # b332 currently does not have signed. we skip it for now
             """
@@ -209,6 +211,7 @@ class Set(_ValueCmd):
                 asm_code.add(asm_cmds.Mov(spotmap[self.output],
                                           r, self.output.ctype.size))
             """
+
 
     def _set_bool(self, spotmap, get_reg, asm_code):
         """Emit code for SET command if arg is boolean type."""
@@ -344,6 +347,9 @@ class ReadAt(_ValueCmd):
 
         if isinstance(addr_spot, RegSpot):
             addr_r = addr_spot
+        elif isinstance(addr_spot, MemSpot):
+            addr_r = get_reg([], [output_spot])
+            asm_code.add(asm_cmds.Read(addr_spot, addr_r))
         else:
             addr_r = get_reg([], [output_spot])
             asm_code.add(asm_cmds.Mov(addr_r, addr_spot, 8))

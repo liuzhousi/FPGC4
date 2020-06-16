@@ -7,7 +7,7 @@ int main()
 
 
 	uprintln("------Sending filename------");
-	CH376_sendFileName();
+	CH376_sendFileName("Lorum.txt");
 	uprintln("------Filename sent------");
 
 	

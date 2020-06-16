@@ -133,7 +133,7 @@ int CH376_spiTransfer(int dataByte)
 }
 
 
-// resets and intitializes CH376_
+// resets and intitializes CH376
 void CH376_init()
 {
 	CH376_spiEndTransfer(); // start with cs high
@@ -577,25 +577,30 @@ void CH376_closeFile()
 }
 
 
-//TODO char pointer filname argument
-void CH376_sendFileName() 
+void CH376_sendString(char* str)
 {
-	uprintln("Sending file name");
+	char chr = *str; 			// first character of str
+
+	while (chr != 0) 			// continue until null value
+	{
+		CH376_spiTransfer(chr);
+		str++; 					// go to next character address
+		chr = *str; 			// get character from address
+	}
+}
+
+//TODO char pointer filname argument
+void CH376_sendFileName(char* f) 
+{
+	
+	uprintln("Sending filename");
 	CH376_spiBeginTransfer();
 	CH376_spiTransfer(CMD_SET_FILE_NAME);
-	CH376_spiTransfer(47); // '/'
-	CH376_spiTransfer(84);
-	CH376_spiTransfer(69);
-	CH376_spiTransfer(83);
-	CH376_spiTransfer(84);
-	CH376_spiTransfer(49);
-	CH376_spiTransfer(46);
-	CH376_spiTransfer(84);
-	CH376_spiTransfer(88);
-	CH376_spiTransfer(84);
-
-	CH376_spiTransfer(0);
+	CH376_spiTransfer('/'); 	// start with /
+	CH376_sendString(f); 		// send filename
+	CH376_spiTransfer(0); 		// close with null
 	CH376_spiEndTransfer();
-	uprintln("File name sent");
+	uprintln("Filename sent");
 	delay(CH376_COMMAND_DELAY);
+	
 }

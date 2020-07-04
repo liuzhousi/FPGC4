@@ -48,7 +48,19 @@ class _GeneralCmp(ILCommand):
             # in this case both are literal/memory.
             r = get_reg([], regs)
             regs.append(r)
-            asm_code.add(asm_cmds.Mov(r, arg1_spot, self.arg1.ctype.size))
+            
+
+            #asm_code.add(asm_cmds.Mov(r, arg1_spot, self.arg1.ctype.size))
+
+
+            if isinstance(arg1_spot, MemSpot):
+                asm_code.add(asm_cmds.Read(arg1_spot, r, self.arg1.ctype.size))
+            elif isinstance(arg1_spot, LiteralSpot):
+                asm_code.add(asm_cmds.Load(arg1_spot, r, self.arg1.ctype.size))
+            elif isinstance(arg1_spot, RegSpot):
+                asm_code.add(asm_cmds.Mov(r, arg1_spot, self.arg1.ctype.size))
+
+
             return r, arg2_spot
         else:
             return arg1_spot, arg2_spot
@@ -60,7 +72,15 @@ class _GeneralCmp(ILCommand):
         if self._is_imm64(arg1_spot):
             size = self.arg1.ctype.size
             new_arg1_spot = get_reg([], regs + [arg2_spot])
-            asm_code.add(asm_cmds.Mov(new_arg1_spot, arg1_spot, size))
+
+            if isinstance(arg1_spot, MemSpot):
+                asm_code.add(asm_cmds.Read(arg1_spot, new_arg1_spot, size))
+            elif isinstance(arg1_spot, LiteralSpot):
+                asm_code.add(asm_cmds.Load(arg1_spot, new_arg1_spot, size))
+            elif isinstance(arg1_spot, RegSpot):
+                asm_code.add(asm_cmds.Mov(new_arg1_spot, arg1_spot, size))
+
+            #asm_code.add(asm_cmds.Mov(new_arg1_spot, arg1_spot, size))
             return new_arg1_spot, arg2_spot
 
         # We cannot have both cases because _fix_both_literal is called
@@ -68,7 +88,15 @@ class _GeneralCmp(ILCommand):
         elif self._is_imm64(arg2_spot):
             size = self.arg2.ctype.size
             new_arg2_spot = get_reg([], regs + [arg1_spot])
-            asm_code.add(asm_cmds.Mov(new_arg2_spot, arg2_spot, size))
+
+            if isinstance(arg2_spot, MemSpot):
+                asm_code.add(asm_cmds.Read(arg2_spot, new_arg2_spot, size))
+            elif isinstance(arg2_spot, LiteralSpot):
+                asm_code.add(asm_cmds.Load(arg2_spot, new_arg2_spot, size))
+            elif isinstance(arg2_spot, RegSpot):
+                asm_code.add(asm_cmds.Mov(new_arg2_spot, arg2_spot, size))
+
+            #asm_code.add(asm_cmds.Mov(new_arg2_spot, arg2_spot, size))
             return arg1_spot, new_arg2_spot
         else:
             return arg1_spot, arg2_spot

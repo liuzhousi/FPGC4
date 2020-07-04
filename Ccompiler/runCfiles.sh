@@ -16,7 +16,7 @@ do
         then
                 echo "B332 ASM code successfully assembled"
                 # convert list to binary files and send to FPGC4
-                (cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && python3 uartFlasher.py testMode)
+                (cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && powershell.exe "python uartFlasher_win.py testMode; exit \$LASTEXITCODE ")
                 retVal="$?"
                 echo "$filename exited with code: $retVal"
                 retList+=("$retVal")

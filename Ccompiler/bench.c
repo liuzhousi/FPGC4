@@ -5,12 +5,15 @@ int main()
 	CH376_init();
 	CH376_connectDrive();
 
+	char* d = "Floemper, Skoep,\n YEEEEET!";
+	int s = 28;
 
 	uprintln("------Sending filename------");
-	CH376_sendFileName("Lorum.txt");
+	CH376_sendFileName("Lorum.txt"); //TEST.TXT
 	uprintln("------Filename sent------");
 
 	
+	/*
 	uprintln("------Opening File------");
 	CH376_openFile();
 	uprintln("------File Opened------");
@@ -22,7 +25,7 @@ int main()
 	uprintln("------Closing File------");
 	CH376_closeFile();
 	uprintln("------Closing done------");
-	
+	*/
 
 	/*
 	uprintln("------Deleting file------");
@@ -31,13 +34,13 @@ int main()
 	*/
 
 
-	/*
+	
 	uprintln("------Creating File------");
 	CH376_createFile();
 	uprintln("------File Created------");
-	*/
+	
 
-	/*
+	
 	uprintln("------Opening File------");
 	CH376_openFile();
 	uprintln("------File Opened------");
@@ -47,13 +50,13 @@ int main()
 	uprintln("------Cursor set to end------");
 
 	uprintln("------Writing in File------");
-	CH376_writeFile();
+	CH376_writeFile(d, s);
 	uprintln("------Writing done------");
 
 	uprintln("------Closing File------");
 	CH376_closeFile();
 	uprintln("------Closing done------");
-	*/
+	
 
 	return 48;
 }
@@ -72,6 +75,11 @@ void int2()
 
 void int3()
 {
+	int *p = (int *) 0xC0262F; // set address (UART RX)
+	int val = *p;
+	int *q = (int *) 0xC0262E; // set address (UART RX)
+	*q = val;
+	
    
 }
 

@@ -50,6 +50,8 @@ These are kinda ordered based on priority
 - add new functions to assembler page
 	- rbp rsp mapped to r14 r15 for c compiler
 	- added negative offset option for read, write and copy instruction
+- add picture of SPI flasher, and add/improve instructions on how to use them (seperate page + commands + hardware mod of spi module)
+- add something about WSL2
 
 
 ## Todo C compiler related
@@ -68,6 +70,9 @@ These are kinda ordered based on priority
 - [done] print static string in correct asm format (.dw without commas)
 - Fix empty label problem in ASSEMBLER! (preprocessor) by adding a nop when detected
 - Fix global variables, and make tests for it
+- Fix commenting out asm code
+- Remove requirement to add intX() functions
+- Add wrapper for extended interrupts
 
 
 ## Future improvements (FPGC5?)

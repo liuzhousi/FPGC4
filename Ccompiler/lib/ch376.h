@@ -1,7 +1,7 @@
 #include "stdlib.h" 
 
-#define CH376_LOOP_DELAY 		 60
-#define CH376_COMMAND_DELAY		 10
+#define CH376_LOOP_DELAY 		 100
+#define CH376_COMMAND_DELAY		 20
 #define CMD_GET_IC_VER           0x01
 #define CMD_SET_BAUDRATE         0x02
 #define CMD_ENTER_SLEEP          0x03
@@ -130,6 +130,34 @@ int CH376_spiTransfer(int dataByte)
 	int retVal = *p; // read value
 
 	return retVal;
+}
+
+
+// Function to send a string (without terminating 0)
+void CH376_sendString(char* str)
+{
+	char chr = *str; 			// first character of str
+
+	while (chr != 0) 			// continue until null value
+	{
+		CH376_spiTransfer(chr);
+		str++; 					// go to next character address
+		chr = *str; 			// get character from address
+	}
+}
+
+
+// Function to send data d of size s
+void CH376_sendData(char* d, int s)
+{
+	char chr = *d; 			// first byte of data
+
+	for(int i = 0; i < s; i++) 	// write s bytes
+	{
+		CH376_spiTransfer(chr);
+		d++; 					// go to next data address
+		chr = *d; 			// get data from address
+	}
 }
 
 
@@ -397,12 +425,14 @@ void CH376_readFile()
 }
 
 
-void CH376_writeFile() 
+// Writes data d of size s
+// currently only works for sizes up to 255, because one byte
+void CH376_writeFile(char* d, int s) 
 {
-	uprintln("Request write for 10 bytes");
+	uprintln("Request write for s bytes");
 	CH376_spiBeginTransfer();
 	CH376_spiTransfer(CMD_BYTE_WRITE);
-	CH376_spiTransfer(10);
+	CH376_spiTransfer(s);
 	CH376_spiTransfer(0);
 	CH376_spiEndTransfer();
 
@@ -428,16 +458,7 @@ void CH376_writeFile()
 	CH376_spiTransfer(CMD_WR_REQ_DATA);
 	retval = CH376_spiTransfer(0x00);
 
-	CH376_spiTransfer(65);
-	CH376_spiTransfer(66);
-	CH376_spiTransfer(67);
-	CH376_spiTransfer(68);
-	CH376_spiTransfer(69);
-	CH376_spiTransfer(70);
-	CH376_spiTransfer(71);
-	CH376_spiTransfer(72);
-	CH376_spiTransfer(73);
-	CH376_spiTransfer(74);
+	CH376_sendData(d, s);
 	CH376_spiEndTransfer();
 
 
@@ -577,19 +598,8 @@ void CH376_closeFile()
 }
 
 
-void CH376_sendString(char* str)
-{
-	char chr = *str; 			// first character of str
 
-	while (chr != 0) 			// continue until null value
-	{
-		CH376_spiTransfer(chr);
-		str++; 					// go to next character address
-		chr = *str; 			// get character from address
-	}
-}
-
-//TODO char pointer filname argument
+// Sends filename f
 void CH376_sendFileName(char* f) 
 {
 	

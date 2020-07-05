@@ -52,6 +52,8 @@ These are kinda ordered based on priority
 	- added negative offset option for read, write and copy instruction
 - add picture of SPI flasher, and add/improve instructions on how to use them (seperate page + commands + hardware mod of spi module)
 - add something about WSL2
+- note that r7 is used as temp reg to store address of label in read/write instructions
+- only global int and int[x] are allowed, no char, since size allocation goes wrong
 
 
 ## Todo C compiler related

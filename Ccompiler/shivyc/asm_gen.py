@@ -61,9 +61,13 @@ class ASMCode:
                      8: "quad"}
 
         if init:
-            self.data.append(f"\t.{size_strs[size]} {init}")
+            self.data.append(f"\t.dw {init}")
         else:
-            self.data.append(f"\t.zero {size}")
+            words = (size // 4)
+            line = "\t.dw"
+            for i in range(words):
+                line += " 0"
+            self.data.append(line)
 
     def add_comm(self, name, size, local):
         """Add a common symbol to the code."""

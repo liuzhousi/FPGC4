@@ -71,16 +71,29 @@ class Write:
                 s += " " + self.arg2.asm_str(self.size)
 
         else:
-            s += "\twrite"
+            if type(self.arg1.base) == str:
+                s += "\taddr2reg " + self.arg1.base + " r7\n\twrite"
 
-            if isinstance(self.arg1.count, spots.LiteralSpot):
-                s += " " + str(self.arg1.offset + (self.arg1.chunk * self.arg1.count.value))
+                if isinstance(self.arg1.count, spots.LiteralSpot):
+                    s += " " + str(self.arg1.offset + (self.arg1.chunk * self.arg1.count.value))
+                else:
+                    s += " " + str(self.arg1.offset)
+                if self.arg1:
+                    s += " r7"
+                if self.arg2:
+                    s += " " + self.arg2.asm_str(self.size)
+
             else:
-                s += " " + str(self.arg1.offset)
-            if self.arg1:
-                s += " " + str(self.arg1.base)
-            if self.arg2:
-                s += " " + self.arg2.asm_str(self.size)
+                s += "\twrite"
+
+                if isinstance(self.arg1.count, spots.LiteralSpot):
+                    s += " " + str(self.arg1.offset + (self.arg1.chunk * self.arg1.count.value))
+                else:
+                    s += " " + str(self.arg1.offset)
+                if self.arg1:
+                    s += " " + str(self.arg1.base)
+                if self.arg2:
+                    s += " " + self.arg2.asm_str(self.size)
         return s
 
 
@@ -104,16 +117,29 @@ class Read:
                 s += " " + self.arg2.asm_str(self.size)
 
         else:
-            s += "\tread"
+            if type(self.arg1.base) == str:
+                s += "\taddr2reg " + self.arg1.base + " r7\n\tread"
 
-            if isinstance(self.arg1.count, spots.LiteralSpot):
-                s += " " + str(self.arg1.offset + (self.arg1.chunk * self.arg1.count.value))
+                if isinstance(self.arg1.count, spots.LiteralSpot):
+                    s += " " + str(self.arg1.offset + (self.arg1.chunk * self.arg1.count.value))
+                else:
+                    s += " " + str(self.arg1.offset)
+                if self.arg1:
+                    s += " r7"
+                if self.arg2:
+                    s += " " + self.arg2.asm_str(self.size)
+
             else:
-                s += " " + str(self.arg1.offset)
-            if self.arg1:
-                s += " " + str(self.arg1.base)
-            if self.arg2:
-                s += " " + self.arg2.asm_str(self.size)
+                s += "\tread"
+
+                if isinstance(self.arg1.count, spots.LiteralSpot):
+                    s += " " + str(self.arg1.offset + (self.arg1.chunk * self.arg1.count.value))
+                else:
+                    s += " " + str(self.arg1.offset)
+                if self.arg1:
+                    s += " " + str(self.arg1.base)
+                if self.arg2:
+                    s += " " + self.arg2.asm_str(self.size)
 
         return s
 

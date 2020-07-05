@@ -37,7 +37,7 @@ rbp 	| r14
 rsp 	| r15
 ```
 This leaves registers r7, r12 and r13 unused in the FPGC4.
-r12 and r13 are currently used as temporary registers for certain assembly instructions, which is sometimes needed/convenient for converting single x86_64 instructions to multiple B322 instructions. For example, in x86_64 you can write a number to the stack at an offset using `mov [rbp-offset] 37`. In B322 you first need to load the literal into a register before using a write instruction.
+r12 and r13 are currently used as temporary registers for certain assembly instructions, which is sometimes needed/convenient for converting single x86_64 instructions to multiple B322 instructions. For example, in x86_64 you can write a number to the stack at an offset using `mov [rbp-offset] 37`. In B322 you first need to load the literal into a register before using a write instruction. r7 is currently used as temp register for loading the address of global variables during for read/write instructions.
 
 
 ## Assembly wrapper

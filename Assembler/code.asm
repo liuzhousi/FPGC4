@@ -22,104 +22,106 @@ Label_noteList:
 	.dw 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
 Label_endp_mode:
 	.dw 128
-Label___strlit2:
-	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 49 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
-Label___strlit35:
-	.dw 67 114 101 97 116 105 110 103 32 102 105 108 101 0
-Label___strlit40:
-	.dw 66 121 116 101 32 87 82 32 114 101 113 32 100 97 116 97 0
-Label___strlit48:
-	.dw 83 101 116 116 105 110 103 32 85 83 66 32 109 111 100 101 32 116 111 32 72 79 83 84 95 50 0
-Label___strlit50:
-	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 49 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
-Label___strlit57:
-	.dw 10 0
-Label___strlit60:
-	.dw 68 101 108 101 116 105 110 103 32 102 105 108 101 0
-Label___strlit63:
-	.dw 83 101 110 100 105 110 103 32 102 105 108 101 110 97 109 101 0
-Label___strlit67:
-	.dw 82 101 113 117 101 115 116 32 114 101 97 100 32 102 111 114 32 49 48 32 98 121 116 101 115 0
-Label___strlit74:
-	.dw 83 101 116 116 105 110 103 32 85 83 66 32 109 111 100 101 32 116 111 32 72 79 83 84 95 50 0
-Label___strlit106:
+Label___strlit15:
 	.dw 44 32 66 121 116 101 32 87 82 32 114 101 113 32 100 111 110 101 32 40 114 101 116 118 97 108 32 61 61 32 100 97 116 97 32 115 105 122 101 41 0
-Label___strlit112:
-	.dw 44 32 79 112 101 110 105 110 103 32 100 111 110 101 32 40 49 52 32 61 61 32 115 117 99 99 101 115 115 41 0
-Label___strlit131:
-	.dw 44 32 67 108 111 115 105 110 103 32 100 111 110 101 32 40 49 52 32 61 61 32 115 117 99 99 101 115 115 41 0
-Label___strlit156:
+Label___strlit21:
+	.dw 83 101 116 116 105 110 103 32 85 83 66 32 109 111 100 101 32 116 111 32 72 79 83 84 95 49 0
+Label___strlit68:
 	.dw 66 121 116 101 32 87 82 32 103 111 32 40 117 112 100 97 116 105 110 103 32 102 105 108 101 32 115 105 122 101 41 0
-Label___strlit167:
-	.dw 44 32 87 114 105 116 101 32 114 101 113 117 101 115 116 32 100 111 110 101 32 40 49 101 32 61 61 32 100 105 115 107 32 119 114 105 116 101 41 0
-Label___strlit175:
-	.dw 45 45 45 45 45 45 83 108 97 118 101 32 97 100 100 114 32 115 101 116 45 45 45 45 45 45 0
-Label___strlit208:
-	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 50 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
-Label___strlit247:
-	.dw 67 104 101 99 107 105 110 103 32 100 105 115 107 32 99 111 110 110 101 99 116 105 111 110 32 115 116 97 116 117 115 0
-Label___strlit260:
-	.dw 44 32 68 105 115 107 32 99 111 110 110 101 99 116 105 111 110 32 99 104 101 99 107 101 100 32 40 49 53 32 61 61 32 110 101 119 32 100 101 118 105 99 101 32 99 111 110 110 101 99 116 101 100 41 0
-Label___strlit272:
-	.dw 114 101 115 101 116 32 100 111 110 101 0
-Label___strlit275:
-	.dw 67 104 101 99 107 105 110 103 32 100 105 115 107 32 99 111 110 110 101 99 116 105 111 110 32 115 116 97 116 117 115 0
-Label___strlit308:
-	.dw 83 101 116 116 105 110 103 32 85 83 66 32 109 111 100 101 32 116 111 32 72 79 83 84 95 48 0
-Label___strlit310:
-	.dw 44 32 67 117 114 115 111 114 32 115 101 116 116 105 110 103 32 100 111 110 101 32 40 49 52 32 61 61 32 115 117 99 99 101 115 115 41 0
-Label___strlit311:
-	.dw 66 121 116 101 32 82 68 32 117 115 98 32 100 97 116 97 48 0
-Label___strlit326:
-	.dw 44 32 68 105 115 107 32 99 111 110 110 101 99 116 105 111 110 32 99 104 101 99 107 101 100 32 40 49 53 32 61 61 32 110 101 119 32 100 101 118 105 99 101 32 99 111 110 110 101 99 116 101 100 41 0
-Label___strlit332:
+Label___strlit93:
+	.dw 44 32 68 101 118 105 99 101 32 99 111 110 110 101 99 116 105 111 110 32 99 104 101 99 107 101 100 32 40 49 53 32 61 61 32 110 101 119 32 100 101 118 105 99 101 32 99 111 110 110 101 99 116 101 100 41 0
+Label___strlit95:
+	.dw 44 32 79 112 101 110 105 110 103 32 100 111 110 101 32 40 49 52 32 61 61 32 115 117 99 99 101 115 115 41 0
+Label___strlit97:
 	.dw 83 101 116 116 105 110 103 32 85 83 66 32 109 111 100 101 32 116 111 32 72 79 83 84 95 49 0
-Label___strlit348:
-	.dw 83 101 116 116 105 110 103 32 85 83 66 32 109 111 100 101 32 116 111 32 72 79 83 84 95 49 0
-Label___strlit363:
-	.dw 45 45 45 45 45 45 72 111 115 116 32 97 100 100 114 32 115 101 116 45 45 45 45 45 45 0
-Label___strlit384:
+Label___strlit128:
+	.dw 67 104 101 99 107 105 110 103 32 100 105 115 107 32 99 111 110 110 101 99 116 105 111 110 32 115 116 97 116 117 115 0
+Label___strlit132:
 	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 50 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
-Label___strlit389:
+Label___strlit149:
 	.dw 67 104 101 99 107 105 110 103 32 100 105 115 107 32 99 111 110 110 101 99 116 105 111 110 32 115 116 97 116 117 115 0
-Label___strlit393:
-	.dw 10 0
-Label___strlit411:
-	.dw 44 32 82 101 97 100 32 114 101 113 117 101 115 116 32 100 111 110 101 32 40 49 100 32 61 61 32 100 105 115 107 32 114 101 97 100 41 0
-Label___strlit420:
-	.dw 44 32 68 114 105 118 101 32 114 101 97 100 121 32 99 104 101 99 107 32 100 111 110 101 32 40 49 52 32 61 61 32 115 117 99 99 101 115 115 41 0
-Label___strlit458:
-	.dw 77 111 117 110 116 105 110 103 32 100 114 105 118 101 0
-Label___strlit462:
-	.dw 44 32 67 114 101 97 116 105 110 103 32 100 111 110 101 32 40 49 52 32 61 61 32 115 117 99 99 101 115 115 41 0
-Label___strlit464:
-	.dw 67 104 101 99 107 105 110 103 32 100 105 115 107 32 99 111 110 110 101 99 116 105 111 110 32 115 116 97 116 117 115 0
-Label___strlit465:
+Label___strlit161:
+	.dw 67 114 101 97 116 105 110 103 32 102 105 108 101 0
+Label___strlit165:
+	.dw 82 101 113 117 101 115 116 32 114 101 97 100 32 102 111 114 32 49 48 32 98 121 116 101 115 0
+Label___strlit188:
 	.dw 44 32 66 121 116 101 32 87 82 32 103 111 32 100 111 110 101 32 40 49 52 32 61 61 32 115 117 99 99 101 115 115 41 0
-Label___strlit474:
-	.dw 44 32 66 121 116 101 32 114 100 32 117 115 98 32 100 111 110 101 32 40 114 101 116 118 97 108 32 61 61 32 100 97 116 97 32 115 105 122 101 41 0
-Label___strlit481:
-	.dw 44 32 68 101 108 101 116 105 110 103 32 100 111 110 101 32 40 49 52 32 61 61 32 115 117 99 99 101 115 115 41 0
-Label___strlit488:
-	.dw 44 32 68 105 115 107 32 99 111 110 110 101 99 116 105 111 110 32 99 104 101 99 107 101 100 32 40 49 53 32 61 61 32 110 101 119 32 100 101 118 105 99 101 32 99 111 110 110 101 99 116 101 100 41 0
-Label___strlit496:
-	.dw 44 32 77 111 117 110 116 105 110 103 32 100 111 110 101 32 40 49 52 32 61 61 32 115 117 99 99 101 115 115 41 0
-Label___strlit497:
-	.dw 70 105 108 101 110 97 109 101 32 115 101 110 116 0
-Label___strlit532:
+Label___strlit194:
+	.dw 44 32 67 108 111 115 105 110 103 32 100 111 110 101 32 40 49 52 32 61 61 32 115 117 99 99 101 115 115 41 0
+Label___strlit210:
+	.dw 45 45 45 45 45 45 72 111 115 116 32 97 100 100 114 32 115 101 116 45 45 45 45 45 45 0
+Label___strlit219:
 	.dw 79 112 101 110 105 110 103 32 102 105 108 101 0
-Label___strlit533:
-	.dw 67 104 101 99 107 105 110 103 32 105 102 32 100 114 105 118 101 32 105 115 32 114 101 97 100 121 0
-Label___strlit548:
-	.dw 67 108 111 115 105 110 103 32 102 105 108 101 0
-Label___strlit562:
-	.dw 82 101 113 117 101 115 116 32 119 114 105 116 101 32 102 111 114 32 115 32 98 121 116 101 115 0
-Label___strlit576:
-	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 48 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
-Label___strlit581:
-	.dw 83 101 116 116 105 110 103 32 99 117 114 115 111 114 32 116 111 32 101 110 100 0
-Label___strlit603:
+Label___strlit234:
+	.dw 83 101 110 100 105 110 103 32 102 105 108 101 110 97 109 101 0
+Label___strlit261:
 	.dw 44 32 68 105 115 107 32 99 111 110 110 101 99 116 105 111 110 32 99 104 101 99 107 101 100 32 40 49 53 32 61 61 32 110 101 119 32 100 101 118 105 99 101 32 99 111 110 110 101 99 116 101 100 41 0
+Label___strlit278:
+	.dw 44 32 68 101 118 105 99 101 32 99 111 110 110 101 99 116 105 111 110 32 99 104 101 99 107 101 100 32 40 49 53 32 61 61 32 110 101 119 32 100 101 118 105 99 101 32 99 111 110 110 101 99 116 101 100 41 0
+Label___strlit279:
+	.dw 45 45 45 45 45 45 83 108 97 118 101 32 97 100 100 114 32 115 101 116 45 45 45 45 45 45 0
+Label___strlit282:
+	.dw 44 32 82 101 97 100 32 114 101 113 117 101 115 116 32 100 111 110 101 32 40 49 100 32 61 61 32 100 105 115 107 32 114 101 97 100 41 0
+Label___strlit283:
+	.dw 44 32 67 114 101 97 116 105 110 103 32 100 111 110 101 32 40 49 52 32 61 61 32 115 117 99 99 101 115 115 41 0
+Label___strlit301:
+	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 48 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
+Label___strlit323:
+	.dw 44 32 67 117 114 115 111 114 32 115 101 116 116 105 110 103 32 100 111 110 101 32 40 49 52 32 61 61 32 115 117 99 99 101 115 115 41 0
+Label___strlit326:
+	.dw 10 0
+Label___strlit333:
+	.dw 44 32 68 105 115 107 32 99 111 110 110 101 99 116 105 111 110 32 99 104 101 99 107 101 100 32 40 49 53 32 61 61 32 110 101 119 32 100 101 118 105 99 101 32 99 111 110 110 101 99 116 101 100 41 0
+Label___strlit340:
+	.dw 67 104 101 99 107 105 110 103 32 105 102 32 100 114 105 118 101 32 105 115 32 114 101 97 100 121 0
+Label___strlit341:
+	.dw 68 101 108 101 116 105 110 103 32 102 105 108 101 0
+Label___strlit343:
+	.dw 83 101 116 116 105 110 103 32 99 117 114 115 111 114 32 116 111 32 101 110 100 0
+Label___strlit346:
+	.dw 82 101 113 117 101 115 116 32 119 114 105 116 101 32 102 111 114 32 115 32 98 121 116 101 115 0
+Label___strlit374:
+	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 49 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
+Label___strlit383:
+	.dw 83 101 116 116 105 110 103 32 85 83 66 32 109 111 100 101 32 116 111 32 72 79 83 84 95 50 0
+Label___strlit386:
+	.dw 45 45 45 45 45 45 82 101 97 100 121 32 116 111 32 114 101 99 101 105 118 101 45 45 45 45 45 45 0
+Label___strlit393:
+	.dw 66 121 116 101 32 82 68 32 117 115 98 32 100 97 116 97 48 0
+Label___strlit434:
+	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 49 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
+Label___strlit445:
+	.dw 10 0
+Label___strlit455:
+	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 50 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
+Label___strlit476:
+	.dw 83 101 116 116 105 110 103 32 85 83 66 32 109 111 100 101 32 116 111 32 72 79 83 84 95 50 0
+Label___strlit479:
+	.dw 114 101 115 101 116 32 100 111 110 101 0
+Label___strlit484:
+	.dw 77 111 117 110 116 105 110 103 32 100 114 105 118 101 0
+Label___strlit488:
+	.dw 44 32 68 114 105 118 101 32 114 101 97 100 121 32 99 104 101 99 107 32 100 111 110 101 32 40 49 52 32 61 61 32 115 117 99 99 101 115 115 41 0
+Label___strlit490:
+	.dw 44 32 68 101 108 101 116 105 110 103 32 100 111 110 101 32 40 49 52 32 61 61 32 115 117 99 99 101 115 115 41 0
+Label___strlit491:
+	.dw 70 105 108 101 110 97 109 101 32 115 101 110 116 0
+Label___strlit496:
+	.dw 67 104 101 99 107 105 110 103 32 100 105 115 107 32 99 111 110 110 101 99 116 105 111 110 32 115 116 97 116 117 115 0
+Label___strlit497:
+	.dw 44 32 77 111 117 110 116 105 110 103 32 100 111 110 101 32 40 49 52 32 61 61 32 115 117 99 99 101 115 115 41 0
+Label___strlit503:
+	.dw 83 101 116 116 105 110 103 32 85 83 66 32 109 111 100 101 32 116 111 32 72 79 83 84 95 48 0
+Label___strlit508:
+	.dw 44 32 66 121 116 101 32 114 100 32 117 115 98 32 100 111 110 101 32 40 114 101 116 118 97 108 32 61 61 32 100 97 116 97 32 115 105 122 101 41 0
+Label___strlit523:
+	.dw 44 32 87 114 105 116 101 32 114 101 113 117 101 115 116 32 100 111 110 101 32 40 49 101 32 61 61 32 100 105 115 107 32 119 114 105 116 101 41 0
+Label___strlit543:
+	.dw 67 108 111 115 105 110 103 32 102 105 108 101 0
+Label___strlit547:
+	.dw 66 121 116 101 32 87 82 32 114 101 113 32 100 97 116 97 0
+Label___strlit552:
+	.dw 67 104 101 99 107 105 110 103 32 68 101 118 105 99 101 32 99 111 110 110 101 99 116 105 111 110 32 115 116 97 116 117 115 0
 
 Label_div:
 	sub rsp 4 rsp
@@ -338,7 +340,7 @@ Label_uprintln:
 	; ADDROF
 	addr2reg Label_uprint r1
 	; ADDROF
-	addr2reg Label___strlit393 r5
+	addr2reg Label___strlit326 r5
 	; SET
 	; CALL
 	savpc r12
@@ -975,7 +977,7 @@ Label_CH376_init:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit272 r5
+	addr2reg Label___strlit479 r5
 	; SET
 	; CALL
 	savpc r12
@@ -985,7 +987,7 @@ Label_CH376_init:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit308 r5
+	addr2reg Label___strlit503 r5
 	; SET
 	; CALL
 	savpc r12
@@ -1099,7 +1101,7 @@ Label_CH376_init:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit576 r5
+	addr2reg Label___strlit301 r5
 	; SET
 	; CALL
 	savpc r12
@@ -1147,7 +1149,7 @@ Label___shivyc_label77:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit389 r5
+	addr2reg Label___strlit149 r5
 	; SET
 	; CALL
 	savpc r12
@@ -1231,7 +1233,7 @@ Label___shivyc_label77:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit603 r5
+	addr2reg Label___strlit261 r5
 	; SET
 	; CALL
 	savpc r12
@@ -1246,7 +1248,7 @@ Label___shivyc_label21:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit332 r5
+	addr2reg Label___strlit97 r5
 	; SET
 	; CALL
 	savpc r12
@@ -1360,7 +1362,7 @@ Label___shivyc_label21:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit2 r5
+	addr2reg Label___strlit374 r5
 	; SET
 	; CALL
 	savpc r12
@@ -1370,7 +1372,7 @@ Label___shivyc_label21:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit48 r5
+	addr2reg Label___strlit383 r5
 	; SET
 	; CALL
 	savpc r12
@@ -1484,7 +1486,7 @@ Label___shivyc_label21:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit208 r5
+	addr2reg Label___strlit132 r5
 	; SET
 	; CALL
 	savpc r12
@@ -1512,7 +1514,7 @@ Label___shivyc_label78:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit275 r5
+	addr2reg Label___strlit128 r5
 	; SET
 	; CALL
 	savpc r12
@@ -1596,7 +1598,7 @@ Label___shivyc_label78:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit488 r5
+	addr2reg Label___strlit333 r5
 	; SET
 	; CALL
 	savpc r12
@@ -1611,7 +1613,7 @@ Label___shivyc_label23:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit533 r5
+	addr2reg Label___strlit340 r5
 	; SET
 	; CALL
 	savpc r12
@@ -1735,7 +1737,7 @@ Label___shivyc_label79:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit420 r5
+	addr2reg Label___strlit488 r5
 	; SET
 	; CALL
 	savpc r12
@@ -1750,7 +1752,7 @@ Label___shivyc_label25:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit458 r5
+	addr2reg Label___strlit484 r5
 	; SET
 	; CALL
 	savpc r12
@@ -1874,7 +1876,7 @@ Label___shivyc_label80:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit496 r5
+	addr2reg Label___strlit497 r5
 	; SET
 	; CALL
 	savpc r12
@@ -1909,7 +1911,7 @@ Label_CH376_setCursor:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit581 r5
+	addr2reg Label___strlit343 r5
 	; SET
 	; CALL
 	savpc r12
@@ -2065,7 +2067,7 @@ Label___shivyc_label81:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit310 r5
+	addr2reg Label___strlit323 r5
 	; SET
 	; CALL
 	savpc r12
@@ -2100,7 +2102,7 @@ Label_CH376_readFile:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit67 r5
+	addr2reg Label___strlit165 r5
 	; SET
 	; CALL
 	savpc r12
@@ -2226,7 +2228,7 @@ Label___shivyc_label82:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit411 r5
+	addr2reg Label___strlit282 r5
 	; SET
 	; CALL
 	savpc r12
@@ -2249,7 +2251,7 @@ Label___shivyc_label31:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit311 r5
+	addr2reg Label___strlit393 r5
 	; SET
 	; CALL
 	savpc r12
@@ -2335,7 +2337,7 @@ Label___shivyc_label34:
 	; ADDROF
 	addr2reg Label_uprint r1
 	; ADDROF
-	addr2reg Label___strlit57 r5
+	addr2reg Label___strlit445 r5
 	; SET
 	; CALL
 	savpc r12
@@ -2372,7 +2374,7 @@ Label___shivyc_label34:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit474 r5
+	addr2reg Label___strlit508 r5
 	; SET
 	; CALL
 	savpc r12
@@ -2406,7 +2408,7 @@ Label_CH376_writeFile:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit562 r5
+	addr2reg Label___strlit346 r5
 	; SET
 	; CALL
 	savpc r12
@@ -2533,7 +2535,7 @@ Label___shivyc_label84:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit167 r5
+	addr2reg Label___strlit523 r5
 	; SET
 	; CALL
 	savpc r12
@@ -2548,7 +2550,7 @@ Label___shivyc_label36:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit40 r5
+	addr2reg Label___strlit547 r5
 	; SET
 	; CALL
 	savpc r12
@@ -2621,7 +2623,7 @@ Label___shivyc_label36:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit106 r5
+	addr2reg Label___strlit15 r5
 	; SET
 	; CALL
 	savpc r12
@@ -2631,7 +2633,7 @@ Label___shivyc_label36:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit156 r5
+	addr2reg Label___strlit68 r5
 	; SET
 	; CALL
 	savpc r12
@@ -2741,7 +2743,7 @@ Label___shivyc_label85:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit465 r5
+	addr2reg Label___strlit188 r5
 	; SET
 	; CALL
 	savpc r12
@@ -2776,7 +2778,7 @@ Label_CH376_openFile:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit532 r5
+	addr2reg Label___strlit219 r5
 	; SET
 	; CALL
 	savpc r12
@@ -2886,7 +2888,7 @@ Label___shivyc_label86:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit112 r5
+	addr2reg Label___strlit95 r5
 	; SET
 	; CALL
 	savpc r12
@@ -2921,7 +2923,7 @@ Label_CH376_createFile:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit35 r5
+	addr2reg Label___strlit161 r5
 	; SET
 	; CALL
 	savpc r12
@@ -3045,7 +3047,7 @@ Label___shivyc_label87:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit462 r5
+	addr2reg Label___strlit283 r5
 	; SET
 	; CALL
 	savpc r12
@@ -3080,7 +3082,7 @@ Label_CH376_deleteFile:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit60 r5
+	addr2reg Label___strlit341 r5
 	; SET
 	; CALL
 	savpc r12
@@ -3190,7 +3192,7 @@ Label___shivyc_label88:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit481 r5
+	addr2reg Label___strlit490 r5
 	; SET
 	; CALL
 	savpc r12
@@ -3225,7 +3227,7 @@ Label_CH376_closeFile:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit548 r5
+	addr2reg Label___strlit543 r5
 	; SET
 	; CALL
 	savpc r12
@@ -3343,7 +3345,7 @@ Label___shivyc_label89:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit131 r5
+	addr2reg Label___strlit194 r5
 	; SET
 	; CALL
 	savpc r12
@@ -3380,7 +3382,7 @@ Label_CH376_sendFileName:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit63 r5
+	addr2reg Label___strlit234 r5
 	; SET
 	; CALL
 	savpc r12
@@ -3437,7 +3439,7 @@ Label_CH376_sendFileName:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit497 r5
+	addr2reg Label___strlit491 r5
 	; SET
 	; CALL
 	savpc r12
@@ -3555,7 +3557,7 @@ Label_noWaitGetStatus:
 	read 0 rsp r12
 	add rsp 4 rsp
 	jumpr 4 r12
-Label_resetDevice:
+Label_connectDevice:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
@@ -3581,7 +3583,7 @@ Label___shivyc_label90:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit247 r5
+	addr2reg Label___strlit496 r5
 	; SET
 	; CALL
 	savpc r12
@@ -3665,7 +3667,7 @@ Label___shivyc_label90:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit326 r5
+	addr2reg Label___strlit278 r5
 	; SET
 	; CALL
 	savpc r12
@@ -3680,7 +3682,7 @@ Label___shivyc_label48:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit348 r5
+	addr2reg Label___strlit21 r5
 	; SET
 	; CALL
 	savpc r12
@@ -3794,7 +3796,7 @@ Label___shivyc_label48:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit50 r5
+	addr2reg Label___strlit434 r5
 	; SET
 	; CALL
 	savpc r12
@@ -3804,7 +3806,7 @@ Label___shivyc_label48:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit74 r5
+	addr2reg Label___strlit476 r5
 	; SET
 	; CALL
 	savpc r12
@@ -3918,7 +3920,7 @@ Label___shivyc_label48:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit384 r5
+	addr2reg Label___strlit455 r5
 	; SET
 	; CALL
 	savpc r12
@@ -3946,7 +3948,7 @@ Label___shivyc_label91:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit464 r5
+	addr2reg Label___strlit552 r5
 	; SET
 	; CALL
 	savpc r12
@@ -4030,7 +4032,7 @@ Label___shivyc_label91:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit260 r5
+	addr2reg Label___strlit93 r5
 	; SET
 	; CALL
 	savpc r12
@@ -4490,61 +4492,39 @@ Label_writeTP2:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 296 rsp
+	sub rsp 244 rsp
 	; READREL
 	addr2reg Label_noteList r7
 	read 16 r7 r1
-	; SETREL
-	write -296 rbp r1
+	; SET
 	; READREL
 	addr2reg Label_noteList r7
-	read 20 r7 r1
-	; SETREL
-	write -292 rbp r1
-	; READREL
-	addr2reg Label_noteList r7
-	read 24 r7 r1
-	; SETREL
-	write -288 rbp r1
-	; READREL
-	addr2reg Label_noteList r7
-	read 28 r7 r1
-	; SETREL
-	write -284 rbp r1
-	; READREL
-	read -296 rbp r4
-	; SET
-	; READREL
-	read -292 rbp r2
-	; SET
-	; READREL
-	read -288 rbp r3
-	; SET
-	; READREL
-	read -284 rbp r1
-	; SET
-	; SET
+	read 20 r7 r2
 	; LBITSHIFT
 	shiftl r2 8 r2
 	; OR
-	or r4 r2 r4
+	or r1 r2 r1
 	; SET
+	; READREL
+	addr2reg Label_noteList r7
+	read 24 r7 r2
 	; LBITSHIFT
-	shiftl r3 16 r3
+	shiftl r2 16 r2
 	; OR
-	or r0 r3 r2
-	or r4 r2 r4
+	or r1 r2 r1
 	; SET
+	; READREL
+	addr2reg Label_noteList r7
+	read 28 r7 r2
 	; LBITSHIFT
-	shiftl r1 24 r1
+	shiftl r2 24 r2
 	; OR
-	or r0 r1 r2
-	or r4 r2 r4
+	or r1 r2 r1
 	; SET
 	; SET
-	load32 12592685 r1
+	load32 12592685 r2
 	; SETAT
-	write 0 r1 r4
+	write 0 r2 r1
 	; RETURN
 	or r0 rbp rsp
 	read 0 rsp rbp
@@ -4556,61 +4536,39 @@ Label_writeTP1:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 312 rsp
+	sub rsp 244 rsp
 	; READREL
 	addr2reg Label_noteList r7
 	read 0 r7 r1
-	; SETREL
-	write -312 rbp r1
+	; SET
 	; READREL
 	addr2reg Label_noteList r7
-	read 4 r7 r1
-	; SETREL
-	write -308 rbp r1
-	; READREL
-	addr2reg Label_noteList r7
-	read 8 r7 r1
-	; SETREL
-	write -304 rbp r1
-	; READREL
-	addr2reg Label_noteList r7
-	read 12 r7 r1
-	; SETREL
-	write -300 rbp r1
-	; READREL
-	read -312 rbp r4
-	; SET
-	; READREL
-	read -308 rbp r2
-	; SET
-	; READREL
-	read -304 rbp r3
-	; SET
-	; READREL
-	read -300 rbp r1
-	; SET
-	; SET
+	read 4 r7 r2
 	; LBITSHIFT
 	shiftl r2 8 r2
 	; OR
-	or r4 r2 r4
+	or r1 r2 r1
 	; SET
+	; READREL
+	addr2reg Label_noteList r7
+	read 8 r7 r2
 	; LBITSHIFT
-	shiftl r3 16 r3
+	shiftl r2 16 r2
 	; OR
-	or r0 r3 r2
-	or r4 r2 r4
+	or r1 r2 r1
 	; SET
+	; READREL
+	addr2reg Label_noteList r7
+	read 12 r7 r2
 	; LBITSHIFT
-	shiftl r1 24 r1
+	shiftl r2 24 r2
 	; OR
-	or r0 r1 r2
-	or r4 r2 r4
+	or r1 r2 r1
 	; SET
 	; SET
-	load32 12592684 r1
+	load32 12592684 r2
 	; SETAT
-	write 0 r1 r4
+	write 0 r2 r1
 	; RETURN
 	or r0 rbp rsp
 	read 0 rsp rbp
@@ -4622,7 +4580,7 @@ Label_get_int_in:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 312 rsp
+	sub rsp 244 rsp
 	; ADDROF
 	addr2reg Label_toggle_recv r1
 	; CALL
@@ -4692,9 +4650,9 @@ Label_set_addr:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 316 rsp
+	sub rsp 284 rsp
 	; LOADARG
-	write -316 rbp r5
+	write -284 rbp r5
 	; ADDROF
 	addr2reg Label_CH376_spiBeginTransfer r1
 	; CALL
@@ -4713,7 +4671,7 @@ Label_set_addr:
 	; ADDROF
 	addr2reg Label_CH376_spiTransfer r1
 	; CALL
-	read -316 rbp r12
+	read -284 rbp r12
 	or r0 r12 r5
 	savpc r12
 	sub rsp 4 rsp
@@ -4744,7 +4702,7 @@ Label_set_addr:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit363 r5
+	addr2reg Label___strlit210 r5
 	; SET
 	; CALL
 	savpc r12
@@ -4769,7 +4727,7 @@ Label_set_addr:
 	; ADDROF
 	addr2reg Label_CH376_spiTransfer r1
 	; CALL
-	read -316 rbp r12
+	read -284 rbp r12
 	or r0 r12 r5
 	savpc r12
 	sub rsp 4 rsp
@@ -4785,7 +4743,7 @@ Label_set_addr:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit175 r5
+	addr2reg Label___strlit279 r5
 	; SET
 	; CALL
 	savpc r12
@@ -4803,9 +4761,9 @@ Label_set_config:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 320 rsp
+	sub rsp 288 rsp
 	; LOADARG
-	write -320 rbp r5
+	write -288 rbp r5
 	; ADDROF
 	addr2reg Label_CH376_spiBeginTransfer r1
 	; CALL
@@ -4824,7 +4782,7 @@ Label_set_config:
 	; ADDROF
 	addr2reg Label_CH376_spiTransfer r1
 	; CALL
-	read -320 rbp r12
+	read -288 rbp r12
 	or r0 r12 r5
 	savpc r12
 	sub rsp 4 rsp
@@ -4863,7 +4821,7 @@ Label_main:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 312 rsp
+	sub rsp 244 rsp
 	; ADDROF
 	addr2reg Label_CH376_init r1
 	; CALL
@@ -4879,7 +4837,7 @@ Label_main:
 	write 0 rsp r12
 	jumpr 0 r1
 	; ADDROF
-	addr2reg Label_resetDevice r1
+	addr2reg Label_connectDevice r1
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
@@ -4913,6 +4871,16 @@ Label_main:
 	addr2reg Label_set_config r1
 	; CALL
 	or r0 1 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit386 r5
+	; SET
+	; CALL
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
@@ -4971,7 +4939,7 @@ Label_int1:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 312 rsp
+	sub rsp 244 rsp
 	; SET
 	load32 4980736 r1
 	; SETAT
@@ -4988,7 +4956,7 @@ Label_int2:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 312 rsp
+	sub rsp 244 rsp
 	; RETURN
 	or r0 rbp rsp
 	read 0 rsp rbp
@@ -5000,7 +4968,7 @@ Label_int3:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 312 rsp
+	sub rsp 244 rsp
 	; RETURN
 	or r0 rbp rsp
 	read 0 rsp rbp
@@ -5012,7 +4980,7 @@ Label_int4:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 312 rsp
+	sub rsp 244 rsp
 	; RETURN
 	or r0 rbp rsp
 	read 0 rsp rbp

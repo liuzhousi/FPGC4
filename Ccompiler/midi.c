@@ -5,6 +5,9 @@
 */
 
 int endp_mode = 0x80;
+
+// list of currently pressed notes
+// values are the note ids. 0 = idle
 int noteList[10] = 0;
 
 void setUSBspeed()   
@@ -24,7 +27,7 @@ int noWaitGetStatus() {
     return retval;
 }
 
-void resetDevice()
+void connectDevice()
 {
 	int retval = 0;
 	char buffer[10];
@@ -44,7 +47,7 @@ void resetDevice()
 
 		itoah(retval, &buffer[0]);
 		uprint(&buffer[0]);
-		uprintln(", Disk connection checked (15 == new device connected)");
+		uprintln(", Device connection checked (15 == new device connected)");
 	}
 
 
@@ -93,7 +96,7 @@ void resetDevice()
 	retval = 0;
 	while (retval != 0x15)
 	{
-		uprintln("Checking disk connection status");
+		uprintln("Checking Device connection status");
 
 		delay(CH376_LOOP_DELAY);
 		CH376_spiBeginTransfer();
@@ -106,7 +109,7 @@ void resetDevice()
 
 		itoah(retval, &buffer[0]);
 		uprint(&buffer[0]);
-		uprintln(", Disk connection checked (15 == new device connected)");
+		uprintln(", Device connection checked (15 == new device connected)");
 	}
 }
 
@@ -119,7 +122,7 @@ void toggle_recv()
   CH376_spiTransfer( 0x1C );
   CH376_spiTransfer( val );
   CH376_spiEndTransfer();
-  
+
 }
 
 void issue_token2(int endp_and_pid)
@@ -128,36 +131,28 @@ void issue_token2(int endp_and_pid)
   CH376_spiTransfer( 0x4F );
   CH376_spiTransfer( endp_and_pid );  /* Bit7~4 for EndPoint No, Bit3~0 for Token PID */
   CH376_spiEndTransfer(); 
-  //delay(1);  
 }
-
 
 
 void press_note(int noteID)
 {
-
   	int done = 0;
-
   	for (int i = 0; i < 8; i++)
   	{
   		if (done == 0)
   		{
   			int *p = noteList;
-
 	  		if (*(p+i) == 0)
 	  		{
 	  			*(p+i) = noteID;
 	  			done = 1;
 	  		}
   		}
-  		
   	}
-
 }
 
 void release_note(int noteID)
 {
-
   	for (int i = 0; i < 8; i++)
   	{
   		int *p = noteList;
@@ -169,18 +164,11 @@ void release_note(int noteID)
 }
 
 
-void RD_USB_DATA() {     
-
-    
-    //Serial.println("Reading data");
-    
+void RD_USB_DATA() 
+{     
     CH376_spiBeginTransfer();
     CH376_spiTransfer(0x28); 
-
     CH376_spiTransfer(0x00);  //ignore len :P, just read 4 bytes
-
-    //Serial.print("Data is of length ");
-    //Serial.println(len, DEC);
    
     int b0 = CH376_spiTransfer(0x00);
     int b1 = CH376_spiTransfer(0x00);
@@ -190,7 +178,6 @@ void RD_USB_DATA() {
     CH376_spiEndTransfer();
 
     char buffer[10];
-
 
     /*
 	uprintln("--RAW DATA--");
@@ -205,7 +192,6 @@ void RD_USB_DATA() {
 
 	itoah(b3, &buffer[0]);
 	uprintln(&buffer[0]);
-
 	*/
 
 	
@@ -215,6 +201,16 @@ void RD_USB_DATA() {
   	int event = b1 &&& 0b11110000;
   	int noteID = b2;
   	int velocity = b3;
+
+  	if (event == 0x90)
+  	{
+	  	press_note(noteID);
+  	}
+
+  	if (event == 0x80)
+  	{
+	  	release_note(noteID);
+  	}
 
 
   	/*
@@ -246,16 +242,6 @@ void RD_USB_DATA() {
 
     uprintln("\n");
 	*/
-
-	if (event == 0x90)
-  	{
-	  	press_note(noteID);
-  	}
-
-  	if (event == 0x80)
-  	{
-	  	release_note(noteID);
-  	}
   	
 }  
 
@@ -263,67 +249,30 @@ void RD_USB_DATA() {
 void writeTP2()
 {
 	// write notelist to toneplayer
-
-
-	int buf[4];
-
-	buf[0] = noteList[4];
-	buf[1] = noteList[5];
-	buf[2] = noteList[6];
-	buf[3] = noteList[7];
-
-	int n0 = buf[0];
-	int n1 = buf[1];
-	int n2 = buf[2];
-	int n3 = buf[3];
-
-	int v2 = n0;
-	v2 = v2 | (n1 << 8);
-	v2 = v2 | (n2 << 16);
-	v2 = v2 | (n3 << 24);
+	int quadNoteWord = noteList[4];
+	quadNoteWord = quadNoteWord | (noteList[5] << 8);
+	quadNoteWord = quadNoteWord | (noteList[6] << 16);
+	quadNoteWord = quadNoteWord | (noteList[7] << 24);
 	
-	
-	//int *tp1 = (int *)0xC0262C; // set address
-	int *tp2 = (int *)0xC0262D; // set address
-	
-	//*tp1 = v2;
-	*tp2 = v2;
+	int *tp2 = (int *)0xC0262D;
+	*tp2 = quadNoteWord;
 }
 
 
 void writeTP1()
 {
 	// write notelist to toneplayer
-
-	int buf[4];
-
-	buf[0] = noteList[0];
-	buf[1] = noteList[1];
-	buf[2] = noteList[2];
-	buf[3] = noteList[3];
-
-	int n0 = buf[0];
-	int n1 = buf[1];
-	int n2 = buf[2];
-	int n3 = buf[3];
-
-	int v2 = n0;
-	v2 = v2 | (n1 << 8);
-	v2 = v2 | (n2 << 16);
-	v2 = v2 | (n3 << 24);
+	int quadNoteWord = noteList[0];
+	quadNoteWord = quadNoteWord | (noteList[1] << 8);
+	quadNoteWord = quadNoteWord | (noteList[2] << 16);
+	quadNoteWord = quadNoteWord | (noteList[3] << 24);
 	
-	
-	int *tp1 = (int *)0xC0262C; // set address
-	//int *tp2 = (int *)0xC0262D; // set address
-	
-	*tp1 = v2;
-	//*tp2 = n2;
+	int *tp1 = (int *)0xC0262C;
+	*tp1 = quadNoteWord;
 }
 
 void get_int_in()   
 {   
-    //uprintln("Waiting for input"); 
-
     toggle_recv();
   
     issue_token2(89);
@@ -333,7 +282,6 @@ void get_int_in()
     while (s != 0x14)
 	{
 		s = noWaitGetStatus();
-		//delay(1);
     }
 
       RD_USB_DATA();
@@ -390,10 +338,10 @@ int main()
 {
 
 	CH376_init();
+
 	setUSBspeed();
 
-
-	resetDevice();
+	connectDevice();
 
 	delay(10);
 
@@ -403,6 +351,7 @@ int main()
 
     set_config(1);
 
+    uprintln("------Ready to receive------");
     delay(10);
 
     while(1)
@@ -411,8 +360,6 @@ int main()
     	writeTP1();
     	writeTP2();
     }
-
-	
 
 	return 48;
 }
@@ -436,4 +383,5 @@ void int3()
 
 void int4()
 {
+	
 }

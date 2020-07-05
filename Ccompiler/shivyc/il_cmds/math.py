@@ -269,7 +269,12 @@ class _AndOrXorCmd(ILCommand):
             out_spot = spotmap[self.output]
             temp_spot = get_reg([out_spot, arg1_spot], [arg2_spot])
             if arg1_spot != temp_spot:
-                asm_code.add(asm_cmds.Mov(temp_spot, arg1_spot, arg1_size))
+
+                if isinstance(arg1_spot, spots.MemSpot):
+                    asm_code.add(asm_cmds.Read(arg1_spot, temp_spot, arg1_size))
+                else:
+                    asm_code.add(asm_cmds.Mov(temp_spot, arg1_spot, arg1_size))
+
             asm_code.add(self.Inst(temp_spot, arg2_spot, arg1_size))
             if temp_spot != out_spot:
                 asm_code.add(asm_cmds.Mov(out_spot, temp_spot, arg1_size))

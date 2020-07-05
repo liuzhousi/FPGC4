@@ -3,7 +3,7 @@
 import shivyc.asm_cmds as asm_cmds
 import shivyc.spots as spots
 from shivyc.il_cmds.base import ILCommand
-from shivyc.spots import LiteralSpot, RegSpot
+from shivyc.spots import LiteralSpot, RegSpot, MemSpot
 
 
 class Label(ILCommand):
@@ -74,6 +74,10 @@ class _GeneralJump(ILCommand):
             r = get_reg()
             asm_code.add(asm_cmds.Mov(r, spotmap[self.cond], size))
             cond_spot = r
+        # need to test before uncomment!
+        #elif isinstance(spotmap[self.cond], MemSpot):
+        #    cond_spot = RegSpot("r13")
+        #    asm_code.add(asm_cmds.Read(spotmap[self.cond], cond_spot, size))
         else:
             cond_spot = spotmap[self.cond]
 

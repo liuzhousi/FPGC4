@@ -72,7 +72,7 @@ class Write:
 
         else:
             if type(self.arg1.base) == str:
-                s += "\taddr2reg " + self.arg1.base + " r7\n\twrite"
+                s += "\taddr2reg Label_" + self.arg1.base + " r7\n\twrite"
 
                 if isinstance(self.arg1.count, spots.LiteralSpot):
                     s += " " + str(self.arg1.offset + (self.arg1.chunk * self.arg1.count.value))
@@ -118,7 +118,7 @@ class Read:
 
         else:
             if type(self.arg1.base) == str:
-                s += "\taddr2reg " + self.arg1.base + " r7\n\tread"
+                s += "\taddr2reg Label_" + self.arg1.base + " r7\n\tread"
 
                 if isinstance(self.arg1.count, spots.LiteralSpot):
                     s += " " + str(self.arg1.offset + (self.arg1.chunk * self.arg1.count.value))

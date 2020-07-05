@@ -21,6 +21,7 @@ Here I keep a simple list of my latest progress and a simple TODO list
 These are kinda ordered based on priority
 
 - Improve and write more libraries
+- Add CH376 interrupt signal to memory map
 - Enable second SPI and UART port
 - Create a web server with W5500 chip
 - Change speed of FT232RL to 3?Mboud
@@ -71,7 +72,7 @@ These are kinda ordered based on priority
 - [done] add bitwise | ^ and & operators (look at commit 31180511de0f95cf5dbda0bf98df71901a2fd1ed)
 - [done] print static string in correct asm format (.dw without commas)
 - Fix empty label problem in ASSEMBLER! (preprocessor) by adding a nop when detected
-- Fix global variables, and make tests for it
+- Fix global array indexing using variables in global variables
 - Fix commenting out asm code
 - Remove requirement to add intX() functions
 - Add wrapper for extended interrupts

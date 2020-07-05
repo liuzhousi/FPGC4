@@ -1,5 +1,12 @@
 #include "lib/ch376.h"
 
+/*
+	Global Variables
+*/
+
+int endp_mode = 0x80;
+int noteList[10] = 0;
+
 void setUSBspeed()   
 {      
     CH376_spiBeginTransfer();
@@ -106,11 +113,8 @@ void resetDevice()
 
 void toggle_recv()
 {
-  int *endp_mode = (int *)0x400001; // set address
-  int val = *endp_mode;
-  *endp_mode = *endp_mode ^0x40;
-	//*endp_mode = 0; // write value
-	//while (*p < 120); // wait 120 frames (two seconds)
+  int val = endp_mode;
+  endp_mode = endp_mode ^0x40;
   CH376_spiBeginTransfer();
   CH376_spiTransfer( 0x1C );
   CH376_spiTransfer( val );
@@ -132,20 +136,17 @@ void issue_token2(int endp_and_pid)
 void press_note(int noteID)
 {
 
-  	int *noteList = (int *)0x400010; // set address
-
   	int done = 0;
 
   	for (int i = 0; i < 8; i++)
   	{
   		if (done == 0)
   		{
-  			int noteStat = *(noteList+i);
+  			int *p = noteList;
 
-	  		if (noteStat == 0)
+	  		if (*(p+i) == 0)
 	  		{
-	  			*(noteList+i) = noteID;
-
+	  			*(p+i) = noteID;
 	  			done = 1;
 	  		}
   		}
@@ -157,14 +158,12 @@ void press_note(int noteID)
 void release_note(int noteID)
 {
 
-	int *noteList = (int *)0x400010; // set address
-
   	for (int i = 0; i < 8; i++)
   	{
-  		int noteStat = *(noteList+i);
-  		if (noteStat == noteID)
+  		int *p = noteList;
+  		if (*(p+i) == noteID)
   		{
-  			*(noteList+i) = 0;
+  			*(p+i) = 0;
   		}
   	}
 }
@@ -194,22 +193,19 @@ void RD_USB_DATA() {
 
 
     /*
-    if (0)
-    {
+	uprintln("--RAW DATA--");
+	itoah(b0, &buffer[0]);
+	uprintln(&buffer[0]);
 
-    	uprintln("--RAW DATA--");
-		itoah(b0, &buffer[0]);
-		uprintln(&buffer[0]);
+	itoah(b1, &buffer[0]);
+	uprintln(&buffer[0]);
 
-		itoah(b1, &buffer[0]);
-		uprintln(&buffer[0]);
+	itoah(b2, &buffer[0]);
+	uprintln(&buffer[0]);
 
-		itoah(b2, &buffer[0]);
-		uprintln(&buffer[0]);
+	itoah(b3, &buffer[0]);
+	uprintln(&buffer[0]);
 
-		itoah(b3, &buffer[0]);
-		uprintln(&buffer[0]);
-	}
 	*/
 
 	
@@ -222,36 +218,33 @@ void RD_USB_DATA() {
 
 
   	/*
-  	if (0)
-  	{
-  		uprintln("--PARSED DATA--");
+	uprintln("--PARSED DATA--");
 
-	  	uprint("Cable Number: ");
-		itoah(cableNumber, &buffer[0]);
-		uprintln(&buffer[0]);
+  	uprint("Cable Number: ");
+	itoah(cableNumber, &buffer[0]);
+	uprintln(&buffer[0]);
 
-		uprint("CIN: ");
-		itoah(CIN, &buffer[0]);
-		uprintln(&buffer[0]);
+	uprint("CIN: ");
+	itoah(CIN, &buffer[0]);
+	uprintln(&buffer[0]);
 
-		uprint("Channel: ");
-		itoah(channel, &buffer[0]);
-		uprintln(&buffer[0]);
+	uprint("Channel: ");
+	itoah(channel, &buffer[0]);
+	uprintln(&buffer[0]);
 
-		uprint("Event: ");
-		itoah(event, &buffer[0]);
-		uprintln(&buffer[0]);
+	uprint("Event: ");
+	itoah(event, &buffer[0]);
+	uprintln(&buffer[0]);
 
-		uprint("NoteID: ");
-		itoah(noteID, &buffer[0]);
-		uprintln(&buffer[0]);
+	uprint("NoteID: ");
+	itoah(noteID, &buffer[0]);
+	uprintln(&buffer[0]);
 
-		uprint("Velocity: ");
-		itoah(velocity, &buffer[0]);
-		uprintln(&buffer[0]);
+	uprint("Velocity: ");
+	itoah(velocity, &buffer[0]);
+	uprintln(&buffer[0]);
 
-	    uprintln("\n");
-	}
+    uprintln("\n");
 	*/
 
 	if (event == 0x90)
@@ -271,14 +264,13 @@ void writeTP2()
 {
 	// write notelist to toneplayer
 
-	int *noteList = (int *)0x400010; // set address
 
 	int buf[4];
 
-	buf[0] = *(noteList + 4);
-	buf[1] = *(noteList + 5);
-	buf[2] = *(noteList + 6);
-	buf[3] = *(noteList + 7);
+	buf[0] = noteList[4];
+	buf[1] = noteList[5];
+	buf[2] = noteList[6];
+	buf[3] = noteList[7];
 
 	int n0 = buf[0];
 	int n1 = buf[1];
@@ -303,14 +295,12 @@ void writeTP1()
 {
 	// write notelist to toneplayer
 
-	int *noteList = (int *)0x400010; // set address
-
 	int buf[4];
 
-	buf[0] = *(noteList + 0);
-	buf[1] = *(noteList + 1);
-	buf[2] = *(noteList + 2);
-	buf[3] = *(noteList + 3);
+	buf[0] = noteList[0];
+	buf[1] = noteList[1];
+	buf[2] = noteList[2];
+	buf[3] = noteList[3];
 
 	int n0 = buf[0];
 	int n1 = buf[1];
@@ -350,18 +340,17 @@ void get_int_in()
 
 
     // print notelist
-	if (0)
+    /*
+	for (int i = 0; i < 8; i++)
 	{
-		int *noteList = (int *)0x400010; // set address
-		for (int i = 0; i < 8; i++)
-		{
-			int q = i;
-			char buffer[10];
-			itoah(*(noteList + q), &buffer[0]);
-			uprintln(&buffer[0]);
-		}
+		int q = i;
+		char buffer[10];
+		int *p = noteList;
+		itoah(*(p+q), &buffer[0]);
+		uprintln(&buffer[0]);
 	}
-    
+	*/
+   
          
 }  
 
@@ -399,18 +388,6 @@ void set_config(int cfg) {
 
 int main() 
 {
-
-	int *noteList = (int *)0x400010; // set address
-
-  	for (int i = 0; i < 8; i++)
-  	{
-  		*noteList = 0;
-  		noteList += 1;
-  	}
-
-
-	int *endp_mode = (int *)0x400001; // set address
-	*endp_mode = 0x80;
 
 	CH376_init();
 	setUSBspeed();

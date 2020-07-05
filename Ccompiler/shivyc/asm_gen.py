@@ -54,7 +54,7 @@ class ASMCode:
 
         init - the value to initialize `name` to
         """
-        self.data.append(f"{name}:")
+        self.data.append(f"Label_{name}:")
         size_strs = {1: "byte",
                      2: "word",
                      4: "int",
@@ -63,9 +63,9 @@ class ASMCode:
         if init:
             self.data.append(f"\t.dw {init}")
         else:
-            words = (size // 4)
+            #words = (size // 4)
             line = "\t.dw"
-            for i in range(words):
+            for i in range(size):
                 line += " 0"
             self.data.append(line)
 

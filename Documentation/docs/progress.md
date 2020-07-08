@@ -55,6 +55,7 @@ These are kinda ordered based on priority
 - add something about WSL2
 - note that r7 is used as temp reg to store address of label in read/write instructions
 - only global int and int[x] are allowed, no char, since size allocation goes wrong
+- register/assembly info for c compiler
 
 
 ## Todo C compiler related
@@ -76,6 +77,7 @@ These are kinda ordered based on priority
 - Fix commenting out asm code
 - Remove requirement to add intX() functions
 - Add wrapper for extended interrupts
+- Improve performance of certain libraries by using assembly
 
 
 ## Future improvements (FPGC5?)

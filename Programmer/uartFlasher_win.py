@@ -71,12 +71,23 @@ if testReturnMode:
 else:
     print("\nSerial monitor:", flush=True)
 
+    run_event = threading.Event()
+    run_event.set()
     t1 = threading.Thread(target = writeThread, args=[port])
     t1.start()
 
-    while True:
-        rcv = port.read(1)
-        try:
-            print(rcv.decode("utf-8"), end = '', flush=True)
-        except:
-            print(rcv, end = '', flush=True)
+    try:
+        while True:
+            bytesToRead = port.in_waiting
+            if(bytesToRead > 0):
+                rcv = port.read(1)
+                try:
+                    print(rcv.decode("utf-8"), end = '', flush=True)
+                except:
+                    print(rcv, end = '', flush=True)
+            else:
+                sleep(.01) # allow CPU to idle
+    except KeyboardInterrupt:
+        print("\nClosing Serial Monitor")
+        run_event.clear()
+        t1.join()

@@ -36,13 +36,17 @@ class _ValueCmd(ILCommand):
             start_spot = start_spot.shift(shift)
             target_spot = target_spot.shift(shift)
 
+            # TODO: probably make better cases for memspots/regspots
 
             if isinstance(start_spot, LiteralSpot):
                 reg = start_spot
             elif reg != start_spot:
                 #print("AAAA", asm_cmds.Mov(reg, start_spot, reg_size), asm_cmds.Read(start_spot, reg, reg_size))
                 #asm_code.add(asm_cmds.Mov(reg, start_spot, reg_size))
-                asm_code.add(asm_cmds.Read(start_spot, reg, reg_size))
+                if isinstance(start_spot, MemSpot):
+                    asm_code.add(asm_cmds.Read(start_spot, reg, reg_size))
+                else:
+                    asm_code.add(asm_cmds.Mov(reg, start_spot, reg_size))
 
             if reg != target_spot:
                 #print("BBBB", asm_cmds.Mov(target_spot, reg, reg_size), asm_cmds.Write(target_spot, reg, reg_size))

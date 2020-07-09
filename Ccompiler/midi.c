@@ -1,7 +1,19 @@
-#include "lib/ch376.h"
+#include "lib/stdlib.h" 
+
+#define CH376_DEBUG				 0
+#define CH376_LOOP_DELAY 		 100
+#define CH376_COMMAND_DELAY		 20
+#define CMD_SET_USB_SPEED        0x04
+#define CMD_RESET_ALL            0x05
+#define CMD_GET_STATUS           0x22
+#define CMD_SET_USB_MODE         0x15
+#define MODE_HOST_0              0x05
+#define MODE_HOST_1              0x07
+#define MODE_HOST_2              0x06
+
 
 /*
-	Global Variables
+*	Global Variables
 */
 
 int endp_mode = 0x80;
@@ -10,6 +22,128 @@ int endp_mode = 0x80;
 // values are the note ids. 0 = idle
 int noteList[10] = 0;
 
+
+/*
+*	Functions
+*/
+
+// Sets GPO[0] (cs) low
+void CH376_spiBeginTransfer()
+{
+	ASM("\
+	// backup regs ;\
+    push r1	;\
+    push r2	;\
+    push r3	;\
+    \
+    load32 0xC02630 r3          // r3 = 0xC02630 | GPIO ;\
+    \
+    read 0 r3 r1                // r1 = GPIO values ;\
+    load 0b1111111011111111 r2  // r2 = bitmask ;\
+    and r1 r2 r1                // set GPO[0] low ;\
+    write 0 r3 r1               // write GPIO ;\
+    \
+    // restore regs ;\
+    pop r3 ;\
+    pop r2 ;\
+    pop r1 ;\
+    ");
+}
+
+// Sets GPO[0] (cs) high
+void CH376_spiEndTransfer()
+{
+	ASM("\
+	// backup regs ;\
+    push r1	;\
+    push r2	;\
+    push r3	;\
+    \
+    load32 0xC02630 r3          // r3 = 0xC02630 | GPIO ;\
+    \
+    read 0 r3 r1                // r1 = GPIO values ;\
+    load 0b100000000 r2         // r2 = bitmask ;\
+    or r1 r2 r1                 // set GPO[0] high ;\
+    write 0 r3 r1               // write GPIO ;\
+    \
+    // restore regs ;\
+    pop r3 ;\
+    pop r2 ;\
+    pop r1 ;\
+    ");
+}
+
+// write dataByte and return read value
+// write 0x00 for a read
+// Writes byte over SPI to CH376
+// INPUT:
+//   r5: byte to write
+// OUTPUT:
+//   r1: read value
+int CH376_spiTransfer(int dataByte)
+{
+	ASM("\
+    load32 0xC02631 r1      // r1 = 0xC02631 | SPI address    	;\
+    write 0 r1 r5           // write r5 over SPI				;\
+    read 0 r1 r1            // read return value				;\
+    ");
+}
+
+
+// Sets USB mode to mode, returns status code
+// Which should be 0x51 when successful
+int CH376_setUSBmode(int mode)
+{
+	CH376_spiBeginTransfer();
+	CH376_spiTransfer(CMD_SET_USB_MODE);
+	CH376_spiEndTransfer();
+	delay(1);
+
+	CH376_spiBeginTransfer();
+	CH376_spiTransfer(mode);
+	CH376_spiEndTransfer();
+	delay(1);
+
+	CH376_spiBeginTransfer();
+	int status = CH376_spiTransfer(0x00);
+	CH376_spiEndTransfer();
+	delay(1);
+
+	return status;
+}
+
+
+// resets and intitializes CH376
+void CH376_init()
+{
+	CH376_spiEndTransfer(); // start with cs high
+	delay(60);
+	
+	CH376_spiBeginTransfer();
+	CH376_spiTransfer(CMD_RESET_ALL);
+	CH376_spiEndTransfer();
+	delay(100); // wait after reset
+	
+	if (CH376_DEBUG)
+		uprintln("reset done");
+
+	if (CH376_DEBUG)
+		uprintln("Setting USB mode to HOST_0");
+
+	int retval = CH376_setUSBmode(MODE_HOST_0);
+
+	if (CH376_DEBUG)
+	{
+		char buffer[10];
+		itoah(retval, &buffer[0]);
+		uprint(&buffer[0]);
+		uprintln(", USB mode set to HOST_0 (51 == operation successful)");
+	}
+	
+}
+
+
+// Not required
 void setUSBspeed()   
 {      
     CH376_spiBeginTransfer();
@@ -20,120 +154,117 @@ void setUSBspeed()
     delay(20);
 }   
 
+
+// Get status without using interrupts
 int noWaitGetStatus() {
     CH376_spiBeginTransfer();
-    int retval = CH376_spiTransfer(CMD_GET_STATUS);
+    CH376_spiTransfer(CMD_GET_STATUS);
     CH376_spiEndTransfer(); 
+    delay(1);
+
+    CH376_spiBeginTransfer();
+    int retval = CH376_spiTransfer(0x00);
+    CH376_spiEndTransfer(); 
+
     return retval;
 }
 
+
+// Checks if a device is connected
+// Sets USB mode to eventually 2
+// Checks again if the device connected in new USB mode
 void connectDevice()
 {
+	// Variables
 	int retval = 0;
 	char buffer[10];
 
-	while (retval != 0x15)
+	// Device connection
+	if (CH376_DEBUG)
+		uprintln("Checking disk connection status");  
+
+    while (retval != 0x15)
 	{
-		uprintln("Checking disk connection status");
-
 		delay(CH376_LOOP_DELAY);
-		CH376_spiBeginTransfer();
-		CH376_spiTransfer(CMD_GET_STATUS);
-		CH376_spiEndTransfer();
+		retval = noWaitGetStatus();
+		if (CH376_DEBUG)
+		{
+			itoah(retval, &buffer[0]);
+			uprint(&buffer[0]);
+			uprintln(", Device connection checked (15 == new device connected)");
+		}
+    }
 
-		CH376_spiBeginTransfer();
-		retval = CH376_spiTransfer(0x00);
-		CH376_spiEndTransfer();
 
+    // USB mode 1
+    if (CH376_DEBUG)
+		uprintln("Setting USB mode to HOST_1");
+
+	retval = CH376_setUSBmode(MODE_HOST_1);
+	
+	if (CH376_DEBUG)
+	{
 		itoah(retval, &buffer[0]);
 		uprint(&buffer[0]);
-		uprintln(", Device connection checked (15 == new device connected)");
+		uprintln(", USB mode set to HOST_1 (51 == operation successful)");
 	}
 
 
+	// USB mode 2
+	if (CH376_DEBUG)
+		uprintln("Setting USB mode to HOST_2");
 
-	uprintln("Setting USB mode to HOST_1");
-	CH376_spiBeginTransfer();
-	CH376_spiTransfer(CMD_SET_USB_MODE);
-	CH376_spiEndTransfer();
-	delay(1);
+	retval = CH376_setUSBmode(MODE_HOST_2);
 
-	CH376_spiBeginTransfer();
-	CH376_spiTransfer(MODE_HOST_1);
-	CH376_spiEndTransfer();
-	delay(1);
-
-	CH376_spiBeginTransfer();
-	retval = CH376_spiTransfer(0x00);
-	CH376_spiEndTransfer();
-
-	itoah(retval, &buffer[0]);
-	uprint(&buffer[0]);
-	uprintln(", USB mode set to HOST_1 (51 == operation successful)");
+	if (CH376_DEBUG)
+	{
+		itoah(retval, &buffer[0]);
+		uprint(&buffer[0]);
+		uprintln(", USB mode set to HOST_2 (51 == operation successful)");
+	}
 
 
-
-	uprintln("Setting USB mode to HOST_2");
-	CH376_spiBeginTransfer();
-	CH376_spiTransfer(CMD_SET_USB_MODE);
-	CH376_spiEndTransfer();
-	delay(1);
-
-	CH376_spiBeginTransfer();
-	CH376_spiTransfer(MODE_HOST_2);
-	CH376_spiEndTransfer();
-	delay(1);
-
-	CH376_spiBeginTransfer();
-	retval = CH376_spiTransfer(0x00);
-	CH376_spiEndTransfer();
-
-	itoah(retval, &buffer[0]);
-	uprint(&buffer[0]);
-	uprintln(", USB mode set to HOST_2 (51 == operation successful)");
-
+	// Device connection
+	if (CH376_DEBUG)
+		uprintln("Checking disk connection status");  
 
 	retval = 0;
-	while (retval != 0x15)
+    while (retval != 0x15)
 	{
-		uprintln("Checking Device connection status");
-
 		delay(CH376_LOOP_DELAY);
-		CH376_spiBeginTransfer();
-		CH376_spiTransfer(CMD_GET_STATUS);
-		CH376_spiEndTransfer();
-
-		CH376_spiBeginTransfer();
-		retval = CH376_spiTransfer(0x00);
-		CH376_spiEndTransfer();
-
-		itoah(retval, &buffer[0]);
-		uprint(&buffer[0]);
-		uprintln(", Device connection checked (15 == new device connected)");
-	}
+		retval = noWaitGetStatus();
+		if (CH376_DEBUG)
+		{
+			itoah(retval, &buffer[0]);
+			uprint(&buffer[0]);
+			uprintln(", Device connection checked (15 == new device connected)");
+		}
+    }
 }
 
 
+// I think this is required to start receiving data from USB
 void toggle_recv()
 {
-  int val = endp_mode;
-  endp_mode = endp_mode ^0x40;
   CH376_spiBeginTransfer();
   CH376_spiTransfer( 0x1C );
-  CH376_spiTransfer( val );
+  CH376_spiTransfer( endp_mode );
   CH376_spiEndTransfer();
-
+  endp_mode = endp_mode ^0x40;
 }
 
-void issue_token2(int endp_and_pid)
+
+// Set endpoint and pid
+void issue_token(int endp_and_pid)
 {
   CH376_spiBeginTransfer();
   CH376_spiTransfer( 0x4F );
-  CH376_spiTransfer( endp_and_pid );  /* Bit7~4 for EndPoint No, Bit3~0 for Token PID */
+  CH376_spiTransfer( endp_and_pid );  // Bit7~4 for EndPoint No, Bit3~0 for Token PID
   CH376_spiEndTransfer(); 
 }
 
 
+// Set a free note in the noteList to noteID
 void press_note(int noteID)
 {
   	int done = 0;
@@ -141,35 +272,42 @@ void press_note(int noteID)
   	{
   		if (done == 0)
   		{
-  			int *p = noteList;
-	  		if (*(p+i) == 0)
+  			int *p_noteList = noteList;
+	  		if (*(p_noteList+i) == 0)
 	  		{
-	  			*(p+i) = noteID;
+	  			*(p_noteList+i) = noteID;
 	  			done = 1;
 	  		}
   		}
   	}
 }
 
+
+// Free all noted in noteList with noteID
 void release_note(int noteID)
 {
   	for (int i = 0; i < 8; i++)
   	{
-  		int *p = noteList;
-  		if (*(p+i) == noteID)
+  		int *p_noteList = noteList;
+  		if (*(p_noteList+i) == noteID)
   		{
-  			*(p+i) = 0;
+  			*(p_noteList+i) = 0;
   		}
   	}
 }
 
 
+// Read data from USB, and do something with it
+// First byte is the length,
+// But since a MIDI keyboard always sends 4 bytes,
+// We just ignore it
 void RD_USB_DATA() 
 {     
     CH376_spiBeginTransfer();
     CH376_spiTransfer(0x28); 
-    CH376_spiTransfer(0x00);  //ignore len :P, just read 4 bytes
+    CH376_spiTransfer(0x00);  // ignore len
    
+   	// read 4 bytes
     int b0 = CH376_spiTransfer(0x00);
     int b1 = CH376_spiTransfer(0x00);
     int b2 = CH376_spiTransfer(0x00);
@@ -179,76 +317,84 @@ void RD_USB_DATA()
 
     char buffer[10];
 
-    /*
-	uprintln("--RAW DATA--");
-	itoah(b0, &buffer[0]);
-	uprintln(&buffer[0]);
+    if (CH376_DEBUG)
+    {
+		uprintln("--RAW DATA--");
+		itoah(b0, &buffer[0]);
+		uprintln(&buffer[0]);
 
-	itoah(b1, &buffer[0]);
-	uprintln(&buffer[0]);
+		itoah(b1, &buffer[0]);
+		uprintln(&buffer[0]);
 
-	itoah(b2, &buffer[0]);
-	uprintln(&buffer[0]);
+		itoah(b2, &buffer[0]);
+		uprintln(&buffer[0]);
 
-	itoah(b3, &buffer[0]);
-	uprintln(&buffer[0]);
-	*/
+		itoah(b3, &buffer[0]);
+		uprintln(&buffer[0]);
+	}
 
 	
+	// parse bytes
 	int cableNumber = b0 &&& 0b11110000;
- 	int CIN = b0 &&& 0b00001111;
-  	int channel = b1 &&& 0b00001111;
-  	int event = b1 &&& 0b11110000;
-  	int noteID = b2;
-  	int velocity = b3;
+ 	int CIN 		= b0 &&& 0b00001111;
+  	int channel 	= b1 &&& 0b00001111;
+  	int event 		= b1 &&& 0b11110000;
+  	int noteID 		= b2;
+  	int velocity 	= b3;
 
+  	// note press
   	if (event == 0x90)
   	{
 	  	press_note(noteID);
   	}
 
+  	// note release
   	if (event == 0x80)
   	{
 	  	release_note(noteID);
   	}
 
+  	// control codes can be checked here as well
+  	// when there is a use for it
 
-  	/*
-	uprintln("--PARSED DATA--");
 
-  	uprint("Cable Number: ");
-	itoah(cableNumber, &buffer[0]);
-	uprintln(&buffer[0]);
+  	if (CH376_DEBUG)
+    {
+		uprintln("--PARSED DATA--");
 
-	uprint("CIN: ");
-	itoah(CIN, &buffer[0]);
-	uprintln(&buffer[0]);
+	  	uprint("Cable Number: ");
+		itoah(cableNumber, &buffer[0]);
+		uprintln(&buffer[0]);
 
-	uprint("Channel: ");
-	itoah(channel, &buffer[0]);
-	uprintln(&buffer[0]);
+		uprint("CIN: ");
+		itoah(CIN, &buffer[0]);
+		uprintln(&buffer[0]);
 
-	uprint("Event: ");
-	itoah(event, &buffer[0]);
-	uprintln(&buffer[0]);
+		uprint("Channel: ");
+		itoah(channel, &buffer[0]);
+		uprintln(&buffer[0]);
 
-	uprint("NoteID: ");
-	itoah(noteID, &buffer[0]);
-	uprintln(&buffer[0]);
+		uprint("Event: ");
+		itoah(event, &buffer[0]);
+		uprintln(&buffer[0]);
 
-	uprint("Velocity: ");
-	itoah(velocity, &buffer[0]);
-	uprintln(&buffer[0]);
+		uprint("NoteID: ");
+		itoah(noteID, &buffer[0]);
+		uprintln(&buffer[0]);
 
-    uprintln("\n");
-	*/
+		uprint("Velocity: ");
+		itoah(velocity, &buffer[0]);
+		uprintln(&buffer[0]);
+
+	    uprintln("\n");
+	}
   	
 }  
 
 
+// Write second part of noteList to tone player 2
 void writeTP2()
 {
-	// write notelist to toneplayer
 	int quadNoteWord = noteList[4];
 	quadNoteWord = quadNoteWord | (noteList[5] << 8);
 	quadNoteWord = quadNoteWord | (noteList[6] << 16);
@@ -259,9 +405,9 @@ void writeTP2()
 }
 
 
+// Write first part of noteList to tone player 1
 void writeTP1()
 {
-	// write notelist to toneplayer
 	int quadNoteWord = noteList[0];
 	quadNoteWord = quadNoteWord | (noteList[1] << 8);
 	quadNoteWord = quadNoteWord | (noteList[2] << 16);
@@ -271,35 +417,19 @@ void writeTP1()
 	*tp1 = quadNoteWord;
 }
 
-void get_int_in()   
+
+// Print noteList
+void printNoteList()   
 {   
-    toggle_recv();
-  
-    issue_token2(89);
-    
-    int s = noWaitGetStatus();   
-
-    while (s != 0x14)
-	{
-		s = noWaitGetStatus();
-    }
-
-      RD_USB_DATA();
-
-
-    // print notelist
-    /*
+	uprintln("--PARSED DATA--");
+	char buffer[10];
 	for (int i = 0; i < 8; i++)
 	{
 		int q = i;
-		char buffer[10];
 		int *p = noteList;
 		itoah(*(p+q), &buffer[0]);
 		uprintln(&buffer[0]);
-	}
-	*/
-   
-         
+	}  
 }  
 
 
@@ -309,18 +439,19 @@ void set_addr(int addr) {
     CH376_spiTransfer( 0x45 );     
     CH376_spiTransfer( addr );  
     CH376_spiEndTransfer();   
- 
- 	delay(100);
-    noWaitGetStatus();
+ 	delay(20);
     
-    uprintln("------Host addr set------");
+    if (CH376_DEBUG)
+	    uprintln("------Host addr set------");
 
     CH376_spiBeginTransfer();
     CH376_spiTransfer( 0x13 ); 
     CH376_spiTransfer( addr ); 
     CH376_spiEndTransfer();   
+    delay(20);
 
-    uprintln("------Slave addr set------");
+	if (CH376_DEBUG)
+    	uprintln("------Slave addr set------");
 }   
 
 
@@ -329,34 +460,47 @@ void set_config(int cfg) {
   CH376_spiTransfer( 0x49 );     
   CH376_spiTransfer( cfg ); 
   CH376_spiEndTransfer();   
-   
-  delay(100);
-  noWaitGetStatus(); 
+  delay(20);
 }  
+
+
 
 int main() 
 {
 
 	CH376_init();
 
-	setUSBspeed();
-
 	connectDevice();
-
 	delay(10);
 
 	set_addr(5);
-
 	delay(10);
 
     set_config(1);
-
-    uprintln("------Ready to receive------");
     delay(10);
 
+	if (CH376_DEBUG)
+	    uprintln("------Ready to receive------");
+
+    // Main loop
     while(1)
     {
-    	get_int_in();
+    	toggle_recv();
+
+		issue_token(89);
+
+		int s = noWaitGetStatus();   
+
+		while (s != 0x14)
+		{
+			s = noWaitGetStatus();
+		}
+
+		RD_USB_DATA();
+
+		if (CH376_DEBUG)
+			printNoteList();
+
     	writeTP1();
     	writeTP2();
     }

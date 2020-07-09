@@ -59,7 +59,7 @@ $C02622 +------------------------+
         |                        |
         | NESpad         $C02622 |
         | Keyboard       $C02623 |
-        | Unused1        $C02624 |
+        | CH376_nInt     $C02624 |
         | Unused2        $C02625 |
         | Timer1_val     $C02626 |
         | Timer1_ctrl    $C02627 |

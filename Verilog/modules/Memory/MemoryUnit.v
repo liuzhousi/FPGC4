@@ -79,7 +79,8 @@ module MemoryUnit(
     //SPI
     output          s_clk,
     input           s_miso,
-    output          s_mosi
+    output          s_mosi,
+    input           s_nint
 );  
 
     //SDRAMcontroller, SPIreader, vram, and I/O should work on negedge clock
@@ -421,11 +422,11 @@ begin
             q <= {24'd0, scanCode};
         end
 
-        //Unused1
+        //CH376 n_interrupt
         if (busy && address == 27'hC02624)
         begin
             busy <= 0;
-            q <= 32'd0;
+            q <= s_nint;
         end
 
         //Unused2

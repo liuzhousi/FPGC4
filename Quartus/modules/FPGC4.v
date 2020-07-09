@@ -98,6 +98,13 @@ pll pll (
 .c1(clk)
 );
 
+wire CH376_nint; //stabilized CH376 n_interrupt signal
+Stabilizer ch376NintStabilizer (
+.clk(clk),
+.reset(1'b0), //Since we stabilize a reset signal, we do NOT want to use it here
+.unstable(s_nint),
+.stable(CH376_nint)
+);
 
 //--------------------Reset-----------------------
 //Reset stabilizer I/O
@@ -438,7 +445,8 @@ MemoryUnit mu(
 
 .s_clk(s_clk),
 .s_mosi(s_mosi),
-.s_miso(s_miso)
+.s_miso(s_miso),
+.s_nint(CH376_nint)
 );
 
 

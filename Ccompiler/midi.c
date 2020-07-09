@@ -90,6 +90,37 @@ int CH376_spiTransfer(int dataByte)
 }
 
 
+// Get status after waiting for an interrupt
+int WaitGetStatus() {
+	int intValue = 1;
+	while(intValue)
+    {
+    	int *i = (int *) 0xC02624;
+    	intValue = *i;
+    }
+    CH376_spiBeginTransfer();
+    CH376_spiTransfer(CMD_GET_STATUS);
+    CH376_spiEndTransfer(); 
+    delay(1);
+
+    CH376_spiBeginTransfer();
+    int retval = CH376_spiTransfer(0x00);
+    CH376_spiEndTransfer(); 
+
+    return retval;
+}
+
+// Get status without using interrupts
+int noWaitGetStatus() {
+    CH376_spiBeginTransfer();
+    CH376_spiTransfer(CMD_GET_STATUS);
+    int retval = CH376_spiTransfer(0x00);
+    CH376_spiEndTransfer(); 
+
+    return retval;
+}
+
+
 // Sets USB mode to mode, returns status code
 // Which should be 0x51 when successful
 int CH376_setUSBmode(int mode)
@@ -155,21 +186,6 @@ void setUSBspeed()
 }   
 
 
-// Get status without using interrupts
-int noWaitGetStatus() {
-    CH376_spiBeginTransfer();
-    CH376_spiTransfer(CMD_GET_STATUS);
-    CH376_spiEndTransfer(); 
-    delay(1);
-
-    CH376_spiBeginTransfer();
-    int retval = CH376_spiTransfer(0x00);
-    CH376_spiEndTransfer(); 
-
-    return retval;
-}
-
-
 // Checks if a device is connected
 // Sets USB mode to eventually 2
 // Checks again if the device connected in new USB mode
@@ -186,7 +202,7 @@ void connectDevice()
     while (retval != 0x15)
 	{
 		delay(CH376_LOOP_DELAY);
-		retval = noWaitGetStatus();
+		retval = WaitGetStatus();
 		if (CH376_DEBUG)
 		{
 			itoah(retval, &buffer[0]);
@@ -232,7 +248,7 @@ void connectDevice()
     while (retval != 0x15)
 	{
 		delay(CH376_LOOP_DELAY);
-		retval = noWaitGetStatus();
+		retval = WaitGetStatus();
 		if (CH376_DEBUG)
 		{
 			itoah(retval, &buffer[0]);
@@ -489,12 +505,7 @@ int main()
 
 		issue_token(89);
 
-		int s = noWaitGetStatus();   
-
-		while (s != 0x14)
-		{
-			s = noWaitGetStatus();
-		}
+		while (WaitGetStatus() != 0x14);
 
 		RD_USB_DATA();
 

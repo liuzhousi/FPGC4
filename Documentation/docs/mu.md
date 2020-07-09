@@ -73,7 +73,7 @@ Using the addresses mapped to the UART RX and UART TX modules, it is possible to
 The SPI module is specifically made for hardware SPI mode. The chip select pin is not part of this module and should be used using GPIO pins so transferring multiple bytes per SPI transfer is possible. The FPGC4 contains two of these SPI modules, but currently only one is in use (and therefore on the memory map). It is attached to the CH376 USB chip for mass storage, with the CS pin connected to GPO[0]. The second SPI port will be connected to the SPI header on the PCB and therefore will have a general purpose.
 
 #### CH376
-Using the CH376T USB controller chip over SPI, it is relatively really simple to read and write files to an USB stick with a FAT or FAT32 partition table. It is also possible to do other things, like reading USB MIDI keyboards and HID devices, although a bit more difficult because of the lack of documentation on the chip. 
+Using the CH376T USB controller chip over SPI, it is relatively really simple to read and write files to an USB stick with a FAT or FAT32 partition table. It is also possible to do other things, like reading USB MIDI keyboards and HID devices, although a bit more difficult because of the lack of documentation on the chip. An example of reading an Acorn Masterkey 61 is given. The n_interrupt pin from the CH376 is also accessible from the memory map.
 
 ### GPIO
 One address on the Memory map is mapped to GPIO pins on the FPGC4. Only the right 16 bits are used. The left 8 of these 16 bits are read only and are the state of the 8 input ports. The right 8 of these 16 bits are the state of the 8 output ports. The output ports can written and read.

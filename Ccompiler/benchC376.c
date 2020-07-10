@@ -77,7 +77,7 @@ int main()
 	CH376_readFile(&buf[0], s);
 	CH376_closeFile();
 
-	buf[36] = 0;
+	buf[s] = 0;
 	uprintln(&buf[0]);
 
 

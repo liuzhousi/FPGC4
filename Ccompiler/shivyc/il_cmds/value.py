@@ -28,8 +28,31 @@ class _ValueCmd(ILCommand):
         that if either of target_spot or start_spot is a register then
         `reg` be equal to that.
         """
-        # TODO: consider padding everything to 8 bytes to reduce the
-        # number of mov operations emitted for struct copying.
+
+        useR13AsTarget = False
+
+        if isinstance(target_spot, MemSpot) and isinstance(target_spot.count, RegSpot):
+            #print(target_spot.__dict__)
+            #r13 := base + offset + (chunk * count.value)
+
+            useR13AsTarget = True
+
+            asm_code.add(asm_cmds.Mov(RegSpot("r13"), target_spot.base, size))
+
+            asm_code.add(asm_cmds.Load(LiteralSpot(target_spot.chunk), RegSpot("r12"), size))
+            asm_code.add(asm_cmds.Mult(RegSpot("r12"), target_spot.count, size))
+
+            asm_code.add(asm_cmds.Add(RegSpot("r13"), RegSpot("r12"), size))
+
+
+            if target_spot.offset >= 0:
+                asm_code.add(asm_cmds.Load(LiteralSpot(target_spot.offset), RegSpot("r12"), size))
+                asm_code.add(asm_cmds.Add(RegSpot("r13"), RegSpot("r12"), size))
+            else:
+                asm_code.add(asm_cmds.Load(LiteralSpot(abs(target_spot.offset)), RegSpot("r12"), size))
+                asm_code.add(asm_cmds.Sub(RegSpot("r13"), RegSpot("r12"), size))
+                
+
 
         if isinstance(start_spot, LiteralSpot):
             if isinstance(target_spot, RegSpot):
@@ -37,10 +60,16 @@ class _ValueCmd(ILCommand):
                 asm_code.add(asm_cmds.Load(start_spot, target_spot, size))
 
             elif isinstance(target_spot, MemSpot):
-                # load
-                asm_code.add(asm_cmds.Load(start_spot, RegSpot("r12"), size))
-                # write
-                asm_code.add(asm_cmds.Write(target_spot, RegSpot("r12"), size))
+                if useR13AsTarget:
+                    # load
+                    asm_code.add(asm_cmds.Load(start_spot, RegSpot("r12"), size))
+                    # write
+                    asm_code.add(asm_cmds.Write(RegSpot("r13"), RegSpot("r12"), size))
+                else:
+                    # load
+                    asm_code.add(asm_cmds.Load(start_spot, RegSpot("r12"), size))
+                    # write
+                    asm_code.add(asm_cmds.Write(target_spot, RegSpot("r12"), size))
 
             elif isinstance(target_spot, LiteralSpot):
                 print("Target spot is a LiteralSpot?!")
@@ -52,8 +81,12 @@ class _ValueCmd(ILCommand):
                 asm_code.add(asm_cmds.Mov(target_spot, start_spot, size))
 
             elif isinstance(target_spot, MemSpot):
-                # write
-                asm_code.add(asm_cmds.Write(target_spot, start_spot, size))
+                if useR13AsTarget:
+                    # write
+                    asm_code.add(asm_cmds.Write(RegSpot("r13"), start_spot, size))
+                else:
+                    # write
+                    asm_code.add(asm_cmds.Write(target_spot, start_spot, size))
 
             elif isinstance(target_spot, LiteralSpot):
                 print("Target spot is a LiteralSpot?!")
@@ -65,10 +98,16 @@ class _ValueCmd(ILCommand):
                 asm_code.add(asm_cmds.Read(start_spot, target_spot, size))
 
             elif isinstance(target_spot, MemSpot):
-                # read
-                asm_code.add(asm_cmds.Read(start_spot, RegSpot("r12"), size))
-                # write
-                asm_code.add(asm_cmds.Write(target_spot, RegSpot("r12"), size))
+                if useR13AsTarget:
+                    # read
+                    asm_code.add(asm_cmds.Read(start_spot, RegSpot("r12"), size))
+                    # write
+                    asm_code.add(asm_cmds.Write(RegSpot("r13"), RegSpot("r12"), size))
+                else:
+                    # read
+                    asm_code.add(asm_cmds.Read(start_spot, RegSpot("r12"), size))
+                    # write
+                    asm_code.add(asm_cmds.Write(target_spot, RegSpot("r12"), size))
 
             elif isinstance(target_spot, LiteralSpot):
                 print("Target spot is a LiteralSpot?!")
@@ -192,6 +231,9 @@ class Set(_ValueCmd):
             return {}
 
     def make_asm(self, spotmap, home_spots, get_reg, asm_code): # noqa D102
+        if spotmap[self.arg] == spotmap[self.output]:
+            return
+
         self.move_data(spotmap[self.output], spotmap[self.arg],
                        self.output.ctype.size, None, asm_code)
 

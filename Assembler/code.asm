@@ -18,60 +18,96 @@ Return_UART:
 
 ; COMPILED C CODE HERE
 
-Label_noteList:
-	.dw 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-Label_endp_mode:
-	.dw 128
-Label___strlit3:
-	.dw 78 111 116 101 73 68 58 32 0
-Label___strlit4:
-	.dw 45 45 45 45 45 45 82 101 97 100 121 32 116 111 32 114 101 99 101 105 118 101 45 45 45 45 45 45 0
-Label___strlit14:
-	.dw 67 97 98 108 101 32 78 117 109 98 101 114 58 32 0
-Label___strlit48:
-	.dw 10 0
-Label___strlit63:
-	.dw 86 101 108 111 99 105 116 121 58 32 0
-Label___strlit71:
-	.dw 45 45 82 65 87 32 68 65 84 65 45 45 0
-Label___strlit72:
-	.dw 67 73 78 58 32 0
-Label___strlit80:
-	.dw 45 45 80 65 82 83 69 68 32 68 65 84 65 45 45 0
-Label___strlit98:
-	.dw 45 45 80 65 82 83 69 68 32 68 65 84 65 45 45 0
-Label___strlit102:
-	.dw 69 118 101 110 116 58 32 0
-Label___strlit143:
-	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 48 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
-Label___strlit158:
+Label___strlit7:
+	.dw 70 105 108 101 32 99 108 111 115 101 100 0
+Label___strlit13:
+	.dw 67 108 111 115 105 110 103 32 102 105 108 101 0
+Label___strlit27:
+	.dw 44 32 66 121 116 101 32 87 82 32 114 101 113 32 100 111 110 101 32 40 114 101 116 118 97 108 32 61 61 32 100 97 116 97 32 115 105 122 101 41 0
+Label___strlit33:
+	.dw 67 114 101 97 116 105 110 103 32 100 105 114 101 99 116 111 114 121 0
+Label___strlit35:
 	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 49 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
-Label___strlit163:
-	.dw 67 104 101 99 107 105 110 103 32 100 105 115 107 32 99 111 110 110 101 99 116 105 111 110 32 115 116 97 116 117 115 0
-Label___strlit169:
-	.dw 10 0
-Label___strlit177:
-	.dw 83 101 116 116 105 110 103 32 85 83 66 32 109 111 100 101 32 116 111 32 72 79 83 84 95 49 0
-Label___strlit187:
-	.dw 44 32 68 101 118 105 99 101 32 99 111 110 110 101 99 116 105 111 110 32 99 104 101 99 107 101 100 32 40 49 53 32 61 61 32 110 101 119 32 100 101 118 105 99 101 32 99 111 110 110 101 99 116 101 100 41 0
-Label___strlit195:
-	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 50 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
-Label___strlit213:
-	.dw 45 45 45 45 45 45 72 111 115 116 32 97 100 100 114 32 115 101 116 45 45 45 45 45 45 0
-Label___strlit218:
-	.dw 67 104 101 99 107 105 110 103 32 100 105 115 107 32 99 111 110 110 101 99 116 105 111 110 32 115 116 97 116 117 115 0
-Label___strlit245:
-	.dw 44 32 68 101 118 105 99 101 32 99 111 110 110 101 99 116 105 111 110 32 99 104 101 99 107 101 100 32 40 49 53 32 61 61 32 110 101 119 32 100 101 118 105 99 101 32 99 111 110 110 101 99 116 101 100 41 0
-Label___strlit291:
+Label___strlit40:
+	.dw 66 121 116 101 32 87 82 32 103 111 32 40 117 112 100 97 116 105 110 103 32 102 105 108 101 32 115 105 122 101 41 0
+Label___strlit52:
 	.dw 83 101 116 116 105 110 103 32 85 83 66 32 109 111 100 101 32 116 111 32 72 79 83 84 95 50 0
-Label___strlit295:
+Label___strlit66:
+	.dw 66 121 116 101 32 87 82 32 114 101 113 32 100 97 116 97 0
+Label___strlit68:
+	.dw 77 111 117 110 116 105 110 103 32 100 114 105 118 101 0
+Label___strlit76:
 	.dw 114 101 115 101 116 32 100 111 110 101 0
-Label___strlit296:
-	.dw 45 45 45 45 45 45 83 108 97 118 101 32 97 100 100 114 32 115 101 116 45 45 45 45 45 45 0
-Label___strlit322:
+Label___strlit83:
+	.dw 83 101 116 116 105 110 103 32 99 117 114 115 111 114 32 116 111 32 115 0
+Label___strlit89:
+	.dw 68 105 115 107 32 99 111 110 110 101 99 116 101 100 0
+Label___strlit105:
+	.dw 44 32 73 67 32 118 101 114 115 105 111 110 0
+Label___strlit109:
+	.dw 82 101 97 100 32 114 101 113 117 101 115 116 32 100 111 110 101 0
+Label___strlit110:
+	.dw 70 105 108 101 32 99 114 101 97 116 101 100 0
+Label___strlit120:
+	.dw 83 101 116 116 105 110 103 32 85 83 66 32 109 111 100 101 32 116 111 32 72 79 83 84 95 49 0
+Label___strlit131:
+	.dw 35 69 79 70 0
+Label___strlit134:
+	.dw 10 0
+Label___strlit137:
+	.dw 66 121 116 101 32 82 68 32 117 115 98 32 100 97 116 97 48 0
+Label___strlit140:
+	.dw 70 105 108 101 32 100 101 108 101 116 101 100 0
+Label___strlit145:
+	.dw 68 114 105 118 101 32 109 111 117 110 116 101 100 0
+Label___strlit181:
+	.dw 44 32 66 121 116 101 32 114 100 32 117 115 98 32 100 111 110 101 32 40 100 97 116 97 32 115 105 122 101 41 0
+Label___strlit187:
+	.dw 68 105 114 101 99 116 111 114 121 32 99 114 101 97 116 101 100 0
+Label___strlit192:
+	.dw 82 101 113 117 101 115 116 32 114 101 97 100 32 102 111 114 32 115 32 98 121 116 101 115 0
+Label___strlit200:
+	.dw 10 0
+Label___strlit217:
+	.dw 82 101 113 117 101 115 116 32 119 114 105 116 101 32 102 111 114 32 115 32 98 121 116 101 115 0
+Label___strlit218:
+	.dw 67 114 101 97 116 105 110 103 32 102 105 108 101 0
+Label___strlit227:
+	.dw 68 114 105 118 101 32 114 101 97 100 121 0
+Label___strlit247:
+	.dw 70 105 108 101 110 97 109 101 32 115 101 110 116 0
+Label___strlit261:
+	.dw 67 104 101 99 107 105 110 103 32 100 105 115 107 32 99 111 110 110 101 99 116 105 111 110 32 115 116 97 116 117 115 0
+Label___strlit273:
+	.dw 83 101 110 100 105 110 103 32 102 105 108 101 110 97 109 101 0
+Label___strlit279:
+	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 48 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
+Label___strlit280:
 	.dw 83 101 116 116 105 110 103 32 85 83 66 32 109 111 100 101 32 116 111 32 72 79 83 84 95 48 0
-Label___strlit337:
-	.dw 67 104 97 110 110 101 108 58 32 0
+Label___strlit307:
+	.dw 76 111 114 117 109 32 105 112 115 117 109 32 100 111 108 111 114 32 101 115 116 32 106 101 109 111 101 100 101 114 32 101 110 122 111 46 0
+Label___strlit310:
+	.dw 66 121 116 101 32 119 114 32 103 111 32 100 111 110 101 0
+Label___strlit324:
+	.dw 70 105 108 101 32 111 112 101 110 101 100 0
+Label___strlit327:
+	.dw 68 105 115 107 32 99 111 110 110 101 99 116 101 100 0
+Label___strlit335:
+	.dw 67 104 101 99 107 105 110 103 32 100 105 115 107 32 99 111 110 110 101 99 116 105 111 110 32 115 116 97 116 117 115 0
+Label___strlit341:
+	.dw 67 117 114 115 111 114 32 115 101 116 0
+Label___strlit342:
+	.dw 79 112 101 110 105 110 103 32 102 105 108 101 0
+Label___strlit343:
+	.dw 47 76 79 82 85 77 46 84 88 84 0
+Label___strlit344:
+	.dw 87 114 105 116 101 32 114 101 113 117 101 115 116 32 100 111 110 101 0
+Label___strlit354:
+	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 50 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
+Label___strlit360:
+	.dw 67 104 101 99 107 105 110 103 32 105 102 32 100 114 105 118 101 32 105 115 32 114 101 97 100 121 0
+Label___strlit361:
+	.dw 68 101 108 101 116 105 110 103 32 102 105 108 101 0
 
 Label_div:
 	sub rsp 4 rsp
@@ -85,9 +121,9 @@ Label_div:
 	or r0 r4 r12
 	load32 0 r13
 	bne r13 r12 2
-	jump Label___shivyc_label56
+	jump Label___shivyc_label91
 	or r0 0 r1
-Label___shivyc_label56:
+Label___shivyc_label91:
 	; JUMPZERO
 	sub r1 0 r12
 	bne r0 r12 2
@@ -113,9 +149,9 @@ Label___shivyc_label2:
 	or r0 r5 r12
 	or r0 r4 r13
 	bgt r13 r12 2
-	jump Label___shivyc_label57
+	jump Label___shivyc_label92
 	or r0 0 r2
-Label___shivyc_label57:
+Label___shivyc_label92:
 	; JUMPZERO
 	sub r2 0 r12
 	bne r0 r12 2
@@ -124,10 +160,12 @@ Label___shivyc_label57:
 	or r0 r4 r12
 	sub r5 r12 r5
 	; SET
+	or r0 r5 r5
 	; ADD
 	load32 1 r12
 	add r1 r12 r1
 	; SET
+	or r0 r1 r1
 	; JUMP
 	jump Label___shivyc_label2
 	; LABEL
@@ -152,9 +190,9 @@ Label_mod:
 	or r0 r4 r12
 	load32 0 r13
 	bne r13 r12 2
-	jump Label___shivyc_label58
+	jump Label___shivyc_label93
 	or r0 0 r1
-Label___shivyc_label58:
+Label___shivyc_label93:
 	; JUMPZERO
 	sub r1 0 r12
 	bne r0 r12 2
@@ -178,9 +216,9 @@ Label___shivyc_label5:
 	or r0 r5 r12
 	or r0 r4 r13
 	bgt r13 r12 2
-	jump Label___shivyc_label59
+	jump Label___shivyc_label94
 	or r0 0 r1
-Label___shivyc_label59:
+Label___shivyc_label94:
 	; JUMPZERO
 	sub r1 0 r12
 	bne r0 r12 2
@@ -189,6 +227,7 @@ Label___shivyc_label59:
 	or r0 r4 r12
 	sub r5 r12 r5
 	; SET
+	or r0 r5 r5
 	; JUMP
 	jump Label___shivyc_label5
 	; LABEL
@@ -232,6 +271,7 @@ Label_uprint:
 	; READAT
 	read 0 r5 r2
 	; SET
+	or r0 r2 r2
 	; LABEL
 Label___shivyc_label7:
 	or r0 r0 r0
@@ -242,9 +282,9 @@ Label___shivyc_label7:
 	or r0 r1 r12
 	load32 0 r13
 	beq r13 r12 2
-	jump Label___shivyc_label60
+	jump Label___shivyc_label95
 	or r0 0 r4
-Label___shivyc_label60:
+Label___shivyc_label95:
 	; JUMPZERO
 	sub r4 0 r12
 	bne r0 r12 2
@@ -259,9 +299,11 @@ Label___shivyc_label60:
 	load32 1 r12
 	add r5 r12 r5
 	; SET
+	or r0 r5 r5
 	; READAT
 	read 0 r5 r2
 	; SET
+	or r0 r2 r2
 	; JUMP
 	jump Label___shivyc_label7
 	; LABEL
@@ -290,8 +332,9 @@ Label_uprintln:
 	; ADDROF
 	addr2reg Label_uprint r1
 	; ADDROF
-	addr2reg Label___strlit169 r5
+	addr2reg Label___strlit134 r5
 	; SET
+	or r0 r5 r5
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
@@ -345,9 +388,9 @@ Label_itoar:
 	read -4 rbp r12
 	load32 0 r13
 	bge r13 r12 2
-	jump Label___shivyc_label61
+	jump Label___shivyc_label96
 	or r0 0 r1
-Label___shivyc_label61:
+Label___shivyc_label96:
 	; JUMPZERO
 	sub r1 0 r12
 	bne r0 r12 2
@@ -390,6 +433,7 @@ Label___shivyc_label9:
 	read -12 rbp r12
 	add r1 r12 r1
 	; SET
+	or r0 r2 r2
 	; SETAT
 	write 0 r1 r2
 	; RETURN
@@ -419,6 +463,7 @@ Label_itoa:
 	write 0 rsp r12
 	jumpr 0 r1
 	; SET
+	or r0 r1 r1
 	; SET
 	or r0 r1 r1
 	; MULT
@@ -478,9 +523,9 @@ Label_itoahr:
 	read -32 rbp r12
 	load32 0 r13
 	bge r13 r12 2
-	jump Label___shivyc_label62
+	jump Label___shivyc_label97
 	or r0 0 r1
-Label___shivyc_label62:
+Label___shivyc_label97:
 	; JUMPZERO
 	sub r1 0 r12
 	bne r0 r12 2
@@ -509,9 +554,9 @@ Label___shivyc_label10:
 	read -44 rbp r12
 	load32 9 r13
 	bge r13 r12 2
-	jump Label___shivyc_label63
+	jump Label___shivyc_label98
 	or r0 0 r1
-Label___shivyc_label63:
+Label___shivyc_label98:
 	; JUMPZERO
 	sub r1 0 r12
 	bne r0 r12 2
@@ -523,6 +568,7 @@ Label___shivyc_label63:
 	load32 10 r12
 	sub r2 r12 r2
 	; SET
+	or r0 r2 r2
 	; JUMP
 	jump Label___shivyc_label12
 	; LABEL
@@ -532,6 +578,7 @@ Label___shivyc_label11:
 	read -44 rbp r2
 	add r2 48 r2
 	; SET
+	or r0 r2 r2
 	; LABEL
 Label___shivyc_label12:
 	or r0 r0 r0
@@ -605,6 +652,7 @@ Label_itoah:
 	write 0 rsp r12
 	jumpr 0 r1
 	; SET
+	or r0 r1 r1
 	; SET
 	or r0 r1 r1
 	; MULT
@@ -653,9 +701,9 @@ Label___shivyc_label13:
 	or r0 r2 r12
 	load32 0 r13
 	bne r13 r12 2
-	jump Label___shivyc_label64
+	jump Label___shivyc_label99
 	or r0 0 r1
-Label___shivyc_label64:
+Label___shivyc_label99:
 	; JUMPZERO
 	sub r1 0 r12
 	bne r0 r12 2
@@ -737,7 +785,7 @@ Label_CH376_spiTransfer:
 	read 0 rsp r12
 	add rsp 4 rsp
 	jumpr 4 r12
-Label_WaitGetStatus:
+Label_CH376_WaitGetStatus:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
@@ -756,6 +804,7 @@ Label___shivyc_label15:
 	; READAT
 	read 0 r1 r1
 	; SET
+	or r0 r1 r1
 	; JUMP
 	jump Label___shivyc_label15
 	; LABEL
@@ -824,7 +873,7 @@ Label___shivyc_label16:
 	read 0 rsp r12
 	add rsp 4 rsp
 	jumpr 4 r12
-Label_noWaitGetStatus:
+Label_CH376_noWaitGetStatus:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
@@ -870,13 +919,234 @@ Label_noWaitGetStatus:
 	read 0 rsp r12
 	add rsp 4 rsp
 	jumpr 4 r12
-Label_CH376_setUSBmode:
+Label_CH376_sendString:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
 	sub rsp 72 rsp
 	; LOADARG
-	write -68 rbp r5
+	write -72 rbp r5
+	; READAT
+	read -72 rbp r1
+	read 0 r1 r5
+	; SET
+	or r0 r5 r5
+	; LABEL
+Label___shivyc_label17:
+	or r0 r0 r0
+	; SET
+	or r0 r5 r1
+	; NOTEQUALCMP
+	or r0 1 r2
+	or r0 r1 r12
+	load32 0 r13
+	beq r13 r12 2
+	jump Label___shivyc_label100
+	or r0 0 r2
+Label___shivyc_label100:
+	; JUMPZERO
+	sub r2 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label18
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; SET
+	read -72 rbp r1
+	; ADD
+	read -72 rbp r1
+	add r1 1 r1
+	; SET
+	write -72 rbp r1
+	; READAT
+	read -72 rbp r1
+	read 0 r1 r5
+	; SET
+	or r0 r5 r5
+	; JUMP
+	jump Label___shivyc_label17
+	; LABEL
+Label___shivyc_label18:
+	or r0 r0 r0
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 4 rsp
+	read 0 rsp r12
+	add rsp 4 rsp
+	jumpr 4 r12
+Label_CH376_sendData:
+	sub rsp 4 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 88 rsp
+	; LOADARG
+	write -80 rbp r5
+	; LOADARG
+	write -84 rbp r4
+	; READAT
+	read -80 rbp r1
+	read 0 r1 r5
+	; SET
+	or r0 r5 r5
+	; SET
+	load32 0 r12
+	write -88 rbp r12
+	; LABEL
+Label___shivyc_label19:
+	or r0 r0 r0
+	; LESSCMP
+	or r0 1 r1
+	read -88 rbp r2
+	or r0 r2 r12
+	read -84 rbp r13
+	bge r12 r13 2
+	jump Label___shivyc_label101
+	or r0 0 r1
+Label___shivyc_label101:
+	; JUMPZERO
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label21
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; SET
+	read -80 rbp r1
+	; ADD
+	read -80 rbp r1
+	add r1 1 r1
+	; SET
+	write -80 rbp r1
+	; READAT
+	read -80 rbp r1
+	read 0 r1 r5
+	; SET
+	or r0 r5 r5
+	; LABEL
+Label___shivyc_label20:
+	or r0 r0 r0
+	; SET
+	read -88 rbp r1
+	; ADD
+	read -88 rbp r1
+	add r1 1 r1
+	; SET
+	write -88 rbp r1
+	; JUMP
+	jump Label___shivyc_label19
+	; LABEL
+Label___shivyc_label21:
+	or r0 r0 r0
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 4 rsp
+	read 0 rsp r12
+	add rsp 4 rsp
+	jumpr 4 r12
+Label_CH376_printICver:
+	sub rsp 4 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 102 rsp
+	; ADDROF
+	addr2reg Label_CH376_spiBeginTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 1 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_delay r1
+	; CALL
+	or r0 1 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 0 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; SET
+	write -102 rbp r1
+	; ADDROF
+	addr2reg Label_CH376_spiEndTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_itoah r1
+	; ADDRREL
+	sub rbp 98 r4 ;lea
+	; CALL
+	read -102 rbp r12
+	or r0 r12 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_uprint r1
+	; ADDRREL
+	sub rbp 98 r5 ;lea
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit105 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 4 rsp
+	read 0 rsp r12
+	add rsp 4 rsp
+	jumpr 4 r12
+Label_CH376_setUSBmode:
+	sub rsp 4 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 110 rsp
+	; LOADARG
+	write -106 rbp r5
 	; ADDROF
 	addr2reg Label_CH376_spiBeginTransfer r1
 	; CALL
@@ -917,7 +1187,7 @@ Label_CH376_setUSBmode:
 	; ADDROF
 	addr2reg Label_CH376_spiTransfer r1
 	; CALL
-	read -68 rbp r12
+	read -106 rbp r12
 	or r0 r12 r5
 	savpc r12
 	sub rsp 4 rsp
@@ -954,7 +1224,7 @@ Label_CH376_setUSBmode:
 	write 0 rsp r12
 	jumpr 0 r1
 	; SET
-	write -72 rbp r1
+	write -110 rbp r1
 	; ADDROF
 	addr2reg Label_CH376_spiEndTransfer r1
 	; CALL
@@ -971,7 +1241,7 @@ Label_CH376_setUSBmode:
 	write 0 rsp r12
 	jumpr 0 r1
 	; RETURN
-	read -72 rbp r12
+	read -110 rbp r12
 	or r0 r12 r1
 	or r0 rbp rsp
 	read 0 rsp rbp
@@ -983,7 +1253,7 @@ Label_CH376_init:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 82 rsp
+	sub rsp 120 rsp
 	; ADDROF
 	addr2reg Label_CH376_spiEndTransfer r1
 	; CALL
@@ -1030,40 +1300,42 @@ Label_CH376_init:
 	write 0 rsp r12
 	jumpr 0 r1
 	; JUMPZERO
-	or r0 0 r1
+	or r0 1 r1
 	sub r1 0 r12
 	bne r0 r12 2
-	jump Label___shivyc_label17
+	jump Label___shivyc_label22
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit295 r5
+	addr2reg Label___strlit76 r5
 	; SET
+	or r0 r5 r5
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
 	; LABEL
-Label___shivyc_label17:
+Label___shivyc_label22:
 	or r0 r0 r0
 	; JUMPZERO
-	or r0 0 r1
+	or r0 1 r1
 	sub r1 0 r12
 	bne r0 r12 2
-	jump Label___shivyc_label18
+	jump Label___shivyc_label23
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit322 r5
+	addr2reg Label___strlit280 r5
 	; SET
+	or r0 r5 r5
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
 	; LABEL
-Label___shivyc_label18:
+Label___shivyc_label23:
 	or r0 r0 r0
 	; ADDROF
 	addr2reg Label_CH376_setUSBmode r1
@@ -1076,217 +1348,34 @@ Label___shivyc_label18:
 	; SET
 	or r0 r1 r5
 	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label19
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 82 r4 ;lea
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDRREL
-	sub rbp 82 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit143 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label19:
-	or r0 r0 r0
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 4 rsp
-	read 0 rsp r12
-	add rsp 4 rsp
-	jumpr 4 r12
-Label_setUSBspeed:
-	sub rsp 4 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 82 rsp
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 11 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 23 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 216 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 20 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 4 rsp
-	read 0 rsp r12
-	add rsp 4 rsp
-	jumpr 4 r12
-Label_connectDevice:
-	sub rsp 4 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 96 rsp
-	; SET
-	load32 0 r12
-	write -96 rbp r12
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label20
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit163 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label20:
-	or r0 r0 r0
-	; LABEL
-Label___shivyc_label21:
-	or r0 r0 r0
-	; NOTEQUALCMP
 	or r0 1 r1
-	read -96 rbp r12
-	load32 21 r13
-	beq r13 r12 2
-	jump Label___shivyc_label65
-	or r0 0 r1
-Label___shivyc_label65:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label22
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 100 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_WaitGetStatus r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -96 rbp r1
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label23
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 92 r4 ;lea
-	; CALL
-	read -96 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDRREL
-	sub rbp 92 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit187 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label23:
-	or r0 r0 r0
-	; JUMP
-	jump Label___shivyc_label21
-	; LABEL
-Label___shivyc_label22:
-	or r0 r0 r0
-	; JUMPZERO
-	or r0 0 r1
 	sub r1 0 r12
 	bne r0 r12 2
 	jump Label___shivyc_label24
 	; ADDROF
+	addr2reg Label_itoah r1
+	; ADDRREL
+	sub rbp 120 r4 ;lea
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_uprint r1
+	; ADDRREL
+	sub rbp 120 r5 ;lea
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit177 r5
+	addr2reg Label___strlit279 r5
 	; SET
+	or r0 r5 r5
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
@@ -1294,6 +1383,104 @@ Label___shivyc_label22:
 	jumpr 0 r1
 	; LABEL
 Label___shivyc_label24:
+	or r0 r0 r0
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 4 rsp
+	read 0 rsp r12
+	add rsp 4 rsp
+	jumpr 4 r12
+Label_CH376_connectDrive:
+	sub rsp 4 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 130 rsp
+	; SET
+	load32 0 r5
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label25
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit335 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label25:
+	or r0 r0 r0
+	; LABEL
+Label___shivyc_label26:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_WaitGetStatus r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; NOTEQUALCMP
+	or r0 1 r2
+	or r0 r1 r12
+	load32 21 r13
+	beq r13 r12 2
+	jump Label___shivyc_label102
+	or r0 0 r2
+Label___shivyc_label102:
+	; JUMPZERO
+	sub r2 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label27
+	; JUMP
+	jump Label___shivyc_label26
+	; LABEL
+Label___shivyc_label27:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label28
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit89 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label28:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label29
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit120 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label29:
 	or r0 r0 r0
 	; ADDROF
 	addr2reg Label_CH376_setUSBmode r1
@@ -1303,20 +1490,19 @@ Label___shivyc_label24:
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
+	or r0 r1 r5
 	; SET
-	write -96 rbp r1
+	or r0 r5 r5
 	; JUMPZERO
-	or r0 0 r1
+	or r0 1 r1
 	sub r1 0 r12
 	bne r0 r12 2
-	jump Label___shivyc_label25
+	jump Label___shivyc_label30
 	; ADDROF
 	addr2reg Label_itoah r1
 	; ADDRREL
-	sub rbp 92 r4 ;lea
+	sub rbp 130 r4 ;lea
 	; CALL
-	read -96 rbp r12
-	or r0 r12 r5
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
@@ -1324,7 +1510,7 @@ Label___shivyc_label24:
 	; ADDROF
 	addr2reg Label_uprint r1
 	; ADDRREL
-	sub rbp 92 r5 ;lea
+	sub rbp 130 r5 ;lea
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
@@ -1333,33 +1519,35 @@ Label___shivyc_label24:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit158 r5
+	addr2reg Label___strlit35 r5
 	; SET
+	or r0 r5 r5
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
 	; LABEL
-Label___shivyc_label25:
+Label___shivyc_label30:
 	or r0 r0 r0
 	; JUMPZERO
-	or r0 0 r1
+	or r0 1 r1
 	sub r1 0 r12
 	bne r0 r12 2
-	jump Label___shivyc_label26
+	jump Label___shivyc_label31
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit291 r5
+	addr2reg Label___strlit52 r5
 	; SET
+	or r0 r5 r5
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
 	; LABEL
-Label___shivyc_label26:
+Label___shivyc_label31:
 	or r0 r0 r0
 	; ADDROF
 	addr2reg Label_CH376_setUSBmode r1
@@ -1370,110 +1558,17 @@ Label___shivyc_label26:
 	write 0 rsp r12
 	jumpr 0 r1
 	; SET
-	write -96 rbp r1
+	or r0 r1 r5
 	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label27
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 92 r4 ;lea
-	; CALL
-	read -96 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDRREL
-	sub rbp 92 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit195 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label27:
-	or r0 r0 r0
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label28
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit218 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label28:
-	or r0 r0 r0
-	; SET
-	load32 0 r12
-	write -96 rbp r12
-	; LABEL
-Label___shivyc_label29:
-	or r0 r0 r0
-	; NOTEQUALCMP
 	or r0 1 r1
-	read -96 rbp r12
-	load32 21 r13
-	beq r13 r12 2
-	jump Label___shivyc_label66
-	or r0 0 r1
-Label___shivyc_label66:
-	; JUMPZERO
 	sub r1 0 r12
 	bne r0 r12 2
-	jump Label___shivyc_label30
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 100 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_WaitGetStatus r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -96 rbp r1
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label31
+	jump Label___shivyc_label32
 	; ADDROF
 	addr2reg Label_itoah r1
 	; ADDRREL
-	sub rbp 92 r4 ;lea
+	sub rbp 130 r4 ;lea
 	; CALL
-	read -96 rbp r12
-	or r0 r12 r5
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
@@ -1481,7 +1576,7 @@ Label___shivyc_label66:
 	; ADDROF
 	addr2reg Label_uprint r1
 	; ADDRREL
-	sub rbp 92 r5 ;lea
+	sub rbp 130 r5 ;lea
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
@@ -1490,315 +1585,101 @@ Label___shivyc_label66:
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit245 r5
+	addr2reg Label___strlit354 r5
 	; SET
+	or r0 r5 r5
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
-	; LABEL
-Label___shivyc_label31:
-	or r0 r0 r0
-	; JUMP
-	jump Label___shivyc_label29
-	; LABEL
-Label___shivyc_label30:
-	or r0 r0 r0
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 4 rsp
-	read 0 rsp r12
-	add rsp 4 rsp
-	jumpr 4 r12
-Label_toggle_recv:
-	sub rsp 4 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 92 rsp
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 28 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	addr2reg Label_endp_mode r7
-	read 0 r7 r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; XOR
-	addr2reg Label_endp_mode r7
-	read 0 r7 r1
-	xor r1 64 r1
-	; SET
-	addr2reg Label_endp_mode r7
-	write 0 r7 r1
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 4 rsp
-	read 0 rsp r12
-	add rsp 4 rsp
-	jumpr 4 r12
-Label_issue_token:
-	sub rsp 4 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 100 rsp
-	; LOADARG
-	write -100 rbp r5
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 79 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	read -100 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 4 rsp
-	read 0 rsp r12
-	add rsp 4 rsp
-	jumpr 4 r12
-Label_press_note:
-	sub rsp 4 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 92 rsp
-	; LOADARG
-	; SET
-	load32 0 r4
-	; SET
-	load32 0 r3
 	; LABEL
 Label___shivyc_label32:
 	or r0 r0 r0
-	; LESSCMP
-	or r0 1 r1
-	or r0 r3 r12
-	load32 8 r13
-	bge r12 r13 2
-	jump Label___shivyc_label67
-	or r0 0 r1
-Label___shivyc_label67:
 	; JUMPZERO
+	or r0 1 r1
 	sub r1 0 r12
 	bne r0 r12 2
-	jump Label___shivyc_label34
-	; EQUALCMP
-	or r0 1 r1
-	or r0 r4 r12
-	load32 0 r13
-	bne r13 r12 2
-	jump Label___shivyc_label68
-	or r0 0 r1
-Label___shivyc_label68:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label35
+	jump Label___shivyc_label33
 	; ADDROF
-	addr2reg Label_noteList r2
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit261 r5
 	; SET
-	; SET
-	; SET
-	or r0 r3 r1
-	; MULT
-	load32 4 r12
-	mult r1 r12 r1
-	; ADD
-	or r0 r2 r12
-	add r1 r12 r1
-	; READAT
-	read 0 r1 r8
-	; EQUALCMP
-	or r0 1 r1
-	or r0 r8 r12
-	load32 0 r13
-	bne r13 r12 2
-	jump Label___shivyc_label69
-	or r0 0 r1
-Label___shivyc_label69:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label36
-	; SET
-	or r0 r3 r1
-	; MULT
-	load32 4 r12
-	mult r1 r12 r1
-	; ADD
-	or r0 r1 r12
-	add r2 r12 r2
-	; SETAT
-	write 0 r2 r5
-	; SET
-	load32 1 r4
-	; LABEL
-Label___shivyc_label36:
-	or r0 r0 r0
-	; LABEL
-Label___shivyc_label35:
-	or r0 r0 r0
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
 	; LABEL
 Label___shivyc_label33:
 	or r0 r0 r0
-	; SET
-	or r0 r3 r1
-	; ADD
-	load32 1 r12
-	add r3 r12 r3
-	; SET
-	; JUMP
-	jump Label___shivyc_label32
 	; LABEL
 Label___shivyc_label34:
 	or r0 r0 r0
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 4 rsp
-	read 0 rsp r12
-	add rsp 4 rsp
-	jumpr 4 r12
-Label_release_note:
+	; ADDROF
+	addr2reg Label_CH376_WaitGetStatus r1
+	; CALL
+	savpc r12
 	sub rsp 4 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 92 rsp
-	; LOADARG
+	write 0 rsp r12
+	jumpr 0 r1
+	; NOTEQUALCMP
+	or r0 1 r2
+	or r0 r1 r12
+	load32 21 r13
+	beq r13 r12 2
+	jump Label___shivyc_label103
+	or r0 0 r2
+Label___shivyc_label103:
+	; JUMPZERO
+	sub r2 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label35
+	; JUMP
+	jump Label___shivyc_label34
+	; LABEL
+Label___shivyc_label35:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label36
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit327 r5
 	; SET
-	load32 0 r3
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label36:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label37
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit360 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
 	; LABEL
 Label___shivyc_label37:
 	or r0 r0 r0
-	; LESSCMP
-	or r0 1 r1
-	or r0 r3 r12
-	load32 8 r13
-	bge r12 r13 2
-	jump Label___shivyc_label70
-	or r0 0 r1
-Label___shivyc_label70:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label39
-	; ADDROF
-	addr2reg Label_noteList r2
-	; SET
-	; SET
-	; SET
-	or r0 r3 r1
-	; MULT
-	load32 4 r12
-	mult r1 r12 r1
-	; ADD
-	or r0 r2 r12
-	add r1 r12 r1
-	; READAT
-	read 0 r1 r4
-	; EQUALCMP
-	or r0 1 r1
-	or r0 r4 r12
-	or r0 r5 r13
-	bne r13 r12 2
-	jump Label___shivyc_label71
-	or r0 0 r1
-Label___shivyc_label71:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label40
-	; SET
-	or r0 r3 r1
-	; MULT
-	load32 4 r12
-	mult r1 r12 r1
-	; ADD
-	or r0 r1 r12
-	add r2 r12 r2
-	; SETAT
-	load32 0 r12
-	write 0 r2 r12
-	; LABEL
-Label___shivyc_label40:
-	or r0 r0 r0
-	; LABEL
-Label___shivyc_label38:
-	or r0 r0 r0
-	; SET
-	or r0 r3 r1
-	; ADD
-	load32 1 r12
-	add r3 r12 r3
-	; SET
-	; JUMP
-	jump Label___shivyc_label37
-	; LABEL
-Label___shivyc_label39:
-	or r0 r0 r0
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 4 rsp
-	read 0 rsp r12
-	add rsp 4 rsp
-	jumpr 4 r12
-Label_RD_USB_DATA:
-	sub rsp 4 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 150 rsp
 	; ADDROF
 	addr2reg Label_CH376_spiBeginTransfer r1
 	; CALL
@@ -1809,59 +1690,11 @@ Label_RD_USB_DATA:
 	; ADDROF
 	addr2reg Label_CH376_spiTransfer r1
 	; CALL
-	or r0 40 r5
+	or r0 48 r5
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 0 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 0 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -138 rbp r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 0 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -146 rbp r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 0 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -130 rbp r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 0 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -118 rbp r1
 	; ADDROF
 	addr2reg Label_CH376_spiEndTransfer r1
 	; CALL
@@ -1869,96 +1702,63 @@ Label_RD_USB_DATA:
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
+	; LABEL
+Label___shivyc_label38:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_WaitGetStatus r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; NOTEQUALCMP
+	or r0 1 r2
+	or r0 r1 r12
+	load32 20 r13
+	beq r13 r12 2
+	jump Label___shivyc_label104
+	or r0 0 r2
+Label___shivyc_label104:
 	; JUMPZERO
-	or r0 0 r1
+	sub r2 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label39
+	; JUMP
+	jump Label___shivyc_label38
+	; LABEL
+Label___shivyc_label39:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label40
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit227 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label40:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
 	sub r1 0 r12
 	bne r0 r12 2
 	jump Label___shivyc_label41
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit71 r5
+	addr2reg Label___strlit68 r5
 	; SET
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 110 r4 ;lea
-	; CALL
-	read -138 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 110 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 110 r4 ;lea
-	; CALL
-	read -146 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 110 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 110 r4 ;lea
-	; CALL
-	read -130 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 110 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 110 r4 ;lea
-	; CALL
-	read -118 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 110 r5 ;lea
+	or r0 r5 r5
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
@@ -1967,49 +1767,24 @@ Label_RD_USB_DATA:
 	; LABEL
 Label___shivyc_label41:
 	or r0 r0 r0
-	; AND
-	read -138 rbp r1
-	and r1 240 r1
-	; SET
-	write -114 rbp r1
-	; AND
-	read -138 rbp r1
-	and r1 15 r1
-	; SET
-	write -122 rbp r1
-	; AND
-	read -146 rbp r1
-	and r1 15 r1
-	; SET
-	write -126 rbp r1
-	; AND
-	read -146 rbp r1
-	and r1 240 r1
-	; SET
-	write -134 rbp r1
-	; SET
-	read -130 rbp r1
-	write -142 rbp r1
-	; SET
-	read -118 rbp r1
-	write -150 rbp r1
-	; EQUALCMP
-	or r0 1 r1
-	read -134 rbp r12
-	load32 144 r13
-	bne r13 r12 2
-	jump Label___shivyc_label72
-	or r0 0 r1
-Label___shivyc_label72:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label42
 	; ADDROF
-	addr2reg Label_press_note r1
+	addr2reg Label_CH376_spiBeginTransfer r1
 	; CALL
-	read -142 rbp r12
-	or r0 r12 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 49 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiEndTransfer r1
+	; CALL
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
@@ -2017,230 +1792,41 @@ Label___shivyc_label72:
 	; LABEL
 Label___shivyc_label42:
 	or r0 r0 r0
-	; EQUALCMP
-	or r0 1 r1
-	read -134 rbp r12
-	load32 128 r13
-	bne r13 r12 2
-	jump Label___shivyc_label73
-	or r0 0 r1
-Label___shivyc_label73:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label43
 	; ADDROF
-	addr2reg Label_release_note r1
+	addr2reg Label_CH376_WaitGetStatus r1
 	; CALL
-	read -142 rbp r12
-	or r0 r12 r5
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
+	; NOTEQUALCMP
+	or r0 1 r2
+	or r0 r1 r12
+	load32 20 r13
+	beq r13 r12 2
+	jump Label___shivyc_label105
+	or r0 0 r2
+Label___shivyc_label105:
+	; JUMPZERO
+	sub r2 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label43
+	; JUMP
+	jump Label___shivyc_label42
 	; LABEL
 Label___shivyc_label43:
 	or r0 r0 r0
 	; JUMPZERO
-	or r0 0 r1
+	or r0 1 r1
 	sub r1 0 r12
 	bne r0 r12 2
 	jump Label___shivyc_label44
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit80 r5
+	addr2reg Label___strlit145 r5
 	; SET
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDROF
-	addr2reg Label___strlit14 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 110 r4 ;lea
-	; CALL
-	read -114 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 110 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDROF
-	addr2reg Label___strlit72 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 110 r4 ;lea
-	; CALL
-	read -122 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 110 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDROF
-	addr2reg Label___strlit337 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 110 r4 ;lea
-	; CALL
-	read -126 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 110 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDROF
-	addr2reg Label___strlit102 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 110 r4 ;lea
-	; CALL
-	read -134 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 110 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDROF
-	addr2reg Label___strlit3 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 110 r4 ;lea
-	; CALL
-	read -142 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 110 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDROF
-	addr2reg Label___strlit63 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 110 r4 ;lea
-	; CALL
-	read -150 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 110 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit48 r5
-	; SET
+	or r0 r5 r5
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
@@ -2256,156 +1842,103 @@ Label___shivyc_label44:
 	read 0 rsp r12
 	add rsp 4 rsp
 	jumpr 4 r12
-Label_writeTP2:
+Label_CH376_setCursor:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 110 rsp
-	; READREL
-	addr2reg Label_noteList r7
-	read 16 r7 r1
-	; SET
-	; READREL
-	addr2reg Label_noteList r7
-	read 20 r7 r2
-	; LBITSHIFT
-	shiftl r2 8 r2
-	; OR
-	or r1 r2 r1
-	; SET
-	; READREL
-	addr2reg Label_noteList r7
-	read 24 r7 r2
-	; LBITSHIFT
-	shiftl r2 16 r2
-	; OR
-	or r1 r2 r1
-	; SET
-	; READREL
-	addr2reg Label_noteList r7
-	read 28 r7 r2
-	; LBITSHIFT
-	shiftl r2 24 r2
-	; OR
-	or r1 r2 r1
-	; SET
-	; SET
-	load32 12592685 r2
-	; SETAT
-	write 0 r2 r1
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 4 rsp
-	read 0 rsp r12
-	add rsp 4 rsp
-	jumpr 4 r12
-Label_writeTP1:
-	sub rsp 4 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 110 rsp
-	; READREL
-	addr2reg Label_noteList r7
-	read 0 r7 r1
-	; SET
-	; READREL
-	addr2reg Label_noteList r7
-	read 4 r7 r2
-	; LBITSHIFT
-	shiftl r2 8 r2
-	; OR
-	or r1 r2 r1
-	; SET
-	; READREL
-	addr2reg Label_noteList r7
-	read 8 r7 r2
-	; LBITSHIFT
-	shiftl r2 16 r2
-	; OR
-	or r1 r2 r1
-	; SET
-	; READREL
-	addr2reg Label_noteList r7
-	read 12 r7 r2
-	; LBITSHIFT
-	shiftl r2 24 r2
-	; OR
-	or r1 r2 r1
-	; SET
-	; SET
-	load32 12592684 r2
-	; SETAT
-	write 0 r2 r1
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 4 rsp
-	read 0 rsp r12
-	add rsp 4 rsp
-	jumpr 4 r12
-Label_printNoteList:
-	sub rsp 4 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 164 rsp
+	sub rsp 150 rsp
+	; LOADARG
+	write -146 rbp r5
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label45
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit98 r5
+	addr2reg Label___strlit83 r5
 	; SET
+	or r0 r5 r5
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
-	; SET
-	load32 0 r12
-	write -164 rbp r12
 	; LABEL
 Label___shivyc_label45:
 	or r0 r0 r0
-	; LESSCMP
-	or r0 1 r1
-	read -164 rbp r12
-	load32 8 r13
-	bge r12 r13 2
-	jump Label___shivyc_label74
-	or r0 0 r1
-Label___shivyc_label74:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label47
 	; SET
-	read -164 rbp r2
+	read -146 rbp r12
+	write -134 rbp r12
+	; RBITSHIFT
+	read -146 rbp r1
+	shiftr r1 8 r1
+	; SET
+	write -138 rbp r1
+	; RBITSHIFT
+	read -146 rbp r1
+	shiftr r1 16 r1
+	; SET
+	write -142 rbp r1
+	; RBITSHIFT
+	read -146 rbp r1
+	shiftr r1 24 r1
+	; SET
+	write -150 rbp r1
 	; ADDROF
-	addr2reg Label_noteList r1
-	; SET
-	; SET
-	; ADDROF
-	addr2reg Label_itoah r3
-	; SET
-	or r0 r2 r2
-	; MULT
-	load32 4 r12
-	mult r2 r12 r2
-	; ADD
-	or r0 r1 r12
-	add r2 r12 r2
-	; READAT
-	read 0 r2 r5
-	; ADDRREL
-	sub rbp 160 r4 ;lea
+	addr2reg Label_CH376_spiBeginTransfer r1
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
-	jumpr 0 r3
+	jumpr 0 r1
 	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 160 r5 ;lea
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 57 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	read -134 rbp r12
+	or r0 r12 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	read -138 rbp r12
+	or r0 r12 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	read -142 rbp r12
+	or r0 r12 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	read -150 rbp r12
+	or r0 r12 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiEndTransfer r1
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
@@ -2414,81 +1947,41 @@ Label___shivyc_label74:
 	; LABEL
 Label___shivyc_label46:
 	or r0 r0 r0
-	; SET
-	read -164 rbp r1
-	; ADD
-	read -164 rbp r1
-	add r1 1 r1
-	; SET
-	write -164 rbp r1
+	; ADDROF
+	addr2reg Label_CH376_WaitGetStatus r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; NOTEQUALCMP
+	or r0 1 r2
+	or r0 r1 r12
+	load32 20 r13
+	beq r13 r12 2
+	jump Label___shivyc_label106
+	or r0 0 r2
+Label___shivyc_label106:
+	; JUMPZERO
+	sub r2 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label47
 	; JUMP
-	jump Label___shivyc_label45
+	jump Label___shivyc_label46
 	; LABEL
 Label___shivyc_label47:
 	or r0 r0 r0
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 4 rsp
-	read 0 rsp r12
-	add rsp 4 rsp
-	jumpr 4 r12
-Label_set_addr:
-	sub rsp 4 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 168 rsp
-	; LOADARG
-	write -168 rbp r5
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 69 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	read -168 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 20 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
 	; JUMPZERO
-	or r0 0 r1
+	or r0 1 r1
 	sub r1 0 r12
 	bne r0 r12 2
 	jump Label___shivyc_label48
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit213 r5
+	addr2reg Label___strlit341 r5
 	; SET
+	or r0 r5 r5
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
@@ -2497,55 +1990,33 @@ Label_set_addr:
 	; LABEL
 Label___shivyc_label48:
 	or r0 r0 r0
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 4 rsp
+	read 0 rsp r12
+	add rsp 4 rsp
+	jumpr 4 r12
+Label_CH376_readFile:
 	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 19 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	read -168 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 20 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 180 rsp
+	; LOADARG
+	write -168 rbp r5
+	; LOADARG
+	write -176 rbp r4
 	; JUMPZERO
-	or r0 0 r1
+	or r0 1 r1
 	sub r1 0 r12
 	bne r0 r12 2
 	jump Label___shivyc_label49
 	; ADDROF
 	addr2reg Label_uprintln r1
 	; ADDROF
-	addr2reg Label___strlit296 r5
+	addr2reg Label___strlit192 r5
 	; SET
+	or r0 r5 r5
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
@@ -2554,20 +2025,6 @@ Label___shivyc_label48:
 	; LABEL
 Label___shivyc_label49:
 	or r0 r0 r0
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 4 rsp
-	read 0 rsp r12
-	add rsp 4 rsp
-	jumpr 4 r12
-Label_set_config:
-	sub rsp 4 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 172 rsp
-	; LOADARG
-	write -172 rbp r5
 	; ADDROF
 	addr2reg Label_CH376_spiBeginTransfer r1
 	; CALL
@@ -2578,7 +2035,7 @@ Label_set_config:
 	; ADDROF
 	addr2reg Label_CH376_spiTransfer r1
 	; CALL
-	or r0 73 r5
+	or r0 58 r5
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
@@ -2586,8 +2043,16 @@ Label_set_config:
 	; ADDROF
 	addr2reg Label_CH376_spiTransfer r1
 	; CALL
-	read -172 rbp r12
+	read -176 rbp r12
 	or r0 r12 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 0 r5
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
@@ -2599,14 +2064,1154 @@ Label_set_config:
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
+	; SET
+	load32 0 r1
+	; LABEL
+Label___shivyc_label50:
+	or r0 r0 r0
 	; ADDROF
-	addr2reg Label_delay r1
+	addr2reg Label_CH376_WaitGetStatus r1
 	; CALL
-	or r0 20 r5
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
+	; NOTEQUALCMP
+	or r0 1 r2
+	or r0 r1 r12
+	load32 29 r13
+	beq r13 r12 2
+	jump Label___shivyc_label107
+	or r0 0 r2
+Label___shivyc_label107:
+	; JUMPZERO
+	sub r2 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label51
+	; JUMP
+	jump Label___shivyc_label50
+	; LABEL
+Label___shivyc_label51:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label52
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit109 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label52:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label53
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit137 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label53:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_spiBeginTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 39 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 0 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; SET
+	write -172 rbp r1
+	; SET
+	load32 0 r12
+	write -180 rbp r12
+	; LABEL
+Label___shivyc_label54:
+	or r0 r0 r0
+	; LESSCMP
+	or r0 1 r1
+	read -180 rbp r2
+	or r0 r2 r12
+	read -172 rbp r13
+	bge r12 r13 2
+	jump Label___shivyc_label108
+	or r0 0 r1
+Label___shivyc_label108:
+	; JUMPZERO
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label56
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 0 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; SET
+	or r0 r1 r1
+	; SET
+	or r0 r1 r2
+	; SET
+	read -180 rbp r3
+	; MULT
+	load32 1 r12
+	mult r3 r12 r3
+	; ADD
+	read -168 rbp r12
+	add r3 r12 r3
+	; SETAT
+	write 0 r3 r2
+	; ADDROF
+	addr2reg Label_uprintc r2
+	; SET
+	or r0 r1 r1
+	; CALL
+	or r0 r1 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r2
+	; LABEL
+Label___shivyc_label55:
+	or r0 r0 r0
+	; SET
+	read -180 rbp r1
+	; ADD
+	read -180 rbp r1
+	add r1 1 r1
+	; SET
+	write -180 rbp r1
+	; JUMP
+	jump Label___shivyc_label54
+	; LABEL
+Label___shivyc_label56:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_spiEndTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label57
+	; ADDROF
+	addr2reg Label_uprint r1
+	; ADDROF
+	addr2reg Label___strlit200 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label57:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label58
+	; ADDROF
+	addr2reg Label_itoah r1
+	; ADDRREL
+	sub rbp 160 r4 ;lea
+	; CALL
+	read -172 rbp r12
+	or r0 r12 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_uprint r1
+	; ADDRREL
+	sub rbp 160 r5 ;lea
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit181 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label58:
+	or r0 r0 r0
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 4 rsp
+	read 0 rsp r12
+	add rsp 4 rsp
+	jumpr 4 r12
+Label_CH376_writeFile:
+	sub rsp 4 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 206 rsp
+	; LOADARG
+	write -198 rbp r5
+	; LOADARG
+	write -202 rbp r4
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label59
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit217 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label59:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_spiBeginTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 60 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	read -202 rbp r12
+	or r0 r12 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 0 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiEndTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; SET
+	load32 0 r1
+	; LABEL
+Label___shivyc_label60:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_WaitGetStatus r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; NOTEQUALCMP
+	or r0 1 r2
+	or r0 r1 r12
+	load32 30 r13
+	beq r13 r12 2
+	jump Label___shivyc_label109
+	or r0 0 r2
+Label___shivyc_label109:
+	; JUMPZERO
+	sub r2 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label61
+	; JUMP
+	jump Label___shivyc_label60
+	; LABEL
+Label___shivyc_label61:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label62
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit344 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label62:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label63
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit66 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label63:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_spiBeginTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 45 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 0 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; SET
+	write -206 rbp r1
+	; ADDROF
+	addr2reg Label_CH376_sendData r1
+	; CALL
+	read -198 rbp r12
+	or r0 r12 r5
+	read -206 rbp r12
+	or r0 r12 r4
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiEndTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label64
+	; ADDROF
+	addr2reg Label_itoah r1
+	; ADDRREL
+	sub rbp 190 r4 ;lea
+	; CALL
+	read -206 rbp r12
+	or r0 r12 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_uprint r1
+	; ADDRREL
+	sub rbp 190 r5 ;lea
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit27 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label64:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label65
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit40 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label65:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_spiBeginTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 61 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiEndTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; SET
+	load32 0 r1
+	; LABEL
+Label___shivyc_label66:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_WaitGetStatus r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; NOTEQUALCMP
+	or r0 1 r2
+	or r0 r1 r12
+	load32 20 r13
+	beq r13 r12 2
+	jump Label___shivyc_label110
+	or r0 0 r2
+Label___shivyc_label110:
+	; JUMPZERO
+	sub r2 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label67
+	; JUMP
+	jump Label___shivyc_label66
+	; LABEL
+Label___shivyc_label67:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label68
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit310 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label68:
+	or r0 r0 r0
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 4 rsp
+	read 0 rsp r12
+	add rsp 4 rsp
+	jumpr 4 r12
+Label_CH376_openFile:
+	sub rsp 4 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 190 rsp
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label69
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit342 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label69:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_spiBeginTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 50 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiEndTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label70:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_WaitGetStatus r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; NOTEQUALCMP
+	or r0 1 r2
+	or r0 r1 r12
+	load32 20 r13
+	beq r13 r12 2
+	jump Label___shivyc_label111
+	or r0 0 r2
+Label___shivyc_label111:
+	; JUMPZERO
+	sub r2 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label71
+	; JUMP
+	jump Label___shivyc_label70
+	; LABEL
+Label___shivyc_label71:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label72
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit324 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label72:
+	or r0 r0 r0
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 4 rsp
+	read 0 rsp r12
+	add rsp 4 rsp
+	jumpr 4 r12
+Label_CH376_deleteFile:
+	sub rsp 4 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 190 rsp
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label73
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit361 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label73:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_spiBeginTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 53 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiEndTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label74:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_WaitGetStatus r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; NOTEQUALCMP
+	or r0 1 r2
+	or r0 r1 r12
+	load32 20 r13
+	beq r13 r12 2
+	jump Label___shivyc_label112
+	or r0 0 r2
+Label___shivyc_label112:
+	; JUMPZERO
+	sub r2 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label75
+	; JUMP
+	jump Label___shivyc_label74
+	; LABEL
+Label___shivyc_label75:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label76
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit140 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label76:
+	or r0 r0 r0
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 4 rsp
+	read 0 rsp r12
+	add rsp 4 rsp
+	jumpr 4 r12
+Label_CH376_closeFile:
+	sub rsp 4 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 190 rsp
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label77
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit13 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label77:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_spiBeginTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 54 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 1 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiEndTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label78:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_WaitGetStatus r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; NOTEQUALCMP
+	or r0 1 r2
+	or r0 r1 r12
+	load32 20 r13
+	beq r13 r12 2
+	jump Label___shivyc_label113
+	or r0 0 r2
+Label___shivyc_label113:
+	; JUMPZERO
+	sub r2 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label79
+	; JUMP
+	jump Label___shivyc_label78
+	; LABEL
+Label___shivyc_label79:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label80
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit7 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label80:
+	or r0 r0 r0
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 4 rsp
+	read 0 rsp r12
+	add rsp 4 rsp
+	jumpr 4 r12
+Label_CH376_createDir:
+	sub rsp 4 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 190 rsp
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label81
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit33 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label81:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_spiBeginTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 64 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiEndTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label82:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_WaitGetStatus r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; NOTEQUALCMP
+	or r0 1 r2
+	or r0 r1 r12
+	load32 20 r13
+	beq r13 r12 2
+	jump Label___shivyc_label114
+	or r0 0 r2
+Label___shivyc_label114:
+	; JUMPZERO
+	sub r2 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label83
+	; JUMP
+	jump Label___shivyc_label82
+	; LABEL
+Label___shivyc_label83:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label84
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit187 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label84:
+	or r0 r0 r0
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 4 rsp
+	read 0 rsp r12
+	add rsp 4 rsp
+	jumpr 4 r12
+Label_CH376_createFile:
+	sub rsp 4 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 190 rsp
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label85
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit218 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label85:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_spiBeginTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 52 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiEndTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label86:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_WaitGetStatus r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; NOTEQUALCMP
+	or r0 1 r2
+	or r0 r1 r12
+	load32 20 r13
+	beq r13 r12 2
+	jump Label___shivyc_label115
+	or r0 0 r2
+Label___shivyc_label115:
+	; JUMPZERO
+	sub r2 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label87
+	; JUMP
+	jump Label___shivyc_label86
+	; LABEL
+Label___shivyc_label87:
+	or r0 r0 r0
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label88
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit110 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label88:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_writeFile r1
+	; ADDROF
+	addr2reg Label___strlit131 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	or r0 4 r4
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_closeFile r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 4 rsp
+	read 0 rsp r12
+	add rsp 4 rsp
+	jumpr 4 r12
+Label_CH376_sendFileName:
+	sub rsp 4 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 214 rsp
+	; LOADARG
+	write -214 rbp r5
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label89
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit273 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label89:
+	or r0 r0 r0
+	; ADDROF
+	addr2reg Label_CH376_spiBeginTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 47 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_sendString r1
+	; CALL
+	read -214 rbp r12
+	or r0 r12 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiTransfer r1
+	; CALL
+	or r0 0 r5
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_CH376_spiEndTransfer r1
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; JUMPZERO
+	or r0 1 r1
+	sub r1 0 r12
+	bne r0 r12 2
+	jump Label___shivyc_label90
+	; ADDROF
+	addr2reg Label_uprintln r1
+	; ADDROF
+	addr2reg Label___strlit247 r5
+	; SET
+	or r0 r5 r5
+	; CALL
+	savpc r12
+	sub rsp 4 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; LABEL
+Label___shivyc_label90:
+	or r0 r0 r0
 	; RETURN
 	or r0 rbp rsp
 	read 0 rsp rbp
@@ -2618,7 +3223,7 @@ Label_main:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 160 rsp
+	sub rsp 268 rsp
 	; ADDROF
 	addr2reg Label_CH376_init r1
 	; CALL
@@ -2627,161 +3232,77 @@ Label_main:
 	write 0 rsp r12
 	jumpr 0 r1
 	; ADDROF
-	addr2reg Label_connectDevice r1
+	addr2reg Label_CH376_connectDrive r1
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
 	; ADDROF
-	addr2reg Label_delay r1
+	addr2reg Label___strlit307 r1
+	; SET
+	or r0 r1 r1
+	; SET
+	or r0 r1 r1
+	; SET
+	load32 36 r12
+	write -268 rbp r12
+	; ADDROF
+	addr2reg Label_CH376_sendFileName r1
+	; ADDROF
+	addr2reg Label___strlit343 r5
+	; SET
+	or r0 r5 r5
 	; CALL
-	or r0 10 r5
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
 	; ADDROF
-	addr2reg Label_set_addr r1
+	addr2reg Label_CH376_openFile r1
 	; CALL
-	or r0 5 r5
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
 	; ADDROF
-	addr2reg Label_delay r1
+	addr2reg Label_CH376_setCursor r1
 	; CALL
-	or r0 10 r5
+	or r0 0 r5
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
 	; ADDROF
-	addr2reg Label_set_config r1
+	addr2reg Label_CH376_readFile r1
+	; ADDRREL
+	sub rbp 264 r5 ;lea
 	; CALL
-	or r0 1 r5
+	read -268 rbp r12
+	or r0 r12 r4
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
 	; ADDROF
-	addr2reg Label_delay r1
+	addr2reg Label_CH376_closeFile r1
 	; CALL
-	or r0 10 r5
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label50
+	; SETREL
+	load32 0 r12
+	write -228 rbp r12
 	; ADDROF
 	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit4 r5
-	; SET
+	; ADDRREL
+	sub rbp 264 r5 ;lea
 	; CALL
 	savpc r12
 	sub rsp 4 rsp
 	write 0 rsp r12
 	jumpr 0 r1
-	; LABEL
-Label___shivyc_label50:
-	or r0 r0 r0
-	; LABEL
-Label___shivyc_label51:
-	or r0 r0 r0
-	; JUMPZERO
-	or r0 1 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label52
-	; ADDROF
-	addr2reg Label_toggle_recv r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_issue_token r1
-	; CALL
-	or r0 89 r5
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label53:
-	or r0 r0 r0
-	; ADDROF
-	addr2reg Label_WaitGetStatus r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; NOTEQUALCMP
-	or r0 1 r2
-	or r0 r1 r12
-	load32 20 r13
-	beq r13 r12 2
-	jump Label___shivyc_label75
-	or r0 0 r2
-Label___shivyc_label75:
-	; JUMPZERO
-	sub r2 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label54
-	; JUMP
-	jump Label___shivyc_label53
-	; LABEL
-Label___shivyc_label54:
-	or r0 r0 r0
-	; ADDROF
-	addr2reg Label_RD_USB_DATA r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label55
-	; ADDROF
-	addr2reg Label_printNoteList r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label55:
-	or r0 r0 r0
-	; ADDROF
-	addr2reg Label_writeTP1 r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_writeTP2 r1
-	; CALL
-	savpc r12
-	sub rsp 4 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; JUMP
-	jump Label___shivyc_label51
-	; LABEL
-Label___shivyc_label52:
-	or r0 r0 r0
 	; RETURN
 	load32 48 r1
 	or r0 rbp rsp
@@ -2794,7 +3315,7 @@ Label_int1:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 160 rsp
+	sub rsp 264 rsp
 	; SET
 	load32 4980736 r1
 	; SETAT
@@ -2811,7 +3332,7 @@ Label_int2:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 160 rsp
+	sub rsp 264 rsp
 	; RETURN
 	or r0 rbp rsp
 	read 0 rsp rbp
@@ -2823,7 +3344,7 @@ Label_int3:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 160 rsp
+	sub rsp 264 rsp
 	; RETURN
 	or r0 rbp rsp
 	read 0 rsp rbp
@@ -2835,7 +3356,7 @@ Label_int4:
 	sub rsp 4 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 160 rsp
+	sub rsp 264 rsp
 	; RETURN
 	or r0 rbp rsp
 	read 0 rsp rbp

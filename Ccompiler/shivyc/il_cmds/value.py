@@ -30,6 +30,50 @@ class _ValueCmd(ILCommand):
         """
         # TODO: consider padding everything to 8 bytes to reduce the
         # number of mov operations emitted for struct copying.
+
+        if isinstance(start_spot, LiteralSpot):
+            if isinstance(target_spot, RegSpot):
+                # load
+                asm_code.add(asm_cmds.Load(start_spot, target_spot, size))
+
+            elif isinstance(target_spot, MemSpot):
+                # load
+                asm_code.add(asm_cmds.Load(start_spot, RegSpot("r12"), size))
+                # write
+                asm_code.add(asm_cmds.Write(target_spot, RegSpot("r12"), size))
+
+            elif isinstance(target_spot, LiteralSpot):
+                print("Target spot is a LiteralSpot?!")
+
+
+        elif isinstance(start_spot, RegSpot):
+            if isinstance(target_spot, RegSpot):
+                # mov (or)
+                asm_code.add(asm_cmds.Mov(target_spot, start_spot, size))
+
+            elif isinstance(target_spot, MemSpot):
+                # write
+                asm_code.add(asm_cmds.Write(target_spot, start_spot, size))
+
+            elif isinstance(target_spot, LiteralSpot):
+                print("Target spot is a LiteralSpot?!")
+
+
+        elif isinstance(start_spot, MemSpot):
+            if isinstance(target_spot, RegSpot):
+                # read
+                asm_code.add(asm_cmds.Read(start_spot, target_spot, size))
+
+            elif isinstance(target_spot, MemSpot):
+                # read
+                asm_code.add(asm_cmds.Read(start_spot, RegSpot("r12"), size))
+                # write
+                asm_code.add(asm_cmds.Write(target_spot, RegSpot("r12"), size))
+
+            elif isinstance(target_spot, LiteralSpot):
+                print("Target spot is a LiteralSpot?!")
+
+        """
         shift = 0
         while shift < size:
             reg_size = self._reg_size(size - shift)
@@ -60,6 +104,8 @@ class _ValueCmd(ILCommand):
 
 
             shift += reg_size
+
+        """
 
     def _reg_size(self, size):
         """Return largest register size that does not overfit given size."""
@@ -146,75 +192,9 @@ class Set(_ValueCmd):
             return {}
 
     def make_asm(self, spotmap, home_spots, get_reg, asm_code): # noqa D102
-        if self.output.ctype.weak_compat(ctypes.bool_t):
-            return self._set_bool(spotmap, get_reg, asm_code)
+        self.move_data(spotmap[self.output], spotmap[self.arg],
+                       self.output.ctype.size, None, asm_code)
 
-        elif isinstance(spotmap[self.arg], LiteralSpot):
-            out_spot = spotmap[self.output]
-            arg_spot = spotmap[self.arg]
-            size = self.output.ctype.size
-
-
-            if isinstance(out_spot, spots.MemSpot):
-                asm_code.add(asm_cmds.Load(arg_spot, RegSpot("r12") , size))
-                asm_code.add(asm_cmds.Write(out_spot, RegSpot("r12"), size))
-                #print(out_spot.base, out_spot.offset, out_spot.chunk, out_spot.count)
-
-
-            elif isinstance(out_spot, spots.RegSpot): 
-                asm_code.add(asm_cmds.Load(arg_spot, out_spot, size))
-            
-            else:
-                asm_code.add(asm_cmds.Mov(out_spot, arg_spot, size))
-            
-
-            #print(out_spot.__dict__, arg_spot.__dict__, size, type(out_spot), type(arg_spot))
-            #print(isinstance(out_spot, spots.MemSpot))
-            #print("instance", asm_cmds.Mov(out_spot, arg_spot, size))
-
-        elif self.output.ctype.size <= self.arg.ctype.size:
-            if spotmap[self.output] == spotmap[self.arg]:
-                return
-
-            if isinstance(spotmap[self.output], RegSpot):
-                r = spotmap[self.output]
-
-            elif isinstance(spotmap[self.arg], RegSpot):
-                r = spotmap[self.arg]
-
-            else:
-                r = get_reg()
-
-
-            self.move_data(spotmap[self.output], spotmap[self.arg],
-                           self.output.ctype.size, r, asm_code)
-
-        else:
-            r = get_reg([spotmap[self.output], spotmap[self.arg]])
-
-            asm_code.add(asm_cmds.Mov(r, spotmap[self.arg], 4))
-
-            # Move from arg_asm -> r_asm
-            # b332 currently does not have signed. we skip it for now
-            """
-            if self.arg.ctype.signed:
-
-                asm_code.add(asm_cmds.Movsx(r, spotmap[self.arg],
-                                            self.output.ctype.size,
-                                            self.arg.ctype.size))
-            elif self.arg.ctype.size == 4:
-                asm_code.add(asm_cmds.Mov(r, spotmap[self.arg], 4))
-            else:
-                asm_code.add(asm_cmds.Movzx(r, spotmap[self.arg],
-                                            self.output.ctype.size,
-                                            self.arg.ctype.size))
-
-            # If necessary, move from r_asm -> output_asm
-            if r != spotmap[self.output]:
-
-                asm_code.add(asm_cmds.Mov(spotmap[self.output],
-                                          r, self.output.ctype.size))
-            """
 
 
     def _set_bool(self, spotmap, get_reg, asm_code):

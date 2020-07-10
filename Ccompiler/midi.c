@@ -10,6 +10,7 @@
 #define MODE_HOST_0              0x05
 #define MODE_HOST_1              0x07
 #define MODE_HOST_2              0x06
+#define ANSW_USB_INT_CONNECT     0x15
 
 
 /*
@@ -91,7 +92,7 @@ int CH376_spiTransfer(int dataByte)
 
 
 // Get status after waiting for an interrupt
-int WaitGetStatus() {
+int CH376_WaitGetStatus() {
 	int intValue = 1;
 	while(intValue)
     {
@@ -111,7 +112,7 @@ int WaitGetStatus() {
 }
 
 // Get status without using interrupts
-int noWaitGetStatus() {
+int CH376_noWaitGetStatus() {
     CH376_spiBeginTransfer();
     CH376_spiTransfer(CMD_GET_STATUS);
     int retval = CH376_spiTransfer(0x00);
@@ -197,19 +198,11 @@ void connectDevice()
 
 	// Device connection
 	if (CH376_DEBUG)
-		uprintln("Checking disk connection status");  
-
-    while (retval != 0x15)
-	{
-		delay(CH376_LOOP_DELAY);
-		retval = WaitGetStatus();
-		if (CH376_DEBUG)
-		{
-			itoah(retval, &buffer[0]);
-			uprint(&buffer[0]);
-			uprintln(", Device connection checked (15 == new device connected)");
-		}
-    }
+   	uprintln("Checking device connection status");
+	while(CH376_WaitGetStatus() != ANSW_USB_INT_CONNECT);
+	if (CH376_DEBUG)
+		uprintln("Device connected");
+    
 
 
     // USB mode 1
@@ -240,22 +233,11 @@ void connectDevice()
 	}
 
 
-	// Device connection
 	if (CH376_DEBUG)
-		uprintln("Checking disk connection status");  
-
-	retval = 0;
-    while (retval != 0x15)
-	{
-		delay(CH376_LOOP_DELAY);
-		retval = WaitGetStatus();
-		if (CH376_DEBUG)
-		{
-			itoah(retval, &buffer[0]);
-			uprint(&buffer[0]);
-			uprintln(", Device connection checked (15 == new device connected)");
-		}
-    }
+   	uprintln("Checking device connection status");
+	while(CH376_WaitGetStatus() != ANSW_USB_INT_CONNECT);
+	if (CH376_DEBUG)
+		uprintln("Device connected");
 }
 
 
@@ -505,7 +487,7 @@ int main()
 
 		issue_token(89);
 
-		while (WaitGetStatus() != 0x14);
+		while (CH376_WaitGetStatus() != 0x14);
 
 		RD_USB_DATA();
 

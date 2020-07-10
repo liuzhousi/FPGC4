@@ -5,58 +5,92 @@ int main()
 	CH376_init();
 	CH376_connectDrive();
 
-	char* d = "Floemper, Skoep,\n YEEEEET!";
-	int s = 28;
+	//CH376_printICver();
 
-	uprintln("------Sending filename------");
-	CH376_sendFileName("Lorum.txt"); //TEST.TXT
-	uprintln("------Filename sent------");
+	char* d = "Lorum ipsum dolor est jemoeder enzo.";
+	int s = 36;
 
-	
-	/*
-	uprintln("------Opening File------");
-	CH376_openFile();
-	uprintln("------File Opened------");
-
-	uprintln("------Reading file------");
-	CH376_readFile();
-	uprintln("------Reading done------");
-
-	uprintln("------Closing File------");
-	CH376_closeFile();
-	uprintln("------Closing done------");
-	*/
-
-	/*
-	uprintln("------Deleting file------");
-	CH376_deleteFile();
-	uprintln("------File deleted------");
-	*/
-
+	//uprintln("------Sending filename------");
+	CH376_sendFileName("/LORUM.TXT");
+	//uprintln("------Filename sent------");
 
 	
-	uprintln("------Creating File------");
+	
+	//uprintln("------Opening File------");
+	//CH376_openFile();
+	//uprintln("------File Opened------");
+
+	//uprintln("------Reading file------");
+	//CH376_readFile();
+	//uprintln("------Reading done------");
+
+	//uprintln("------Closing File------");
+	//CH376_closeFile();
+	//uprintln("------Closing done------");
+	
+
+
+	//uprintln("------Deleting file------");
+	//CH376_deleteFile();
+	//uprintln("------File deleted------");
+
+
+
+
+	//uprintln("------Creating File------");
+	//CH376_createFile();
+	//uprintln("------File Created------");
+
+
+
+	//uprintln("------Opening File------");
+	//CH376_openFile();
+	//uprintln("------File Opened------");
+
+	//uprintln("------Set cursor to end------");
+	//CH376_setCursor();
+	//uprintln("------Cursor set to end------");
+
+	//uprintln("------Writing in File------");
+	//CH376_writeFile(d, s);
+	//uprintln("------Writing done------");
+
+	//uprintln("------Closing File------");
+	//CH376_closeFile();
+	//uprintln("------Closing done------");
+
+
+	// send filename again after create, because the file get closed afterwards
+	/*
 	CH376_createFile();
-	uprintln("------File Created------");
-	
 
-	
-	uprintln("------Opening File------");
+	CH376_sendFileName("/LORUM.TXT");
 	CH376_openFile();
-	uprintln("------File Opened------");
-
-	uprintln("------Set cursor to end------");
-	CH376_setCursor();
-	uprintln("------Cursor set to end------");
-
-	uprintln("------Writing in File------");
+	CH376_setCursor(0);
 	CH376_writeFile(d, s);
-	uprintln("------Writing done------");
-
-	uprintln("------Closing File------");
 	CH376_closeFile();
-	uprintln("------Closing done------");
-	
+	*/
+
+	char buf[50];
+	CH376_openFile();
+	CH376_setCursor(0);
+	CH376_readFile(&buf[0], s);
+	CH376_closeFile();
+
+	buf[36] = 0;
+	uprintln(&buf[0]);
+
+
+	/*
+	NOTES:
+	open file in subdirectory:
+	- set filename to /FOLDER1
+	- send open file
+	- set filename to FOLDER2
+	- send open file
+	- set filename to A.TXT
+	- send open file
+	*/
 
 	return 48;
 }
@@ -70,17 +104,10 @@ void int1()
 
 void int2()
 {
-
 }
 
 void int3()
 {
-	int *p = (int *) 0xC0262F; // set address (UART RX)
-	int val = *p;
-	int *q = (int *) 0xC0262E; // set address (UART RX)
-	*q = val;
-	
-   
 }
 
 void int4()

@@ -1,6 +1,15 @@
 #include "math.h" 
 
 /*
+* TODO:
+* - Convert most of these functions to assembly
+* - Add writeToAddress(data, addr, len)
+* - Add writeWordToAddress(data, addr)
+* - Add readFromAddress(dst, addr, len)
+* - Add readWordFromAddress(dst, addr)
+*/
+
+/*
 uprintc(char c)
 
 Prints a single char c by writing it to 0xC0262E

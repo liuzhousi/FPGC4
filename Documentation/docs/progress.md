@@ -78,6 +78,7 @@ These are kinda ordered based on priority
 - Remove requirement to add intX() functions
 - Add wrapper for extended interrupts
 - Improve performance of certain libraries by using assembly
+- Add timer 1 interrupt code to assembly wrapper
 
 
 ## Future improvements (FPGC5?)

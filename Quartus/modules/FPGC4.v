@@ -74,7 +74,11 @@ module FPGC4(
 	 input           s_nint,
     output          s_mosi,
 	 output 			  s_cs, 		//actually just a copy of GPO[0]
-	 output          s_rst
+	 output          s_rst,
+	 
+	 //UART2
+	 output          uart2_out,
+	 input 			  uart2_in
 );
 
 wire frameDrawn;    //high when frame just rendered
@@ -356,6 +360,7 @@ wire        t1_interrupt;
 wire        t2_interrupt;
 wire        t3_interrupt;
 wire 			uart_rx_interrupt;
+wire 			uart2_rx_interrupt;
 wire        scan_code_ready;
 
 MemoryUnit mu(
@@ -440,6 +445,10 @@ MemoryUnit mu(
 .uart_in(uart_in),
 .uart_rx_interrupt(uart_rx_interrupt),
 
+.uart2_out(uart2_out),
+.uart2_in(uart2_in),
+.uart2_rx_interrupt(uart2_rx_interrupt),
+
 .GPI(GPI),
 .GPO(GPO),
 
@@ -462,7 +471,7 @@ CPU cpu(
 .int4           (frameDrawn),               //Frame Drawn
 .ext_int1       (t3_interrupt),             //timer3
 .ext_int2       (scan_code_ready),          //PS/2 scancode ready
-.ext_int3       (1'b0),
+.ext_int3       (uart2_rx_interrupt),       //UART2 rx
 .ext_int4       (1'b0),
 .address        (address),
 .data           (data),

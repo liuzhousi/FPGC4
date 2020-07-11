@@ -61,6 +61,10 @@ module FPGC4(
     wire uart_in;
     wire uart_rx_interrupt;
 
+    wire uart2_out;
+    wire uart2_in;
+    wire uart2_rx_interrupt;
+
 
 //-------------------Reset----------------------
 //Reset stabilizer I/O
@@ -402,6 +406,10 @@ MemoryUnit mu(
 .uart_in(uart_in),
 .uart_rx_interrupt(uart_rx_interrupt),
 
+.uart2_out(uart2_out),
+.uart2_in(uart2_in),
+.uart2_rx_interrupt(uart2_rx_interrupt),
+
 .GPI(GPI),
 .GPO(GPO)
 );
@@ -420,7 +428,7 @@ CPU cpu(
 .int4           (frameDrawn),               //Frame Drawn
 .ext_int1       (t3_interrupt),             //timer3
 .ext_int2       (scan_code_ready),          //PS/2 scancode ready
-.ext_int3       (1'b0),
+.ext_int3       (uart2_rx_interrupt),       //UART2 rx
 .ext_int4       (1'b0),
 .address        (address),
 .data           (data),

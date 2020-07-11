@@ -72,6 +72,11 @@ module MemoryUnit(
     output          uart_rx_interrupt,
     input           uart_in,
 
+    //UART2
+    output          uart2_out,
+    output          uart2_rx_interrupt,
+    input           uart2_in,
+
     //GPIO
     input [7:0]     GPI,
     output reg [7:0]GPO,
@@ -277,6 +282,35 @@ UARTrx uart_rx(
 .o_Rx_Byte  (w_Rx_Byte)
 );
 
+
+//-------------------UART2 TX-----------------------
+//UART TX I/O
+wire r2_Tx_DV, w2_Tx_Done;
+wire [7:0] r2_Tx_Byte;
+
+UARTtx uart_tx2(
+.i_Clock    (clk),
+.reset      (reset),
+.i_Tx_DV    (r2_Tx_DV),
+.i_Tx_Byte  (r2_Tx_Byte),
+.o_Tx_Active(),
+.o_Tx_Serial(uart2_out),
+.o_Tx_Done_l(w2_Tx_Done)
+);
+
+//-------------------UART2 RX-----------------------
+//UART2 RX I/O
+wire [7:0] w2_Rx_Byte;
+
+
+UARTrx uart_rx2(
+.i_Clock    (clk),
+.reset      (reset),
+.i_Rx_Serial(uart2_in),
+.o_Rx_DV    (uart2_rx_interrupt),
+.o_Rx_Byte  (w2_Rx_Byte)
+);
+
 //----------------SPI-(USB disk)-------------------
 //SPI I/O
 wire s_start;
@@ -347,6 +381,9 @@ assign tg2_we           = (address == 27'hC0262D)                           ? we
 
 assign r_Tx_DV          = (address == 27'hC0262E && we)                     ? start                     : 1'b0;
 assign r_Tx_Byte        = (address == 27'hC0262E)                           ? data                      : 8'd0;
+
+assign r2_Tx_DV         = (address == 27'hC02732 && we)                     ? start                     : 1'b0;
+assign r2_Tx_Byte       = (address == 27'hC02732)                           ? data                      : 8'd0;
 
 assign s_in             = (address == 27'hC02631)                           ? data                      : 8'd0;
 assign s_start          = (address == 27'hC02631 && we)                     ? start                     : 1'b0;
@@ -484,8 +521,25 @@ begin
             q <= {23'd0, vramSPR_cpu_q};
         end
 
+        //UART2 TX
+        if (busy && address == 27'hC02732)
+        begin
+            if (w2_Tx_Done)
+            begin
+                busy <= 0;
+                q <=32'd0;
+            end
+        end
+
+        //UART2 RX
+        if (busy && address == 27'hC02733)
+        begin
+            busy <= 0;
+            q <= w2_Rx_Byte;
+        end
+
         //Prevent lockups
-        if (busy && address >= 27'hC02732)
+        if (busy && address >= 27'hC02734)
         begin
             busy <= 0;
             q <= 32'd0;

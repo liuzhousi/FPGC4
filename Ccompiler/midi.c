@@ -519,12 +519,14 @@ void int1()
 
 void int2()
 {
-
+	int *p = (int *)0xC0262E; 	// address of UART TX
+	*p = 44; 			// write char over UART
 }
 
 void int3()
 {
-   
+   int *p = (int *)0xC0262E; 	// address of UART TX
+	*p = 45; 			// write char over UART
 }
 
 void int4()

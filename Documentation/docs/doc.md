@@ -9,7 +9,7 @@
 		- remove the old fpgc4 folder on the server
 		- copy the site directory to the server, with fpgc4 as name
 		- recursively set group to www-data
-	- just make sure you use public key authentication to the server, so no password prompts come up during the script
+	- just make sure you use public key authentication to the server
 
 
 

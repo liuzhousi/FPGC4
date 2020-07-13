@@ -105,6 +105,7 @@ Inline assembly is especially useful for implementing fast functions like copyin
 ## Coding style recommendation
 Since there is currently no OS, memory (heap) management needs to be done by the programmer. So write at top of program/library which variables are stored at which address. Also, see the Main Memory Map below.
 
+- Some variables can be defined as global variables, which the compiler puts in the Program code (recommended way if possible)
 - Libraries have their own heap, and each library should use different addresses within this space
 - Use clear function names, and defines with prefixes if necessary, to avoid conflicts
 - Use integers for pointers, as they are 32 bit

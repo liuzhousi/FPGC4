@@ -1,41 +1,41 @@
 # Progress
-Here I keep a simple list of my latest progress and a simple TODO list
+Here I keep a list of my latest progress and a TODO list
 
-## Progress log
-- Added library support in assembler
-- Added sprites
-- Rewrote FSX2 for CRT display
-- Finally updated the documentation a bit
-- Created and ordered PCB
-- PCB received, assembled and tested
-- Updated documentation quite a bit
+## Progress log (truncated to latest progress)
 - Added 4 extension interrupts
 - Changes PS/2 controller to only check for scan codes and send an interrupt
 - Reimplemented programmable timer
 - Moved documentation to mkdocs website
 - Modified an existing C compiler (written in python, outputs x86_64 asm) to output B322 asm
 - Added UART DTR reset like an Arduino
-- Mostly finished C compiler, adding libraries
+- C compiler is pretty usable, still some errors here and there with certain code
+- Libraries for CH376 and GFX added
+- Added support for reading interrupt signal from CH376
+- Ported code from personal Arduino project to read MIDI USB keybaord using CH376
+- Added ESP32 as APU (ESP32Synth), replacing the two square wave TonePlayers on the FPGA (still need to disable the TonePlayers!)
+- ESP32 APU uses I2S DAC, and now has a bidirectional UART communication port with the MU
 
 ## Future plans
 These are kinda ordered based on priority
 
+- Remove TonePlayer
+- Improve ESP32Synth
 - Improve and write more libraries
-- Add CH376 interrupt signal to memory map
-- Enable second SPI and UART port
+- Enable second SPI and third UART port
 - Create a web server with W5500 chip
-- Change speed of FT232RL to 3?Mboud
+- Change speed of FT232RL to 1Mboud
 - Change all static paths in the project to relative ones
-- Optimize TonePlayer modules to not use division and therefore decrease size
 - Write a USB bootloader
 - Write a platformer game
 - Create a pattern and palette table generator
 - Add logo to boot screen animation in bootloader
 - Write an OS
-- Add Gameboy printer via Arduino to I/O
-- Change SPI Flash for SDCARD, or add a way to reprogram the flash directly from the FPGA
+- Add Gameboy printer via Arduino to I/O (Best way to do this currently is using UART3)
+- Change SPI Flash for SDCARD (if yes, then use an SRAM cache for blocks and rewrite bootloader), 
+   or add a way to reprogram the flash directly from the FPGA (better idea)
 
 ## Todo documentation
+- really, I should add more pictures and examples (of video output, simulation, hardware)
 - add DSUB9 pinout
 - add (probably in specs section) the FPGA usage statistics
 	- note that the sprite renderer takes almost half of the FPGA, because many big registers

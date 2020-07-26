@@ -14,7 +14,12 @@ then
     then
             echo "B332 ASM code successfully assembled"
             # convert list to binary files and send to FPGC4
-            (cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && powershell.exe "python uartFlasher_win.py")
+
+            # WSL2 version
+            # (cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && powershell.exe "python uartFlasher_win.py")
+
+            # WSL1 version
+            (cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && python3 uartFlasher.py)
     
     else # assemble failed, run again to show error
         echo "Failed to assemble B332 ASM code"

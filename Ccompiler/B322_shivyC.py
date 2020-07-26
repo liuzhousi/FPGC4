@@ -61,7 +61,7 @@ def main():
     arguments = get_arguments()
 
     # currently supports compiling one .c file only
-    if len(arguments.files) is not 1:
+    if len(arguments.files) != 1:
         print("Expected one input file, got ", str(len(arguments.files)))
         return -1
 
@@ -73,7 +73,7 @@ def main():
 
     error_collector.show()
 
-    if len(error_collector.issues) is 0:
+    if len(error_collector.issues) == 0:
         sys.exit(0)
     
     else:

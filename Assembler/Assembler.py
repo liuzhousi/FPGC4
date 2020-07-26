@@ -119,7 +119,7 @@ def passOne(parsedLines):
                     if i != "data":
                         passOneResult.append((line[0], i + " //data"))
             else:
-                if (compiledLine is not "ignore"):
+                if (compiledLine != "ignore"):
                     passOneResult.append((line[0], compiledLine))
         except Exception as e:
             print("Error in line " + str(line[0]) + ": " + " ".join(line[1]))

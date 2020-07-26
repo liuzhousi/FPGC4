@@ -16,10 +16,18 @@ do
         then
                 echo "B332 ASM code successfully assembled"
                 # convert list to binary files and send to FPGC4
-                (cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && powershell.exe "python uartFlasher_win.py testMode; exit \$LASTEXITCODE ")
+
+                # WSL2 version
+                # (cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && powershell.exe "python uartFlasher_win.py testMode; exit \$LASTEXITCODE ")
+                
+                # WSL1 version
+                (cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && python3 uartFlasher.py testMode)
+
                 retVal="$?"
                 echo "$filename exited with code: $retVal"
                 retList+=("$retVal")
+
+                # WSL version
 
         else # assemble failed, run again to show error
             echo "Failed to assemble B332 ASM code"
@@ -29,6 +37,10 @@ do
         echo "Failed to compile C code"
         python3 B322_shivyC.py $filename
     fi
+
+    # sleep alternative since it is broken in WSL1
+    read -t 0.2
+
 done
 
 echo "Got the follwing return values:"

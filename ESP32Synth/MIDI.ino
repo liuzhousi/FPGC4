@@ -29,6 +29,18 @@ void executeMidi()
     {
         waveForm = map(mBuffer[1], 0, 127, 0, WMAX-1);
     }
+
+    // sustain pedal
+    else if ( mBuffer[0] == 0x40) 
+    {
+        if (mBuffer[1] == 0x7f)
+          SustainPedal = true;
+        else
+        {
+          SustainPedal = false;
+          doSustainPedalRelease();
+        }
+    }
     
     // volume slider
     else if ( mBuffer[0] == 0x07) 

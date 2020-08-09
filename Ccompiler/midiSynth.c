@@ -19,11 +19,6 @@
 
 int endp_mode = 0x80;
 
-// list of currently pressed notes
-// values are the note ids. 0 = idle
-int noteList[10] = 0;
-
-
 /*
 *	Functions
 */
@@ -262,39 +257,6 @@ void issue_token(int endp_and_pid)
 }
 
 
-// Set a free note in the noteList to noteID
-void press_note(int noteID)
-{
-  	int done = 0;
-  	for (int i = 0; i < 8; i++)
-  	{
-  		if (done == 0)
-  		{
-  			int *p_noteList = noteList;
-	  		if (*(p_noteList+i) == 0)
-	  		{
-	  			*(p_noteList+i) = noteID;
-	  			done = 1;
-	  		}
-  		}
-  	}
-}
-
-
-// Free all noted in noteList with noteID
-void release_note(int noteID)
-{
-  	for (int i = 0; i < 8; i++)
-  	{
-  		int *p_noteList = noteList;
-  		if (*(p_noteList+i) == noteID)
-  		{
-  			*(p_noteList+i) = 0;
-  		}
-  	}
-}
-
-
 // Read data from USB, and do something with it
 // First byte is the length,
 // But since a MIDI keyboard always sends 4 bytes,
@@ -319,13 +281,11 @@ void RD_USB_DATA()
 	*p = (int)b2; 				// write char over UART2
 	*p = (int)b3; 				// write char over UART2
 
-	return;
-
-
-    char buffer[10];
 
     if (CH376_DEBUG)
     {
+    	char buffer[10];
+
 		uprintln("--RAW DATA--");
 		itoah(b0, &buffer[0]);
 		uprintln(&buffer[0]);
@@ -338,36 +298,16 @@ void RD_USB_DATA()
 
 		itoah(b3, &buffer[0]);
 		uprintln(&buffer[0]);
-	}
 
-	
-	// parse bytes
-	int cableNumber = b0 &&& 0b11110000;
- 	int CIN 		= b0 &&& 0b00001111;
-  	int channel 	= b1 &&& 0b00001111;
-  	int event 		= b1 &&& 0b11110000;
-  	int noteID 		= b2;
-  	int velocity 	= b3;
+		// parse bytes
+		int cableNumber = b0 &&& 0b11110000;
+	 	int CIN 		= b0 &&& 0b00001111;
+	  	int channel 	= b1 &&& 0b00001111;
+	  	int event 		= b1 &&& 0b11110000;
+	  	int noteID 		= b2;
+	  	int velocity 	= b3;
 
-  	// note press
-  	if (event == 0x90)
-  	{
-	  	press_note(noteID);
-  	}
-
-  	// note release
-  	if (event == 0x80)
-  	{
-	  	release_note(noteID);
-  	}
-
-  	// control codes can be checked here as well
-  	// when there is a use for it
-
-
-  	if (CH376_DEBUG)
-    {
-		uprintln("--PARSED DATA--");
+	  	uprintln("--PARSED DATA--");
 
 	  	uprint("Cable Number: ");
 		itoah(cableNumber, &buffer[0]);
@@ -396,48 +336,7 @@ void RD_USB_DATA()
 	    uprintln("\n");
 	}
   	
-}  
-
-
-// Write second part of noteList to tone player 2
-void writeTP2()
-{
-	int quadNoteWord = noteList[4];
-	quadNoteWord = quadNoteWord | (noteList[5] << 8);
-	quadNoteWord = quadNoteWord | (noteList[6] << 16);
-	quadNoteWord = quadNoteWord | (noteList[7] << 24);
-	
-	int *tp2 = (int *)0xC0262D;
-	*tp2 = quadNoteWord;
 }
-
-
-// Write first part of noteList to tone player 1
-void writeTP1()
-{
-	int quadNoteWord = noteList[0];
-	quadNoteWord = quadNoteWord | (noteList[1] << 8);
-	quadNoteWord = quadNoteWord | (noteList[2] << 16);
-	quadNoteWord = quadNoteWord | (noteList[3] << 24);
-	
-	int *tp1 = (int *)0xC0262C;
-	*tp1 = quadNoteWord;
-}
-
-
-// Print noteList
-void printNoteList()   
-{   
-	uprintln("--PARSED DATA--");
-	char buffer[10];
-	for (int i = 0; i < 8; i++)
-	{
-		int q = i;
-		int *p = noteList;
-		itoah(*(p+q), &buffer[0]);
-		uprintln(&buffer[0]);
-	}  
-}  
 
 
 void set_addr(int addr) {    
@@ -499,12 +398,6 @@ int main()
 		while (CH376_WaitGetStatus() != 0x14);
 
 		RD_USB_DATA();
-
-		if (CH376_DEBUG)
-			printNoteList();
-
-    	writeTP1();
-    	writeTP2();
     }
 
 	return 48;

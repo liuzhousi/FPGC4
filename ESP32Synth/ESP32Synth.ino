@@ -31,7 +31,7 @@
  */
 
 //------------ MIDI INPUT -------------
-HardwareSerial MidiSerial(1);         // MIDI input (and control output (TBI)) on UART1
+HardwareSerial MidiSerial(2);         // MIDI input (and control output (TBI)) on UART2
 
 
 //----------- WAVE TABLES -------------
@@ -67,6 +67,7 @@ uint32_t AmaxCount  = 0;    // number of counts within attack state (duration in
 uint32_t DmaxCount  = 0;    // number of counts within decay state (duration in samples)
 uint32_t RmaxCount  = 0;    // number of counts within release state (duration in samples)
 uint32_t Sval       = 4095; // sustain value
+bool SustainPedal = false;
 
 // ADSR data structure
 typedef struct {
@@ -74,6 +75,7 @@ typedef struct {
   uint32_t counter;         // counter for calculations within current ADSR state
   uint32_t output;          // output of ADSR, has range of 0-4095
   uint32_t lastOutput;      // previous output value (for release value calculation)
+  bool      pressed;        // if the note is physically pressed
 } ADSR;
 
 
@@ -338,4 +340,6 @@ void loop()
 
   // send buffer
   i2s_write_bytes(I2S_PORT, (const char *)&sampleBuf[0], sizeof(uint32_t)*SAMPLE_BUFFER_SIZE, 100);
+
+  turnOffLowVolumeNotes();
 }

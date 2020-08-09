@@ -20,15 +20,59 @@ void setGateOn(uint32_t n)
 {
   voices[n].adsr.counter  = 0;
   voices[n].adsr.state    = ADSR_ATTACK;
+  voices[n].adsr.pressed  = true;
 }
 
 
 // Tell ADSR that the note is released
 void setGateOff(uint32_t n) 
 {
-  voices[n].adsr.lastOutput   = voices[n].adsr.output;
-  voices[n].adsr.counter      = 0;
-  voices[n].adsr.state        = ADSR_RELEASE;
+  if (!SustainPedal)
+  {
+    voices[n].adsr.lastOutput   = voices[n].adsr.output;
+    voices[n].adsr.counter      = 0;
+    voices[n].adsr.state        = ADSR_RELEASE;
+    voices[n].adsr.pressed      = false;
+  }
+  else
+  {
+    voices[n].adsr.pressed      = false;
+  }
+}
+
+
+// Turn off notes with low volume
+void turnOffLowVolumeNotes() 
+{
+  for (int n = 0; n < MAXVOICES; n++)
+  {
+    if (voices[n].adsr.state == ADSR_SUSTAIN)
+    {
+      if (voices[n].adsr.output < 20)
+      {
+        voices[n].adsr.counter  = 0;
+        voices[n].adsr.state    = ADSR_IDLE;
+        voices[n].adsr.output   = 0;
+        voices[n].adsr.pressed  = false;
+      }
+    }
+  }
+}
+
+
+// Handler when sustain pedal is released
+void doSustainPedalRelease() 
+{
+  for (int n = 0; n < MAXVOICES; n++)
+  {
+    if (voices[n].adsr.state != ADSR_IDLE && voices[n].adsr.state != ADSR_RELEASE)
+    {
+      if (voices[n].adsr.pressed == false)
+      {
+        setGateOff(n);
+      }
+    }
+  }
 }
 
 

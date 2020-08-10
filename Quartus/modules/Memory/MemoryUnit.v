@@ -52,13 +52,13 @@ module MemoryUnit(
 
     //PS/2
     input           ps2d, ps2c,
-	 output          scan_code_ready,
+    output          scan_code_ready,
     
     //(S)NESpad
     output          nesc, nesl,
     input           nesd,
 
-    //CTCtimers
+    //OStimers
     output          t1_interrupt,
     output          t2_interrupt,
     output          t3_interrupt,
@@ -71,8 +71,8 @@ module MemoryUnit(
     output          uart_out,
     output          uart_rx_interrupt,
     input           uart_in,
-	 
-	 //UART2
+
+    //UART2
     output          uart2_out,
     output          uart2_rx_interrupt,
     input           uart2_in,
@@ -85,7 +85,12 @@ module MemoryUnit(
     output          s_clk,
     input           s_miso,
     output          s_mosi,
-	 input           s_nint
+    input           s_nint,
+
+    //SPI2
+    output          spi2_clk,
+    output          spi2_mosi,
+    input           spi2_miso
 );  
 
     //SDRAMcontroller, SPIreader, vram, and I/O should work on negedge clock
@@ -223,7 +228,7 @@ OStimer osTimer3(
 );
 
 //---------------Tone Generator 1-------------------
-//CTC timer 3 I/O
+//OS timer 3 I/O
 wire [31:0] tg1_note;
 wire tg1_we;
 
@@ -284,7 +289,7 @@ UARTrx uart_rx(
 
 
 //-------------------UART2 TX-----------------------
-//UART2 TX I/O
+//UART TX I/O
 wire r2_Tx_DV, w2_Tx_Done;
 wire [7:0] r2_Tx_Byte;
 
@@ -321,7 +326,7 @@ wire s_busy;
 SimpleSPI
 #(
 .reg_width(8), //1Byte
-.speed_div(100) //250KHz
+.speed_div(100) //100kHz
 ) spi
 (
 .clk        (clk),
@@ -334,6 +339,31 @@ SimpleSPI
 .miso       (s_miso),
 .mosi       (s_mosi),
 .busy       (s_busy)
+);
+
+//----------------SPI2-(GP)-------------------
+//SPI I/O
+wire s2_start;
+wire [7:0] s2_in;
+wire [7:0] s2_out;
+wire s2_busy;
+
+SimpleSPI
+#(
+.reg_width(8), //1Byte
+.speed_div(100) //100kHz
+) spi2
+(
+.clk        (clk),
+.reset      (reset),
+.t_start    (s2_start),
+.d_in       (s2_in),
+.d_out      (s2_out),
+.cs         (),         //We do this with GPIO
+.spi_clk    (spi2_clk),
+.miso       (spi2_miso),
+.mosi       (spi2_mosi),
+.busy       (s2_busy)
 );
 
 
@@ -387,6 +417,9 @@ assign r2_Tx_Byte       = (address == 27'hC02732)                           ? da
 
 assign s_in             = (address == 27'hC02631)                           ? data                      : 8'd0;
 assign s_start          = (address == 27'hC02631 && we)                     ? start                     : 1'b0;
+
+assign s2_in            = (address == 27'hC02734)                           ? data                      : 8'd0;
+assign s2_start         = (address == 27'hC02734 && we)                     ? start                     : 1'b0;
 
 
 initial
@@ -508,6 +541,7 @@ begin
             q <= {GPO,GPI};
         end
 
+        //CH376 SPI
         if (busy && address == 27'hC02631 && !s_busy)
         begin
             busy <= 0;
@@ -538,8 +572,15 @@ begin
             q <= w2_Rx_Byte;
         end
 
+        //SPI2 GP
+        if (busy && address == 27'hC02734 && !s2_busy)
+        begin
+            busy <= 0;
+            q <= s2_out;
+        end
+
         //Prevent lockups
-        if (busy && address >= 27'hC02734)
+        if (busy && address >= 27'hC02735)
         begin
             busy <= 0;
             q <= 32'd0;

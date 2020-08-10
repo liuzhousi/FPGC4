@@ -68,7 +68,7 @@ module FPGC4(
 	 input [7:0]     GPI,
     output [7:0]    GPO,
 	 
-    //SPI
+    //SPI (CH376)
     output          s_clk,
     input           s_miso,
 	 input           s_nint,
@@ -78,7 +78,14 @@ module FPGC4(
 	 
 	 //UART2
 	 output          uart2_out,
-	 input 			  uart2_in
+	 input 			  uart2_in,
+	 
+	 //SPI2 (GP)
+    output          spi2_cs, //GPO[1]
+    output          spi2_clk,
+	 output          spi2_mosi,
+    input           spi2_miso
+
 );
 
 wire frameDrawn;    //high when frame just rendered
@@ -140,6 +147,7 @@ assign reset = (~nreset_stable) || dtrRst;
 
 assign s_cs = GPO[0];
 assign s_rst = reset;
+assign spi2_cs = GPO[1];
 
 //--------------------Clocks----------------------
 assign SDRAM_CLK = clk;
@@ -165,7 +173,7 @@ assign vram32_gpu_d     = 32'd0;
 VRAM #(
 .WIDTH(32), 
 .WORDS(1056), 
-.LIST("/home/bart/Documents/FPGA/FPGC4/Verilog/memory/vram32.list")
+.LIST("../Verilog/memory/vram32.list")
 )   vram32(
 //CPU port
 .cpu_clk    (clk),
@@ -198,7 +206,7 @@ assign vram322_gpu_d     = 32'd0;
 VRAM #(
 .WIDTH(32), 
 .WORDS(1056), 
-.LIST("/home/bart/Documents/FPGA/FPGC4/Verilog/memory/vram32.list")
+.LIST("../Verilog/memory/vram32.list")
 )   vram322(
 //CPU port
 .cpu_clk    (clk),
@@ -237,7 +245,7 @@ assign vram8_gpu_d      = 8'd0;
 VRAM #(
 .WIDTH(8), 
 .WORDS(8194), 
-.LIST("/home/bart/Documents/FPGA/FPGC4/Verilog/memory/vram8.list")
+.LIST("../Verilog/memory/vram8.list")
 )   vram8(
 //CPU port
 .cpu_clk    (clk),
@@ -276,7 +284,7 @@ assign vramSPR_gpu_d      = 9'd0;
 VRAM #(
 .WIDTH(9), 
 .WORDS(256), 
-.LIST("/home/bart/Documents/FPGA/FPGC4/Verilog/memory/vramSPR.list")
+.LIST("../Verilog/memory/vramSPR.list")
 )   vramSPR(
 //CPU port
 .cpu_clk    (clk),
@@ -455,7 +463,11 @@ MemoryUnit mu(
 .s_clk(s_clk),
 .s_mosi(s_mosi),
 .s_miso(s_miso),
-.s_nint(CH376_nint)
+.s_nint(CH376_nint),
+
+.spi2_clk(spi2_clk),
+.spi2_mosi(spi2_mosi),
+.spi2_miso(spi2_miso)
 );
 
 

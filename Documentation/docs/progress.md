@@ -56,6 +56,7 @@ These are kinda ordered based on priority
 - note that r7 is used as temp reg to store address of label in read/write instructions
 - only global int and int[x] are allowed, no char, since size allocation goes wrong
 - register/assembly info for c compiler
+- add schematic of pcb
 
 
 ## Todo C compiler related

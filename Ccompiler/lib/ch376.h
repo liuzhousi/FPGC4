@@ -1,6 +1,6 @@
 #include "stdlib.h" 
 
-#define CH376_DEBUG 			 1
+#define CH376_DEBUG 			 0
 #define CH376_LOOP_DELAY 		 100
 #define CH376_COMMAND_DELAY		 20
 #define CMD_GET_IC_VER           0x01
@@ -354,7 +354,42 @@ void CH376_connectDrive() {
 }
 
 
+int CH376_getFileSize()
+{
+	int fz1;
+	int fz2;
+	int fz3;
+	int fz4;
+	int fz5;
 
+	CH376_spiBeginTransfer();
+	CH376_spiTransfer(0x0C);
+	CH376_spiTransfer(0x68);
+	fz1 = CH376_spiTransfer(0);
+	fz2 = CH376_spiTransfer(0);
+	fz3 = CH376_spiTransfer(0);
+	fz4 = CH376_spiTransfer(0);
+	CH376_spiEndTransfer();
+
+	/*
+	char buffer[10];
+	itoa(fz1, &buffer[0]);
+	uprintln(&buffer[0]);
+	itoa(fz2, &buffer[0]);
+	uprintln(&buffer[0]);
+	itoa(fz3, &buffer[0]);
+	uprintln(&buffer[0]);
+	itoa(fz4, &buffer[0]);
+	uprintln(&buffer[0]);
+	*/
+
+	int retval = fz1;
+	retval = retval + (fz2 << 8);
+	retval = retval + (fz3 << 16);
+	retval = retval + (fz4 << 24);
+
+	return retval;
+}
 
 // Sets cursor to position s
 void CH376_setCursor(int s) 
@@ -383,7 +418,8 @@ void CH376_setCursor(int s)
 
 
 // Reads s bytes into buf
-// Can read 255 bytes per call
+// Can read 65536 bytes per call
+// TODO do loop for >255 bytes
 void CH376_readFile(char* buf, int s) 
 {
 	if (CH376_DEBUG)
@@ -392,51 +428,115 @@ void CH376_readFile(char* buf, int s)
 	CH376_spiBeginTransfer();
 	CH376_spiTransfer(CMD_BYTE_READ);
 	CH376_spiTransfer(s);
-	CH376_spiTransfer(0);
+	CH376_spiTransfer(s >> 8);
 	CH376_spiEndTransfer();
 
-	int retval = 0;
 	char buffer[10];
+
+	int bytesRead = 0; 
 
 	while(CH376_WaitGetStatus() != ANSW_USB_INT_DISK_READ);
 
 	if (CH376_DEBUG)
 		uprintln("Read request done");
 
-
-
 	if (CH376_DEBUG)
-		uprintln("Byte RD usb data0");
+		uprintln("Reading first set of data");
 
+	// Read first set of bytes (max 255)
 	CH376_spiBeginTransfer();
 	CH376_spiTransfer(CMD_RD_USB_DATA0);
 	int readLen = CH376_spiTransfer(0x00);
+
+	if (CH376_DEBUG)
+	{
+		//uprint("\n");
+		itoah(readLen, &buffer[0]);
+		uprint(&buffer[0]);
+		uprintln(", Read USB data size");
+	}
 
 	int readByte;
 
 	for (int i = 0; i < readLen; i++) 
 	{
 		readByte = CH376_spiTransfer(0x00);
-		buf[i] = (char)readByte;
-		uprintc((char)readByte);
+		buf[bytesRead] = (char)readByte;
+		bytesRead = bytesRead + 1;
+		//uprintc((char)readByte);
 	}
-
 	CH376_spiEndTransfer();
 
-	if (CH376_DEBUG)
-		uprint("\n");
 
-	if (CH376_DEBUG)
+	// Keep reading until done
+	int doneReading = 0;
+	if (bytesRead == s)
 	{
-		itoah(readLen, &buffer[0]);
-		uprint(&buffer[0]);
-		uprintln(", Byte rd usb done (data size)");
+		doneReading = 1;
 	}
+
+	while (doneReading == 0)
+	{
+		if (CH376_DEBUG)
+			uprintln("Requesting next set of data");
+
+		// requesting another set of data
+		CH376_spiBeginTransfer();
+		CH376_spiTransfer(CMD_BYTE_RD_GO);
+		CH376_spiEndTransfer();
+
+		int continueRead = 0;
+		while (continueRead == 0)
+		{
+			int IntStatus = CH376_WaitGetStatus();
+			if (IntStatus == ANSW_USB_INT_SUCCESS)
+			{
+				continueRead = 1;
+				doneReading = 1;
+			}
+			if (IntStatus == ANSW_USB_INT_DISK_READ)
+			{
+				continueRead = 1;
+			}
+		}
+
+		if (doneReading == 0)
+		{
+			if (CH376_DEBUG)
+				uprintln("Reading next set of data");
+
+			// read the set of data
+			CH376_spiBeginTransfer();
+			CH376_spiTransfer(CMD_RD_USB_DATA0);
+			readLen = CH376_spiTransfer(0x00);
+
+			if (CH376_DEBUG)
+			{
+				//uprint("\n");
+				itoah(readLen, &buffer[0]);
+				uprint(&buffer[0]);
+				uprintln(", Read USB data size");
+			}
+
+			for (int i = 0; i < readLen; i++) 
+			{
+				readByte = CH376_spiTransfer(0x00);
+				buf[bytesRead] = (char)readByte;
+				bytesRead = bytesRead + 1;
+				//uprintc((char)readByte);
+			}
+
+			CH376_spiEndTransfer();
+		}
+
+	}
+	
 }
 
 
 // Writes data d of size s
-// Can only write 255 bytes at a time
+// Can only write 65536 bytes at a time
+// TODO do loop for >255 bytes
 void CH376_writeFile(char* d, int s) 
 {
 	if (CH376_DEBUG)
@@ -445,7 +545,7 @@ void CH376_writeFile(char* d, int s)
 	CH376_spiBeginTransfer();
 	CH376_spiTransfer(CMD_BYTE_WRITE);
 	CH376_spiTransfer(s);
-	CH376_spiTransfer(0);
+	CH376_spiTransfer(s >> 8);
 	CH376_spiEndTransfer();
 
 	int retval = 0;
@@ -492,7 +592,8 @@ void CH376_writeFile(char* d, int s)
 }
 
 
-void CH376_openFile() 
+// returns 1 on success
+int CH376_openFile() 
 {
 	if (CH376_DEBUG)
 		uprintln("Opening file");
@@ -501,10 +602,21 @@ void CH376_openFile()
 	CH376_spiTransfer(CMD_FILE_OPEN);
 	CH376_spiEndTransfer();
 
-	while(CH376_WaitGetStatus() != ANSW_USB_INT_SUCCESS);
+	if (CH376_WaitGetStatus() == ANSW_USB_INT_SUCCESS)
+	{
+		if (CH376_DEBUG)
+			uprintln("File opened");
+		
+		return 1;
+	}
+	else
+	{
+		if (CH376_DEBUG)
+			uprintln("Could not open file");
+
+		return 0;
+	}
 	
-	if (CH376_DEBUG)
-		uprintln("File opened");
 }
 
 
@@ -583,7 +695,7 @@ void CH376_createFile()
 
 // Sends filename f
 // REQUIRES CAPITAL LETTERS IF YOU WANT TO OPEN IT ON YOUR PC AS WELL!
-// FILE NAME SHOULD BE MAX 11 CHARS
+// TODO: handle (split with open()) directories
 void CH376_sendFileName(char* f) 
 {
 	if (CH376_DEBUG)

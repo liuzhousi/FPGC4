@@ -72,13 +72,19 @@ int main()
 	*/
 
 	char buf[50];
-	CH376_openFile();
-	CH376_setCursor(0);
-	CH376_readFile(&buf[0], s);
-	CH376_closeFile();
+	if (CH376_openFile() == 1)
+	{
+		CH376_setCursor(0);
+		CH376_readFile(&buf[0], s);
+		CH376_closeFile();
 
-	buf[s] = 0;
-	uprintln(&buf[0]);
+		buf[s] = 0;
+		uprintln(&buf[0]);
+	}
+	else
+	{
+		uprintln("could not open file");
+	}
 
 
 	/*

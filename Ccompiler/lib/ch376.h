@@ -1,6 +1,6 @@
 #include "stdlib.h" 
 
-#define CH376_DEBUG 			 0
+#define CH376_DEBUG 			 1
 #define CH376_LOOP_DELAY 		 100
 #define CH376_COMMAND_DELAY		 20
 #define CMD_GET_IC_VER           0x01
@@ -46,6 +46,7 @@
 #define CMD_SET_CONFIG           0x49
 #define CMD_AUTO_CONFIG          0x4D
 #define CMD_ISSUE_TKN_X          0x4E
+
 #define ANSW_RET_SUCCESS         0x51
 #define ANSW_USB_INT_SUCCESS     0x14
 #define ANSW_USB_INT_CONNECT     0x15
@@ -197,6 +198,7 @@ void CH376_sendData(char* d, int s)
 }
 
 
+// Good test to know if the communication works
 void CH376_printICver()
 {
 	CH376_spiBeginTransfer();
@@ -236,7 +238,8 @@ int CH376_setUSBmode(int mode)
 
 
 // resets and intitializes CH376
-void CH376_init()
+// returns 1 on success
+int CH376_init()
 {
 	CH376_spiEndTransfer(); // start with cs high
 	delay(60);
@@ -264,6 +267,11 @@ void CH376_init()
 		uprint(&buffer[0]);
 		uprintln(", USB mode set to HOST_0 (51 == operation successful)");
 	}
+
+	if (retval == 0x51)
+		return 1;
+	else
+		return 0;
 }
 
 
@@ -271,21 +279,21 @@ void CH376_init()
 // sets usb host mode
 // waits for drive to be ready
 // mounts drive
-void CH376_connectDrive() {
+// returns 1 on success
+int CH376_connectDrive() {
 
 	int retval = 0;
 	char buffer[10];
 
-
-	// Disk connection
+	// Device connection
 	if (CH376_DEBUG)
-		uprintln("Checking disk connection status");
+		uprintln("Waiting for device to be connected");
 
+	// Wait forever until an USB device is connected
 	while(CH376_WaitGetStatus() != ANSW_USB_INT_CONNECT);
 
 	if (CH376_DEBUG)
-		uprintln("Disk connected");
-
+		uprintln("Device connected");
 
 	// USB mode 1
 	if (CH376_DEBUG)
@@ -300,6 +308,9 @@ void CH376_connectDrive() {
 		uprintln(", USB mode set to HOST_1 (51 == operation successful)");
 	}
 
+	// Return on error
+	if (retval != 0x51)
+		return 0;
 
 	// USB mode 2
 	if (CH376_DEBUG)
@@ -314,15 +325,19 @@ void CH376_connectDrive() {
 		uprintln(", USB mode set to HOST_2 (51 == operation successful)");
 	}
 
+	// Return on error
+	if (retval != 0x51)
+		return 0;
 
-	// Disk connection
+
+	// Device connection
 	if (CH376_DEBUG)
-		uprintln("Checking disk connection status");
+		uprintln("Waiting for device to be connected");
 
 	while(CH376_WaitGetStatus() != ANSW_USB_INT_CONNECT);
 
 	if (CH376_DEBUG)
-		uprintln("Disk connected");
+		uprintln("Device connected");
 
 
 	// Drive ready
@@ -333,11 +348,17 @@ void CH376_connectDrive() {
 	CH376_spiTransfer(CMD_DISK_CONNECT);
 	CH376_spiEndTransfer();
 
-	while(CH376_WaitGetStatus() != ANSW_USB_INT_SUCCESS);
+	if (CH376_WaitGetStatus() != ANSW_USB_INT_SUCCESS)
+	{
+		if (CH376_DEBUG)
+			uprintln("Drive not ready");
+
+		// Return on error
+		return 0;
+	}
 	
 	if (CH376_DEBUG)
 		uprintln("Drive ready");
-
 
 	// Mounting drive
 	if (CH376_DEBUG)
@@ -347,80 +368,73 @@ void CH376_connectDrive() {
 	CH376_spiTransfer(CMD_DISK_MOUNT);
 	CH376_spiEndTransfer();
 
-	while(CH376_WaitGetStatus() != ANSW_USB_INT_SUCCESS);
+	if (CH376_WaitGetStatus() != ANSW_USB_INT_SUCCESS)
+	{
+		if (CH376_DEBUG)
+			uprintln("Drive not mounted");
+
+		// Return on error
+		return 0;
+	}
 
 	if (CH376_DEBUG)
 		uprintln("Drive mounted");
+
+	return 1;
 }
 
 
+// Returns file size of currently opened file (32 bits)
 int CH376_getFileSize()
 {
-	int fz1;
-	int fz2;
-	int fz3;
-	int fz4;
-	int fz5;
-
 	CH376_spiBeginTransfer();
-	CH376_spiTransfer(0x0C);
+	CH376_spiTransfer(CMD_GET_FILE_SIZE);
 	CH376_spiTransfer(0x68);
-	fz1 = CH376_spiTransfer(0);
-	fz2 = CH376_spiTransfer(0);
-	fz3 = CH376_spiTransfer(0);
-	fz4 = CH376_spiTransfer(0);
+	int retval = CH376_spiTransfer(0);
+	retval = retval + (CH376_spiTransfer(0) << 8);
+	retval = retval + (CH376_spiTransfer(0) << 16);
+	retval = retval + (CH376_spiTransfer(0) << 24);
 	CH376_spiEndTransfer();
-
-	/*
-	char buffer[10];
-	itoa(fz1, &buffer[0]);
-	uprintln(&buffer[0]);
-	itoa(fz2, &buffer[0]);
-	uprintln(&buffer[0]);
-	itoa(fz3, &buffer[0]);
-	uprintln(&buffer[0]);
-	itoa(fz4, &buffer[0]);
-	uprintln(&buffer[0]);
-	*/
-
-	int retval = fz1;
-	retval = retval + (fz2 << 8);
-	retval = retval + (fz3 << 16);
-	retval = retval + (fz4 << 24);
 
 	return retval;
 }
 
+
 // Sets cursor to position s
-void CH376_setCursor(int s) 
+// Returns 1 on success
+int CH376_setCursor(int s) 
 {
 	if (CH376_DEBUG)
 		uprintln("Setting cursor to s");
 
-	int s0 = s;
-	int s1 = s >> 8;
-	int s2 = s >> 16;
-	int s3 = s >> 24;
-
 	CH376_spiBeginTransfer();
 	CH376_spiTransfer(CMD_BYTE_LOCATE);
-	CH376_spiTransfer(s0);
-	CH376_spiTransfer(s1);
-	CH376_spiTransfer(s2);
-	CH376_spiTransfer(s3);
+	CH376_spiTransfer(s);
+	CH376_spiTransfer(s >> 8);
+	CH376_spiTransfer(s >> 16);
+	CH376_spiTransfer(s >> 24);
 	CH376_spiEndTransfer();
 
-	while(CH376_WaitGetStatus() != ANSW_USB_INT_SUCCESS);
+	if (CH376_WaitGetStatus() != ANSW_USB_INT_SUCCESS)
+	{
+		if (CH376_DEBUG)
+			uprintln("Cursor not set");
+
+		// Return on error
+		return 0;
+	}
 
 	if (CH376_DEBUG)
 		uprintln("Cursor set");
+
+	return 1;
 }
 
 
 // Reads s bytes into buf
 // Can read 65536 bytes per call
-// TODO do loop for >255 bytes
-void CH376_readFile(char* buf, int s) 
+// Returns 1 on success
+int CH376_readFile(char* buf, int s) 
 {
 	if (CH376_DEBUG)
 		uprintln("Request read for s bytes");
@@ -433,112 +447,77 @@ void CH376_readFile(char* buf, int s)
 
 	char buffer[10];
 
+	if (CH376_WaitGetStatus() != ANSW_USB_INT_DISK_READ)
+	{
+		if (CH376_DEBUG)
+			uprintln("Read request failed");
+		return 0;
+	}
+
 	int bytesRead = 0; 
-
-	while(CH376_WaitGetStatus() != ANSW_USB_INT_DISK_READ);
-
-	if (CH376_DEBUG)
-		uprintln("Read request done");
-
-	if (CH376_DEBUG)
-		uprintln("Reading first set of data");
-
-	// Read first set of bytes (max 255)
-	CH376_spiBeginTransfer();
-	CH376_spiTransfer(CMD_RD_USB_DATA0);
-	int readLen = CH376_spiTransfer(0x00);
-
-	if (CH376_DEBUG)
-	{
-		//uprint("\n");
-		itoah(readLen, &buffer[0]);
-		uprint(&buffer[0]);
-		uprintln(", Read USB data size");
-	}
-
-	int readByte;
-
-	for (int i = 0; i < readLen; i++) 
-	{
-		readByte = CH376_spiTransfer(0x00);
-		buf[bytesRead] = (char)readByte;
-		bytesRead = bytesRead + 1;
-		//uprintc((char)readByte);
-	}
-	CH376_spiEndTransfer();
-
-
-	// Keep reading until done
 	int doneReading = 0;
-	if (bytesRead == s)
-	{
-		doneReading = 1;
-	}
 
 	while (doneReading == 0)
 	{
+		// Read set of bytes (max 255)
+		CH376_spiBeginTransfer();
+		CH376_spiTransfer(CMD_RD_USB_DATA0);
+		int readLen = CH376_spiTransfer(0x00);
+
 		if (CH376_DEBUG)
-			uprintln("Requesting next set of data");
+		{
+			itoa(readLen, &buffer[0]);
+			uprint(&buffer[0]);
+			uprintln(", Read USB data size");
+		}
+
+		int readByte;
+
+		for (int i = 0; i < readLen; i++) 
+		{
+			readByte = CH376_spiTransfer(0x00);
+			buf[bytesRead] = (char)readByte;
+			bytesRead = bytesRead + 1;
+		}
+		CH376_spiEndTransfer();
 
 		// requesting another set of data
 		CH376_spiBeginTransfer();
 		CH376_spiTransfer(CMD_BYTE_RD_GO);
 		CH376_spiEndTransfer();
 
-		int continueRead = 0;
-		while (continueRead == 0)
+		int IntStatus = CH376_WaitGetStatus();
+		if (IntStatus == ANSW_USB_INT_SUCCESS)
 		{
-			int IntStatus = CH376_WaitGetStatus();
-			if (IntStatus == ANSW_USB_INT_SUCCESS)
-			{
-				continueRead = 1;
-				doneReading = 1;
-			}
-			if (IntStatus == ANSW_USB_INT_DISK_READ)
-			{
-				continueRead = 1;
-			}
+			// done with reading, exit loop
+			doneReading = 1;
 		}
-
-		if (doneReading == 0)
+		else if (IntStatus == ANSW_USB_INT_DISK_READ)
+		{
+			// read another block
+		}
+		else
 		{
 			if (CH376_DEBUG)
-				uprintln("Reading next set of data");
-
-			// read the set of data
-			CH376_spiBeginTransfer();
-			CH376_spiTransfer(CMD_RD_USB_DATA0);
-			readLen = CH376_spiTransfer(0x00);
-
-			if (CH376_DEBUG)
-			{
-				//uprint("\n");
-				itoah(readLen, &buffer[0]);
-				uprint(&buffer[0]);
-				uprintln(", Read USB data size");
-			}
-
-			for (int i = 0; i < readLen; i++) 
-			{
-				readByte = CH376_spiTransfer(0x00);
-				buf[bytesRead] = (char)readByte;
-				bytesRead = bytesRead + 1;
-				//uprintc((char)readByte);
-			}
-
-			CH376_spiEndTransfer();
+				uprintln("Error while reading data");
+			return 0;
 		}
-
 	}
-	
+
+	return 1;
 }
 
 
 // Writes data d of size s
 // Can only write 65536 bytes at a time
-// TODO do loop for >255 bytes
-void CH376_writeFile(char* d, int s) 
+// returns 1 on success
+int CH376_writeFile(char* d, int s) 
 {
+	if (s == 0)
+		return 0;
+
+	char buffer[10];
+
 	if (CH376_DEBUG)
 		uprintln("Request write for s bytes");
 
@@ -548,47 +527,61 @@ void CH376_writeFile(char* d, int s)
 	CH376_spiTransfer(s >> 8);
 	CH376_spiEndTransfer();
 
-	int retval = 0;
-	char buffer[10];
-
-	while(CH376_WaitGetStatus() != ANSW_USB_INT_DISK_WRITE);
-
-	if (CH376_DEBUG)
-		uprintln("Write request done");
-
-
-
-	if (CH376_DEBUG)
-		uprintln("Byte WR req data");
-
-	CH376_spiBeginTransfer();
-	CH376_spiTransfer(CMD_WR_REQ_DATA);
-	int wrLen = CH376_spiTransfer(0x00);
-
-	CH376_sendData(d, wrLen);
-	CH376_spiEndTransfer();
-
-	if (CH376_DEBUG)
+	if (CH376_WaitGetStatus() != ANSW_USB_INT_DISK_WRITE)
 	{
-		itoah(wrLen, &buffer[0]);
-		uprint(&buffer[0]);
-		uprintln(", Byte WR req done (retval == data size)");
+		if (CH376_DEBUG)
+			uprintln("Write request failed");
+		return 0;
 	}
 
 
-	if (CH376_DEBUG)
-		uprintln("Byte WR go (updating file size)");
+	int bytesWritten = 0;
+	int doneWriting = 0;
 
-	CH376_spiBeginTransfer();
-	CH376_spiTransfer(CMD_BYTE_WR_GO);
-	CH376_spiEndTransfer();
+	while (doneWriting == 0)
+	{
+		// Write set of bytes (max 255)
+		CH376_spiBeginTransfer();
+		CH376_spiTransfer(CMD_WR_REQ_DATA);
+		int wrLen = CH376_spiTransfer(0x00);
 
-	retval = 0;
+		if (CH376_DEBUG)
+		{
+			itoa(wrLen, &buffer[0]);
+			uprint(&buffer[0]);
+			uprintln(", Write USB data size");
+		}
 
-	while(CH376_WaitGetStatus() != ANSW_USB_INT_SUCCESS);
+		CH376_sendData(d + bytesWritten, wrLen);
+		bytesWritten = bytesWritten + wrLen;
+		CH376_spiEndTransfer();
+
+		// update file size
+		CH376_spiBeginTransfer();
+		CH376_spiTransfer(CMD_BYTE_WR_GO);
+		CH376_spiEndTransfer();
+
+
+		int IntStatus = CH376_WaitGetStatus();
+		if (IntStatus == ANSW_USB_INT_SUCCESS)
+		{
+			// done with writing, exit loop
+			doneWriting = 1;
+		}
+		else if (IntStatus == ANSW_USB_INT_DISK_WRITE)
+		{
+			// write another block
+		}
+		else
+		{
+			if (CH376_DEBUG)
+				uprintln("Error while writing data");
+			return 0;
+		}
+
+	}
 	
-	if (CH376_DEBUG)
-		uprintln("Byte wr go done");
+	return 1;
 }
 
 
@@ -620,7 +613,8 @@ int CH376_openFile()
 }
 
 
-void CH376_deleteFile() 
+// returns 1 on success
+int CH376_deleteFile() 
 {
 	if (CH376_DEBUG)
 		uprintln("Deleting file");
@@ -629,31 +623,53 @@ void CH376_deleteFile()
 	CH376_spiTransfer(CMD_FILE_ERASE);
 	CH376_spiEndTransfer();
 
-	while(CH376_WaitGetStatus() != ANSW_USB_INT_SUCCESS);
-	
-	if (CH376_DEBUG)
-		uprintln("File deleted");
+	if (CH376_WaitGetStatus() == ANSW_USB_INT_SUCCESS)
+	{
+		if (CH376_DEBUG)
+			uprintln("File deleted");
+		
+		return 1;
+	}
+	else
+	{
+		if (CH376_DEBUG)
+			uprintln("Could not delete file");
+
+		return 0;
+	}
 }
 
 
-void CH376_closeFile() 
+// returns 1 on success
+int CH376_closeFile() 
 {  
 	if (CH376_DEBUG)
 		uprintln("Closing file");
 
 	CH376_spiBeginTransfer();
 	CH376_spiTransfer(CMD_FILE_CLOSE);
-	CH376_spiTransfer(0x01); //0x01 if update filesize, else 0x00 (0x00 for closing folders?)
+	CH376_spiTransfer(0x01); //0x01 if update filesize, else 0x00
 	CH376_spiEndTransfer();
 
-	while(CH376_WaitGetStatus() != ANSW_USB_INT_SUCCESS);
-	
-	if (CH376_DEBUG)
-		uprintln("File closed");
+	if (CH376_WaitGetStatus() == ANSW_USB_INT_SUCCESS)
+	{
+		if (CH376_DEBUG)
+			uprintln("File closed");
+		
+		return 1;
+	}
+	else
+	{
+		if (CH376_DEBUG)
+			uprintln("Could not close file");
+
+		return 0;
+	}
 }
 
 
-void CH376_createDir() 
+// returns 1 on success
+int CH376_createDir() 
 {
 	if (CH376_DEBUG)
 		uprintln("Creating directory");
@@ -662,18 +678,30 @@ void CH376_createDir()
 	CH376_spiTransfer(CMD_DIR_CREATE);
 	CH376_spiEndTransfer();
 
-	while(CH376_WaitGetStatus() != ANSW_USB_INT_SUCCESS);
-	
-	if (CH376_DEBUG)
-		uprintln("Directory created");
+	if (CH376_WaitGetStatus() == ANSW_USB_INT_SUCCESS)
+	{
+		if (CH376_DEBUG)
+			uprintln("Directory created");
+		
+		return 1;
+	}
+	else
+	{
+		if (CH376_DEBUG)
+			uprintln("Could not create directory");
+
+		return 0;
+	}
 }
 
 
-// Creates file
-// New files are 1 byte long.
-// Have not found a way to set it to 0 bytes,
-// So #EOF is written to create a consistend EOF
-void CH376_createFile() 
+// Creates file (recreates if exists)
+// New files are 1 byte long
+// Have not found a way to set it to 0 bytes, 
+// since CMD_SET_FILE_SIZE does not work
+// Automatically closes file
+// returns 1 on success
+int CH376_createFile() 
 {
 	if (CH376_DEBUG)
 		uprintln("Creating file");
@@ -682,14 +710,40 @@ void CH376_createFile()
 	CH376_spiTransfer(CMD_FILE_CREATE);
 	CH376_spiEndTransfer();
 
-	while(CH376_WaitGetStatus() != ANSW_USB_INT_SUCCESS);
-	
-	if (CH376_DEBUG)
-		uprintln("File created");
+	if (CH376_WaitGetStatus() == ANSW_USB_INT_SUCCESS)
+	{
+		if (CH376_DEBUG)
+			uprintln("File created");
+	}
+	else
+	{
+		if (CH376_DEBUG)
+			uprintln("Could not open file");
 
-	CH376_writeFile("#EOF", 4); 
+		return 0;
+	}
 
-	CH376_closeFile();
+	if (!CH376_openFile())
+		return 0;
+
+	// setting file size to 0
+	// works in memory, but does not update on disk
+	/*
+	CH376_spiBeginTransfer();
+	CH376_spiTransfer(CMD_SET_FILE_SIZE);
+	CH376_spiTransfer(0x68);
+	CH376_spiTransfer(0);
+	CH376_spiTransfer(0);
+	CH376_spiTransfer(0);
+	CH376_spiTransfer(0);
+	CH376_spiEndTransfer();
+	*/
+
+	// closing file
+	if (!CH376_closeFile())
+		return 0;
+
+	return 1;
 }
 
 

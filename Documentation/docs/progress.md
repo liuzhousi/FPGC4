@@ -80,6 +80,8 @@ These are kinda ordered based on priority
 - Add wrapper for extended interrupts
 - Improve performance of certain libraries by using assembly
 - Add timer 1 interrupt code to assembly wrapper
+- Change or r0 const rx to load const rx
+- Maybe add some hotfix for number not fitting in register by using temp reg
 
 
 ## Future improvements (FPGC5?)
@@ -89,3 +91,12 @@ These are kinda ordered based on priority
 - Maybe DMA controller
 - Maybe some way to use 3D rendering with a frame buffer
 - Optimize SPI to SDRAM by using one (two including size) big sequential read
+
+
+## TODO soon
+- CH376 Subdirs
+- CH376 Binary files (images)
+- W5500 Set buffer to 10KB
+- W5500 Send image of < 10KB
+- W5500 Headers
+- Documentation

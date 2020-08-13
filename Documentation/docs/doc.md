@@ -1,4 +1,6 @@
 # Documentation
+- you need mkdocs (pip3 install mkdocs)
+- also you need mkdocs-material from pip3
 - to work on the documentation:
 	- execute ./run.sh to host a local version on localhost:6969
 	- when a file is changed, the website should refresh automatically

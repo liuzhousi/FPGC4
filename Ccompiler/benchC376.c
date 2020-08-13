@@ -1,17 +1,129 @@
 #include "lib/ch376.h"
 
+char fileBuffer[4096] = 0;
+
+// Test reading file
+int TestReadingFile()
+{
+	if (!CH376_init())
+		return 49;
+
+	if (!CH376_connectDrive())
+		return 50;
+
+	CH376_sendFileName("/Y1.HTM");
+
+	if (!CH376_openFile())
+		return 51;
+
+	char buffer[10];
+	int fzise = CH376_getFileSize();
+
+	itoa(fzise, &buffer[0]);
+	uprint("File size: ");
+	uprintln(&buffer[0]);
+
+	if (!CH376_setCursor(0))
+		return 52;
+
+	if (!CH376_readFile(fileBuffer, fzise))
+		return 53;
+
+	if (!CH376_closeFile())
+		return 54;
+
+	char *p_fileBuffer = fileBuffer;
+	*(p_fileBuffer+fzise) = 0;
+
+	uprintln(fileBuffer);
+
+	return 48;
+}
+
+int TestCreatingFile()
+{
+	if (!CH376_init())
+		return 49;
+
+	if (!CH376_connectDrive())
+		return 50;
+
+	CH376_sendFileName("/Y1.HTM");
+
+	if (!CH376_createFile())
+		return 51;
+
+	if (!CH376_openFile())
+		return 52;
+
+	char buffer[10];
+	int fzise = CH376_getFileSize();
+	itoa(fzise, &buffer[0]);
+	uprint("File size: ");
+	uprintln(&buffer[0]);
+
+	if (!CH376_closeFile())
+		return 53;
+
+	return 48;
+}
+
+
+int TestWritingFile()
+{
+	if (!CH376_init())
+		return 49;
+
+	if (!CH376_connectDrive())
+		return 50;
+
+	CH376_sendFileName("/Y1.HTM");
+
+	if (!CH376_createFile())
+		return 51;
+
+	CH376_sendFileName("/Y1.HTM");
+
+	if (!CH376_openFile())
+		return 52;
+
+	if (!CH376_setCursor(0))
+		return 53;
+
+	if (!CH376_writeFile("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabcd", 713))
+		return 54;
+
+	char buffer[10];
+	int fzise = CH376_getFileSize();
+	itoa(fzise, &buffer[0]);
+	uprint("File size: ");
+	uprintln(&buffer[0]);
+
+	if (!CH376_closeFile())
+		return 55;
+
+	return 48;
+}
+
 int main() 
 {
-	CH376_init();
-	CH376_connectDrive();
-
 	//CH376_printICver();
+	//TestReadingFile();
+	//TestCreatingFile();
+	TestWritingFile();
+	TestReadingFile();
+	return 48;
 
-	char* d = "Lorum ipsum dolor est jemoeder enzo.";
-	int s = 36;
+
+
+	//----------OLD-----------
+
+
+	//char* d = "Lorum ipsum dolor est jemoeder enzo.";
+	//int s = 36;
 
 	//uprintln("------Sending filename------");
-	CH376_sendFileName("/LORUM.TXT");
+	//CH376_sendFileName("/LORUM.TXT");
 	//uprintln("------Filename sent------");
 
 	
@@ -71,6 +183,7 @@ int main()
 	CH376_closeFile();
 	*/
 
+	/*
 	char buf[50];
 	if (CH376_openFile() == 1)
 	{
@@ -85,7 +198,7 @@ int main()
 	{
 		uprintln("could not open file");
 	}
-
+	*/
 
 	/*
 	NOTES:
@@ -98,7 +211,7 @@ int main()
 	- send open file
 	*/
 
-	return 48;
+	//return 48;
 }
 
 // timer1 interrupt handler

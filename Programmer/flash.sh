@@ -2,7 +2,7 @@
 if [ ! $# -eq 2 ]
   then
     echo "Please give two arguments"
-    echo "arg1: device (/dev/ttyACM0)"
+    echo "arg1: device (/dev/ttyACM0, or on WSL1: /dev/ttyS{COM port number})"
     echo "arg2: code (code.bin)"
     exit 
 fi

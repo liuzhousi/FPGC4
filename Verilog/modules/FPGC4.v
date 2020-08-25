@@ -258,18 +258,16 @@ wire frameDrawn;      //high when frame just rendered
 assign vga_clk = clk; //should become 6 ish mhz eventually
 
 FSX fsx(
+.vga_clk(vga_clk),
+
 //VGA
-/*
-.vga_clk        (vga_clk),
 .vga_r          (vga_r),
 .vga_g          (vga_g),
 .vga_b          (vga_b),
 .vga_hs         (vga_hs),
 .vga_vs         (vga_vs),
-.vga_blk        (vga_blk),
-*/
 
-.vga_clk(vga_clk),
+//CRT
 .crt_sync(crt_sync),
 .crt_r(crt_r),
 .crt_g(crt_g),

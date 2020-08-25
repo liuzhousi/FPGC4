@@ -5,14 +5,12 @@
 module FSX(
     //VGA I/O
     input               vga_clk,
-    /*
+    
     output wire [2:0]   vga_r,
     output wire [2:0]   vga_g,
     output wire [1:0]   vga_b,
     output wire         vga_hs,
     output wire         vga_vs,
-    output wire         vga_blk,
-    */
 
     //CRT Video
     output          crt_sync,
@@ -90,6 +88,8 @@ reg [8:0] v_count;  // frame position in lines including blanking
 
 wire o_hs, o_vs, o_de, o_h, o_v, o_frame;
 assign crt_sync = !(o_hs^o_vs);
+assign vga_hs = o_hs;
+assign vga_vs = o_vs;
 
 // generate sync signals with correct polarity
 assign o_hs = H_POL ? (h_count > HS_STA & h_count <= HS_END)
@@ -271,5 +271,9 @@ assign sprite_drawn = (SPR_r != 3'd0 || SPR_g != 3'd0 || SPR_b != 2'd0) ? 1'b1:
 assign crt_r =  (sprite_drawn) ?  SPR_r: BGW_r;
 assign crt_g =  (sprite_drawn) ?  SPR_g: BGW_g;
 assign crt_b =  (sprite_drawn) ?  SPR_b: BGW_b;
+
+assign vga_r = crt_r;
+assign vga_g = crt_g;
+assign vga_b = crt_b;
 
 endmodule

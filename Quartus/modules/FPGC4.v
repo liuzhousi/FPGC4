@@ -95,19 +95,14 @@ assign led = uart_dtr;
 
 wire clk;
 
-assign vga_clk = 1'b0;
-assign vga_hs = 1'b0;
-assign vga_vs = 1'b0;
-assign vga_r = 3'd0;
-assign vga_g = 3'd0;
-assign vga_b = 2'd0;
-
 //PLL for VGA @9MHz and clk @25MHz
 pll pll (
 .inclk0(clock),
 .c0(crt_clk),
 .c1(clk)
 );
+
+assign vga_clk = crt_clk;
 
 wire CH376_nint; //stabilized CH376 n_interrupt signal
 Stabilizer ch376NintStabilizer (
@@ -306,18 +301,16 @@ VRAM #(
 //FSX I/O
 
 FSX fsx(
+.vga_clk(crt_clk),
+
 //VGA
-/*
-.vga_clk        (vga_clk),
 .vga_r          (vga_r),
 .vga_g          (vga_g),
 .vga_b          (vga_b),
 .vga_hs         (vga_hs),
 .vga_vs         (vga_vs),
-.vga_blk        (vga_blk),
-*/
 
-.vga_clk(crt_clk),
+//CRT
 .crt_sync(crt_sync),
 .crt_r(crt_r),
 .crt_g(crt_g),

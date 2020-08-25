@@ -11,10 +11,11 @@ int TestReadingFile()
 	if (!CH376_connectDrive())
 		return 50;
 
-	CH376_sendFileName("/Y1.HTM");
+	if (!CH376_sendFileName("/HOME/BART/HTML/INDEX.HTM"))
+		return 51;
 
 	if (!CH376_openFile())
-		return 51;
+		return 52;
 
 	char buffer[10];
 	int fzise = CH376_getFileSize();
@@ -24,13 +25,13 @@ int TestReadingFile()
 	uprintln(&buffer[0]);
 
 	if (!CH376_setCursor(0))
-		return 52;
-
-	if (!CH376_readFile(fileBuffer, fzise))
 		return 53;
 
-	if (!CH376_closeFile())
+	if (!CH376_readFile(fileBuffer, fzise))
 		return 54;
+
+	if (!CH376_closeFile())
+		return 55;
 
 	char *p_fileBuffer = fileBuffer;
 	*(p_fileBuffer+fzise) = 0;
@@ -90,7 +91,7 @@ int TestWritingFile()
 	if (!CH376_setCursor(0))
 		return 53;
 
-	if (!CH376_writeFile("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabcd", 713))
+	if (!CH376_writeFile("123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111112113114115116117118119120121122123124125126127128129130131132133134135136137138139140141142143144145146147148149150151152153154155156157158159160161162163164165166167168169170171172173174175176177178179180181182183184185186187188189190191192193194195196197198199200201202203204205206207208209210211212213214215216217218219220221222223224225226227228229230231232233234", 594))
 		return 54;
 
 	char buffer[10];
@@ -110,8 +111,8 @@ int main()
 	//CH376_printICver();
 	//TestReadingFile();
 	//TestCreatingFile();
-	TestWritingFile();
-	TestReadingFile();
+	//TestWritingFile();
+	return TestReadingFile();
 	return 48;
 
 
@@ -119,86 +120,9 @@ int main()
 	//----------OLD-----------
 
 
-	//char* d = "Lorum ipsum dolor est jemoeder enzo.";
-	//int s = 36;
-
-	//uprintln("------Sending filename------");
-	//CH376_sendFileName("/LORUM.TXT");
-	//uprintln("------Filename sent------");
-
-	
-	
-	//uprintln("------Opening File------");
-	//CH376_openFile();
-	//uprintln("------File Opened------");
-
-	//uprintln("------Reading file------");
-	//CH376_readFile();
-	//uprintln("------Reading done------");
-
-	//uprintln("------Closing File------");
-	//CH376_closeFile();
-	//uprintln("------Closing done------");
-	
-
-
 	//uprintln("------Deleting file------");
 	//CH376_deleteFile();
 	//uprintln("------File deleted------");
-
-
-
-
-	//uprintln("------Creating File------");
-	//CH376_createFile();
-	//uprintln("------File Created------");
-
-
-
-	//uprintln("------Opening File------");
-	//CH376_openFile();
-	//uprintln("------File Opened------");
-
-	//uprintln("------Set cursor to end------");
-	//CH376_setCursor();
-	//uprintln("------Cursor set to end------");
-
-	//uprintln("------Writing in File------");
-	//CH376_writeFile(d, s);
-	//uprintln("------Writing done------");
-
-	//uprintln("------Closing File------");
-	//CH376_closeFile();
-	//uprintln("------Closing done------");
-
-
-	// send filename again after create, because the file get closed afterwards
-	/*
-	CH376_createFile();
-
-	CH376_sendFileName("/LORUM.TXT");
-	CH376_openFile();
-	CH376_setCursor(0);
-	CH376_writeFile(d, s);
-	CH376_closeFile();
-	*/
-
-	/*
-	char buf[50];
-	if (CH376_openFile() == 1)
-	{
-		CH376_setCursor(0);
-		CH376_readFile(&buf[0], s);
-		CH376_closeFile();
-
-		buf[s] = 0;
-		uprintln(&buf[0]);
-	}
-	else
-	{
-		uprintln("could not open file");
-	}
-	*/
 
 	/*
 	NOTES:

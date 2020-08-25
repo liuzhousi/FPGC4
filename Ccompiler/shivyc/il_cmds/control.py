@@ -74,16 +74,14 @@ class _GeneralJump(ILCommand):
             r = get_reg()
             asm_code.add(asm_cmds.Mov(r, spotmap[self.cond], size))
             cond_spot = r
-        # need to test before uncomment!
-        #elif isinstance(spotmap[self.cond], MemSpot):
-        #    cond_spot = RegSpot("r13")
-        #    asm_code.add(asm_cmds.Read(spotmap[self.cond], cond_spot, size))
+            zero_spot = LiteralSpot("0")
+            asm_code.add(asm_cmds.Cmp(cond_spot, zero_spot, size))
+
+        elif isinstance(spotmap[self.cond], MemSpot):
+            asm_code.add(asm_cmds.Read(spotmap[self.cond], spots.RegSpot("r12"), size))
         else:
-            cond_spot = spotmap[self.cond]
-
-        zero_spot = LiteralSpot("0")
-        asm_code.add(asm_cmds.Cmp(cond_spot, zero_spot, size))
-
+            zero_spot = LiteralSpot("0")
+            asm_code.add(asm_cmds.Cmp(spotmap[self.cond], zero_spot, size))
 
 
         asm_code.add(self.command(RegSpot("r0"), RegSpot("r12"), LiteralSpot(2)))

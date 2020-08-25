@@ -100,3 +100,4 @@ These are kinda ordered based on priority
 - W5500 Send image of < 10KB
 - W5500 Headers
 - Documentation
+- CCompiler Change Int size to 1 word

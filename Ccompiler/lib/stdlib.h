@@ -10,6 +10,20 @@
 */
 
 /*
+memcpy(char* dest, char* src, int n)
+
+Copies n characters from src to dest
+*/
+void memcpy(char* dest, char* src, int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		dest[i] = src[i];
+	}
+}
+
+
+/*
 uprintc(char c)
 
 Prints a single char c by writing it to 0xC0262E

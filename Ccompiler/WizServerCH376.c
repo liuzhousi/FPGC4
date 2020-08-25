@@ -98,11 +98,11 @@
 // MSByte: 0x0004
 // LSByte: 0x0005
 
-#define WIZNET_DEBUG 1
+#define WIZNET_DEBUG 0
 
-#define WIZ_MAX_BUF 1024
-
-#define FILE_BUFFER_SIZE 4096 // buffer size for reading files from USB storage
+#define WIZ_MAX_RBUF 1024 // buffer for receiving data
+#define WIZ_MAX_TBUF 512 // buffer for sending data
+#define FILE_BUFFER_SIZE 512 // buffer size for reading files from USB storage
 char fileBuffer[FILE_BUFFER_SIZE] = 0;
 
 
@@ -368,7 +368,8 @@ int wizGetSockReg16(int addr)
 //W5500 CONNECTION HANDLING FUNCTIONS
 //-------------------
 
-int wizWriteResponse(char* buf, int buflen)
+
+int wizWriteResponseFromMemory(char* buf, int buflen)
 {
   // Make sure there is something to send
   if (buflen <= 0)
@@ -376,39 +377,99 @@ int wizWriteResponse(char* buf, int buflen)
     return 0;
   }
 
-  // Make sure there is room in the transmit buffer for what we want to send
-  int txfree = wizGetSockReg16(SnTX_FSR); // Size of the available buffer area
+  int bytesSent = 0;
 
-  int timeout = 0;
-  while (txfree < buflen) 
+  // loop until all bytes are sent
+  while (bytesSent != buflen)
   {
-    timeout++; // Increase timeout counter
-    delay(1); // Wait a bit
-    txfree = wizGetSockReg16(SnTX_FSR); // Size of the available buffer area
-    
-    // After a second
-    if (timeout > 1000) 
+
+    if (wizGetSockReg8(SnSR) == SOCK_CLOSED)
     {
-      wizCmd(CR_DISCON); // Disconnect the connection
+      uprintln("connection closed");
       return 0;
     }
+
+    int partToSend = buflen - bytesSent;
+    if (partToSend > WIZ_MAX_TBUF)
+      partToSend = WIZ_MAX_TBUF;
+
+    // Make sure there is room in the transmit buffer for what we want to send
+    int txfree = wizGetSockReg16(SnTX_FSR); // Size of the available buffer area
+
+    int timeout = 0;
+    while (txfree < partToSend) 
+    {
+      timeout++; // Increase timeout counter
+      delay(1); // Wait a bit
+      txfree = wizGetSockReg16(SnTX_FSR); // Size of the available buffer area
+      
+      // After a second
+      if (timeout > 1000) 
+      {
+        wizCmd(CR_DISCON); // Disconnect the connection
+        uprintln("timeout");
+        return 0;
+      }
+    }
+
+     // Space is available so we will send the buffer
+    int txwr = wizGetSockReg16(SnTX_WR);  // Read the Tx Write Pointer
+
+    // Write the outgoing data to the transmit buffer
+    wizWrite(txwr, WIZNET_WRITE_SnTX, buf + bytesSent, partToSend);
+
+    // update the buffer pointer
+    int newSize = txwr + partToSend;
+    wizSetSockReg16(SnTX_WR, newSize);
+
+    // Now Send the SEND command which tells the wiznet the pointer is updated
+    wizCmd(CR_SEND);
+
+    // Update the amount of bytes sent
+    bytesSent += partToSend;
   }
 
-  // Space is available so we will send the buffer
-  int txwr = wizGetSockReg16(SnTX_WR);  // Read the Tx Write Pointer
-
-  // Write the outgoing data to the transmit buffer
-  wizWrite(txwr, WIZNET_WRITE_SnTX, buf, buflen);
-
-  // update the buffer pointer
-  int newSize = txwr + buflen;
-  wizSetSockReg16(SnTX_WR, newSize);
-
-  // Now Send the SEND command which tells the wiznet the pointer is updated
-  wizCmd(CR_SEND);
 
   return 1;
 }
+
+
+// Writes response from (successfully) opened USB file
+int wizWriteResponseFromUSB(int fileSize)
+{
+  // file size is already checked on being > 0
+
+  if (!CH376_setCursor(0))
+      uprintln("cursor error");
+
+  int bytesSent = 0;
+  char buffer[10];
+
+  // loop until all bytes are sent
+  while (bytesSent != fileSize)
+  {
+    int partToSend = fileSize - bytesSent;
+    // send in parts of FILE_BUFFER_SIZE
+    if (partToSend > FILE_BUFFER_SIZE)
+      partToSend = FILE_BUFFER_SIZE;
+
+    // read from usb to buffer
+    if (!CH376_readFile(fileBuffer, partToSend))
+      uprintln("read error");
+    if (!wizWriteResponseFromMemory(fileBuffer, partToSend))
+    {
+      uprintln("wizTranser error");
+      return 0;
+    }
+
+    // Update the amount of bytes sent
+    bytesSent += partToSend;
+  }
+
+  CH376_closeFile();
+  return 1;
+}
+
 
 
 // Read received data
@@ -418,9 +479,9 @@ int wizReadRecvData(char* buf, int buflen)
   {
     return 1;
   }
-  if (buflen > WIZ_MAX_BUF) // If the request size > WIZ_MAX_BUF,just truncate it
+  if (buflen > WIZ_MAX_RBUF) // If the request size > WIZ_MAX_RBUF,just truncate it
   {
-    buflen = WIZ_MAX_BUF - 2; // -2 Because room for 0 terminator and because arrays start at 0
+    buflen = WIZ_MAX_RBUF - 2; // -2 Because room for 0 terminator and because arrays start at 0
   }
    
   // Get the address where the wiznet is holding the data
@@ -452,7 +513,7 @@ void wizFlush(int s, int rsize)
 void wizSend404Response()
 {
   char* retTxt = "<!DOCTYPE html><html><head><title>ERROR404</title></head><body>ERROR 404: This is not the page you are looking for</body></html>";
-  wizWriteResponse(retTxt, 128);
+  wizWriteResponseFromMemory(retTxt, 128);
 }
 
 
@@ -504,70 +565,119 @@ int wizGetFilePath(char* rbuf, char* pbuf)
 }
 
 
+void wizServeFile(char* path)
+{
+  // Redirect "/" to "/INDEX.HTM"
+  if (path[0] == 47 && path[1] == 0)
+  {
+    // send an actual redirect to the browser
+    char* response = "HTTP/1.1 301 Moved Permanently\nLocation: /INDEX.HTM\n";
+    wizWriteResponseFromMemory(response, 52);
+    // Disconnect after sending the redirect
+    wizCmd(CR_DISCON);
+    return;
+  }
+
+  if (WIZNET_DEBUG)
+  {
+    uprintln("---START PATHNAME---");
+    uprintln(&path[0]);
+    uprintln("---END PATHNAME---");
+  }
+
+  int error = 0;
+
+  if (!CH376_sendFileName(&path[0]))
+    error = 404;
+
+  if (!error)
+    if (!CH376_openFile())
+      error = 404;
+
+  int fileSize;
+  if (!error)
+    fileSize = CH376_getFileSize();
+
+  if (!error)
+    if (fileSize == 0)
+      error = 404; // handle empty files as if they do not exist
+
+  if (!error)
+    if (fileSize + 1 == 0)
+      error = 404; // we get a file size of 0xFFFFFFFF on opened folders
+
+  // send error response on error
+  if (error)
+  {
+    // currently puts all errors under 404
+    // write header
+    char* header = "HTTP/1.1 404 Not Found\nServer: FPGC4/1.0\nContent-Type: text/html\n\n";
+    wizWriteResponseFromMemory(header, 66);
+
+    CH376_sendFileName("/404.HTM");
+    if (!CH376_openFile())
+    {
+      // if the custom 404 does not exist, return own error code
+      wizSend404Response();
+    }
+    else
+    {
+      // send custom 404
+      fileSize = CH376_getFileSize();
+      // write the response from USB
+      wizWriteResponseFromUSB(fileSize);
+    }
+  }
+  else
+  {
+    // write header
+    // currently omitting content type
+    char* header = "HTTP/1.1 200 OK\nServer: FPGC4/1.0\n\n";
+    wizWriteResponseFromMemory(header, 35);
+
+    // write the response from USB
+    wizWriteResponseFromUSB(fileSize);
+  }
+
+  // Disconnect after sending a response
+  wizCmd(CR_DISCON);
+} 
+
+
 // Handle session for socket s
-// TODO add header function
 void wizHandleSession()
 {
   // Size of received data
   int rsize;
   rsize = wizGetSockReg16(SnRX_RSR);
 
-  if (rsize > 0)
+  if (rsize == 0)
   {
-    
-    char rbuf[WIZ_MAX_BUF];
-    rbuf[0] = 0;
-    wizReadRecvData(&rbuf[0], rsize);
+    wizCmd(CR_DISCON);
+    return;
+  }
+  
+  char rbuf[WIZ_MAX_RBUF];
+  wizReadRecvData(&rbuf[0], rsize);
 
-    if (WIZNET_DEBUG)
-    {
-      uprintln("---START REQUEST---");
-      uprintln(&rbuf[0]);
-      uprintln("---END REQUEST---");
-    }
-
-    //  read rbuf for requested page
-    //  parse from {GET /INFO.HTM HTTP/1.1}
-    char pbuf[128]; // buffer for path name
-    int pbufSize = wizGetFilePath(&rbuf[1], &pbuf[0]);
-
-    if (WIZNET_DEBUG)
-    {
-      uprintln("---START PATHNAME---");
-      uprintln(&pbuf[0]);
-      uprintln("---END PATHNAME---");
-    }
-
-    CH376_sendFileName(&pbuf[0]);
-    //CH376_sendFileName("/INDEX.HTM"); //1247
-    //CH376_sendFileName("/INFO.HTM"); //127
-    //CH376_sendFileName("LORUM.TXT"); //36
-
-    // return 404.HTM if file not found
-    if (CH376_openFile() == 0)
-    {
-      CH376_sendFileName("/404.HTM");
-      if (CH376_openFile() == 0)
-      {
-        // if the 404 does not exist, return own error code
-        wizSend404Response();
-        wizCmd(CR_DISCON);
-        return;
-      }
-    }
-    int fileSize = CH376_getFileSize();
-    CH376_setCursor(0);
-    CH376_readFile(fileBuffer, fileSize);
-    CH376_closeFile();
-    
-    wizWriteResponse(fileBuffer, fileSize);
-
-    // Free received data when not read
-    //wizFlush(0, rsize);
+  if (WIZNET_DEBUG)
+  {
+    uprintln("---START REQUEST---");
+    uprintln(&rbuf[0]);
+    uprintln("---END REQUEST---");
   }
 
-  // Disconnect after sending a response
-  wizCmd(CR_DISCON);
+  //  read rbuf for requested page
+  //  parse from {GET /INFO.HTM HTTP/1.1}
+  char pbuf[128]; // buffer for path name
+  int pbufSize = wizGetFilePath(&rbuf[1], &pbuf[0]);
+
+  wizServeFile(&pbuf[0]);
+
+  // Free received data when not read
+  // Not used, since we currently read the request
+  //wizFlush(0, rsize);
+
 }
 
 

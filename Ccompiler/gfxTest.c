@@ -8,8 +8,8 @@ int main()
 	GFX_copyPatternTable((int)DATA_ASCII_DEFAULT); // add offset to data
 
 	// note that a line in background is 64 tiles, while in window it is just 40
-	GFX_printWindowColored((int)"hallo", 5, 44, 2); // pos 4, line 2
-	GFX_printBGColored((int)"DERPYEET", 8, 66, 1); // pos 2, line 2
+	GFX_printWindowColored((int)"hallo", 5, GFX_WindowPosFromXY(5,2), 2); // pos 4, line 2
+	GFX_printBGColored((int)"DERPYEET", 8, GFX_BackgroundPosFromXY(7,2), 1); // pos 2, line 2
 	return 48;
 }
 

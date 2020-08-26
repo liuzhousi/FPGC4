@@ -57,6 +57,7 @@ These are kinda ordered based on priority
 - only global int and int[x] are allowed, no char, since size allocation goes wrong
 - register/assembly info for c compiler
 - add schematic of pcb
+- add info about w5500 hardware and software
 
 
 ## Todo C compiler related

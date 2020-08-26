@@ -317,7 +317,10 @@ class AddrOf(ILCommand):
         if r != spotmap[self.output]:
             #print("help (addrOf)")
             size = self.output.ctype.size
-            asm_code.add(asm_cmds.Mov(spotmap[self.output], r, size))
+
+            #asm_code.add(asm_cmds.Mov(spotmap[self.output], r, size))
+
+            _ValueCmd.move_data(self, spotmap[self.output], r, size, None, asm_code)
 
 
 class ASMcode(ILCommand):

@@ -55,8 +55,8 @@ parameter
     V_POL=0;        // vertical sync polarity (0:neg, 1:pos)
 */
 
-//CRT 240p
 parameter
+//CRT 240p
     H_RES   = 320,      // horizontal resolution (pixels)
     V_RES   = 240,      // vertical resolution (lines)
     H_FP    = 24,       // horizontal front porch
@@ -67,6 +67,20 @@ parameter
     V_BP    = 14,       // vertical back porch
     H_POL   = 0,        // horizontal sync polarity (0:neg, 1:pos)
     V_POL   = 0;        // vertical sync polarity
+	 
+//VGA 720(360)x240
+/*
+    H_RES   = 320,      // horizontal resolution (pixels)
+    V_RES   = 240,      // vertical resolution (lines)
+    H_FP    = 44,       // horizontal front porch
+    H_SYNC  = 16,       // horizontal sync
+    H_BP    = 60,       // horizontal back porch
+    V_FP    = 3,        // vertical front porch
+    V_SYNC  = 10,       // vertical sync
+    V_BP    = 6,        // vertical back porch
+    H_POL   = 1,        // horizontal sync polarity (0:neg, 1:pos)
+    V_POL   = 0;        // vertical sync polarity
+*/
 
     
 // Horizontal: sync, active, and pixels

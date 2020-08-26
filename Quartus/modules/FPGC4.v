@@ -84,7 +84,8 @@ module FPGC4(
     output          spi2_cs, //GPO[1]
     output          spi2_clk,
 	 output          spi2_mosi,
-    input           spi2_miso
+    input           spi2_miso,
+	 output 			  nrst_out
 
 );
 
@@ -139,6 +140,7 @@ DtrReset dtrReset (
 );
 
 assign reset = (~nreset_stable) || dtrRst;
+assign nrst_out = ~reset;
 
 assign s_cs = GPO[0];
 assign s_rst = reset;

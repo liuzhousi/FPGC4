@@ -416,3 +416,15 @@ void GFX_initVram()
 	GFX_clearParameters();
 }
 
+
+// convert x and y to position for window table
+int GFX_WindowPosFromXY(int x, int y)
+{
+    return y*40 + x;
+}
+
+// convert x and y to position for background table
+int GFX_BackgroundPosFromXY(int x, int y)
+{
+    return y*64 + x;
+}

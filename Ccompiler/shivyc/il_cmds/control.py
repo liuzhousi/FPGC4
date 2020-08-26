@@ -222,6 +222,8 @@ class Call(ILCommand):
         func_size = self.func.ctype.size
         ret_size = self.func.ctype.arg.ret.size
 
+        useR13 = False
+
         # Check if function pointer spot will be clobbered by moving the
         # arguments into the correct registers.
         if spotmap[self.func] in self.arg_regs[0:len(self.args)]:
@@ -229,6 +231,10 @@ class Call(ILCommand):
             r = get_reg([], self.arg_regs[0:len(self.args)])
             asm_code.add(asm_cmds.Mov(r, spotmap[self.func], func_size))
             func_spot = r
+
+        if isinstance(func_spot, spots.MemSpot):
+            useR13 = True
+            asm_code.add(asm_cmds.Read(func_spot, spots.RegSpot("r13"), func_size))
 
         for arg, reg in zip(self.args, self.arg_regs):
             if spotmap[arg] == reg:
@@ -245,7 +251,10 @@ class Call(ILCommand):
         asm_code.add(asm_cmds.Write(spots.RegSpot("rsp"), spots.RegSpot("r12")))
         #sub 1 rsp rsp
         #write 0 rsp r12
-        asm_code.add(asm_cmds.Jumpr(spots.LiteralSpot(0), func_spot))
+        if (useR13):
+            asm_code.add(asm_cmds.Jumpr(spots.LiteralSpot(0), spots.RegSpot("r13")))
+        else:
+            asm_code.add(asm_cmds.Jumpr(spots.LiteralSpot(0), func_spot))
 
         if not self.void_return and spotmap[self.ret] != spots.RAX:
             asm_code.add(asm_cmds.Mov(spotmap[self.ret], spots.RAX, ret_size))

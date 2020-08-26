@@ -276,7 +276,7 @@ void RD_USB_DATA()
     CH376_spiEndTransfer();
 
     int *p = (int*)0xC02732; 	// address of UART2 TX
-	*p = (int)b0; 				// write char over UART2
+	//*p = (int)b0; 				// write char over UART2
 	*p = (int)b1; 				// write char over UART2
 	*p = (int)b2; 				// write char over UART2
 	*p = (int)b3; 				// write char over UART2

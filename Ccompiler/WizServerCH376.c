@@ -385,7 +385,7 @@ int wizWriteResponseFromMemory(char* buf, int buflen)
 
     if (wizGetSockReg8(SnSR) == SOCK_CLOSED)
     {
-      uprintln("connection closed");
+      //uprintln("connection closed");
       return 0;
     }
 
@@ -407,7 +407,7 @@ int wizWriteResponseFromMemory(char* buf, int buflen)
       if (timeout > 1000) 
       {
         wizCmd(CR_DISCON); // Disconnect the connection
-        uprintln("timeout");
+        //uprintln("timeout");
         return 0;
       }
     }
@@ -458,7 +458,7 @@ int wizWriteResponseFromUSB(int fileSize)
       uprintln("read error");
     if (!wizWriteResponseFromMemory(fileBuffer, partToSend))
     {
-      uprintln("wizTranser error");
+      //uprintln("wizTranser error");
       return 0;
     }
 

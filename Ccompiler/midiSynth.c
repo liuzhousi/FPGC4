@@ -23,6 +23,14 @@ int endp_mode = 0x80;
 *	Functions
 */
 
+void AssemblyImports()
+{
+	ASM("\
+	// Quick midi music test rom for ESP32Synth ;\
+	`include example/data_music_midi.asm ;\
+	");
+}
+
 // Sets GPO[0] (cs) low
 void CH376_spiBeginTransfer()
 {
@@ -97,7 +105,7 @@ int CH376_WaitGetStatus() {
     CH376_spiBeginTransfer();
     CH376_spiTransfer(CMD_GET_STATUS);
     CH376_spiEndTransfer(); 
-    delay(1);
+    //delay(1);
 
     CH376_spiBeginTransfer();
     int retval = CH376_spiTransfer(0x00);
@@ -370,6 +378,24 @@ void set_config(int cfg) {
 }  
 
 
+void startMidiPlayer()
+{
+	ASM("\
+	load32 0x80000 r2 ;\
+	;\
+    load 1 r1 ;\
+    write 0 r2 r0 // reset midi index ;\
+    write 1 r2 r1 // reset time index ;\
+    ;\
+    load32 0xC02628 r1  // r1 = Timer2 value register ;\
+    ;\
+    // start timer2 to start playing ;\
+    load 1 r3 ;\
+    write 0 r1 r3       // write timer2 value ;\
+    write 1 r1 r3       // start timer2 ;\
+    ");
+}
+
 
 int main() 
 {
@@ -387,6 +413,8 @@ int main()
 
 	if (CH376_DEBUG)
 	    uprintln("------Ready to receive------");
+
+	startMidiPlayer();
 
     // Main loop
     while(1)
@@ -412,8 +440,68 @@ void int1()
 
 void int2()
 {
-	int *p = (int *)0xC0262E; 	// address of UART TX
-	*p = 44; 			// write char over UART
+	ASM("\
+	push r1 ;\
+    push r2 ;\
+    push r3 ;\
+    push r4 ;\
+    push r5 ;\
+    push r8 ;\
+    push r10 ;\
+    push r11 ;\
+    push r12 ;\
+	;\
+    load32 0x80000 r2 ;\
+ 	;\
+    //TIME ;\
+    read 1 r2 r5        // read time index to r5 ;\
+	;\
+    load32 0xC02628 r1  // r1 = Timer2 value register ;\
+	;\
+    addr2reg MUSICLENS r3 ;\
+    add r3 r5 r3        // add time index offset to address ;\
+    read 0 r3 r3        // get time len data ;\
+ 	;\
+    // set and start timer ;\
+    load 1 r4 ;\
+    write 0 r1 r3       // write timer2 value ;\
+    write 1 r1 r4       // start timer2 ;\
+	;\
+    // increase timer index ;\
+    add r5 1 r5 ;\
+    write 1 r2 r5 ;\
+ 	;\
+    //NOTES ;\
+ 	;\
+    read 0 r2 r5        // read midi index to r5 ;\
+ 	;\
+    addr2reg MUSICNOTES r4 ;\
+    add r4 r5 r4         // add midi index offset to address ;\
+    read 0 r4 r10        // get byte1 ;\
+    read 1 r4 r11        // get byte2 ;\
+    read 2 r4 r12        // get byte3 ;\
+ 	;\
+    // write to uart2 ;\
+    load32 0xC02732 r8 ;\
+    write 0 r8 r10 ;\
+    write 0 r8 r11 ;\
+    write 0 r8 r12 ;\
+	;\
+    // increase midi index by 3 ;\
+    add r5 3 r5 ;\
+    write 0 r2 r5 ;\
+	;\
+    // restore registers ;\
+    pop r12 ;\
+    pop r11 ;\
+    pop r10 ;\
+    pop r8 ;\
+    pop r5 ;\
+    pop r4 ;\
+    pop r3 ;\
+    pop r2 ;\
+    pop r1 ;\
+    ");
 }
 
 void int3()

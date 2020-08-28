@@ -27,6 +27,12 @@ Int1:
     push r1
     push r2
     push r3
+    push r4
+    push r5
+    push r8
+    push r10
+    push r11
+    push r12
 
     load32 0x80000 r2   ; r2 =  0x80000 | midi index
                             ;   0x80001 | time index
@@ -74,6 +80,12 @@ Int1:
     write 0 r2 r5
 
     ; restore registers
+    pop r12
+    pop r11
+    pop r10
+    pop r8
+    pop r5
+    pop r4
     pop r3
     pop r2
     pop r1

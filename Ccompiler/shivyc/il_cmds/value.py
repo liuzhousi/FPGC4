@@ -148,7 +148,7 @@ class _ValueCmd(ILCommand):
 
     def _reg_size(self, size):
         """Return largest register size that does not overfit given size."""
-        reg_sizes = [8, 4, 2, 1]
+        reg_sizes = [4, 2, 1]
         for reg_size in reg_sizes:
             if size >= reg_size:
                 return reg_size
@@ -381,7 +381,7 @@ class ReadAt(_ValueCmd):
             asm_code.add(asm_cmds.Read(addr_spot, addr_r))
         else:
             addr_r = get_reg([], [output_spot])
-            asm_code.add(asm_cmds.Mov(addr_r, addr_spot, 8))
+            asm_code.add(asm_cmds.Mov(addr_r, addr_spot, 1))
 
         indir_spot = MemSpot(addr_r)
         if isinstance(output_spot, RegSpot):
@@ -421,7 +421,7 @@ class SetAt(_ValueCmd):
             addr_r = addr_spot
         else:
             addr_r = get_reg([], [value_spot])
-            asm_code.add(asm_cmds.Mov(addr_r, addr_spot, 8))
+            asm_code.add(asm_cmds.Mov(addr_r, addr_spot, 1))
 
         indir_spot = MemSpot(addr_r)
         if isinstance(value_spot, RegSpot):
@@ -563,7 +563,7 @@ class AddrRel(_RelCommand):
         asm_code.add(asm_cmds.Lea(out_spot, rel_spot))
 
         if out_spot != spotmap[self.output]:
-            asm_code.add(asm_cmds.Mov(spotmap[self.output], out_spot, 8))
+            asm_code.add(asm_cmds.Mov(spotmap[self.output], out_spot, 1))
 
 
 class ReadRel(_RelCommand):

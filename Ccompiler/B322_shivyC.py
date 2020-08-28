@@ -2,15 +2,15 @@
 """
 Main executable for C compiler.
 This compiler is a modified version of the ShivyC compiler (C to x86_64 compiler, written in Python, see https://github.com/ShivamSarodia/ShivyC) by Shivam Sarodia.
-It is modified to output B332 assembly instead of x86_64 assembly.
+It is modified by me (b4rt-dev) to output B322 assembly instead of x86_64 assembly.
 New features are/will be added as well, compared to the original version.
-For more info see the documentation. (when it is written :P)
+For more info see the documentation (when it is written properly :P) on https://www.b4rt.nl/fpgc4 (or the github for the .md files)
 """
 
 """
 Currently the compiler is still a bit of a mess after converting the output stage to output B322 assembly.
-There are random print statements, and things like the size parameter of registers/instructions still have to be removed.
-Not all cases are tested yet, so for example divisions will result in x86_64 ish assembly that will not compile by the assembler.
+There are things like the size parameter of registers/instructions that still have to be removed, and most things are still ad hac
+Not all cases are tested yet, since I do not have test cases written for everything yet, so for example divisions will result in x86_64 ish assembly that will not compile by the B322 assembler.
 """
 
 """

@@ -190,7 +190,7 @@ class PointerCType(CType):
     def __init__(self, arg, const=False):
         """Initialize type."""
         self.arg = arg
-        super().__init__(8, const)
+        super().__init__(1, const) # used to be 8
 
     def weak_compat(self, other):
         """Return True iff other is a compatible type to self."""
@@ -399,28 +399,29 @@ class UnionCType(_UnionStructCType):
 # "make_unsigned" or "make_const" return a copy of the type, so equality
 # checking will not work.
 
+# TODO: remove longint
 
 void = VoidCType()
 
 bool_t = IntegerCType(1, False)
 bool_t._bool = True
 
-char = IntegerCType(1, True)
+char = IntegerCType(1, False)
 unsig_char = IntegerCType(1, False)
 unsig_char_max = 255
 
-short = IntegerCType(2, True)
-unsig_short = IntegerCType(2, False)
+short = IntegerCType(1, False)
+unsig_short = IntegerCType(1, False)
 
-integer = IntegerCType(4, True)
-unsig_int = IntegerCType(4, False)
-int_max = 2147483647
-int_min = -2147483648
+integer = IntegerCType(1, False)
+unsig_int = IntegerCType(1, False)
+int_max = 4294967295
+int_min = 0
 
-longint = IntegerCType(8, True)
-unsig_longint = IntegerCType(8, False)
-long_max = 9223372036854775807
-long_min = -9223372036854775808
+longint = IntegerCType(1, False)
+unsig_longint = IntegerCType(1, False)
+long_max = 4294967295
+long_min = 0
 
 
 simple_types = {token_kinds.void_kw: void,

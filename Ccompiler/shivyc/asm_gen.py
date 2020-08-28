@@ -41,24 +41,12 @@ class ASMCode:
         ASMCode.label_num += 1
         return f"__shivyc_label{ASMCode.label_num}"
 
-    def add_global(self, name):
-        """Add a name to the code as global.
-
-        name (str) - The name to add.
-
-        """
-        self.globals.append(f"\t.global {name}")
-
     def add_data(self, name, size, init):
         """Add static data to the code.
 
         init - the value to initialize `name` to
         """
         self.data.append(f"Label_{name}:")
-        size_strs = {1: "byte",
-                     2: "word",
-                     4: "int",
-                     8: "quad"}
 
         if init:
             self.data.append(f"\t.dw {init}")
@@ -69,14 +57,9 @@ class ASMCode:
                 line += " 0"
             self.data.append(line)
 
-    def add_comm(self, name, size, local):
-        """Add a common symbol to the code."""
-        if local:
-            self.comm.append(f"\t.local {name}")
-        self.comm.append(f"\t.comm {name} {size}")
-
     def add_string_literal(self, name, chars):
-        """Add a string literal to the ASM code."""
+        """Add a string literal to the ASM code.
+        Each char is stored in its own word"""
         self.string_literals.append(f"Label_{name}:")
         data = " ".join(str(char) for char in chars)
         self.string_literals.append(f"\t.dw {data}")
@@ -84,8 +67,8 @@ class ASMCode:
     def full_code(self):  # noqa: D202
         """Produce the full assembly code.
 
-        return (str) - The assembly code, ready for saving to disk and
-        assembling.
+        return (str) - The assembly code, ready for assembling.
+        includes some assembly wrappers for setting up the stack and handling interrupts
 
         """
         header = []
@@ -494,11 +477,12 @@ class ASMGen:
         # In addition, move all IL values of strange size to memory because
         # they won't fit in a register.
         for v in free_values:
-            if v.ctype.size not in {1, 2, 4, 8}:
+            if v.ctype.size > 4:
                 move_to_mem.append(v)
                 #print(v, " was moved to mem because of size")
 
-        # TODO: All non-free IL values are automatically assigned distinct
+        # (Not really relevant for B322)
+        # Shivy-todo: All non-free IL values are automatically assigned distinct
         # memory spots. However, this is very inoptimal for structs.
         # Consider the following C code, where S is already declared:
         #
@@ -610,7 +594,7 @@ class ASMGen:
         self._generate_asm(commands, live_vars, spotmap)
 
     def _get_global_spotmap(self):
-        """Generate global spotmap and add global values to ASM.
+        """Generate global spotmap.
 
         This function generates a spotmap for variables which are not
         specific to a single function. This includes literals and variables
@@ -629,11 +613,6 @@ class ASMGen:
             num += 1
             spot = self._get_nondynamic_spot(value, num)
             if spot: global_spotmap[value] = spot
-
-        externs = self.symbol_table.linkages[EXTERNAL].values()
-        for v in externs:
-            if self.symbol_table.def_state.get(v) == DEFINED:
-                self.asm_code.add_global(self.symbol_table.names[v])
 
         return global_spotmap
 
@@ -993,7 +972,7 @@ class ASMGen:
 
        
         #self.asm_code.add(asm_cmds.Push(spots.RBP, None, 8))
-        self.asm_code.add(asm_cmds.Sub(spots.RSP, spots.LiteralSpot(4)))
+        self.asm_code.add(asm_cmds.Sub(spots.RSP, spots.LiteralSpot(1)))
         self.asm_code.add(asm_cmds.Write(spots.RSP, spots.RBP))
 
 

@@ -180,7 +180,7 @@ class RelativeLValue(LValue):
         # `sizes`, we don't need to emit a SET command.
         resized_count = set_type(self.count, ctypes.longint, il_code)
 
-        sizes = [8, 4, 2, 1]
+        sizes = [4, 2, 1]
         if self.chunk in sizes:
             self.fixed_chunk, self.fixed_count = self.chunk, resized_count
             return
@@ -414,10 +414,10 @@ def shift_into_range(val, ctype):
     """Shift a numerical value into range for given integral ctype."""
 
     if ctype.signed:
-        max_val = 1 << (ctype.size * 8 - 1)
+        max_val = 1 << (ctype.size * 32 - 1)
         range = 2 * max_val
     else:
-        max_val = 1 << ctype.size * 8
+        max_val = 1 << ctype.size * 32
         range = max_val
 
     val = val % range

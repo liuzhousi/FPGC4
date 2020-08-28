@@ -707,6 +707,7 @@ class Declaration(Node):
         if const: base_type = base_type.make_const()
         return base_type, storage
 
+    # TODO: remove longs
     def get_base_ctype(self, specs, spec_range):
         """Return a base ctype given a list of specs."""
 

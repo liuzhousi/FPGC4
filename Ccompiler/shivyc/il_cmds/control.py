@@ -157,12 +157,12 @@ class Return(ILCommand):
         #asm_code.add(asm_cmds.Pop(spots.RBP, None, 8))
         
         asm_code.add(asm_cmds.Read(spots.RSP, spots.RBP))
-        asm_code.add(asm_cmds.Add(spots.RSP, spots.LiteralSpot(4)))
+        asm_code.add(asm_cmds.Add(spots.RSP, spots.LiteralSpot(1)))
         
 
         #asm_code.add(asm_cmds.Ret())
         asm_code.add(asm_cmds.Read(spots.RSP, spots.RegSpot("r12")))
-        asm_code.add(asm_cmds.Add(spots.RSP, spots.LiteralSpot(4)))
+        asm_code.add(asm_cmds.Add(spots.RSP, spots.LiteralSpot(1)))
         asm_code.add(asm_cmds.Jumpr(spots.LiteralSpot(4), spots.RegSpot("r12")))
 
 
@@ -247,7 +247,7 @@ class Call(ILCommand):
                 asm_code.add(asm_cmds.Mov(reg, spotmap[arg], arg.ctype.size))
 
         asm_code.add(asm_cmds.SavPC(spots.RegSpot("r12")))
-        asm_code.add(asm_cmds.Sub(spots.RegSpot("rsp"), spots.LiteralSpot(4)))
+        asm_code.add(asm_cmds.Sub(spots.RegSpot("rsp"), spots.LiteralSpot(1)))
         asm_code.add(asm_cmds.Write(spots.RegSpot("rsp"), spots.RegSpot("r12")))
         #sub 1 rsp rsp
         #write 0 rsp r12

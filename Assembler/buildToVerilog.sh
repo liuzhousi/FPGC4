@@ -7,9 +7,11 @@ if (python3 Assembler.py > ../Programmer/code.list) # compile and write to code.
        	# WSL2 version
        	# (cd ../Programmer && bash compileROM.sh && powershell.exe "python uartFlasher_win.py" && cp code.bin  ../Verilog/memory/code.bin && echo "Compile and Copy done")
        	
-       	# WSL1 version
+       	# WSL1/Linux version
        	(cd ../Programmer && bash compileROM.sh && python3 uartFlasher.py && cp code.bin  ../Verilog/memory/code.bin && echo "Compile and Copy done")
        	
+        # Simulation only version
+        #(cd ../Programmer && bash compileROM.sh && cp code.bin  ../Verilog/memory/code.bin && echo "Compile and Copy done")
 
        	# convert to text file
 		(cd ../Verilog/memory && bash bin2txt.sh && echo "Converted to txt")

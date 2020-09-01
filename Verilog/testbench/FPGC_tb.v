@@ -36,7 +36,6 @@
 
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/Keyboard.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/NESpadReader.v"
-`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/TonePlayer.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/OStimer.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/UARTtx.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/IO/UARTrx.v"
@@ -50,10 +49,6 @@ reg clk;
 reg nreset;
 
 //reg ext_int1, ext_int2, ext_int3, ext_int4;
-
-//ToneGenerator
-wire tone1_out1, tone1_out2, tone1_out3, tone1_out4;
-wire tone2_out1, tone2_out2, tone2_out3, tone2_out4;
 
 //SPI Flash
 wire spi_clk;
@@ -150,16 +145,6 @@ FPGC4 fpgc (
 .spi_cs     (spi_cs),
 
 
-//ToneGenerators
-.tone1_out1(tone1_out1),
-.tone1_out2(tone1_out2),
-.tone1_out3(tone1_out3),
-.tone1_out4(tone1_out4),
-.tone2_out1(tone2_out1),
-.tone2_out2(tone2_out2),
-.tone2_out3(tone2_out3),
-.tone2_out4(tone2_out4),
-
 //GPIO
 .GPI(GPI),
 .GPO(GPO),
@@ -179,6 +164,8 @@ begin
     uart_dtr = 1;
     GPI = 8'b00000000;
 
+    /*
+
     repeat(100) #20 clk = ~clk; //25MHz
 
     uart_dtr = 0;
@@ -193,12 +180,14 @@ begin
 
     uart_dtr = 1;
     repeat(100) #20 clk = ~clk; //25MHz
+
+    */
 
     
-    //repeat(20000) #20 clk = ~clk; //25MHz
+    repeat(5000) #20 clk = ~clk; //25MHz
 
 
-    repeat(500) #20 clk = ~clk; //25MHz
+    //repeat(500) #20 clk = ~clk; //25MHz
 
     #1 $finish;
 end

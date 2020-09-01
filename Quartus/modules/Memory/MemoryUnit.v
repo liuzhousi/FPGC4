@@ -63,10 +63,6 @@ module MemoryUnit(
     output          t2_interrupt,
     output          t3_interrupt,
 
-    //ToneGenerators
-    output          tone1_out1, tone1_out2, tone1_out3, tone1_out4,
-    output          tone2_out1, tone2_out2, tone2_out3, tone2_out4,
-
     //UART
     output          uart_out,
     output          uart_rx_interrupt,
@@ -227,37 +223,6 @@ OStimer osTimer3(
 .interrupt(t3_interrupt)
 );
 
-//---------------Tone Generator 1-------------------
-//OS timer 3 I/O
-wire [31:0] tg1_note;
-wire tg1_we;
-
-TonePlayer tonePlayer1(
-.clk(clk),
-.reset(reset),
-.we(tg1_we),
-.noteID(tg1_note),
-.lineOut1(tone1_out1),
-.lineOut2(tone1_out2),
-.lineOut3(tone1_out3),
-.lineOut4(tone1_out4)
-);
-
-//---------------Tone Generator 2-------------------
-//Tone Generator 2 I/O
-wire [31:0] tg2_note;
-wire tg2_we;
-
-TonePlayer tonePlayer2(
-.clk(clk),
-.reset(reset),
-.we(tg2_we),
-.noteID(tg2_note),
-.lineOut1(tone2_out1),
-.lineOut2(tone2_out2),
-.lineOut3(tone2_out3),
-.lineOut4(tone2_out4)
-);
 
 //-------------------UART TX-----------------------
 //UART TX I/O
@@ -404,11 +369,6 @@ assign t3_value         = (address == 27'hC0262A && we)                     ? da
 assign t3_set           = (address == 27'hC0262A && we)                     ? 1'b1                      : 1'b0;
 assign t3_trigger       = (address == 27'hC0262B && we)                     ? 1'b1                      : 1'b0;
 
-assign tg1_note         = (address == 27'hC0262C)                           ? data                      : 32'd0;
-assign tg1_we           = (address == 27'hC0262C)                           ? we                        : 1'b0;
-assign tg2_note         = (address == 27'hC0262D)                           ? data                      : 32'd0;
-assign tg2_we           = (address == 27'hC0262D)                           ? we                        : 1'b0;
-
 assign r_Tx_DV          = (address == 27'hC0262E && we)                     ? start                     : 1'b0;
 assign r_Tx_Byte        = (address == 27'hC0262E)                           ? data                      : 8'd0;
 
@@ -506,7 +466,7 @@ begin
             q <= 32'd0;
         end
 
-        //OStimers and NotePlayers
+        //OStimers and (removed) NotePlayers
         if (busy && address >= 27'hC02626 && address < 27'hC0262E)
         begin
             busy <= 0;

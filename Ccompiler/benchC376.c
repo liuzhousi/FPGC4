@@ -11,7 +11,7 @@ int TestReadingFile()
 	if (!CH376_connectDrive())
 		return 50;
 
-	if (!CH376_sendFileName("/HOME/BART/HTML/INDEX.HTM"))
+	if (!CH376_sendFileName("/INDEX.HTM"))
 		return 51;
 
 	if (!CH376_openFile())

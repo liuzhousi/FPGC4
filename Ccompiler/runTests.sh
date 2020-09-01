@@ -39,7 +39,7 @@ do
     fi
 
     # sleep alternative since it is broken in WSL1
-    read -t 0.2
+    read -t 0.1
 
 done
 

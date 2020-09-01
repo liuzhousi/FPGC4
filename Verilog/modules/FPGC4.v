@@ -40,9 +40,6 @@ module FPGC4(
     inout           spi_wp, 
     inout           spi_hold,
 
-    output          tone1_out1, tone1_out2, tone1_out3, tone1_out4,
-    output          tone2_out1, tone2_out2, tone2_out3, tone2_out4,
-
     input [7:0]     GPI,
     output [7:0]    GPO,
 
@@ -390,15 +387,6 @@ MemoryUnit mu(
 .t1_interrupt(t1_interrupt),
 .t2_interrupt(t2_interrupt),
 .t3_interrupt(t3_interrupt),
-
-.tone1_out1(tone1_out1),
-.tone1_out2(tone1_out2),
-.tone1_out3(tone1_out3),
-.tone1_out4(tone1_out4),
-.tone2_out1(tone2_out1),
-.tone2_out2(tone2_out2),
-.tone2_out3(tone2_out3),
-.tone2_out4(tone2_out4),
 
 .uart_out(uart_out),
 .uart_in(uart_in),

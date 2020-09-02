@@ -183,14 +183,22 @@ def moveLabels(parsedLines):
     returnList = []
 
     #move to next line
-    for idx, line in enumerate(parsedLines):
+    # (old iteration) for idx, line in enumerate(parsedLines):
+    idx = 0;
+    while idx < len(parsedLines):
+        line = parsedLines[idx]
         if line[1].lower().split()[0] == "label":
             if idx < len(parsedLines) - 1:
-                parsedLines[idx+1] = (parsedLines[idx+1][0], "_*" + line[1].split()[1] + "*_ " + parsedLines[idx+1][1])
+                # if we have a label directly below, insert a nop as a quick fix
+                if parsedLines[idx+1][1].lower().split()[0] == "label":
+                    parsedLines.insert(idx+1, (0, "_*" + line[1].split()[1] + "*_ " +"00000000000000000000000000000000 //NOP to quickfix double labels"))
+                else:
+                    parsedLines[idx+1] = (parsedLines[idx+1][0], "_*" + line[1].split()[1] + "*_ " + parsedLines[idx+1][1])
             else:
                 print("Error: label " + line[1].split()[1] + " has no instructions below it")
                 print("Assembler will now exit")
                 sys.exit(1)
+        idx += 1
 
     #remove original labels
     for line in parsedLines:

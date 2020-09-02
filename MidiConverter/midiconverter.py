@@ -1,7 +1,8 @@
+#!/usr/bin/python3
+
 import mido
 import sys
 
-#mid = mido.MidiFile('mario.mid')
 mid = mido.MidiFile(sys.argv[1])
 
 msgList = []
@@ -11,21 +12,6 @@ for msg in mid:
         msgList.append(msg)
 
 
-
-'''smallMsgList = []
-
-
-for i in range(32):
-    smallMsgList.append(msgList[i])'''
-
-"""
-noteList = []
-for msg in msgList:
-    print(msg.bytes())
-    exit()
-  
-
-"""
 print("MUSICNOTES:")
 print("; midi data")
 print(".dw ", end = '')
@@ -35,7 +21,10 @@ for idx, x in enumerate(msgList):
 
     print(x.bytes()[0], end = ' ')
     print(x.bytes()[1], end = ' ')
-    print(x.bytes()[2], end = ' ')
+    velocity = x.bytes()[2]
+    if velocity > 80:
+        velocity = 80
+    print(velocity, end = ' ')
 
 print("\n")
 

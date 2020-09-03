@@ -313,44 +313,63 @@ int wizReadDouble(int addr, int cb)
 
 // Send a command cmd to socket s
 // Wait until done
-void wizCmd(int cmd)
+void wizCmd(int s, int cmd)
 {
   //wizWriteSingle(SnCR, WIZNET_WRITE_SnR, cmd);
   WizSpiBeginTransfer();
   WizSpiTransfer(0); //msByte
   WizSpiTransfer(SnCR); //lsByte
-  WizSpiTransfer(WIZNET_WRITE_SnR);
+  WizSpiTransfer(WIZNET_WRITE_SnR + (s << 5));
   WizSpiTransfer(cmd);
   WizSpiEndTransfer();
 
-  while ( wizReadSingle(SnCR, WIZNET_READ_SnR) );
+  //while ( wizReadSingle(SnCR, WIZNET_READ_SnR) );
 }
 
 // Write 8 bits to a sockets control register
-void wizSetSockReg8(int addr, int val)
+void wizSetSockReg8(int s, int addr, int val)
 {
   //wizWriteSingle(addr, WIZNET_WRITE_SnR, val);
   WizSpiBeginTransfer();
   WizSpiTransfer(0); //msByte
   WizSpiTransfer(addr); //lsByte
-  WizSpiTransfer(WIZNET_WRITE_SnR);
+  WizSpiTransfer(WIZNET_WRITE_SnR + (s << 5));
   WizSpiTransfer(val);
   WizSpiEndTransfer();
 }
 
 // Read 8 bits from a sockets control register
-int wizGetSockReg8(int addr){
-  return wizReadSingle(addr, WIZNET_READ_SnR);
+int wizGetSockReg8(int s, int addr){
+  //return wizReadSingle(addr, WIZNET_READ_SnR);
+  WizSpiBeginTransfer();
+
+  // Send address
+  int addrMSB = addr >> 8;
+  WizSpiTransfer(addrMSB); //msByte
+  WizSpiTransfer(addr); //lsByte
+
+  int cb = WIZNET_READ_SnR + (s << 5);
+  
+  // Send control byte
+  WizSpiTransfer(cb);
+
+  // Read data
+  int retval = WizSpiTransfer(0);
+
+  WizSpiEndTransfer();
+
+  // Return read value
+  return retval;
 }
 
 // Write 16 bits to a sockets control register
-void wizSetSockReg16(int addr, int val)
+void wizSetSockReg16(int s, int addr, int val)
 {
-  //wizWriteDouble(addr, WIZNET_WRITE_SnR, val);
+  //wizWriteDouble(addr, WIZNET_WRITE_SnR + (s << 5), val);
   WizSpiBeginTransfer();
   WizSpiTransfer(0); //msByte
   WizSpiTransfer(addr); //lsByte
-  WizSpiTransfer(WIZNET_WRITE_SnR);
+  WizSpiTransfer(WIZNET_WRITE_SnR + (s << 5));
   int valMSB = val >> 8;
   WizSpiTransfer(valMSB);
   WizSpiTransfer(val);
@@ -358,9 +377,29 @@ void wizSetSockReg16(int addr, int val)
 }
 
 // Read 16 bits from a sockets control register
-int wizGetSockReg16(int addr)
+int wizGetSockReg16(int s, int addr)
 {
-  return wizReadDouble(addr, WIZNET_READ_SnR);
+  //return wizReadDouble(addr, WIZNET_READ_SnR + (s << 5));
+  WizSpiBeginTransfer();
+
+  // Send address
+  int addrMSB = addr >> 8;
+  WizSpiTransfer(addrMSB); //msByte
+  WizSpiTransfer(addr); //lsByte
+
+  int cb = WIZNET_READ_SnR + (s << 5);
+
+  // Send control byte
+  WizSpiTransfer(cb);
+
+  // Read data
+  int retval = WizSpiTransfer(0) << 8;
+  retval = retval + WizSpiTransfer(0);
+
+  WizSpiEndTransfer();
+
+  // Return read value
+  return retval;
 }
 
 
@@ -369,7 +408,7 @@ int wizGetSockReg16(int addr)
 //-------------------
 
 
-int wizWriteResponseFromMemory(char* buf, int buflen)
+int wizWriteResponseFromMemory(int s, char* buf, int buflen)
 {
   // Make sure there is something to send
   if (buflen <= 0)
@@ -383,7 +422,7 @@ int wizWriteResponseFromMemory(char* buf, int buflen)
   while (bytesSent != buflen)
   {
 
-    if (wizGetSockReg8(SnSR) == SOCK_CLOSED)
+    if (wizGetSockReg8(s, SnSR) == SOCK_CLOSED)
     {
       //uprintln("connection closed");
       return 0;
@@ -394,36 +433,36 @@ int wizWriteResponseFromMemory(char* buf, int buflen)
       partToSend = WIZ_MAX_TBUF;
 
     // Make sure there is room in the transmit buffer for what we want to send
-    int txfree = wizGetSockReg16(SnTX_FSR); // Size of the available buffer area
+    int txfree = wizGetSockReg16(s, SnTX_FSR); // Size of the available buffer area
 
     int timeout = 0;
     while (txfree < partToSend) 
     {
       timeout++; // Increase timeout counter
       delay(1); // Wait a bit
-      txfree = wizGetSockReg16(SnTX_FSR); // Size of the available buffer area
+      txfree = wizGetSockReg16(s, SnTX_FSR); // Size of the available buffer area
       
       // After a second
       if (timeout > 1000) 
       {
-        wizCmd(CR_DISCON); // Disconnect the connection
+        wizCmd(s, CR_DISCON); // Disconnect the connection
         //uprintln("timeout");
         return 0;
       }
     }
 
      // Space is available so we will send the buffer
-    int txwr = wizGetSockReg16(SnTX_WR);  // Read the Tx Write Pointer
+    int txwr = wizGetSockReg16(s, SnTX_WR);  // Read the Tx Write Pointer
 
     // Write the outgoing data to the transmit buffer
-    wizWrite(txwr, WIZNET_WRITE_SnTX, buf + bytesSent, partToSend);
+    wizWrite(txwr, WIZNET_WRITE_SnTX + (s << 5), buf + bytesSent, partToSend);
 
     // update the buffer pointer
     int newSize = txwr + partToSend;
-    wizSetSockReg16(SnTX_WR, newSize);
+    wizSetSockReg16(s, SnTX_WR, newSize);
 
     // Now Send the SEND command which tells the wiznet the pointer is updated
-    wizCmd(CR_SEND);
+    wizCmd(s, CR_SEND);
 
     // Update the amount of bytes sent
     bytesSent += partToSend;
@@ -435,7 +474,7 @@ int wizWriteResponseFromMemory(char* buf, int buflen)
 
 
 // Writes response from (successfully) opened USB file
-int wizWriteResponseFromUSB(int fileSize)
+int wizWriteResponseFromUSB(int s, int fileSize)
 {
   // file size is already checked on being > 0
 
@@ -456,7 +495,7 @@ int wizWriteResponseFromUSB(int fileSize)
     // read from usb to buffer
     if (!CH376_readFile(fileBuffer, partToSend))
       uprintln("read error");
-    if (!wizWriteResponseFromMemory(fileBuffer, partToSend))
+    if (!wizWriteResponseFromMemory(s, fileBuffer, partToSend))
     {
       //uprintln("wizTranser error");
       return 0;
@@ -473,7 +512,7 @@ int wizWriteResponseFromUSB(int fileSize)
 
 
 // Read received data
-int wizReadRecvData(char* buf, int buflen)
+int wizReadRecvData(int s, char* buf, int buflen)
 {
   if (buflen == 0)
   {
@@ -485,10 +524,10 @@ int wizReadRecvData(char* buf, int buflen)
   }
    
   // Get the address where the wiznet is holding the data
-  int rxrd = wizGetSockReg16(SnRX_RD); 
+  int rxrd = wizGetSockReg16(s, SnRX_RD); 
 
   // Read the data into the buffer
-  wizRead(rxrd, WIZNET_READ_SnRX, buf, buflen);
+  wizRead(rxrd, WIZNET_READ_SnRX + (s << 5), buf, buflen);
 
   // Terminate buffer
   *(buf + buflen) = 0;
@@ -502,18 +541,18 @@ void wizFlush(int s, int rsize)
 {
   if (rsize > 0)
   {
-    int rxrd = wizGetSockReg16(SnRX_RD);         //retrieve read data pointer
+    int rxrd = wizGetSockReg16(s, SnRX_RD);         //retrieve read data pointer
     int nsize = rxrd + rsize;
-    wizSetSockReg16(SnRX_RD, nsize);  //replace read data pointer
+    wizSetSockReg16(s, SnRX_RD, nsize);  //replace read data pointer
     //tell the wiznet we have retrieved the data
-    wizCmd(CR_RECV);
+    wizCmd(s, CR_RECV);
   }
 }
 
-void wizSend404Response()
+void wizSend404Response(int s)
 {
   char* retTxt = "<!DOCTYPE html><html><head><title>ERROR404</title></head><body>ERROR 404: This is not the page you are looking for</body></html>";
-  wizWriteResponseFromMemory(retTxt, 128);
+  wizWriteResponseFromMemory(s, retTxt, 128);
 }
 
 
@@ -565,16 +604,16 @@ int wizGetFilePath(char* rbuf, char* pbuf)
 }
 
 
-void wizServeFile(char* path)
+void wizServeFile(int s, char* path)
 {
   // Redirect "/" to "/INDEX.HTM"
   if (path[0] == 47 && path[1] == 0)
   {
     // send an actual redirect to the browser
     char* response = "HTTP/1.1 301 Moved Permanently\nLocation: /INDEX.HTM\n";
-    wizWriteResponseFromMemory(response, 52);
+    wizWriteResponseFromMemory(s, response, 52);
     // Disconnect after sending the redirect
-    wizCmd(CR_DISCON);
+    wizCmd(s, CR_DISCON);
     return;
   }
 
@@ -612,20 +651,20 @@ void wizServeFile(char* path)
     // currently puts all errors under 404
     // write header
     char* header = "HTTP/1.1 404 Not Found\nServer: FPGC4/1.0\nContent-Type: text/html\n\n";
-    wizWriteResponseFromMemory(header, 66);
+    wizWriteResponseFromMemory(s, header, 66);
 
     CH376_sendFileName("/404.HTM");
     if (!CH376_openFile())
     {
       // if the custom 404 does not exist, return own error code
-      wizSend404Response();
+      wizSend404Response(s);
     }
     else
     {
       // send custom 404
       fileSize = CH376_getFileSize();
       // write the response from USB
-      wizWriteResponseFromUSB(fileSize);
+      wizWriteResponseFromUSB(s, fileSize);
     }
   }
   else
@@ -633,32 +672,32 @@ void wizServeFile(char* path)
     // write header
     // currently omitting content type
     char* header = "HTTP/1.1 200 OK\nServer: FPGC4/1.0\n\n";
-    wizWriteResponseFromMemory(header, 35);
+    wizWriteResponseFromMemory(s, header, 35);
 
     // write the response from USB
-    wizWriteResponseFromUSB(fileSize);
+    wizWriteResponseFromUSB(s, fileSize);
   }
 
   // Disconnect after sending a response
-  wizCmd(CR_DISCON);
+  wizCmd(s, CR_DISCON);
 } 
 
 
 // Handle session for socket s
-void wizHandleSession()
+void wizHandleSession(int s)
 {
   // Size of received data
   int rsize;
-  rsize = wizGetSockReg16(SnRX_RSR);
+  rsize = wizGetSockReg16(s, SnRX_RSR);
 
   if (rsize == 0)
   {
-    wizCmd(CR_DISCON);
+    wizCmd(s, CR_DISCON);
     return;
   }
   
   char rbuf[WIZ_MAX_RBUF];
-  wizReadRecvData(&rbuf[0], rsize);
+  wizReadRecvData(s, &rbuf[0], rsize);
 
   if (WIZNET_DEBUG)
   {
@@ -672,11 +711,11 @@ void wizHandleSession()
   char pbuf[128]; // buffer for path name
   int pbufSize = wizGetFilePath(&rbuf[1], &pbuf[0]);
 
-  wizServeFile(&pbuf[0]);
+  wizServeFile(s, &pbuf[0]);
 
   // Free received data when not read
   // Not used, since we currently read the request
-  //wizFlush(0, rsize);
+  //wizFlush(s, rsize);
 
 }
 
@@ -748,15 +787,15 @@ void wiz_Init()
 }
 
 
-// Initialize socket 0 for TCP listen at 80.
-void wizInitSocketTCP()
+// Initialize socket s for TCP listen at 80.
+void wizInitSocketTCP(int s)
 {
-  wizCmd(CR_CLOSE);
-  wizSetSockReg8      (SnIR, 0xFF);    //reset interrupt register
-  wizSetSockReg8      (SnMR, MR_TCP);  //set mode register to tcp
-  wizSetSockReg16     (SnPORT, 80);  //set tcp port to 80
-  wizCmd(CR_OPEN);
-  wizCmd(CR_LISTEN);
+  wizCmd(s, CR_CLOSE);
+  wizSetSockReg8      (s, SnIR, 0xFF);    //reset interrupt register
+  wizSetSockReg8      (s, SnMR, MR_TCP);  //set mode register to tcp
+  wizSetSockReg16     (s, SnPORT, 80);  //set tcp port to 80
+  wizCmd(s, CR_OPEN);
+  wizCmd(s, CR_LISTEN);
   if (WIZNET_DEBUG)
     uprintln("opened socket");
 }
@@ -778,48 +817,67 @@ int main()
   // Init W5500
   wiz_Init();
 
-  // Open socket 0 in TCP Server mode at port 80
-  wizInitSocketTCP();
+  // Open all sockets in TCP Server mode at port 80
+  wizInitSocketTCP(0);
+  wizInitSocketTCP(1);
+  wizInitSocketTCP(2);
+  wizInitSocketTCP(3);
+  wizInitSocketTCP(4);
+  wizInitSocketTCP(5);
+  wizInitSocketTCP(6);
+  wizInitSocketTCP(7);
   
-  // Socket 0 status
-  int s0Status;
+  // Socket s status
+  int sxStatus;
 
   while(1)
   {
-    // Get status for socket 0
-    s0Status = wizGetSockReg8(SnSR);
+    // handle all sockets
+    for (int s = 0; s < 8; s++)
+    {
+      if (WIZNET_DEBUG)
+      {
+        char* msg = "Processing socket ";
+        uprint(msg);
+        char buf[2];
+        buf[0] = '0' + s;
+        buf[1] = 0;
+        uprintln(&buf[0]);
+      }
+      // Get status for socket s
+      sxStatus = wizGetSockReg8(s, SnSR);
 
-    if (s0Status == SOCK_CLOSED)
-    { 
-      // Open the socket when closed
-      if (WIZNET_DEBUG)
-        uprintln("Socket closed");
-      // Set socket 0 in TCP Server mode at port 80
-      wizInitSocketTCP();
+      if (sxStatus == SOCK_CLOSED)
+      { 
+        // Open the socket when closed
+        if (WIZNET_DEBUG)
+          uprintln("Socket closed");
+        // Set socket s in TCP Server mode at port 80
+        wizInitSocketTCP(s);
+      }
+      else if (sxStatus == SOCK_ESTABLISHED)
+      {
+        // Handle session when a connection is established
+        // Also reinitialize socket
+        if (WIZNET_DEBUG)
+          uprintln("Got connection");
+        wizHandleSession(s);
+        // Set socket s in TCP Server mode at port 80
+        wizInitSocketTCP(s);
+      }
+      else if (sxStatus == SOCK_LISTEN || sxStatus == SOCK_SYNSENT || sxStatus == SOCK_SYNRECV)
+      {
+        // Do nothing in these cases
+      }
+      else
+      {
+        // In other cases, reset the socket
+        // Set socket s in TCP Server mode at port 80
+        if (WIZNET_DEBUG)
+          uprintln("Resetting socket");
+        wizInitSocketTCP(s);
+      }
     }
-    else if (s0Status == SOCK_ESTABLISHED)
-    {
-      // Handle session when a connection is established
-      // Also reinitialize socket
-      if (WIZNET_DEBUG)
-        uprintln("Got connection");
-      wizHandleSession();
-      // Set socket 0 in TCP Server mode at port 80
-      wizInitSocketTCP();
-    }
-    else if (s0Status == SOCK_LISTEN || s0Status == SOCK_SYNSENT || s0Status == SOCK_SYNRECV)
-    {
-      // Do nothing in these cases
-    }
-    else
-    {
-      // In other cases, reset the socket
-      // Set socket 0 in TCP Server mode at port 80
-      if (WIZNET_DEBUG)
-        uprintln("Resetting socket");
-      wizInitSocketTCP();
-    }
-
     // Delay a few milliseconds
     // Should (could) eventually be replaced by an interrupt checker
     delay(10);

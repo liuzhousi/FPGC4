@@ -4,7 +4,7 @@ The basic way to write code for the B322 is by using the B322 assembly language.
 The assembler compiles the assembly code to 32 bit machine instructions. The input file is currently code.asm, and the output is printed to stdout.
 
 ## Line types
-Each line is parsed on its own. There are four types of lines:
+Each line is parsed on its own. There are five types of lines:
 
 - Includes
 - Comments
@@ -47,7 +47,7 @@ Int4: ; interrupt 4 handler
 ```
 
 It is recommended to start each label with a capital letter, however this is not mandatory.
-One should not use two labels directly after each other without any instruction in between, and one should not use a label at the end of the file. The assembler will complain if this happens.
+One should not use two labels directly after each other without any instruction in between (the compiler will now insert a NOP in between the labels if this happens, since the C compiler sometimes creates this issue), and one should not use a label at the end of the file. The assembler will complain if the latter happens.
 When two identical labels are defined, the assembler will complain.
 It does not matter if a label is never referenced.
 However, it does matter when a reference is made to a label that is not defined. In that case the assembler will complain.
@@ -129,10 +129,10 @@ The assembler does the following things the the following order:
 7. Write result to output file
 
 ### Input and output files
-Currently one cannot pass arguments to the assembler. The assembler will read the code from code.asm and write the result to stdout. While arguments and file handling are easy to implement, I do not need it right now and have not plans to change this.
+Currently one cannot pass arguments to the assembler. The assembler will read the code from code.asm and write the result to stdout. I might add file handling in the future.
 
 ## Important notes
-One important assumption is that the code will be executed from addr 0 of the SDRAM. Otherwise the label addresses will not be calculated correctly. In the future I might add an offset argument where all labels are offsetted by this argument, and a flag to disable the required Interrupt handlers
+One important assumption is that the code will be executed from addr 0 of the SDRAM. Otherwise the label addresses will not be calculated correctly. In the future I might add an offset argument where all labels are offsetted by this argument, and a flag to disable the required Interrupt handlers, though these features have no use right now and therefore no priority.
 
 ## Other things
 I could create my own syntax highlighting for Sublime Text 3, however its Z80 syntax highlighting is already kinda decent. Might modify it in the future to support my assembly instead.

@@ -1,8 +1,8 @@
 # C Compiler
-Using the C compiler it is possible to compile C code to B322 assembly. Using C it is way easier to write code for the FPGC4, although it is less optimized.
+Using the C compiler it is possible to compile C code to B322 assembly. Using C it is way easier to write code for the FPGC4, although it is less optimized and currently not perfectly stable.
 
 ## How the C Compiler works
-A C compiler is a very complex piece of software. To prevent having to spend a very long time on writing an instable, slow and unfinished C compiler, I modified an existing C compiler instead. I found a very good and well documented C compiler written in Python, called [ShivyC](https://github.com/ShivamSarodia/ShivyC). ShivyC outputs x86_64 assembly code. It has the following stages:
+A C compiler is a very complex piece of software. To prevent having to spend a very long time on writing an instable, slow and unfinished C compiler, I modified an existing C compiler instead. I found a very good and well documented C compiler written in Python (the easiest programming language), called [ShivyC](https://github.com/ShivamSarodia/ShivyC). ShivyC outputs x86_64 assembly code. It has the following stages:
 
 - lexer: reads C file, creates tokens
 - preprocessor: handles include statements
@@ -10,7 +10,19 @@ A C compiler is a very complex piece of software. To prevent having to spend a v
 - ILgen: generates Intermediate Language code from the AST
 - ASMgen: generates x86_64 code from the IL
 
-To make the compiler output B322 assembly, I only needed to adjust the last stage. Luckily, the x86_64 assembly and B322 assembly have much in common in terms of registers and instructions (relatively), so no major modifications to the other stages, which were made with x86_64 in mind, were needed. Some assembly wrapping code is used to set up things like the stack, interrupt handlers and return code.
+To make the compiler output B322 assembly, I (mostly) only needed to adjust the last stage. Luckily, the x86_64 assembly and B322 assembly have much in common in terms of registers and instructions (relatively), so no major modifications to the other stages, which were made with x86_64 in mind, were needed. Some assembly wrapping code is used to set up things like the stack, interrupt handlers and return code.
+
+## Biggest differences between x86_64 and B322 assembly
+There are a few big differences between these languages:
+
+### Register sizes
+B322 has 16 (15 if you ignore r0 which is always 0) 32 bit registers. x86_64 has multiple variants of its registers for 8, 16, 32 and 64 bit values. I 'fixed' this by forcing the C compiler to only use the 32 bit versions of the registers.
+
+### Byte addressable memory
+B322 uses word addressable memory, meaning that each address is 32 bits. x86_64 uses byte addressable memory, so I had to modify the compiler to use 1 address per integer (32 bits) instead of 4.
+
+### Memory access in each instruction
+B322 has READ, WRITE and COPY instruction to access memory. All other instructions can only be applied to registers (and in some cases literals). x86_64 can use literals, registers and memory (with offsets and multiplications!!!) for almost all instructions. This is by far the biggest problem I currently have and requires writing cases for almost all possibilities. I started doing this kind of ad hoc and need to spend more time on this to improve stability.
 
 ## Stack
 C uses a stack. Since the hardware stack of the FPGC4 is too small, has no external pointers and is not addressable, a software stack is used instead. The stack starts at the end of SDRAM at 0x700000 and grows towards 0. The interrupt handlers have a separate (and smaller) stack, starting at 0x7B0000. R14 and R15 are used as base pointer and stack pointer respectively.
@@ -66,10 +78,11 @@ Most basic features like for/while loops are supported, so I will not list every
 - floating points
 - negative numbers! (the FPGC4 does not do any signed operations)
 - division and modulo (use div() and mod() in the math library for this)
-- include guards, since this is handled internally inside the compiler
+- include guards, since this is handled internally inside the compiler (for includes)
 - compiling and linking multiple .c files. So libraries should be written entirely in a single .h file
 - certain array initializers (like `char a[] = "foo";`)
 - complex things like varargs, which I never used anyways
+- probably some other things :s
 
 ## Interrupt handler
 Because of the way interrupts are handled in the assembler, it is required for each main .c file to have the functions (void) int1() int2() int3() and int4(). These can be empty, since the context switch (using the hardware stack) and `reti` are handled by the wrapper.
@@ -110,6 +123,7 @@ Since there is currently no OS, memory (heap) management needs to be done by the
 - Use clear function names, and defines with prefixes if necessary, to avoid conflicts
 - Use integers for pointers, as they are 32 bit
 - Use mostly integers, since these are the same size as a register
+- Program code is not different from any other place in memory, and therefore can be easily modified at runtime
 
 ### Main Memory Map
 This memory map visualizes where what is (or should) be stored where in memory:

@@ -108,7 +108,7 @@ int TestWritingFile()
 
 int main() 
 {
-	//CH376_printICver();
+	CH376_printICver();
 	//TestReadingFile();
 	//TestCreatingFile();
 	//TestWritingFile();

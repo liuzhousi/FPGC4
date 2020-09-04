@@ -101,8 +101,8 @@
 #define WIZNET_DEBUG 0
 
 #define WIZ_MAX_RBUF 1024 // buffer for receiving data
-#define WIZ_MAX_TBUF 512 // buffer for sending data
-#define FILE_BUFFER_SIZE 512 // buffer size for reading files from USB storage
+#define WIZ_MAX_TBUF 256 // buffer for sending data
+#define FILE_BUFFER_SIZE 1024 // buffer size for reading files from USB storage
 char fileBuffer[FILE_BUFFER_SIZE] = 0;
 
 

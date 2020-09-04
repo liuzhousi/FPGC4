@@ -4,7 +4,7 @@
 - to work on the documentation:
 	- execute ./run.sh to host a local version on localhost:6969
 	- when a file is changed, the website should refresh automatically
-- to deploy the website on the server:
+- to deploy the website on the server (notes for self):
 	- execute ./deploy.sh
 	- this will:
 		- build the site to the ./site directory
@@ -15,13 +15,10 @@
 
 
 
-
-
 ## Notes for markdown documentation
 
 !!! note ""
     Note example
-
 
 !!! info 
 	yeet

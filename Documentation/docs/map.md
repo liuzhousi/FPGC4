@@ -4,6 +4,7 @@ One map is used by the CPU (and implemented by the MU) and the other map is used
 
 ## CPU memory map
 When the CPU gets a `READ`, `WRITE` or `COPY` instruction, it will use the following memory map. This means that, for example, reading from address `0xC02622` will read the button states of the (S)NES controller, and writing to address `0xC0041F` will write an entry in the Palette Table for the GPU.
+The memory map is not really ordered that well (like how Sprite VRAM is between two I/O blocks). This is because I added and removed certain things while developing this project, and 'sorting' it would force me to change addresses in code I already wrote.
 
 ``` text
 $000000 +------------------------+ 
@@ -60,15 +61,15 @@ $C02622 +------------------------+
         | NESpad         $C02622 |
         | Keyboard       $C02623 |
         | CH376_nInt     $C02624 |
-        | Unused2        $C02625 |
+        | Unused         $C02625 |
         | Timer1_val     $C02626 |
         | Timer1_ctrl    $C02627 |
         | Timer2_val     $C02628 |
         | Timer2_ctrl    $C02629 |
         | Timer3_val     $C0262A |
         | Timer3_ctrl    $C0262B |
-        | TonePlayer1    $C0262C |
-        | TonePlayer2    $C0262D |
+        | Unused         $C0262C |
+        | Unused         $C0262D |
         | UART tx        $C0262E |
         | UART rx        $C0262F |
         | GPIO           $C02630 |
@@ -85,7 +86,7 @@ $C02732 |                        |
         |                        |
         | UART2 tx (APU) $C02732 |
         | UART2 rx (APU) $C02733 |
-        | SPI2 (GP)      $C02734 |
+        | SPI2 (W5500)   $C02734 |
         +------------------------+ $C02734
 
 ```

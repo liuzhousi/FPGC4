@@ -1,5 +1,5 @@
 # Architecture
-The FPGC4 consists of four main parts: the CPU, GPU, MU and APU.
+The FPGC4 consists of four main parts: the CPU, GPU, MU and APU, where the APU is the only component for which I used already existing hardware.
 
 The CPU, called the B322, is the main part that executes all instructions. It reads and writes to the MU. The CPU consists of an timer that handles the timing of the CPU phases, an instruction decoder that splits the 32 bits of each instructions, an PC unit that handles all program counter related functions like jumps and interrupts, an ALU that can do 16 different operations on two 32 bit inputs, a register bank that contains 16 32 bit registers, a stack and finally a control unit that directs certain signals based on the instruction.
  

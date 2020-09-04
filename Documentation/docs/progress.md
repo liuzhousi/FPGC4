@@ -1,9 +1,9 @@
 # Progress
 Here I keep a list of my latest progress and a TODO list
 
-## Progress log (truncated to latest progress)
+## Big Progress log (truncated to latest progress)
 - Added 4 extension interrupts
-- Changes PS/2 controller to only check for scan codes and send an interrupt
+- Changed PS/2 controller to only check for scan codes and send an interrupt
 - Reimplemented programmable timer
 - Moved documentation to mkdocs website
 - Modified an existing C compiler (written in python, outputs x86_64 asm) to output B322 asm
@@ -14,22 +14,23 @@ Here I keep a list of my latest progress and a TODO list
 - Ported code from personal Arduino project to read MIDI USB keybaord using CH376
 - Added ESP32 as APU (ESP32Synth), replacing the two square wave TonePlayers on the FPGA (still need to disable the TonePlayers!)
 - ESP32 APU uses I2S DAC, and now has a bidirectional UART communication port with the MU
+- Added W5500 in hardware and software
+- Reimplemented SPI module. Now uses 6.25MHz SPI clock (verified stable for CH376)
 
 ## Future plans
 These are kinda ordered based on priority
 
-- Remove TonePlayer
+- Improve C compiler
 - Improve ESP32Synth
 - Improve and write more libraries
-- Enable second SPI and third UART port
-- Create a web server with W5500 chip
-- Change speed of FT232RL to 1Mboud
+- Enable third UART port
 - Change all static paths in the project to relative ones
-- Write a USB bootloader
+- Write a USB loader program
 - Write a platformer game
 - Create a pattern and palette table generator
-- Add logo to boot screen animation in bootloader
-- Write an OS
+- Add logo to USB loader
+- Change speed of FT232RL to 1Mboud
+- Write an OS (when C is super stable)
 - Add Gameboy printer via Arduino to I/O (Best way to do this currently is using UART3)
 - Change SPI Flash for SDCARD (if yes, then use an SRAM cache for blocks and rewrite bootloader), 
    or add a way to reprogram the flash directly from the FPGA (better idea)
@@ -74,7 +75,7 @@ These are kinda ordered based on priority
 - [done] add hex support!!! (and binary while at it) (also in defines)
 - [done] add bitwise | ^ and & operators (look at commit 31180511de0f95cf5dbda0bf98df71901a2fd1ed)
 - [done] print static string in correct asm format (.dw without commas)
-- Fix empty label problem in ASSEMBLER! (preprocessor) by adding a nop when detected
+- [done] Fix empty label problem in ASSEMBLER! by adding a nop when detected
 - Fix global array indexing using variables in global variables
 - Fix commenting out asm code
 - Remove requirement to add intX() functions

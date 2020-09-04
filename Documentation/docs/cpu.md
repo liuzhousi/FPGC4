@@ -1,5 +1,5 @@
 # CPU (B322)
-The B322 (B4rt 32 bit processor v2) executes instructions from memory with the program counter as address. It is a 32 bit RISC CPU implementing the B322 instruction set.
+The B322 (B4rt 32 bit processor v2) executes instructions from memory with the program counter as address. It is a 32 bit RISC CPU implementing the self designed B322 instruction set.
 
 ## B322 ISA
 The B322 instruction set architecture is a RISC architecture.

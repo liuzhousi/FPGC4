@@ -288,18 +288,12 @@ wire [7:0] s_in;
 wire [7:0] s_out;
 wire s_busy;
 
-SimpleSPI
-#(
-.reg_width(8), //1Byte
-.speed_div(100) //100kHz
-) spi
-(
+SimpleSPI spi(
 .clk        (clk),
 .reset      (reset),
 .t_start    (s_start),
 .d_in       (s_in),
 .d_out      (s_out),
-.cs         (),         //We do this with GPIO
 .spi_clk    (s_clk),
 .miso       (s_miso),
 .mosi       (s_mosi),
@@ -313,18 +307,12 @@ wire [7:0] s2_in;
 wire [7:0] s2_out;
 wire s2_busy;
 
-SimpleSPI
-#(
-.reg_width(8), //1Byte
-.speed_div(100) //100kHz
-) spi2
-(
+SimpleSPI spi2(
 .clk        (clk),
 .reset      (reset),
 .t_start    (s2_start),
 .d_in       (s2_in),
 .d_out      (s2_out),
-.cs         (),         //We do this with GPIO
 .spi_clk    (spi2_clk),
 .miso       (spi2_miso),
 .mosi       (spi2_mosi),

@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
-[*] Tue Sep  1 17:42:42 2020
+[*] Fri Sep  4 11:11:53 2020
 [*]
 [dumpfile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/wave.vcd"
-[dumpfile_mtime] "Tue Sep  1 17:25:00 2020"
-[dumpfile_size] 1356879
+[dumpfile_mtime] "Fri Sep  4 11:11:33 2020"
+[dumpfile_size] 1307325
 [savefile] "/home/bart/Documents/FPGA/FPGC4/Verilog/output/FPGC4.gtkw"
-[timestart] 46290000
+[timestart] 0
 [size] 1920 1020
 [pos] -1 -1
-*-18.987394 46791000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-24.987394 65580000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] FPGC_tb.
 [treeopen] FPGC_tb.fpgc.
 [treeopen] FPGC_tb.fpgc.cpu.
@@ -18,7 +18,7 @@
 [sst_width] 268
 [signals_width] 366
 [sst_expanded] 1
-[sst_vpaned_height] 587
+[sst_vpaned_height] 610
 @28
 FPGC_tb.fpgc.clk
 FPGC_tb.fpgc.nreset
@@ -250,7 +250,6 @@ FPGC_tb.fpgc.mu.we
 FPGC_tb.fpgc.mu.osTimer1.clk
 @24
 FPGC_tb.fpgc.mu.osTimer1.counterValue[31:0]
-@25
 FPGC_tb.fpgc.mu.osTimer1.delayCounter[31:0]
 @28
 FPGC_tb.fpgc.mu.osTimer1.setValue
@@ -288,17 +287,19 @@ FPGC_tb.GPO[7:0]
 @24
 FPGC_tb.fpgc.mu.spi.clk
 FPGC_tb.fpgc.mu.spi.t_start
-@28
-FPGC_tb.fpgc.mu.spi.slow_start
-@24
 FPGC_tb.fpgc.mu.spi.busy
 FPGC_tb.fpgc.mu.spi.count[3:0]
 FPGC_tb.fpgc.mu.spi.state[2:0]
+@28
 FPGC_tb.fpgc.mu.spi.d_in[7:0]
 FPGC_tb.fpgc.mu.spi.d_out[7:0]
+@24
 FPGC_tb.fpgc.mu.spi.spi_clk
 FPGC_tb.fpgc.mu.spi.miso
 FPGC_tb.fpgc.mu.spi.mosi
+@28
+FPGC_tb.fpgc.mu.spi.mosi_d[7:0]
+FPGC_tb.fpgc.mu.spi.miso_d[7:0]
 @200
 -
 -SDRAMcontroller

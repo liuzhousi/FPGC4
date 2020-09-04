@@ -24,5 +24,6 @@ These are the current specifications of the FPGC4:
 - ESP32 as APU, connected via secondary UART port.
 - 16bit I2S DAC for ESP32 APU
 - USB host with FAT(12/16/32) file system support using a CH376T controller over SPI
+- Ethernet using W5500 over SPI
 - 8 interrupts, of which 4 normal interrupts (currently attached to two OS timers, UART RX and the frameDrawn signal of the FSX2), and 4 extended interrupts (currently attached to the PS/2 controller, a third OS timer and UART2 RX (ESP32 APU))
-- <1W Power draw (without USB device plugged in), so can easily be powered by a single laptop USB port, and no heatsinks/cooling is required
+- <1W Power draw (without USB device plugged in), so can easily be powered by a single laptop USB port, and no heatsinks/cooling is required (update: now a bit more, since and ESP32 and W5500 has been added. Still no heat of course and easy to power).

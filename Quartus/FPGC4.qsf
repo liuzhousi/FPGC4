@@ -225,4 +225,15 @@ set_global_assignment -name VERILOG_FILE modules/ClockDivider.v
 set_global_assignment -name SDC_FILE FPGC4.sdc
 set_global_assignment -name QIP_FILE pll.qip
 set_global_assignment -name VERILOG_FILE modules/DtrReset.v
+set_instance_assignment -name SYNCHRONIZER_IDENTIFICATION FORCED -to "Stabilizer:ch376NintStabilizer|unstableToClk"
+set_instance_assignment -name SYNCHRONIZER_IDENTIFICATION FORCED -to "Stabilizer:dtrStabilizer|unstableToClk"
+set_instance_assignment -name SYNCHRONIZER_IDENTIFICATION FORCED -to "Stabilizer:resStabilizer|unstableToClk"
+set_instance_assignment -name SYNCHRONIZER_IDENTIFICATION FORCED -to "CPU:cpu|Stabilizer:ext_int1Stabilizer|unstableToClk"
+set_instance_assignment -name SYNCHRONIZER_IDENTIFICATION FORCED -to "CPU:cpu|Stabilizer:ext_int2Stabilizer|unstableToClk"
+set_instance_assignment -name SYNCHRONIZER_IDENTIFICATION FORCED -to "CPU:cpu|Stabilizer:ext_int3Stabilizer|unstableToClk"
+set_instance_assignment -name SYNCHRONIZER_IDENTIFICATION FORCED -to "CPU:cpu|Stabilizer:ext_int4Stabilizer|unstableToClk"
+set_instance_assignment -name SYNCHRONIZER_IDENTIFICATION FORCED -to "CPU:cpu|Stabilizer:int1Stabilizer|unstableToClk"
+set_instance_assignment -name SYNCHRONIZER_IDENTIFICATION FORCED -to "CPU:cpu|Stabilizer:int2Stabilizer|unstableToClk"
+set_instance_assignment -name SYNCHRONIZER_IDENTIFICATION FORCED -to "CPU:cpu|Stabilizer:int3Stabilizer|unstableToClk"
+set_instance_assignment -name SYNCHRONIZER_IDENTIFICATION FORCED -to "CPU:cpu|Stabilizer:int4Stabilizer|unstableToClk"
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

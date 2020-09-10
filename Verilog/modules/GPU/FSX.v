@@ -35,10 +35,10 @@ module FSX(
     input  [8:0]        vramSPR_q,
 
     //Interrupt signal
-    output wire         frameDrawn
+    output reg         frameDrawn
 );
 //assign vga_blk = 1'b1;
-assign frameDrawn = o_frame;
+//assign frameDrawn = o_frame;
 
 //DISPLAY SIGNAL GENERATION
 /* 480x272 TFT screen
@@ -126,6 +126,11 @@ begin
     end
     else 
          h_count <= h_count + 1;
+
+    if (v_count == 0 && h_count < 8)
+        frameDrawn <= 1'b1;
+    else
+        frameDrawn <= 1'b0;
 end
 
 initial begin

@@ -22,7 +22,9 @@ void initVoices()
 // Index step is multiplied by 256 to preserve precision
 void setVoiceFreqency(uint32_t f, uint32_t n) 
 {
-  voices[n].indexStep = ((WAVETABLELENGTH  * f) <<8) / SAMPLERATE; // multiply by 256 to prevent losing precision
+  voices[n].indexStep = WAVETABLELENGTH  * f; 
+  voices[n].indexStep = voices[n].indexStep << 10;   // multiply by 1024 to prevent losing precision
+  voices[n].indexStep = voices[n].indexStep / SAMPLERATE;
   voices[n].tableIndex = 0;
 }
 
@@ -33,9 +35,9 @@ void updateVoice(uint32_t n)
   // step through the wavetable, the larger the step value, the higher the frequency
   voices[n].tableIndex += voices[n].indexStep;  
 
-  // wrap around table index (requires WAVETABLELENGTH to be a power of 2)
-  // also note that we divide here by 256, since the index step is multiplied by 256 (for precision)
-  uint32_t tIdx = (voices[n].tableIndex >> 8) & (WAVETABLELENGTH-1);   
+  // we divide here by 1024, since the index step is multiplied by 1024 (for precision)
+  uint32_t tIdx = (voices[n].tableIndex >> 10);
+  tIdx = tIdx % WAVETABLELENGTH; // wrap around the table bounds
 
   int32_t amplitude = 0;
   // which table to use:

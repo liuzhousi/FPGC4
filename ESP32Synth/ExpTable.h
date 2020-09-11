@@ -311,10 +311,16 @@ const uint16_t lookup_exp_decay[4096] = {
 
 uint32_t getAttack(uint32_t index) 
 {
-  return lookup_log_attack[index];
+  if (index > 4095)
+    index = 4095;
+
+    return lookup_log_attack[index];
 }
 
 uint32_t getDecay(uint32_t index) 
 {
-  return lookup_exp_decay[index];
+  if (index > 4095)
+    index = 4095;
+  
+    return lookup_exp_decay[index];
 }

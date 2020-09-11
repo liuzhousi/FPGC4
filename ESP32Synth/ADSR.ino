@@ -8,10 +8,10 @@
 // range: 0-127
 void initADSR()
 {
-  setADSRattack     (2);
-  setADSRdecay      (90);
+  setADSRattack     (1);
+  setADSRdecay      (65);
   setADSRsustain    (0);
-  setADSRrelease    (40);
+  setADSRrelease    (15);
 }
 
 
@@ -36,6 +36,7 @@ void setGateOff(uint32_t n)
   }
   else
   {
+    // when the sustain pedal is pressed, we keep the note on sustain, but note that the note is not pressed anymore in case of pedal release
     voices[n].adsr.pressed      = false;
   }
 }
@@ -102,7 +103,7 @@ void setADSRdecay(uint32_t MIDIvalue)
 // Currently is a linear function, should make this exponential in the future
 void setADSRsustain(uint32_t MIDIvalue)
 {
-  Sval = map(MIDIvalue, 0, 127, 0, 4095);
+  Sval = MIDIvalue << 5;
 }
 
 
@@ -164,8 +165,8 @@ void updateADSR(uint32_t n)
 
           uint32_t v = getDecay(index);
           // scale decay to sustain difference
-          // TODO test this
-          v = (v * (4095-Sval)) >> 12;
+          v = (v * (4095-Sval));
+          v = v >> 12;
           v = v + Sval;
           
           voices[n].adsr.output = v;
@@ -182,7 +183,6 @@ void updateADSR(uint32_t n)
           voices[n].adsr.counter  = 0;
           voices[n].adsr.state    = ADSR_IDLE;
           voices[n].adsr.output   = 0;
-          //voices[n].note          = 0;          // reset note ID
         }
         else 
         {
@@ -197,7 +197,8 @@ void updateADSR(uint32_t n)
           uint32_t v = getDecay(index);
 
           // scale output height by lastOutput
-          v = (v * voices[n].adsr.lastOutput) >> 12;
+          v = (v * voices[n].adsr.lastOutput);
+          v = v >> 12;
           voices[n].adsr.output = v;
         }
       break;

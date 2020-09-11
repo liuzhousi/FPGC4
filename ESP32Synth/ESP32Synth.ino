@@ -3,6 +3,7 @@
  * 
  * TODO:
  * create exponential scale for adsr knob values (only calculated when knob is rotated, so no lookup tables needed!)
+ * use multiple wavetables with aliasing for specific octaves
  * implement all missing features like FM, LFO, Reverb and Low/Hi pass
  */
 
@@ -80,7 +81,7 @@ typedef struct {
 
 
 // ------------ VOICE --------------
-#define MAXVOICES   26      // how many voices are allowed to be active at the same time
+#define MAXVOICES   24      // how many voices are allowed to be active at the same time
 
 uint32_t masterVolume = 84; // master volume (scale 0-127)
 
@@ -90,8 +91,8 @@ typedef struct {
   uint32_t  wave;           // selected wave (currently unused. only global waveForm variable is used. Should be used when in program mode (adapt midi code to include waveform of note)
   uint32_t  note;           // note ID of voice
   uint32_t  velocity;       // velocity of current note
-  uint32_t  indexStep;      // by how much we increase the wave table index for each sample (changes with frequency)
-  uint32_t  tableIndex;     // current index of wave table
+  uint64_t  indexStep;      // by how much we increase the wave table index for each sample (changes with frequency)
+  uint64_t  tableIndex;     // current index of wave table
   int32_t   output;         // integer output of voice, has range of +-2047
   uint32_t  activationTime; // millis when the voice was activated
   uint32_t  volume;         // master volume of voice (above ADSR) (currently unused. only global volume variable is used. Should be used when in program mode (adapt midi code to include waveform of note)
@@ -111,7 +112,7 @@ uint8_t command     = 0;        // midi command type
 
 //-------------I2S-------------------
 #define SAMPLERATE  44100               // samples per second (44.1KHz)
-#define SAMPLE_BUFFER_SIZE 32           // size of sample buffer, before sending to I2S driver
+#define SAMPLE_BUFFER_SIZE 64           // size of sample buffer, before sending to I2S driver
 
 uint32_t sampleBuf[SAMPLE_BUFFER_SIZE]; // sample buffer
 uint32_t sampleBufIdx = 0;              // current position in sample buffer
@@ -168,19 +169,6 @@ void handleNoteOn(uint8_t channel, uint8_t noteID, uint8_t velocity)
     }
   }
 
-  // if no slot was found, look for a slot with the same note ID 
-  if (slot == -1) 
-  {
-    for (uint32_t n=0; n < MAXVOICES; n++) 
-    {
-      if(voices[n].note == noteID)
-      {
-        slot = n;
-        break;
-      }
-    }
-  }
-
   // if no slot was found, look for a slot with the lowest amplitude in release state
   if (slot == -1) 
   {
@@ -194,6 +182,24 @@ void handleNoteOn(uint8_t channel, uint8_t noteID, uint8_t velocity)
         if (voices[n].adsr.output < lowestRelease)
         {
           lowestRelease = voices[n].adsr.output;  // update the lowestRelease
+          slot = n;                               // update the current found slot
+        }
+      }
+    }
+  }
+
+  // if no slot was found, look for a slot with the same note ID
+  // if multiple, select the oldest one
+  if (slot == -1) 
+  {
+    uint32_t lowestTime = 0xFFFFFFFF;
+    for (uint32_t n=0; n < MAXVOICES; n++) 
+    {
+      if (voices[n].note == noteID)
+      {
+        if (voices[n].activationTime < lowestTime)
+        {
+          lowestTime = voices[n].activationTime;  // update the lowestTime
           slot = n;                               // update the current found slot
         }
       }
@@ -220,9 +226,9 @@ void handleNoteOn(uint8_t channel, uint8_t noteID, uint8_t velocity)
   voices[slot].activationTime = millis();  // set the activation time
 
   // apply minimum velocity
-  if (velocity < 20)
+  if (velocity < 15)
   {
-    velocity = 20;
+    velocity = 15;
   }
   voices[slot].velocity = velocity;   // set the velocity time
   uint32_t f = getFreq(noteID);       // get freqency of note ID
@@ -258,8 +264,7 @@ void handleNoteOff(uint8_t channel, uint8_t noteID, uint8_t velocity)
 //  - mix those outputs together
 //  - scale output to range of DAC
 //  - apply clipping where needed
-//  - convert signed sample to unsigned sample
-//  - return unsigned sample
+//  - return signed sample
 int16_t produceSample() 
 {
   // update the states of the active voices and ADSRs
@@ -282,7 +287,8 @@ int16_t produceSample()
       // ADSR output is in range of 0-4095
       // multiply both outputs and divide by 4096 to get an output of +-2047
       int32_t signedADSR = voices[n].adsr.output;   // convert uint32_t to int_32t
-      int32_t ADSRappliedOutput = (signedADSR * voices[n].output) >> 10;
+      int32_t ADSRappliedOutput = (signedADSR * voices[n].output);
+      ADSRappliedOutput = ADSRappliedOutput >> 10;
       int32_t VelocityAppliedOutput = (ADSRappliedOutput * voices[n].velocity);
       VelocityAppliedOutput = VelocityAppliedOutput >> 7;
       sum = sum + VelocityAppliedOutput;
@@ -334,7 +340,7 @@ void loop()
   {
     int16_t sampl = produceSample();
     
-    sampleBuf[sampleBufIdx] = (sampl << 16) + sampl;
+    sampleBuf[sampleBufIdx] = (sampl << 16) + sampl; //write sample on both channels, because mono
     sampleBufIdx += 1;
   }
 

@@ -2,7 +2,7 @@
  * Contains MIDI note ID to frequency table
  */
  
-
+// this is stupid. should not go higher than 4000
 const uint32_t midiFreq[153] = {
 //C,    C',   D,    D',   E,     F,     F',    G,     G',    A,     A',    B  
   8,    9,    9,    10,   10,    11,    12,    12,    13,    14,    15,    15,
@@ -23,6 +23,8 @@ const uint32_t midiFreq[153] = {
 
 uint32_t getFreq(uint32_t note) 
 {
+  if (note > 152)
+    note = 152;
   return midiFreq[note];
 }
 

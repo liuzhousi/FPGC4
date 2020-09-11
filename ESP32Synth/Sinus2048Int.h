@@ -3,7 +3,7 @@
  */
 
 
-const int16_t sinusInt[] = {
+const int16_t sinusInt[2048] = {
 0,6,13,19,25,31,38,44,50,57,63,69,75,82,88,94,
 100,107,113,119,126,132,138,144,151,157,163,169,176,182,188,194,
 201,207,213,219,226,232,238,244,251,257,263,269,275,282,288,294,
@@ -136,5 +136,8 @@ const int16_t sinusInt[] = {
 
 int32_t getSinInt(uint32_t index) 
 {
+    if (index > 2047)
+    index = index % 2048; // should not be needed, since this is done in Voice
+
   return sinusInt[index];
 }

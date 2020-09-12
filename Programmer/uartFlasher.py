@@ -72,7 +72,7 @@ while not doneSending:
         doneSending = True
 
 print("Done programming", flush=True)
-port.read(1)
+port.read(1) # should return 'd', though I'm not checking on it
 
 if testReturnMode:
     rcv = port.read(1)

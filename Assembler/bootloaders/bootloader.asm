@@ -1,5 +1,6 @@
 ; New bootloader code with UART option, now defaults to UART
-; copy SPI to SDRAM and jump to sdram
+; copies SPI to SDRAM, or copies UART bootloader from ROM to SDRAM, and finally jumps to SDRAM after clearing all registers
+; lines with a . in the comments indicate a change over the previous version, where the UART bootloader was stored in SPI flash instead
 
 Main:
     load 0x2630 r1
@@ -50,34 +51,34 @@ Main:
 
     CopyUartLoader:
 
-        load 0 r1
-        loadhi 0x80 r1          ; r1 = address 0 of SPI: 0x800000
-        load 0 r2               ; r2 = address 0 of SDRAM: 0x00, and loop var
-        read 5 r1 r3            ; r3 = last address to copy +1, which is in line 6 of SPI code
-        load 16 r4              ; r4 = number of words to copy at the start
+        load 0x246A r1          ; .
+        loadhi 0xC0 r1          ; . r1 = address of first part of UART bootloader data in ROM: 0xC02422 + 72 = 0xC0246A
+        load 0 r2               ;   r2 = address 0 of SDRAM: 0x00, and loop var
+        or r0 r0 r0             ; . r3 was unused, so I set it to NOP, to not mess up existing jump addresses, since this is a mod of a compiled binary
+        load 7 r4               ; . r4 = number of words to copy at the start
 
         CopyStartLoop:
-            copy 0 r1 r2            ; copy SPI to SDRAM
+            copy 0 r1 r2            ; copy ROM to SDRAM
 
-            add r1 1 r1             ; incr SPI address 
+            add r1 1 r1             ; incr ROM address 
             add r2 1 r2             ; incr SDRAM address
 
             beq r2 r4 2             ; copy is done when SDRAM address == number of words to copy at the start
             jump CopyStartLoop      ; copy is not done yet, copy next address
 
 
-        load 0 r1
-        loadhi 0x80 r1          ; r1 = address 0 of SPI: 0x800000
-        load 0 r2               ; r2 = address 0 of SDRAM: 0x00, and loop var
-        read 5 r1 r3            ; r3 = last address to copy +1, which is in line 6 of SPI code
-        sub r3 512 r4           ; r4 = starting address, 512 addresses before last address
-        add r4 r1 r1            ; apply starting address offset to SPI address
-        add r4 r2 r2            ; apply starting address offset to SDRAM address
+        load 0x2471 r1          ; .
+        loadhi 0xC0 r1          ; . r1 = address of second part of UART bootloader data in ROM: 0xC02422 + 79 = 0xC02471
+        load 0xDE07 r2          ; . r2 = address 4185607 of SDRAM: 0x3FDE07, and loop var
+        loadhi 0x3F r2          ; .
+        load 0xDE66 r3          ; . r3 = r2 + number of words to copy = 0x3FDE07 + 95 = 0x3FDE66
+        loadhi 0x3F r3          ; .
+        or r0 r0 r0             ; . NOP, to not mess up existing jump addresses, since this is a mod of a compiled binary
 
         CopyEndLoop:
-            copy 0 r1 r2            ; copy SPI to SDRAM
+            copy 0 r1 r2            ; copy ROM to SDRAM
 
-            add r1 1 r1             ; incr SPI address 
+            add r1 1 r1             ; incr ROM address 
             add r2 1 r2             ; incr SDRAM address
 
             beq r2 r3 2             ; copy is done when SDRAM address == number of lines to copy

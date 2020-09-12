@@ -18,706 +18,22 @@ Return_UART:
 
 ; COMPILED C CODE HERE
 
-Label_endp_mode:
-	.dw 128
-Label___strlit9:
-	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 48 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
-Label___strlit69:
-	.dw 78 111 116 101 73 68 58 32 0
-Label___strlit81:
-	.dw 86 101 108 111 99 105 116 121 58 32 0
-Label___strlit112:
-	.dw 10 0
-Label___strlit154:
-	.dw 114 101 115 101 116 32 100 111 110 101 0
-Label___strlit157:
-	.dw 68 101 118 105 99 101 32 99 111 110 110 101 99 116 101 100 0
-Label___strlit158:
-	.dw 67 104 97 110 110 101 108 58 32 0
-Label___strlit163:
-	.dw 45 45 45 45 45 45 82 101 97 100 121 32 116 111 32 114 101 99 101 105 118 101 45 45 45 45 45 45 0
-Label___strlit183:
-	.dw 45 45 80 65 82 83 69 68 32 68 65 84 65 45 45 0
-Label___strlit191:
-	.dw 45 45 82 65 87 32 68 65 84 65 45 45 0
-Label___strlit192:
-	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 49 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
-Label___strlit198:
-	.dw 83 101 116 116 105 110 103 32 85 83 66 32 109 111 100 101 32 116 111 32 72 79 83 84 95 49 0
-Label___strlit200:
-	.dw 67 97 98 108 101 32 78 117 109 98 101 114 58 32 0
-Label___strlit216:
-	.dw 83 101 116 116 105 110 103 32 85 83 66 32 109 111 100 101 32 116 111 32 72 79 83 84 95 50 0
-Label___strlit231:
-	.dw 45 45 45 45 45 45 72 111 115 116 32 97 100 100 114 32 115 101 116 45 45 45 45 45 45 0
-Label___strlit249:
-	.dw 83 101 116 116 105 110 103 32 85 83 66 32 109 111 100 101 32 116 111 32 72 79 83 84 95 48 0
-Label___strlit261:
-	.dw 44 32 85 83 66 32 109 111 100 101 32 115 101 116 32 116 111 32 72 79 83 84 95 50 32 40 53 49 32 61 61 32 111 112 101 114 97 116 105 111 110 32 115 117 99 99 101 115 115 102 117 108 41 0
-Label___strlit278:
-	.dw 45 45 45 45 45 45 83 108 97 118 101 32 97 100 100 114 32 115 101 116 45 45 45 45 45 45 0
-Label___strlit282:
-	.dw 67 73 78 58 32 0
-Label___strlit292:
-	.dw 67 104 101 99 107 105 110 103 32 100 101 118 105 99 101 32 99 111 110 110 101 99 116 105 111 110 32 115 116 97 116 117 115 0
-Label___strlit296:
-	.dw 67 104 101 99 107 105 110 103 32 100 101 118 105 99 101 32 99 111 110 110 101 99 116 105 111 110 32 115 116 97 116 117 115 0
-Label___strlit298:
-	.dw 10 0
-Label___strlit302:
-	.dw 68 101 118 105 99 101 32 99 111 110 110 101 99 116 101 100 0
-Label___strlit307:
-	.dw 69 118 101 110 116 58 32 0
+Label___strlit36:
+	.dw 66 65 67 75 71 82 79 85 78 68 0
+Label___strlit45:
+	.dw 104 97 108 108 111 0
 
-Label_div:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 0 rsp
-	; LOADARG
-	; LOADARG
-	; EQUALCMP
-	or r0 1 r1
-	or r0 r4 r12
-	load32 0 r13
-	bne r13 r12 2
-	jump Label___shivyc_label43
-	or r0 0 r1
-Label___shivyc_label43:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label1
-	; RETURN
-	load32 0 r1
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-	; LABEL
-Label___shivyc_label1:
-	; SET
-	load32 0 r1
-	; LABEL
-Label___shivyc_label2:
-	; GREATEROREQCMP
-	or r0 1 r2
-	or r0 r5 r12
-	or r0 r4 r13
-	bgt r13 r12 2
-	jump Label___shivyc_label44
-	or r0 0 r2
-Label___shivyc_label44:
-	; JUMPZERO
-	sub r2 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label3
-	; SUBTR
-	or r0 r4 r12
-	sub r5 r12 r5
-	; SET
-	; ADD
-	load32 1 r12
-	add r1 r12 r1
-	; SET
-	; JUMP
-	jump Label___shivyc_label2
-	; LABEL
-Label___shivyc_label3:
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_mod:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 0 rsp
-	; LOADARG
-	; LOADARG
-	; EQUALCMP
-	or r0 1 r1
-	or r0 r4 r12
-	load32 0 r13
-	bne r13 r12 2
-	jump Label___shivyc_label45
-	or r0 0 r1
-Label___shivyc_label45:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label4
-	; RETURN
-	or r0 r5 r1
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-	; LABEL
-Label___shivyc_label4:
-	; LABEL
-Label___shivyc_label5:
-	; GREATEROREQCMP
-	or r0 1 r1
-	or r0 r5 r12
-	or r0 r4 r13
-	bgt r13 r12 2
-	jump Label___shivyc_label46
-	or r0 0 r1
-Label___shivyc_label46:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label6
-	; SUBTR
-	or r0 r4 r12
-	sub r5 r12 r5
-	; SET
-	; JUMP
-	jump Label___shivyc_label5
-	; LABEL
-Label___shivyc_label6:
-	; RETURN
-	or r0 r5 r1
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_memcpy:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 0 rsp
-	; LOADARG
-	; LOADARG
-	; LOADARG
-	; SET
-	load32 0 r2
-	; LABEL
-Label___shivyc_label7:
-	; LESSCMP
-	or r0 1 r1
-	or r0 r2 r12
-	or r0 r3 r13
-	bge r12 r13 2
-	jump Label___shivyc_label47
-	or r0 0 r1
-Label___shivyc_label47:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label9
-	; SET
-	or r0 r2 r1
-	; MULT
-	load32 1 r12
-	mult r1 r12 r1
-	; ADD
-	or r0 r4 r12
-	add r1 r12 r1
-	; READAT
-	read 0 r1 r8
-	; SET
-	or r0 r2 r1
-	; MULT
-	load32 1 r12
-	mult r1 r12 r1
-	; ADD
-	or r0 r5 r12
-	add r1 r12 r1
-	; SETAT
-	write 0 r1 r8
-	; LABEL
-Label___shivyc_label8:
-	; SET
-	or r0 r2 r1
-	; ADD
-	load32 1 r12
-	add r2 r12 r2
-	; SET
-	; JUMP
-	jump Label___shivyc_label7
-	; LABEL
-Label___shivyc_label9:
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_uprintc:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 0 rsp
-	; LOADARG
-	; SET
-	load32 12592686 r1
-	; SET
-	; SETAT
-	write 0 r1 r5
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_uprint:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 0 rsp
-	; LOADARG
-	; SET
-	load32 12592686 r3
-	; READAT
-	read 0 r5 r2
-	; SET
-	; LABEL
-Label___shivyc_label10:
-	; SET
-	or r0 r2 r1
-	; NOTEQUALCMP
-	or r0 1 r4
-	or r0 r1 r12
-	load32 0 r13
-	beq r13 r12 2
-	jump Label___shivyc_label48
-	or r0 0 r4
-Label___shivyc_label48:
-	; JUMPZERO
-	sub r4 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label11
-	; SET
-	; SETAT
-	write 0 r3 r2
-	; SET
-	or r0 r5 r1
-	; ADD
-	load32 1 r12
-	add r5 r12 r5
-	; SET
-	; READAT
-	read 0 r5 r2
-	; SET
-	; JUMP
-	jump Label___shivyc_label10
-	; LABEL
-Label___shivyc_label11:
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_uprintln:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 0 rsp
-	; LOADARG
-	; ADDROF
-	addr2reg Label_uprint r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDROF
-	addr2reg Label___strlit298 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_itoar:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 4 rsp
-	; LOADARG
-	write -1 rbp r5
-	; LOADARG
-	write -2 rbp r4
-	; ADDROF
-	addr2reg Label_mod r1
-	; CALL
-	read -1 rbp r12
-	or r0 r12 r5
-	or r0 10 r4
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -3 rbp r1
-	; SET
-	load32 0 r12
-	write -4 rbp r12
-	; ADDROF
-	addr2reg Label_div r1
-	; CALL
-	read -1 rbp r12
-	or r0 r12 r5
-	or r0 10 r4
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -1 rbp r1
-	; GREATERCMP
-	or r0 1 r1
-	read -1 rbp r12
-	load32 0 r13
-	bge r13 r12 2
-	jump Label___shivyc_label49
-	or r0 0 r1
-Label___shivyc_label49:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label12
-	; ADDROF
-	addr2reg Label_itoar r1
-	; CALL
-	read -1 rbp r12
-	or r0 r12 r5
-	read -2 rbp r12
-	or r0 r12 r4
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADD
-	read -4 rbp r12
-	add r1 r12 r1
-	; SET
-	write -4 rbp r1
-	; LABEL
-Label___shivyc_label12:
-	; ADD
-	read -3 rbp r2
-	add r2 48 r2
-	; SET
-	read -4 rbp r1
-	; ADD
-	read -4 rbp r3
-	add r3 1 r3
-	; SET
-	write -4 rbp r3
-	; SET
-	; MULT
-	load32 1 r12
-	mult r1 r12 r1
-	; ADD
-	read -2 rbp r12
-	add r1 r12 r1
-	; SET
-	; SETAT
-	write 0 r1 r2
-	; RETURN
-	read -4 rbp r12
-	or r0 r12 r1
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_itoa:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 5 rsp
-	; LOADARG
-	; LOADARG
-	write -5 rbp r4
-	; ADDROF
-	addr2reg Label_itoar r1
-	; CALL
-	read -5 rbp r12
-	or r0 r12 r4
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	; SET
-	; MULT
-	load32 1 r12
-	mult r1 r12 r1
-	; ADD
-	read -5 rbp r12
-	add r1 r12 r1
-	; SETAT
-	load32 0 r12
-	write 0 r1 r12
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_itoahr:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 9 rsp
-	; LOADARG
-	write -6 rbp r5
-	; LOADARG
-	write -7 rbp r4
-	; ADDROF
-	addr2reg Label_mod r1
-	; CALL
-	read -6 rbp r12
-	or r0 r12 r5
-	or r0 16 r4
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -8 rbp r1
-	; SET
-	load32 0 r12
-	write -9 rbp r12
-	; ADDROF
-	addr2reg Label_div r1
-	; CALL
-	read -6 rbp r12
-	or r0 r12 r5
-	or r0 16 r4
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -6 rbp r1
-	; GREATERCMP
-	or r0 1 r1
-	read -6 rbp r12
-	load32 0 r13
-	bge r13 r12 2
-	jump Label___shivyc_label50
-	or r0 0 r1
-Label___shivyc_label50:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label13
-	; ADDROF
-	addr2reg Label_itoahr r1
-	; CALL
-	read -6 rbp r12
-	or r0 r12 r5
-	read -7 rbp r12
-	or r0 r12 r4
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADD
-	read -9 rbp r12
-	add r1 r12 r1
-	; SET
-	write -9 rbp r1
-	; LABEL
-Label___shivyc_label13:
-	; GREATERCMP
-	or r0 1 r1
-	read -8 rbp r12
-	load32 9 r13
-	bge r13 r12 2
-	jump Label___shivyc_label51
-	or r0 0 r1
-Label___shivyc_label51:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label14
-	; ADD
-	read -8 rbp r2
-	add r2 65 r2
-	; SUBTR
-	load32 10 r12
-	sub r2 r12 r2
-	; SET
-	; JUMP
-	jump Label___shivyc_label15
-	; LABEL
-Label___shivyc_label14:
-	; ADD
-	read -8 rbp r2
-	add r2 48 r2
-	; SET
-	; LABEL
-Label___shivyc_label15:
-	; SET
-	read -9 rbp r1
-	; ADD
-	read -9 rbp r3
-	add r3 1 r3
-	; SET
-	write -9 rbp r3
-	; SET
-	; MULT
-	load32 1 r12
-	mult r1 r12 r1
-	; ADD
-	read -7 rbp r12
-	add r1 r12 r1
-	; SETAT
-	write 0 r1 r2
-	; RETURN
-	read -9 rbp r12
-	or r0 r12 r1
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_itoah:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 10 rsp
-	; LOADARG
-	; LOADARG
-	write -10 rbp r4
-	; MULT
-	or r0 0 r1
-	mult r1 1 r1
-	; ADD
-	read -10 rbp r12
-	add r1 r12 r1
-	; SETAT
-	load32 48 r12
-	write 0 r1 r12
-	; MULT
-	or r0 1 r1
-	mult r1 1 r1
-	; ADD
-	read -10 rbp r12
-	add r1 r12 r1
-	; SETAT
-	load32 120 r12
-	write 0 r1 r12
-	; MULT
-	or r0 2 r1
-	mult r1 1 r1
-	; ADD
-	read -10 rbp r12
-	add r1 r12 r1
-	; SET
-	write -10 rbp r1
-	; ADDROF
-	addr2reg Label_itoahr r1
-	; CALL
-	read -10 rbp r12
-	or r0 r12 r4
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	; SET
-	; MULT
-	load32 1 r12
-	mult r1 r12 r1
-	; ADD
-	read -10 rbp r12
-	add r1 r12 r1
-	; SETAT
-	load32 0 r12
-	write 0 r1 r12
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_delay:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 0 rsp
-	; LOADARG
-	; SET
-	load32 4980736 r3
-	; SETAT
-	load32 0 r12
-	write 0 r3 r12
-	; SET
-	load32 12592678 r1
-	; SETAT
-	write 0 r1 r5
-	; SET
-	load32 12592679 r1
-	; SETAT
-	load32 1 r12
-	write 0 r1 r12
-	; LABEL
-Label___shivyc_label16:
-	; READAT
-	read 0 r3 r2
-	; EQUALCMP
-	or r0 1 r1
-	or r0 r2 r12
-	load32 0 r13
-	bne r13 r12 2
-	jump Label___shivyc_label52
-	or r0 0 r1
-Label___shivyc_label52:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label17
-	; JUMP
-	jump Label___shivyc_label16
-	; LABEL
-Label___shivyc_label17:
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_AssemblyImports:
+Label_GFX_asmDefines:
 	sub rsp 1 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
 	sub rsp 0 rsp
 	; ASMCODE
-	`include example/data_music_midi.asm
+	define GFX_PATTERN_TABLE_SIZE       = 1024
+	define GFX_PALETTE_TABLE_SIZE       = 32
+	define GFX_WINDOW_TILES             = 1920
+	define GFX_BG_TILES                 = 2048
+	define GFX_SPRITES                  = 64
 	; RETURN
 	or r0 rbp rsp
 	read 0 rsp rbp
@@ -725,7 +41,165 @@ Label_AssemblyImports:
 	read 0 rsp r12
 	add rsp 1 rsp
 	jumpr 4 r12
-Label_CH376_spiBeginTransfer:
+Label_GFX_printWindowColored:
+	sub rsp 1 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 0 rsp
+	; LOADARG
+	; LOADARG
+	; LOADARG
+	; LOADARG
+	; ASMCODE
+	push r1
+	push r6
+	push r7
+	push r8
+	push r9
+	push r10
+	load32 0xC01420 r10
+	load 0 r1
+	or r10 r0 r6
+	or r5 r0 r7
+	add r3 r6 r6
+	GFX_printWindowColoredLoop:
+	read 0 r7 r9
+	write 0 r6 r9
+	write 2048 r6 r2
+	add r6 1 r6
+	add r7 1 r7
+	add r1 1 r1
+	bge r1 r4 2
+	jump GFX_printWindowColoredLoop
+	pop r10
+	pop r9
+	pop r8
+	pop r7
+	pop r6
+	pop r1
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 1 rsp
+	read 0 rsp r12
+	add rsp 1 rsp
+	jumpr 4 r12
+Label_GFX_printBGColored:
+	sub rsp 1 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 0 rsp
+	; LOADARG
+	; LOADARG
+	; LOADARG
+	; LOADARG
+	; ASMCODE
+	push r1
+	push r6
+	push r7
+	push r8
+	push r9
+	push r10
+	load32 0xC00420 r10
+	load 0 r1
+	or r10 r0 r6
+	or r5 r0 r7
+	add r3 r6 r6
+	GFX_printBGColoredLoop:
+	read 0 r7 r9
+	write 0 r6 r9
+	write 2048 r6 r2
+	add r6 1 r6
+	add r7 1 r7
+	add r1 1 r1
+	bge r1 r4 2
+	jump GFX_printBGColoredLoop
+	pop r10
+	pop r9
+	pop r8
+	pop r7
+	pop r6
+	pop r1
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 1 rsp
+	read 0 rsp r12
+	add rsp 1 rsp
+	jumpr 4 r12
+Label_GFX_copyPatternTable:
+	sub rsp 1 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 0 rsp
+	; LOADARG
+	; ASMCODE
+	push r2
+	push r3
+	push r4
+	push r1
+	push r6
+	load32 0xC00000 r2
+	load 0 r3
+	load GFX_PATTERN_TABLE_SIZE r4
+	or r2 r0 r1
+	add r5 4 r6
+	GFX_initPatternTableLoop:
+	copy 0 r6 r1
+	add r1 1 r1
+	add r6 1 r6
+	add r3 1 r3
+	beq r3 r4 2
+	jump GFX_initPatternTableLoop
+	pop r6
+	pop r1
+	pop r4
+	pop r3
+	pop r2
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 1 rsp
+	read 0 rsp r12
+	add rsp 1 rsp
+	jumpr 4 r12
+Label_GFX_copyPaletteTable:
+	sub rsp 1 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 0 rsp
+	; LOADARG
+	; ASMCODE
+	push r2
+	push r3
+	push r4
+	push r1
+	push r6
+	load32 0xC00400 r2
+	load 0 r3
+	load GFX_PALETTE_TABLE_SIZE r4
+	or r2 r0 r1
+	add r5 4 r6
+	GFX_initPaletteTableLoop:
+	copy 0 r6 r1
+	add r1 1 r1
+	add r6 1 r6
+	add r3 1 r3
+	beq r3 r4 2
+	jump GFX_initPaletteTableLoop
+	pop r6
+	pop r1
+	pop r4
+	pop r3
+	pop r2
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 1 rsp
+	read 0 rsp r12
+	add rsp 1 rsp
+	jumpr 4 r12
+Label_GFX_clearBGtileTable:
 	sub rsp 1 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
@@ -734,11 +208,20 @@ Label_CH376_spiBeginTransfer:
 	push r1
 	push r2
 	push r3
-	load32 0xC02630 r3
-	read 0 r3 r1
-	load 0b1111111011111111 r2
-	and r1 r2 r1
-	write 0 r3 r1
+	push r4
+	push r5
+	load32 0xC00420 r1
+	load 0 r3
+	load GFX_BG_TILES r4
+	or r1 r0 r5
+	GFX_clearBGtileTableLoop:
+	write 0 r5 r0
+	add r5 1 r5
+	add r3 1 r3
+	beq r3 r4 2
+	jump GFX_clearBGtileTableLoop
+	pop r5
+	pop r4
 	pop r3
 	pop r2
 	pop r1
@@ -749,7 +232,7 @@ Label_CH376_spiBeginTransfer:
 	read 0 rsp r12
 	add rsp 1 rsp
 	jumpr 4 r12
-Label_CH376_spiEndTransfer:
+Label_GFX_clearBGpaletteTable:
 	sub rsp 1 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
@@ -758,11 +241,20 @@ Label_CH376_spiEndTransfer:
 	push r1
 	push r2
 	push r3
-	load32 0xC02630 r3
-	read 0 r3 r1
-	load 0b100000000 r2
-	or r1 r2 r1
-	write 0 r3 r1
+	push r4
+	push r5
+	load32 0xC00C20 r1
+	load 0 r3
+	load GFX_BG_TILES r4
+	or r1 r0 r5
+	GFX_clearBGpaletteTableLoop:
+	write 0 r5 r0
+	add r5 1 r5
+	add r3 1 r3
+	beq r3 r4 2
+	jump GFX_clearBGpaletteTableLoop
+	pop r5
+	pop r4
 	pop r3
 	pop r2
 	pop r1
@@ -773,16 +265,260 @@ Label_CH376_spiEndTransfer:
 	read 0 rsp r12
 	add rsp 1 rsp
 	jumpr 4 r12
-Label_CH376_spiTransfer:
+Label_GFX_clearWindowtileTable:
+	sub rsp 1 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 0 rsp
+	; ASMCODE
+	push r1
+	push r2
+	push r3
+	push r4
+	push r5
+	load32 0xC01420 r1
+	load 0 r3
+	load GFX_WINDOW_TILES r4
+	or r1 r0 r5
+	GFX_clearWindowtileTableLoop:
+	write 0 r5 r0
+	add r5 1 r5
+	add r3 1 r3
+	beq r3 r4 2
+	jump GFX_clearWindowtileTableLoop
+	pop r5
+	pop r4
+	pop r3
+	pop r2
+	pop r1
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 1 rsp
+	read 0 rsp r12
+	add rsp 1 rsp
+	jumpr 4 r12
+Label_GFX_clearWindowpaletteTable:
+	sub rsp 1 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 0 rsp
+	; ASMCODE
+	push r1
+	push r2
+	push r3
+	push r4
+	push r5
+	load32 0xC01C20 r1
+	load 0 r3
+	load GFX_WINDOW_TILES r4
+	or r1 r0 r5
+	GFX_clearWindowpaletteTableLoop:
+	write 0 r5 r0
+	add r5 1 r5
+	add r3 1 r3
+	beq r3 r4 2
+	jump GFX_clearWindowpaletteTableLoop
+	pop r5
+	pop r4
+	pop r3
+	pop r2
+	pop r1
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 1 rsp
+	read 0 rsp r12
+	add rsp 1 rsp
+	jumpr 4 r12
+Label_GFX_clearSprites:
+	sub rsp 1 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 0 rsp
+	; ASMCODE
+	push r1
+	push r2
+	push r3
+	push r4
+	push r5
+	load32 0xC02632 r1
+	load 0 r3
+	load GFX_SPRITES r4
+	or r1 r0 r5
+	GFX_clearSpritesLoop:
+	write 0 r5 r0
+	write 1 r5 r0
+	write 2 r5 r0
+	write 3 r5 r0
+	add r5 4 r5
+	add r3 1 r3
+	beq r3 r4 2
+	jump GFX_clearSpritesLoop
+	pop r5
+	pop r4
+	pop r3
+	pop r2
+	pop r1
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 1 rsp
+	read 0 rsp r12
+	add rsp 1 rsp
+	jumpr 4 r12
+Label_GFX_clearParameters:
+	sub rsp 1 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 0 rsp
+	; ASMCODE
+	push r1
+	load32 0xC02420 r1
+	write 0 r1 r0
+	write 1 r1 r0
+	pop r1
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 1 rsp
+	read 0 rsp r12
+	add rsp 1 rsp
+	jumpr 4 r12
+Label_GFX_initVram:
+	sub rsp 1 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 0 rsp
+	; ADDROF
+	addr2reg Label_GFX_clearBGtileTable r1
+	; CALL
+	savpc r12
+	sub rsp 1 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_GFX_clearBGpaletteTable r1
+	; CALL
+	savpc r12
+	sub rsp 1 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_GFX_clearWindowtileTable r1
+	; CALL
+	savpc r12
+	sub rsp 1 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_GFX_clearWindowpaletteTable r1
+	; CALL
+	savpc r12
+	sub rsp 1 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_GFX_clearSprites r1
+	; CALL
+	savpc r12
+	sub rsp 1 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; ADDROF
+	addr2reg Label_GFX_clearParameters r1
+	; CALL
+	savpc r12
+	sub rsp 1 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; RETURN
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 1 rsp
+	read 0 rsp r12
+	add rsp 1 rsp
+	jumpr 4 r12
+Label_GFX_WindowPosFromXY:
 	sub rsp 1 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
 	sub rsp 0 rsp
 	; LOADARG
+	; LOADARG
+	; MULT
+	load32 40 r12
+	mult r4 r12 r4
+	; ADD
+	or r0 r5 r12
+	add r4 r12 r4
+	; RETURN
+	or r0 r4 r1
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 1 rsp
+	read 0 rsp r12
+	add rsp 1 rsp
+	jumpr 4 r12
+Label_GFX_BackgroundPosFromXY:
+	sub rsp 1 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 0 rsp
+	; LOADARG
+	; LOADARG
+	; MULT
+	load32 64 r12
+	mult r4 r12 r4
+	; ADD
+	or r0 r5 r12
+	add r4 r12 r4
+	; RETURN
+	or r0 r4 r1
+	or r0 rbp rsp
+	read 0 rsp rbp
+	add rsp 1 rsp
+	read 0 rsp r12
+	add rsp 1 rsp
+	jumpr 4 r12
+Label_DATA_PALETTE_DEFAULT:
+	sub rsp 1 rsp
+	write 0 rsp rbp
+	or r0 rsp rbp
+	sub rsp 0 rsp
 	; ASMCODE
-	load32 0xC02631 r1
-	write 0 r1 r5
-	read 0 r1 r1
+	.dw 0b00000000000000001111111111111111
+	.dw 0b00000011000000000000000000011101
+	.dw 0b00000000000000000000000011100000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
 	; RETURN
 	or r0 rbp rsp
 	read 0 rsp rbp
@@ -790,1393 +526,1036 @@ Label_CH376_spiTransfer:
 	read 0 rsp r12
 	add rsp 1 rsp
 	jumpr 4 r12
-Label_CH376_WaitGetStatus:
+Label_DATA_ASCII_DEFAULT:
 	sub rsp 1 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 11 rsp
-	; SET
-	load32 1 r1
-	; LABEL
-Label___shivyc_label18:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label19
-	; SET
-	load32 12592676 r1
-	; READAT
-	read 0 r1 r1
-	; SET
-	; JUMP
-	jump Label___shivyc_label18
-	; LABEL
-Label___shivyc_label19:
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 34 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 0 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -11 rbp r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; RETURN
-	read -11 rbp r12
-	or r0 r12 r1
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_CH376_noWaitGetStatus:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 12 rsp
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 34 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 0 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -12 rbp r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; RETURN
-	read -12 rbp r12
-	or r0 r12 r1
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_CH376_setUSBmode:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 14 rsp
-	; LOADARG
-	write -13 rbp r5
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 21 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 1 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	read -13 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 1 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 0 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -14 rbp r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 1 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; RETURN
-	read -14 rbp r12
-	or r0 r12 r1
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_CH376_init:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 24 rsp
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 60 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 5 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 100 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label20
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit154 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label20:
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label21
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit249 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label21:
-	; ADDROF
-	addr2reg Label_CH376_setUSBmode r1
-	; CALL
-	or r0 5 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	or r0 r1 r5
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label22
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 24 r4 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDRREL
-	sub rbp 24 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit9 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label22:
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_setUSBspeed:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 24 rsp
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 11 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 23 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 216 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 20 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_connectDevice:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 34 rsp
-	; SET
-	load32 0 r5
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label23
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit292 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label23:
-	; LABEL
-Label___shivyc_label24:
-	; ADDROF
-	addr2reg Label_CH376_WaitGetStatus r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; NOTEQUALCMP
-	or r0 1 r2
-	or r0 r1 r12
-	load32 21 r13
-	beq r13 r12 2
-	jump Label___shivyc_label53
-	or r0 0 r2
-Label___shivyc_label53:
-	; JUMPZERO
-	sub r2 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label25
-	; JUMP
-	jump Label___shivyc_label24
-	; LABEL
-Label___shivyc_label25:
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label26
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit157 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label26:
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label27
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit198 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label27:
-	; ADDROF
-	addr2reg Label_CH376_setUSBmode r1
-	; CALL
-	or r0 7 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	or r0 r1 r5
-	; SET
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label28
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 34 r4 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDRREL
-	sub rbp 34 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit192 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label28:
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label29
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit216 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label29:
-	; ADDROF
-	addr2reg Label_CH376_setUSBmode r1
-	; CALL
-	or r0 6 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	or r0 r1 r5
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label30
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 34 r4 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDRREL
-	sub rbp 34 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit261 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label30:
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label31
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit296 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label31:
-	; LABEL
-Label___shivyc_label32:
-	; ADDROF
-	addr2reg Label_CH376_WaitGetStatus r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; NOTEQUALCMP
-	or r0 1 r2
-	or r0 r1 r12
-	load32 21 r13
-	beq r13 r12 2
-	jump Label___shivyc_label54
-	or r0 0 r2
-Label___shivyc_label54:
-	; JUMPZERO
-	sub r2 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label33
-	; JUMP
-	jump Label___shivyc_label32
-	; LABEL
-Label___shivyc_label33:
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label34
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit302 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label34:
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_toggle_recv:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 34 rsp
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 28 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	addr2reg Label_endp_mode r7
-	read 0 r7 r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; XOR
-	addr2reg Label_endp_mode r7
-	read 0 r7 r1
-	xor r1 64 r1
-	; SET
-	addr2reg Label_endp_mode r7
-	write 0 r7 r1
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_issue_token:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 35 rsp
-	; LOADARG
-	write -35 rbp r5
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 79 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	read -35 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_RD_USB_DATA:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 55 rsp
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 40 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 0 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 0 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -52 rbp r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 0 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -54 rbp r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 0 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -50 rbp r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 0 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -47 rbp r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	load32 12592946 r1
-	; SETAT
-	read -54 rbp r12
-	write 0 r1 r12
-	; SETAT
-	read -50 rbp r12
-	write 0 r1 r12
-	; SETAT
-	read -47 rbp r12
-	write 0 r1 r12
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label35
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit191 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 45 r4 ;lea
-	; CALL
-	read -52 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 45 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 45 r4 ;lea
-	; CALL
-	read -54 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 45 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 45 r4 ;lea
-	; CALL
-	read -50 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 45 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 45 r4 ;lea
-	; CALL
-	read -47 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 45 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; AND
-	read -52 rbp r1
-	and r1 240 r1
-	; SET
-	write -46 rbp r1
-	; AND
-	read -52 rbp r1
-	and r1 15 r1
-	; SET
-	write -48 rbp r1
-	; AND
-	read -54 rbp r1
-	and r1 15 r1
-	; SET
-	write -49 rbp r1
-	; AND
-	read -54 rbp r1
-	and r1 240 r1
-	; SET
-	write -51 rbp r1
-	; SET
-	read -50 rbp r12
-	write -53 rbp r12
-	; SET
-	read -47 rbp r12
-	write -55 rbp r12
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit183 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDROF
-	addr2reg Label___strlit200 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 45 r4 ;lea
-	; CALL
-	read -46 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 45 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDROF
-	addr2reg Label___strlit282 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 45 r4 ;lea
-	; CALL
-	read -48 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 45 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDROF
-	addr2reg Label___strlit158 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 45 r4 ;lea
-	; CALL
-	read -49 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 45 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDROF
-	addr2reg Label___strlit307 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 45 r4 ;lea
-	; CALL
-	read -51 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 45 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDROF
-	addr2reg Label___strlit69 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 45 r4 ;lea
-	; CALL
-	read -53 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 45 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDROF
-	addr2reg Label___strlit81 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 45 r4 ;lea
-	; CALL
-	read -55 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 45 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit112 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label35:
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_set_addr:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 56 rsp
-	; LOADARG
-	write -56 rbp r5
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 69 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	read -56 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 20 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label36
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit231 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label36:
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 19 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	read -56 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 20 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label37
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit278 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label37:
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_set_config:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 57 rsp
-	; LOADARG
-	write -57 rbp r5
-	; ADDROF
-	addr2reg Label_CH376_spiBeginTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	or r0 73 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiTransfer r1
-	; CALL
-	read -57 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_CH376_spiEndTransfer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 20 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_startMidiPlayer:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 45 rsp
+	sub rsp 0 rsp
 	; ASMCODE
-	load32 0x80000 r2
-	load 1 r1
-	write 0 r2 r0
-	write 1 r2 r1
-	load32 0xC02628 r1
-	load 1 r3
-	write 0 r1 r3
-	write 1 r1 r3
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111111111111001100000000000011
+	.dw 0b11001100001100111100000000000011
+	.dw 0b11001111111100111100001111000011
+	.dw 0b11000000000000110011111111111100
+	.dw 0b00111111111111001111111111111111
+	.dw 0b11110011110011111111111111111111
+	.dw 0b11110000000011111111110000111111
+	.dw 0b11111111111111110011111111111100
+	.dw 0b00111100111100001111111111111100
+	.dw 0b11111111111111001111111111111100
+	.dw 0b00111111111100000000111111000000
+	.dw 0b00000011000000000000000000000000
+	.dw 0b00000011000000000000111111000000
+	.dw 0b00111111111100001111111111111100
+	.dw 0b00111111111100000000111111000000
+	.dw 0b00000011000000000000000000000000
+	.dw 0b00001111110000000011111111110000
+	.dw 0b00001111110000001111111111111100
+	.dw 0b11111111111111001111001100111100
+	.dw 0b00000011000000000000111111000000
+	.dw 0b00000011000000000000001100000000
+	.dw 0b00001111110000000011111111110000
+	.dw 0b11111111111111000011111111110000
+	.dw 0b00000011000000000000111111000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000011110000000000111111110000
+	.dw 0b00001111111100000000001111000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11111111111111111111111111111111
+	.dw 0b11111100001111111111000000001111
+	.dw 0b11110000000011111111110000111111
+	.dw 0b11111111111111111111111111111111
+	.dw 0b00000000000000000000111111110000
+	.dw 0b00111100001111000011000000001100
+	.dw 0b00110000000011000011110000111100
+	.dw 0b00001111111100000000000000000000
+	.dw 0b11111111111111111111000000001111
+	.dw 0b11000011110000111100111111110011
+	.dw 0b11001111111100111100001111000011
+	.dw 0b11110000000011111111111111111111
+	.dw 0b00000000111111110000000000111111
+	.dw 0b00000000111111110011111111110011
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111100000011111111000000
+	.dw 0b00001111111100000011110000111100
+	.dw 0b00111100001111000011110000111100
+	.dw 0b00001111111100000000001111000000
+	.dw 0b00111111111111000000001111000000
+	.dw 0b00001111111111110000111100001111
+	.dw 0b00001111111111110000111100000000
+	.dw 0b00001111000000000011111100000000
+	.dw 0b11111111000000001111110000000000
+	.dw 0b00111111111111110011110000001111
+	.dw 0b00111111111111110011110000001111
+	.dw 0b00111100000011110011110000111111
+	.dw 0b11111100001111001111000000000000
+	.dw 0b00000011110000001111001111001111
+	.dw 0b00001111111100001111110000111111
+	.dw 0b11111100001111110000111111110000
+	.dw 0b11110011110011110000001111000000
+	.dw 0b11000000000000001111110000000000
+	.dw 0b11111111110000001111111111111100
+	.dw 0b11111111110000001111110000000000
+	.dw 0b11000000000000000000000000000000
+	.dw 0b00000000000011000000000011111100
+	.dw 0b00001111111111001111111111111100
+	.dw 0b00001111111111000000000011111100
+	.dw 0b00000000000011000000000000000000
+	.dw 0b00000011110000000000111111110000
+	.dw 0b00111111111111000000001111000000
+	.dw 0b00000011110000000011111111111100
+	.dw 0b00001111111100000000001111000000
+	.dw 0b00111100001111000011110000111100
+	.dw 0b00111100001111000011110000111100
+	.dw 0b00111100001111000000000000000000
+	.dw 0b00111100001111000000000000000000
+	.dw 0b00111111111111111111001111001111
+	.dw 0b11110011110011110011111111001111
+	.dw 0b00000011110011110000001111001111
+	.dw 0b00000011110011110000000000000000
+	.dw 0b00001111111111000011110000001111
+	.dw 0b00001111110000000011110011110000
+	.dw 0b00111100111100000000111111000000
+	.dw 0b11110000111100000011111111000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111111111111000011111111111100
+	.dw 0b00111111111111000000000000000000
+	.dw 0b00000011110000000000111111110000
+	.dw 0b00111111111111000000001111000000
+	.dw 0b00111111111111000000111111110000
+	.dw 0b00000011110000001111111111111111
+	.dw 0b00000011110000000000111111110000
+	.dw 0b00111111111111000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000000000000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00111111111111000000111111110000
+	.dw 0b00000011110000000000000000000000
+	.dw 0b00000000000000000000001111000000
+	.dw 0b00000000111100001111111111111100
+	.dw 0b00000000111100000000001111000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000111100000000
+	.dw 0b00111100000000001111111111111100
+	.dw 0b00111100000000000000111100000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11110000000000001111000000000000
+	.dw 0b11110000000000001111111111111100
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000110000110000
+	.dw 0b00111100001111001111111111111111
+	.dw 0b00111100001111000000110000110000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000001111000000
+	.dw 0b00001111111100000011111111111100
+	.dw 0b11111111111111111111111111111111
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000001111111111111111
+	.dw 0b11111111111111110011111111111100
+	.dw 0b00001111111100000000001111000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00001111000000000011111111000000
+	.dw 0b00111111110000000000111100000000
+	.dw 0b00001111000000000000000000000000
+	.dw 0b00001111000000000000000000000000
+	.dw 0b00111100111100000011110011110000
+	.dw 0b00111100111100000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111100111100000011110011110000
+	.dw 0b11111111111111000011110011110000
+	.dw 0b11111111111111000011110011110000
+	.dw 0b00111100111100000000000000000000
+	.dw 0b00001111000000000011111111110000
+	.dw 0b11110000000000000011111111000000
+	.dw 0b00000000111100001111111111000000
+	.dw 0b00001111000000000000000000000000
+	.dw 0b00000000000000001111000000111100
+	.dw 0b11110000111100000000001111000000
+	.dw 0b00001111000000000011110000111100
+	.dw 0b11110000001111000000000000000000
+	.dw 0b00001111110000000011110011110000
+	.dw 0b00001111110000000011111100111100
+	.dw 0b11110011111100001111000011110000
+	.dw 0b00111111001111000000000000000000
+	.dw 0b00111100000000000011110000000000
+	.dw 0b11110000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000011110000000000111100000000
+	.dw 0b00111100000000000011110000000000
+	.dw 0b00111100000000000000111100000000
+	.dw 0b00000011110000000000000000000000
+	.dw 0b00111100000000000000111100000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000111100000000
+	.dw 0b00111100000000000000000000000000
+	.dw 0b00000000000000000011110000111100
+	.dw 0b00001111111100001111111111111111
+	.dw 0b00001111111100000011110000111100
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000111100000000
+	.dw 0b00001111000000001111111111110000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000111100000000
+	.dw 0b00001111000000000011110000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000001111111111110000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000111100000000
+	.dw 0b00001111000000000000000000000000
+	.dw 0b00000000001111000000000011110000
+	.dw 0b00000011110000000000111100000000
+	.dw 0b00111100000000001111000000000000
+	.dw 0b11000000000000000000000000000000
+	.dw 0b00111111111100001111000000111100
+	.dw 0b11110000111111001111001111111100
+	.dw 0b11111111001111001111110000111100
+	.dw 0b00111111111100000000000000000000
+	.dw 0b00001111000000000011111100000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b11111111111100000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b00000000111100000000111111000000
+	.dw 0b00111100000000001111000011110000
+	.dw 0b11111111111100000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b00000000111100000000111111000000
+	.dw 0b00000000111100001111000011110000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00000011111100000000111111110000
+	.dw 0b00111100111100001111000011110000
+	.dw 0b11111111111111000000000011110000
+	.dw 0b00000011111111000000000000000000
+	.dw 0b11111111111100001111000000000000
+	.dw 0b11111111110000000000000011110000
+	.dw 0b00000000111100001111000011110000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00001111110000000011110000000000
+	.dw 0b11110000000000001111111111000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b11111111111100001111000011110000
+	.dw 0b00000000111100000000001111000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00001111000000000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b11110000111100000011111111000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b11110000111100000011111111110000
+	.dw 0b00000000111100000000001111000000
+	.dw 0b00111111000000000000000000000000
+	.dw 0b00000000000000000000111100000000
+	.dw 0b00001111000000000000000000000000
+	.dw 0b00000000000000000000111100000000
+	.dw 0b00001111000000000000000000000000
+	.dw 0b00000000000000000000111100000000
+	.dw 0b00001111000000000000000000000000
+	.dw 0b00000000000000000000111100000000
+	.dw 0b00001111000000000011110000000000
+	.dw 0b00000011110000000000111100000000
+	.dw 0b00111100000000001111000000000000
+	.dw 0b00111100000000000000111100000000
+	.dw 0b00000011110000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11111111111100000000000000000000
+	.dw 0b00000000000000001111111111110000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111100000000000000111100000000
+	.dw 0b00000011110000000000000011110000
+	.dw 0b00000011110000000000111100000000
+	.dw 0b00111100000000000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b00000000111100000000001111000000
+	.dw 0b00001111000000000000000000000000
+	.dw 0b00001111000000000000000000000000
+	.dw 0b00111111111100001111000000111100
+	.dw 0b11110011111111001111001111111100
+	.dw 0b11110011111111001111000000000000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00001111000000000011111111000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11111111111100001111000011110000
+	.dw 0b11110000111100000000000000000000
+	.dw 0b11111111111100000011110000111100
+	.dw 0b00111100001111000011111111110000
+	.dw 0b00111100001111000011110000111100
+	.dw 0b11111111111100000000000000000000
+	.dw 0b00001111111100000011110000111100
+	.dw 0b11110000000000001111000000000000
+	.dw 0b11110000000000000011110000111100
+	.dw 0b00001111111100000000000000000000
+	.dw 0b11111111110000000011110011110000
+	.dw 0b00111100001111000011110000111100
+	.dw 0b00111100001111000011110011110000
+	.dw 0b11111111110000000000000000000000
+	.dw 0b11111111111111000011110000001100
+	.dw 0b00111100110000000011111111000000
+	.dw 0b00111100110000000011110000001100
+	.dw 0b11111111111111000000000000000000
+	.dw 0b11111111111111000011110000001100
+	.dw 0b00111100110000000011111111000000
+	.dw 0b00111100110000000011110000000000
+	.dw 0b11111111000000000000000000000000
+	.dw 0b00001111111100000011110000111100
+	.dw 0b11110000000000001111000000000000
+	.dw 0b11110000111111000011110000111100
+	.dw 0b00001111111111000000000000000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111100001111111111110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111100000000000000000000
+	.dw 0b00111111110000000000111100000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00000011111111000000000011110000
+	.dw 0b00000000111100000000000011110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b11111100001111000011110000111100
+	.dw 0b00111100111100000011111111000000
+	.dw 0b00111100111100000011110000111100
+	.dw 0b11111100001111000000000000000000
+	.dw 0b11111111000000000011110000000000
+	.dw 0b00111100000000000011110000000000
+	.dw 0b00111100000011000011110000111100
+	.dw 0b11111111111111000000000000000000
+	.dw 0b11110000001111001111110011111100
+	.dw 0b11111111111111001111111111111100
+	.dw 0b11110011001111001111000000111100
+	.dw 0b11110000001111000000000000000000
+	.dw 0b11110000001111001111110000111100
+	.dw 0b11111111001111001111001111111100
+	.dw 0b11110000111111001111000000111100
+	.dw 0b11110000001111000000000000000000
+	.dw 0b00001111110000000011110011110000
+	.dw 0b11110000001111001111000000111100
+	.dw 0b11110000001111000011110011110000
+	.dw 0b00001111110000000000000000000000
+	.dw 0b11111111111100000011110000111100
+	.dw 0b00111100001111000011111111110000
+	.dw 0b00111100000000000011110000000000
+	.dw 0b11111111000000000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110011111100000011111111000000
+	.dw 0b00000011111100000000000000000000
+	.dw 0b11111111111100000011110000111100
+	.dw 0b00111100001111000011111111110000
+	.dw 0b00111100111100000011110000111100
+	.dw 0b11111100001111000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b00111100000000000000111100000000
+	.dw 0b00000011110000001111000011110000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b11111111111100001100111100110000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11111111111100000000000000000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111100000011111111000000
+	.dw 0b00001111000000000000000000000000
+	.dw 0b11110000001111001111000000111100
+	.dw 0b11110000001111001111001100111100
+	.dw 0b11111111111111001111110011111100
+	.dw 0b11110000001111000000000000000000
+	.dw 0b11110000001111001111000000111100
+	.dw 0b00111100111100000000111111000000
+	.dw 0b00001111110000000011110011110000
+	.dw 0b11110000001111000000000000000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111100000011111111000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b11111111111111001111000000111100
+	.dw 0b11000000111100000000001111000000
+	.dw 0b00001111000011000011110000111100
+	.dw 0b11111111111111000000000000000000
+	.dw 0b00111111110000000011110000000000
+	.dw 0b00111100000000000011110000000000
+	.dw 0b00111100000000000011110000000000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b11110000000000000011110000000000
+	.dw 0b00001111000000000000001111000000
+	.dw 0b00000000111100000000000000111100
+	.dw 0b00000000000011000000000000000000
+	.dw 0b00111111110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00000011000000000000111111000000
+	.dw 0b00111100111100001111000000111100
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000001111111111111111
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00000011110000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111111110000000000000011110000
+	.dw 0b00111111111100001111000011110000
+	.dw 0b00111111001111000000000000000000
+	.dw 0b11111100000000000011110000000000
+	.dw 0b00111100000000000011111111110000
+	.dw 0b00111100001111000011110000111100
+	.dw 0b11110011111100000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b11110000000000001111000011110000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00000011111100000000000011110000
+	.dw 0b00000000111100000011111111110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111001111000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b11111111111100001111000000000000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00001111110000000011110011110000
+	.dw 0b00111100000000001111111100000000
+	.dw 0b00111100000000000011110000000000
+	.dw 0b11111111000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111111001111001111000011110000
+	.dw 0b11110000111100000011111111110000
+	.dw 0b00000000111100001111111111000000
+	.dw 0b11111100000000000011110000000000
+	.dw 0b00111100111100000011111100111100
+	.dw 0b00111100001111000011110000111100
+	.dw 0b11111100001111000000000000000000
+	.dw 0b00001111000000000000000000000000
+	.dw 0b00111111000000000000111100000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00000000111100000000000000000000
+	.dw 0b00000000111100000000000011110000
+	.dw 0b00000000111100001111000011110000
+	.dw 0b11110000111100000011111111000000
+	.dw 0b11111100000000000011110000000000
+	.dw 0b00111100001111000011110011110000
+	.dw 0b00111111110000000011110011110000
+	.dw 0b11111100001111000000000000000000
+	.dw 0b00111111000000000000111100000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11110000111100001111111111111100
+	.dw 0b11111111111111001111001100111100
+	.dw 0b11110000001111000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11111111110000001111000011110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111100000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11110011111100000011110000111100
+	.dw 0b00111100001111000011111111110000
+	.dw 0b00111100000000001111111100000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111111001111001111000011110000
+	.dw 0b11110000111100000011111111110000
+	.dw 0b00000000111100000000001111111100
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11110011111100000011111100111100
+	.dw 0b00111100001111000011110000000000
+	.dw 0b11111111000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111111111100001111000000000000
+	.dw 0b00111111110000000000000011110000
+	.dw 0b11111111110000000000000000000000
+	.dw 0b00000011000000000000111100000000
+	.dw 0b00111111111100000000111100000000
+	.dw 0b00001111000000000000111100110000
+	.dw 0b00000011110000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111001111000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111100000011111111000000
+	.dw 0b00001111000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11110000001111001111001100111100
+	.dw 0b11111111111111001111111111111100
+	.dw 0b00111100111100000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11110000001111000011110011110000
+	.dw 0b00001111110000000011110011110000
+	.dw 0b11110000001111000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111100000011111111110000
+	.dw 0b00000000111100001111111111000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11111111111100001100001111000000
+	.dw 0b00001111000000000011110000110000
+	.dw 0b11111111111100000000000000000000
+	.dw 0b00000011111100000000111100000000
+	.dw 0b00001111000000001111110000000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00000011111100000000000000000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000000000000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000000000000000
+	.dw 0b11111100000000000000111100000000
+	.dw 0b00001111000000000000001111110000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b11111100000000000000000000000000
+	.dw 0b00111111001111001111001111110000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000001100000000
+	.dw 0b00001111110000000011110011110000
+	.dw 0b11110000001111001111000000111100
+	.dw 0b11111111111111000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b11110000000000001111000011110000
+	.dw 0b00111111110000000000001111000000
+	.dw 0b00000000111100000011111111000000
+	.dw 0b00000000000000001111000011110000
+	.dw 0b00000000000000001111000011110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111111111000000000000000000
+	.dw 0b00000011111100000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b11111111111100001111000000000000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00111111111111001111000000001111
+	.dw 0b00001111111100000000000000111100
+	.dw 0b00001111111111000011110000111100
+	.dw 0b00001111111111110000000000000000
+	.dw 0b11110000111100000000000000000000
+	.dw 0b00111111110000000000000011110000
+	.dw 0b00111111111100001111000011110000
+	.dw 0b00111111111111000000000000000000
+	.dw 0b11111100000000000000000000000000
+	.dw 0b00111111110000000000000011110000
+	.dw 0b00111111111100001111000011110000
+	.dw 0b00111111111111000000000000000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00111111110000000000000011110000
+	.dw 0b00111111111100001111000011110000
+	.dw 0b00111111111111000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111111110000001111000000000000
+	.dw 0b11110000000000000011111111000000
+	.dw 0b00000000111100000000111111000000
+	.dw 0b00111111111111001111000000001111
+	.dw 0b00001111111100000011110000111100
+	.dw 0b00111111111111000011110000000000
+	.dw 0b00001111111100000000000000000000
+	.dw 0b11110000111100000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b11111111111100001111000000000000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b11111100000000000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b11111111111100001111000000000000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b11110000111100000000000000000000
+	.dw 0b00111111000000000000111100000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00111111111100001111000000111100
+	.dw 0b00001111110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00001111111100000000000000000000
+	.dw 0b11111100000000000000000000000000
+	.dw 0b00111111000000000000111100000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b11110000001111000000111111000000
+	.dw 0b00111100111100001111000000111100
+	.dw 0b11111111111111001111000000111100
+	.dw 0b11110000001111000000000000000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00000000000000000011111111000000
+	.dw 0b11110000111100001111111111110000
+	.dw 0b11110000111100000000000000000000
+	.dw 0b00000011111100000000000000000000
+	.dw 0b11111111111100000011110000000000
+	.dw 0b00111111110000000011110000000000
+	.dw 0b11111111111100000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111111111111110000000011110000
+	.dw 0b00111111111111111111000011110000
+	.dw 0b00111111111111110000000000000000
+	.dw 0b00001111111111000011110011110000
+	.dw 0b11110000111100001111111111111100
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111111000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b00000000000000000011111111000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00000000000000001111000011110000
+	.dw 0b00000000000000000011111111000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00000000000000001111110000000000
+	.dw 0b00000000000000000011111111000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b00000000000000001111000011110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111111111000000000000000000
+	.dw 0b00000000000000001111110000000000
+	.dw 0b00000000000000001111000011110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111111111000000000000000000
+	.dw 0b00000000000000001111000011110000
+	.dw 0b00000000000000001111000011110000
+	.dw 0b11110000111100000011111111110000
+	.dw 0b00000000111100001111111111000000
+	.dw 0b11110000000011110000001111000000
+	.dw 0b00001111111100000011110000111100
+	.dw 0b00111100001111000000111111110000
+	.dw 0b00000011110000000000000000000000
+	.dw 0b11110000111100000000000000000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00111111111111001111000000000000
+	.dw 0b11110000000000000011111111111100
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00001111110000000011110011110000
+	.dw 0b00111100001100001111111100000000
+	.dw 0b00111100000000001111110000111100
+	.dw 0b11111111111100000000000000000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111110000001111111111110000
+	.dw 0b00001111000000001111111111110000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b11111111110000001111000011110000
+	.dw 0b11110000111100001111111111001100
+	.dw 0b11110000001111001111000011111111
+	.dw 0b11110000001111001111000000111111
+	.dw 0b00000000111111000000001111001111
+	.dw 0b00000011110000000000111111110000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b11110011110000000011111100000000
+	.dw 0b00000011111100000000000000000000
+	.dw 0b00111111110000000000000011110000
+	.dw 0b00111111111100001111000011110000
+	.dw 0b00111111111111000000000000000000
+	.dw 0b00001111110000000000000000000000
+	.dw 0b00111111000000000000111100000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00000000000000000000001111110000
+	.dw 0b00000000000000000011111111000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00000000000000000000001111110000
+	.dw 0b00000000000000001111000011110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111111111000000000000000000
+	.dw 0b00000000000000001111111111000000
+	.dw 0b00000000000000001111111111000000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111100000000000000000000
+	.dw 0b11111111111100000000000000000000
+	.dw 0b11110000111100001111110011110000
+	.dw 0b11111111111100001111001111110000
+	.dw 0b11110000111100000000000000000000
+	.dw 0b00001111111100000011110011110000
+	.dw 0b00111100111100000000111111111100
+	.dw 0b00000000000000000011111111111100
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00001111110000000011110011110000
+	.dw 0b00111100111100000000111111000000
+	.dw 0b00000000000000000011111111110000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00001111000000000000000000000000
+	.dw 0b00001111000000000011110000000000
+	.dw 0b11110000000000001111000011110000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000001111111111110000
+	.dw 0b11110000000000001111000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000001111111111110000
+	.dw 0b00000000111100000000000011110000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11110000000011111111000000111100
+	.dw 0b11110000111100001111001111111100
+	.dw 0b00001111000011110011110000111100
+	.dw 0b11110000111100000000000011111111
+	.dw 0b11110000000011111111000000111100
+	.dw 0b11110000111100001111001111001111
+	.dw 0b00001111001111110011110011111111
+	.dw 0b11110000111111110000000000001111
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000000000000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000000000000000
+	.dw 0b00000000000000000000111100001111
+	.dw 0b00111100001111001111000011110000
+	.dw 0b00111100001111000000111100001111
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000001111000011110000
+	.dw 0b00111100001111000000111100001111
+	.dw 0b00111100001111001111000011110000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00001100000011001100000011000000
+	.dw 0b00001100000011001100000011000000
+	.dw 0b00001100000011001100000011000000
+	.dw 0b00001100000011001100000011000000
+	.dw 0b00110011001100111100110011001100
+	.dw 0b00110011001100111100110011001100
+	.dw 0b00110011001100111100110011001100
+	.dw 0b00110011001100111100110011001100
+	.dw 0b11110011110011110011111100111111
+	.dw 0b11110011110011111111110011111100
+	.dw 0b11110011110011110011111100111111
+	.dw 0b11110011110011111111110011111100
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b11111111110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b11111111110000000000001111000000
+	.dw 0b11111111110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b11111111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11111111111111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11111111110000000000001111000000
+	.dw 0b11111111110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00001111001111000000111100111100
+	.dw 0b11111111001111000000000000111100
+	.dw 0b11111111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11111111111111000000000000111100
+	.dw 0b11111111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b11111111001111000000000000111100
+	.dw 0b11111111111111000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b11111111111111000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b11111111110000000000001111000000
+	.dw 0b11111111110000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11111111110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011111111110000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b11111111111111110000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11111111111111110000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011111111110000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11111111111111110000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b11111111111111110000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011111111110000001111000000
+	.dw 0b00000011111111110000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111110000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111110000111100000000
+	.dw 0b00001111111111110000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00001111111111110000111100000000
+	.dw 0b00001111001111110000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b11111111001111110000000000000000
+	.dw 0b11111111111111110000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11111111111111110000000000000000
+	.dw 0b11111111001111110000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111110000111100000000
+	.dw 0b00001111001111110000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11111111111111110000000000000000
+	.dw 0b11111111111111110000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00001111001111000000111100111100
+	.dw 0b11111111001111110000000000000000
+	.dw 0b11111111001111110000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00000011110000000000001111000000
+	.dw 0b11111111111111110000000000000000
+	.dw 0b11111111111111110000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b11111111111111110000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11111111111111110000000000000000
+	.dw 0b11111111111111110000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11111111111111110000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111111111110000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011111111110000001111000000
+	.dw 0b00000011111111110000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000011111111110000001111000000
+	.dw 0b00000011111111110000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00001111111111110000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b11111111111111110000111100111100
+	.dw 0b00001111001111000000111100111100
+	.dw 0b00000011110000000000001111000000
+	.dw 0b11111111111111110000001111000000
+	.dw 0b11111111111111110000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b11111111110000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000011111111110000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b11111111111111111111111111111111
+	.dw 0b11111111111111111111111111111111
+	.dw 0b11111111111111111111111111111111
+	.dw 0b11111111111111111111111111111111
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b11111111111111111111111111111111
+	.dw 0b11111111111111111111111111111111
+	.dw 0b11111111000000001111111100000000
+	.dw 0b11111111000000001111111100000000
+	.dw 0b11111111000000001111111100000000
+	.dw 0b11111111000000001111111100000000
+	.dw 0b00000000111111110000000011111111
+	.dw 0b00000000111111110000000011111111
+	.dw 0b00000000111111110000000011111111
+	.dw 0b00000000111111110000000011111111
+	.dw 0b11111111111111111111111111111111
+	.dw 0b11111111111111111111111111111111
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111111001111001111001111110000
+	.dw 0b11110000110000001111001111110000
+	.dw 0b00111111001111000000000000000000
+	.dw 0b00000000000000000011111111000000
+	.dw 0b11110000111100001111111111000000
+	.dw 0b11110000111100001111111111000000
+	.dw 0b11110000000000001111000000000000
+	.dw 0b00000000000000001111111111110000
+	.dw 0b11110000111100001111000000000000
+	.dw 0b11110000000000001111000000000000
+	.dw 0b11110000000000000000000000000000
+	.dw 0b00000000000000001111111111111100
+	.dw 0b00111100111100000011110011110000
+	.dw 0b00111100111100000011110011110000
+	.dw 0b00111100111100000000000000000000
+	.dw 0b11111111111100001111000011110000
+	.dw 0b00111100000000000000111100000000
+	.dw 0b00111100000000001111000011110000
+	.dw 0b11111111111100000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111111111111001111001111000000
+	.dw 0b11110011110000001111001111000000
+	.dw 0b00111111000000000000000000000000
+	.dw 0b00000000000000000011110000111100
+	.dw 0b00111100001111000011110000111100
+	.dw 0b00111100001111000011111111110000
+	.dw 0b00111100000000001111000000000000
+	.dw 0b00000000000000000011111100111100
+	.dw 0b11110011111100000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000000000000000
+	.dw 0b11111111111100000000111100000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b11110000111100000011111111000000
+	.dw 0b00001111000000001111111111110000
+	.dw 0b00001111110000000011110011110000
+	.dw 0b11110000001111001111111111111100
+	.dw 0b11110000001111000011110011110000
+	.dw 0b00001111110000000000000000000000
+	.dw 0b00001111110000000011110011110000
+	.dw 0b11110000001111001111000000111100
+	.dw 0b00111100111100000011110011110000
+	.dw 0b11111100111111000000000000000000
+	.dw 0b00000011111100000000111100000000
+	.dw 0b00000011110000000011111111110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111111111111001111001111001111
+	.dw 0b11110011110011110011111111111100
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000001111000000000011110000
+	.dw 0b00111111111111001111001111001111
+	.dw 0b11110011110011110011111111111100
+	.dw 0b00111100000000001111000000000000
+	.dw 0b00001111110000000011110000000000
+	.dw 0b11110000000000001111111111000000
+	.dw 0b11110000000000000011110000000000
+	.dw 0b00001111110000000000000000000000
+	.dw 0b00111111110000001111000011110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111100001111000011110000
+	.dw 0b11110000111100000000000000000000
+	.dw 0b00000000000000001111111111110000
+	.dw 0b00000000000000001111111111110000
+	.dw 0b00000000000000001111111111110000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b11111111111100000000111100000000
+	.dw 0b00001111000000000000000000000000
+	.dw 0b11111111111100000000000000000000
+	.dw 0b00111100000000000000111100000000
+	.dw 0b00000011110000000000111100000000
+	.dw 0b00111100000000000000000000000000
+	.dw 0b11111111111100000000000000000000
+	.dw 0b00000011110000000000111100000000
+	.dw 0b00111100000000000000111100000000
+	.dw 0b00000011110000000000000000000000
+	.dw 0b11111111111100000000000000000000
+	.dw 0b00000000111111000000001111001111
+	.dw 0b00000011110011110000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000000000001111000000
+	.dw 0b00000011110000001111001111000000
+	.dw 0b11110011110000000011111100000000
+	.dw 0b00001111000000000000111100000000
+	.dw 0b00000000000000001111111111110000
+	.dw 0b00000000000000000000111100000000
+	.dw 0b00001111000000000000000000000000
+	.dw 0b00000000000000000011111100111100
+	.dw 0b11110011111100000000000000000000
+	.dw 0b00111111001111001111001111110000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00001111110000000011110011110000
+	.dw 0b00111100111100000000111111000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000001111000000
+	.dw 0b00000011110000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000011110000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000111111110000000011110000
+	.dw 0b00000000111100000000000011110000
+	.dw 0b11111100111100000011110011110000
+	.dw 0b00001111111100000000001111110000
+	.dw 0b00111111110000000011110011110000
+	.dw 0b00111100111100000011110011110000
+	.dw 0b00111100111100000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00111111000000000000001111000000
+	.dw 0b00001111000000000011110000000000
+	.dw 0b00111111110000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00001111111100000000111111110000
+	.dw 0b00001111111100000000111111110000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
+	.dw 0b00000000000000000000000000000000
 	; RETURN
 	or r0 rbp rsp
 	read 0 rsp rbp
@@ -2188,143 +1567,90 @@ Label_main:
 	sub rsp 1 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 45 rsp
+	sub rsp 4 rsp
 	; ADDROF
-	addr2reg Label_CH376_init r1
+	addr2reg Label_GFX_initVram r1
 	; CALL
 	savpc r12
 	sub rsp 1 rsp
 	write 0 rsp r12
 	jumpr 0 r1
 	; ADDROF
-	addr2reg Label_connectDevice r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
+	addr2reg Label_GFX_copyPaletteTable r1
 	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 10 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_set_addr r1
-	; CALL
-	or r0 5 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 10 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_set_config r1
-	; CALL
-	or r0 1 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 10 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; JUMPZERO
-	or r0 0 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label38
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit163 r5
+	addr2reg Label_DATA_PALETTE_DEFAULT r5
 	; SET
 	; CALL
 	savpc r12
 	sub rsp 1 rsp
 	write 0 rsp r12
 	jumpr 0 r1
-	; LABEL
-Label___shivyc_label38:
 	; ADDROF
-	addr2reg Label_startMidiPlayer r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label39:
-	; JUMPZERO
-	or r0 1 r1
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label40
+	addr2reg Label_GFX_copyPatternTable r1
 	; ADDROF
-	addr2reg Label_toggle_recv r1
+	addr2reg Label_DATA_ASCII_DEFAULT r5
+	; SET
 	; CALL
 	savpc r12
 	sub rsp 1 rsp
 	write 0 rsp r12
 	jumpr 0 r1
 	; ADDROF
-	addr2reg Label_issue_token r1
-	; CALL
-	or r0 89 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; LABEL
-Label___shivyc_label41:
+	addr2reg Label_GFX_printWindowColored r1
+	write -1 rbp r1
 	; ADDROF
-	addr2reg Label_CH376_WaitGetStatus r1
+	addr2reg Label___strlit45 r1
+	; SET
+	; SET
+	write -3 rbp r1
+	; ADDROF
+	addr2reg Label_GFX_WindowPosFromXY r1
 	; CALL
+	or r0 5 r5
+	or r0 2 r4
 	savpc r12
 	sub rsp 1 rsp
 	write 0 rsp r12
 	jumpr 0 r1
-	; NOTEQUALCMP
+	; CALL
+	read -1 rbp r13
+	read -3 rbp r12
+	or r0 r12 r5
+	or r0 5 r4
+	or r0 r1 r3
+	or r0 2 r2
+	savpc r12
+	sub rsp 1 rsp
+	write 0 rsp r12
+	jumpr 0 r13
+	; ADDROF
+	addr2reg Label_GFX_printBGColored r1
+	write -2 rbp r1
+	; ADDROF
+	addr2reg Label___strlit36 r1
+	; SET
+	; SET
+	write -4 rbp r1
+	; ADDROF
+	addr2reg Label_GFX_BackgroundPosFromXY r1
+	; CALL
+	or r0 7 r5
+	or r0 2 r4
+	savpc r12
+	sub rsp 1 rsp
+	write 0 rsp r12
+	jumpr 0 r1
+	; CALL
+	read -2 rbp r13
+	read -4 rbp r12
+	or r0 r12 r5
+	or r0 10 r4
+	or r0 r1 r3
 	or r0 1 r2
-	or r0 r1 r12
-	load32 20 r13
-	beq r13 r12 2
-	jump Label___shivyc_label55
-	or r0 0 r2
-Label___shivyc_label55:
-	; JUMPZERO
-	sub r2 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label42
-	; JUMP
-	jump Label___shivyc_label41
-	; LABEL
-Label___shivyc_label42:
-	; ADDROF
-	addr2reg Label_RD_USB_DATA r1
-	; CALL
 	savpc r12
 	sub rsp 1 rsp
 	write 0 rsp r12
-	jumpr 0 r1
-	; JUMP
-	jump Label___shivyc_label39
-	; LABEL
-Label___shivyc_label40:
+	jumpr 0 r13
 	; RETURN
 	load32 48 r1
 	or r0 rbp rsp
@@ -2337,7 +1663,7 @@ Label_int1:
 	sub rsp 1 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 45 rsp
+	sub rsp 0 rsp
 	; SET
 	load32 4980736 r1
 	; SETAT
@@ -2354,49 +1680,7 @@ Label_int2:
 	sub rsp 1 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 45 rsp
-	; ASMCODE
-	push r1
-	push r2
-	push r3
-	push r4
-	push r5
-	push r8
-	push r10
-	push r11
-	push r12
-	load32 0x80000 r2
-	read 1 r2 r5
-	load32 0xC02628 r1
-	addr2reg MUSICLENS r3
-	add r3 r5 r3
-	read 0 r3 r3
-	load 1 r4
-	write 0 r1 r3
-	write 1 r1 r4
-	add r5 1 r5
-	write 1 r2 r5
-	read 0 r2 r5
-	addr2reg MUSICNOTES r4
-	add r4 r5 r4
-	read 0 r4 r10
-	read 1 r4 r11
-	read 2 r4 r12
-	load32 0xC02732 r8
-	write 0 r8 r10
-	write 0 r8 r11
-	write 0 r8 r12
-	add r5 3 r5
-	write 0 r2 r5
-	pop r12
-	pop r11
-	pop r10
-	pop r8
-	pop r5
-	pop r4
-	pop r3
-	pop r2
-	pop r1
+	sub rsp 0 rsp
 	; RETURN
 	or r0 rbp rsp
 	read 0 rsp rbp
@@ -2408,12 +1692,7 @@ Label_int3:
 	sub rsp 1 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 45 rsp
-	; SET
-	load32 12592686 r1
-	; SETAT
-	load32 45 r12
-	write 0 r1 r12
+	sub rsp 0 rsp
 	; RETURN
 	or r0 rbp rsp
 	read 0 rsp rbp
@@ -2425,7 +1704,7 @@ Label_int4:
 	sub rsp 1 rsp
 	write 0 rsp rbp
 	or r0 rsp rbp
-	sub rsp 45 rsp
+	sub rsp 0 rsp
 	; RETURN
 	or r0 rbp rsp
 	read 0 rsp rbp

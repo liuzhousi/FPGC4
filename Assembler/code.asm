@@ -1,962 +1,526 @@
-; Setup stack and return function before jumping to Main of C program
+; Bootloader. Is stored in ROM.
+; Writes logo to on screen as a form of POST. Initial color is white, and will be changed to blue/green after the bootloader is finished to indicate success.
+; Copies SPI to SDRAM, or copies UART bootloader from ROM to SDRAM, and finally jumps to SDRAM after setting the color of the logo and clearing all registers
+; Because assembler assumes the program is executed from SDRAM, the addresses need to be updated after compilation!
+
 Main:
-    load32 0x700000 rsp     ; initialize stack address
-    addr2reg Return_UART r1 ; get address of return function
-    sub r1 4 r1             ; remove 4 from address, since function return has offset 4
-    write 0 rsp r1          ; write return address on stack
-    jump Label_main         ; jump to main of C program
-                            ; should return to the address we just put on the stack
-    halt                    ; should not get here
 
-; Function that is called after Main of C program has returned
-; Return value should be in R1
-; Send it over UART and halt afterwards
-Return_UART:
-    load32 0xC0262E r2          ; r2 = 0xC0262E | UART tx
-    write 0 r2 r1               ; write r1 over UART
-    halt                        ; halt
+    ; LOGO
+    ; set palette table
+    load32 0xC00400 r1      ; pallette address
+    load 0xFF r2            ; white as primary color, others black
+    write 0 r1 r2
 
-; COMPILED C CODE HERE
+    ; copy pattern table
+    load32 0xC00000 r3      ; r3 = data dest
+    addr2reg LOGOTABLE r2   ; r2 = data source
 
-Label___strlit12:
-	.dw 68 101 108 97 121 32 68 111 110 101 0
-Label___strlit61:
-	.dw 72 101 108 108 111 63 32 73 115 32 105 116 32 109 101 32 121 111 117 39 114 101 32 108 111 111 107 105 110 103 32 102 111 114 63 0
-Label___strlit73:
-	.dw 68 101 108 97 121 32 83 116 97 114 116 101 100 0
-Label___strlit74:
-	.dw 10 0
+    add r3 253 r1           ; r1 = loop end (if r3 matches)
 
-Label_div:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 0 rsp
-	; LOADARG
-	; LOADARG
-	; EQUALCMP
-	or r0 1 r1
-	or r0 r4 r12
-	load32 0 r13
-	bne r13 r12 2
-	jump Label___shivyc_label18
-	or r0 0 r1
-Label___shivyc_label18:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label1
-	; RETURN
-	load32 0 r1
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-	; LABEL
-Label___shivyc_label1:
-	; SET
-	load32 0 r1
-	; LABEL
-Label___shivyc_label2:
-	; GREATEROREQCMP
-	or r0 1 r2
-	or r0 r5 r12
-	or r0 r4 r13
-	bgt r13 r12 2
-	jump Label___shivyc_label19
-	or r0 0 r2
-Label___shivyc_label19:
-	; JUMPZERO
-	sub r2 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label3
-	; SUBTR
-	or r0 r4 r12
-	sub r5 r12 r5
-	; SET
-	; ADD
-	load32 1 r12
-	add r1 r12 r1
-	; SET
-	; JUMP
-	jump Label___shivyc_label2
-	; LABEL
-Label___shivyc_label3:
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_mod:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 0 rsp
-	; LOADARG
-	; LOADARG
-	; EQUALCMP
-	or r0 1 r1
-	or r0 r4 r12
-	load32 0 r13
-	bne r13 r12 2
-	jump Label___shivyc_label20
-	or r0 0 r1
-Label___shivyc_label20:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label4
-	; RETURN
-	or r0 r5 r1
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-	; LABEL
-Label___shivyc_label4:
-	; LABEL
-Label___shivyc_label5:
-	; GREATEROREQCMP
-	or r0 1 r1
-	or r0 r5 r12
-	or r0 r4 r13
-	bgt r13 r12 2
-	jump Label___shivyc_label21
-	or r0 0 r1
-Label___shivyc_label21:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label6
-	; SUBTR
-	or r0 r4 r12
-	sub r5 r12 r5
-	; SET
-	; JUMP
-	jump Label___shivyc_label5
-	; LABEL
-Label___shivyc_label6:
-	; RETURN
-	or r0 r5 r1
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_memcpy:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 0 rsp
-	; LOADARG
-	; LOADARG
-	; LOADARG
-	; SET
-	load32 0 r2
-	; LABEL
-Label___shivyc_label7:
-	; LESSCMP
-	or r0 1 r1
-	or r0 r2 r12
-	or r0 r3 r13
-	bge r12 r13 2
-	jump Label___shivyc_label22
-	or r0 0 r1
-Label___shivyc_label22:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label9
-	; SET
-	or r0 r2 r1
-	; MULT
-	load32 1 r12
-	mult r1 r12 r1
-	; ADD
-	or r0 r4 r12
-	add r1 r12 r1
-	; READAT
-	read 0 r1 r8
-	; SET
-	or r0 r2 r1
-	; MULT
-	load32 1 r12
-	mult r1 r12 r1
-	; ADD
-	or r0 r5 r12
-	add r1 r12 r1
-	; SETAT
-	write 0 r1 r8
-	; LABEL
-Label___shivyc_label8:
-	; SET
-	or r0 r2 r1
-	; ADD
-	load32 1 r12
-	add r2 r12 r2
-	; SET
-	; JUMP
-	jump Label___shivyc_label7
-	; LABEL
-Label___shivyc_label9:
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_uprintc:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 0 rsp
-	; LOADARG
-	; SET
-	load32 12592686 r1
-	; SET
-	; SETAT
-	write 0 r1 r5
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_uprint:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 0 rsp
-	; LOADARG
-	; SET
-	load32 12592686 r3
-	; READAT
-	read 0 r5 r2
-	; SET
-	; LABEL
-Label___shivyc_label10:
-	; SET
-	or r0 r2 r1
-	; NOTEQUALCMP
-	or r0 1 r4
-	or r0 r1 r12
-	load32 0 r13
-	beq r13 r12 2
-	jump Label___shivyc_label23
-	or r0 0 r4
-Label___shivyc_label23:
-	; JUMPZERO
-	sub r4 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label11
-	; SET
-	; SETAT
-	write 0 r3 r2
-	; SET
-	or r0 r5 r1
-	; ADD
-	load32 1 r12
-	add r5 r12 r5
-	; SET
-	; READAT
-	read 0 r5 r2
-	; SET
-	; JUMP
-	jump Label___shivyc_label10
-	; LABEL
-Label___shivyc_label11:
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_uprintln:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 0 rsp
-	; LOADARG
-	; ADDROF
-	addr2reg Label_uprint r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprint r1
-	; ADDROF
-	addr2reg Label___strlit74 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_itoar:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 4 rsp
-	; LOADARG
-	write -1 rbp r5
-	; LOADARG
-	write -2 rbp r4
-	; ADDROF
-	addr2reg Label_mod r1
-	; CALL
-	read -1 rbp r12
-	or r0 r12 r5
-	or r0 10 r4
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -3 rbp r1
-	; SET
-	load32 0 r12
-	write -4 rbp r12
-	; ADDROF
-	addr2reg Label_div r1
-	; CALL
-	read -1 rbp r12
-	or r0 r12 r5
-	or r0 10 r4
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -1 rbp r1
-	; GREATERCMP
-	or r0 1 r1
-	read -1 rbp r12
-	load32 0 r13
-	bge r13 r12 2
-	jump Label___shivyc_label24
-	or r0 0 r1
-Label___shivyc_label24:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label12
-	; ADDROF
-	addr2reg Label_itoar r1
-	; CALL
-	read -1 rbp r12
-	or r0 r12 r5
-	read -2 rbp r12
-	or r0 r12 r4
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADD
-	read -4 rbp r12
-	add r1 r12 r1
-	; SET
-	write -4 rbp r1
-	; LABEL
-Label___shivyc_label12:
-	; ADD
-	read -3 rbp r2
-	add r2 48 r2
-	; SET
-	read -4 rbp r1
-	; ADD
-	read -4 rbp r3
-	add r3 1 r3
-	; SET
-	write -4 rbp r3
-	; SET
-	; MULT
-	load32 1 r12
-	mult r1 r12 r1
-	; ADD
-	read -2 rbp r12
-	add r1 r12 r1
-	; SET
-	; SETAT
-	write 0 r1 r2
-	; RETURN
-	read -4 rbp r12
-	or r0 r12 r1
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_itoa:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 5 rsp
-	; LOADARG
-	; LOADARG
-	write -5 rbp r4
-	; ADDROF
-	addr2reg Label_itoar r1
-	; CALL
-	read -5 rbp r12
-	or r0 r12 r4
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	; SET
-	; MULT
-	load32 1 r12
-	mult r1 r12 r1
-	; ADD
-	read -5 rbp r12
-	add r1 r12 r1
-	; SETAT
-	load32 0 r12
-	write 0 r1 r12
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_itoahr:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 9 rsp
-	; LOADARG
-	write -6 rbp r5
-	; LOADARG
-	write -7 rbp r4
-	; ADDROF
-	addr2reg Label_mod r1
-	; CALL
-	read -6 rbp r12
-	or r0 r12 r5
-	or r0 16 r4
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -8 rbp r1
-	; SET
-	load32 0 r12
-	write -9 rbp r12
-	; ADDROF
-	addr2reg Label_div r1
-	; CALL
-	read -6 rbp r12
-	or r0 r12 r5
-	or r0 16 r4
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	write -6 rbp r1
-	; GREATERCMP
-	or r0 1 r1
-	read -6 rbp r12
-	load32 0 r13
-	bge r13 r12 2
-	jump Label___shivyc_label25
-	or r0 0 r1
-Label___shivyc_label25:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label13
-	; ADDROF
-	addr2reg Label_itoahr r1
-	; CALL
-	read -6 rbp r12
-	or r0 r12 r5
-	read -7 rbp r12
-	or r0 r12 r4
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADD
-	read -9 rbp r12
-	add r1 r12 r1
-	; SET
-	write -9 rbp r1
-	; LABEL
-Label___shivyc_label13:
-	; GREATERCMP
-	or r0 1 r1
-	read -8 rbp r12
-	load32 9 r13
-	bge r13 r12 2
-	jump Label___shivyc_label26
-	or r0 0 r1
-Label___shivyc_label26:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label14
-	; ADD
-	read -8 rbp r2
-	add r2 65 r2
-	; SUBTR
-	load32 10 r12
-	sub r2 r12 r2
-	; SET
-	; JUMP
-	jump Label___shivyc_label15
-	; LABEL
-Label___shivyc_label14:
-	; ADD
-	read -8 rbp r2
-	add r2 48 r2
-	; SET
-	; LABEL
-Label___shivyc_label15:
-	; SET
-	read -9 rbp r1
-	; ADD
-	read -9 rbp r3
-	add r3 1 r3
-	; SET
-	write -9 rbp r3
-	; SET
-	; MULT
-	load32 1 r12
-	mult r1 r12 r1
-	; ADD
-	read -7 rbp r12
-	add r1 r12 r1
-	; SETAT
-	write 0 r1 r2
-	; RETURN
-	read -9 rbp r12
-	or r0 r12 r1
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_itoah:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 10 rsp
-	; LOADARG
-	; LOADARG
-	write -10 rbp r4
-	; MULT
-	or r0 0 r1
-	mult r1 1 r1
-	; ADD
-	read -10 rbp r12
-	add r1 r12 r1
-	; SETAT
-	load32 48 r12
-	write 0 r1 r12
-	; MULT
-	or r0 1 r1
-	mult r1 1 r1
-	; ADD
-	read -10 rbp r12
-	add r1 r12 r1
-	; SETAT
-	load32 120 r12
-	write 0 r1 r12
-	; MULT
-	or r0 2 r1
-	mult r1 1 r1
-	; ADD
-	read -10 rbp r12
-	add r1 r12 r1
-	; SET
-	write -10 rbp r1
-	; ADDROF
-	addr2reg Label_itoahr r1
-	; CALL
-	read -10 rbp r12
-	or r0 r12 r4
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	; SET
-	; MULT
-	load32 1 r12
-	mult r1 r12 r1
-	; ADD
-	read -10 rbp r12
-	add r1 r12 r1
-	; SETAT
-	load32 0 r12
-	write 0 r1 r12
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_delay:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 0 rsp
-	; LOADARG
-	; SET
-	load32 4980736 r3
-	; SETAT
-	load32 0 r12
-	write 0 r3 r12
-	; SET
-	load32 12592678 r1
-	; SETAT
-	write 0 r1 r5
-	; SET
-	load32 12592679 r1
-	; SETAT
-	load32 1 r12
-	write 0 r1 r12
-	; LABEL
-Label___shivyc_label16:
-	; READAT
-	read 0 r3 r2
-	; EQUALCMP
-	or r0 1 r1
-	or r0 r2 r12
-	load32 0 r13
-	bne r13 r12 2
-	jump Label___shivyc_label27
-	or r0 0 r1
-Label___shivyc_label27:
-	; JUMPZERO
-	sub r1 0 r12
-	bne r0 r12 2
-	jump Label___shivyc_label17
-	; JUMP
-	jump Label___shivyc_label16
-	; LABEL
-Label___shivyc_label17:
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_main:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 21 rsp
-	; ADDROF
-	addr2reg Label___strlit61 r5
-	; SET
-	; SET
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; SET
-	load32 1024 r12
-	write -21 rbp r12
-	; ADDROF
-	addr2reg Label_itoa r1
-	; ADDRREL
-	sub rbp 20 r4 ;lea
-	; CALL
-	read -21 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 20 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_itoah r1
-	; ADDRREL
-	sub rbp 20 r4 ;lea
-	; CALL
-	read -21 rbp r12
-	or r0 r12 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDRREL
-	sub rbp 20 r5 ;lea
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit73 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_delay r1
-	; CALL
-	or r0 1000 r5
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; ADDROF
-	addr2reg Label_uprintln r1
-	; ADDROF
-	addr2reg Label___strlit12 r5
-	; SET
-	; CALL
-	savpc r12
-	sub rsp 1 rsp
-	write 0 rsp r12
-	jumpr 0 r1
-	; RETURN
-	load32 48 r1
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_int1:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 20 rsp
-	; SET
-	load32 4980736 r1
-	; SETAT
-	load32 1 r12
-	write 0 r1 r12
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_int2:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 20 rsp
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_int3:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 20 rsp
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-Label_int4:
-	sub rsp 1 rsp
-	write 0 rsp rbp
-	or r0 rsp rbp
-	sub rsp 20 rsp
-	; RETURN
-	or r0 rbp rsp
-	read 0 rsp rbp
-	add rsp 1 rsp
-	read 0 rsp r12
-	add rsp 1 rsp
-	jumpr 4 r12
-; END OF COMPILED C CODE
+    CopyPatternLoop:
+        copy 0 r2 r3        ; copy data to vram
+        add r2 1 r2         ; increase source address
+        add r3 1 r3         ; increase dest address
 
-; Interrupt handlers
-; Has some administration before jumping to Label_int[ID]
-; To prevent interfering with stack of program, they have their own stack
-; at 0x7B0000, where program stack does not reach
-; Also, all registers have to be backed up and restored to hardware stack
-; A return function has to be put on the stack as wel that the C code interrupt handler
-; will jump to when it is done
+        beq r3 r1 2         ; keep looping until all 252 words are copied
+        jump CopyPatternLoop
 
+
+    ; copy window tile table
+    load32 0xC015E4 r3      ; r3 = data dest: window tile address 0xC01420 + position offset
+    addr2reg TILETABLE r2   ; r2 = data source
+
+    load 0 r4               ; r4 = loop counter
+    load 96 r1              ; r1 = loop end
+    load 16 r5              ; r5 = next line counter
+    load 32 r8              ; r8 = shift variable
+
+
+    CopyTileLoop:
+        sub r8 8 r8         ; remove 8 from shift variable
+        read 0 r2 r10       ; read data
+        shiftr r10 r8 r10   ; shift data to right
+        write 0 r3 r10      ; write shifted data to vram
+        bne r0 r8 3         ; if we shifted the last byte
+            add r2 1 r2         ; increase source address
+            load 32 r8          ; set shift variable back
+        add r3 1 r3         ; increase dest address
+        sub r5 1 r5         ; reduce line counter
+        add r4 1 r4         ; increase counter
+
+        bne r5 r0 3
+            load 16 r5
+            add r3 24 r3
+
+        beq r4 r1 2         ; keep looping until all tiles are copied
+        jump CopyTileLoop
+
+
+
+    CopySPI:
+    load32 0xC02630 r1      ; r1 = GPIO address: 0xC02630
+    read 0 r1 r2            ; r2 = GPIO values
+    load 0b00000001 r3      ; r3 = bitmask for GPI[0]
+    and r2 r3 r3            ; r3 = GPI[0]
+
+    ; if GPI[0] is high (currently default because of pullup), then jump to UART bootloader copy function
+    beq r0 r3 2
+        jump CopyUartLoader
+
+    load32 0x800000 r1      ; r1 = address 0 of SPI: 0x800000
+    load 0 r2               ; r2 = address 0 of SDRAM: 0x00, and loop var
+    read 5 r1 r3            ; r3 = last address to copy +1, which is in line 6 of SPI code
+
+    CopyLoop:
+        copy 0 r1 r2            ; copy SPI to SDRAM
+
+        add r1 1 r1             ; incr SPI address 
+        add r2 1 r2             ; incr SDRAM address
+
+        beq r2 r3 2             ; copy is done when SDRAM address == number of lines to copy
+            jump CopyLoop           ; copy is not done yet, copy next address
+    
+    EndBootloader:
+    ; before clearing registers, we change the color of the logo to blue/green-ish to indicate success
+
+    load32 0xC00400 r1      ; pallette address
+    load 0b10010 r2         ; Blue/green as main color, others black
+    write 0 r1 r2
+
+    ; clear registers
+    load 0 r1
+    load 0 r2
+    load 0 r3
+    load 0 r4
+    load 0 r5
+    load 0 r6
+    load 0 r7
+    load 0 r8
+    load 0 r9
+    load 0 r10
+    load 0 r11
+    load 0 r12
+    load 0 r13
+    load 0 r14
+    load 0 r15
+
+    jump 0                  ; bootloader is done, jump to sdram
+
+
+    CopyUartLoader:
+
+        addr2reg UARTBOOTLOADERDATAPART1 r1 ; r1 = (src) address of first part of UART bootloader data in ROM
+        load 0 r2                           ; r2 = (dst) address 0 of SDRAM: 0x00, and loop var
+        load 7 r4                           ; r4 = number of words to copy at the start
+
+        CopyStartLoop:
+            copy 0 r1 r2            ; copy ROM to SDRAM
+
+            add r1 1 r1             ; incr ROM address 
+            add r2 1 r2             ; incr SDRAM address
+
+            beq r2 r4 2             ; copy is done when SDRAM address == number of words to copy at the start
+                jump CopyStartLoop  ; copy is not done yet, copy next address
+
+
+        addr2reg UARTBOOTLOADERDATAPART2 r1 ; r1 = (src) address of second part of UART bootloader data in ROM
+        load32 0x3FDE07 r2          ; r2 = (dst) address 4185607 of SDRAM: 0x3FDE07, and loop var
+        load32 0x3FDE66 r3          ; r3 = r2 + number of words to copy = 0x3FDE07 + 95 = 0x3FDE66
+
+        CopyEndLoop:
+            copy 0 r1 r2            ; copy ROM to SDRAM
+
+            add r1 1 r1             ; incr ROM address 
+            add r2 1 r2             ; incr SDRAM address
+
+            beq r2 r3 2             ; copy is done when SDRAM address == number of lines to copy
+                jump CopyEndLoop    ; copy is not done yet, copy next address
+
+        jump EndBootloader     ; copy is done
+
+
+
+UARTBOOTLOADERDATAPART1:
+.dw 0b10010000000000000000000000001100 ; Jump to constant address 6, first part of of UART bootloader data (to SDRAM 0, 7 words long)
+.dw 0b10010000011111111011110001001000 ; Jump to constant address 4185636
+.dw 0b10010000011111111011110001100010 ; Jump to constant address 4185649
+.dw 0b10010000011111111011110001100100 ; Jump to constant address 4185650
+.dw 0b10010000011111111011110011001010 ; Jump to constant address 4185701
+.dw 0b00000000001111111101111001100110 ; Length of program
+.dw 0b11111111111111111111111111111111 ; Halt
+
+UARTBOOTLOADERDATAPART2:
+.dw 0b01110010011000101110000000000001 ; Set r1 to 0x262E, second part of UART bootloader data (to SDRAM 4185607, 95 words long)
+.dw 0b01110000000011000000000100000001 ; Set highest 16 bits of r1 to 0xC0
+.dw 0b11100000000000000001000100000010 ; Read at address in r1 with offset 1 to r2
+.dw 0b01110000000000000000000000000100 ; Set r4 to 0
+.dw 0b01010000000000000010010011010000 ; If r4 != r13, then jump to offset 2
+.dw 0b00001010100000011000001000000010 ; Compute r2 << 24 and write result to r2
+.dw 0b01110000000000000001000000000100 ; Set r4 to 1
+.dw 0b01010000000000000010010011010000 ; If r4 != r13, then jump to offset 2
+.dw 0b00001010100000010000001000000010 ; Compute r2 << 16 and write result to r2
+.dw 0b01110000000000000010000000000100 ; Set r4 to 2
+.dw 0b01010000000000000010010011010000 ; If r4 != r13, then jump to offset 2
+.dw 0b00001010100000001000001000000010 ; Compute r2 << 8 and write result to r2
+.dw 0b01110000000000000011000000000100 ; Set r4 to 3
+.dw 0b01010000000000000010010011010000 ; If r4 != r13, then jump to offset 2
+.dw 0b00001010100000000000001000000010 ; Compute r2 << 0 and write result to r2
+.dw 0b00001001100000000001110100001101 ; Compute r13 + 1 and write result to r13
+.dw 0b00000001100000000000001011101110 ; Compute r2 + r14 and write result to r14
+.dw 0b01110000000000000100000000000100 ; Set r4 to 4
+.dw 0b01100000000000000010010011010000 ; If r4 == r13, then jump to offset 2
+.dw 0b00010000000000000000000000000000 ; Return from interrupt
+.dw 0b00001011000000011000111000000100 ; Compute r14 >> 24 and write result to r4
+.dw 0b11010000000000000000000101000000 ; Write value in r4 to address in r1 with offset 0
+.dw 0b00001011000000010000111000000100 ; Compute r14 >> 16 and write result to r4
+.dw 0b11010000000000000000000101000000 ; Write value in r4 to address in r1 with offset 0
+.dw 0b00001011000000001000111000000100 ; Compute r14 >> 8 and write result to r4
+.dw 0b11010000000000000000000101000000 ; Write value in r4 to address in r1 with offset 0
+.dw 0b00001011000000000000111000000100 ; Compute r14 >> 0 and write result to r4
+.dw 0b11010000000000000000000101000000 ; Write value in r4 to address in r1 with offset 0
+.dw 0b00010000000000000000000000000000 ; Return from interrupt
+.dw 0b01110000000000000000000000000001 ; Set r1 to 0x0000
+.dw 0b01110000000001000000000100000001 ; Set highest 16 bits of r1 to 0x40
+.dw 0b01110000000000000000000000000010 ; Set r2 to 0
+.dw 0b01110000000000000000000000000011 ; Set r3 to 0
+.dw 0b00000000000000000000001000000101 ; Compute r2 OR r0 and write result to r5
+.dw 0b00000000000000000000000100000110 ; Compute r1 OR r0 and write result to r6
+.dw 0b11000000000000000000011001010000 ; Copy from address in r6 to address in r5 with offset 0
+.dw 0b00001001100000000001010100000101 ; Compute r5 + 1 and write result to r5
+.dw 0b00001001100000000001011000000110 ; Compute r6 + 1 and write result to r6
+.dw 0b00001001100000000001001100000011 ; Compute r3 + 1 and write result to r3
+.dw 0b01100000000000000010001111100000 ; If r3 == r14, then jump to offset 2
+.dw 0b10010000011111111011110001010100 ; Jump to constant address 4185642
+.dw 0b00010000000000000000000000000000 ; Return from interrupt
+.dw 0b00010000000000000000000000000000 ; Return from interrupt
+.dw 0b01110000000000000100000000000001 ; Set r1 to 4
+.dw 0b01100000000000000010110100010000 ; If r13 == r1, then jump to offset 2
+.dw 0b10010000011111111011110000001110 ; Jump to constant address 4185607
+.dw 0b01110010011000101110000000000001 ; Set r1 to 0x262E
+.dw 0b01110000000011000000000100000001 ; Set highest 16 bits of r1 to 0xC0
+.dw 0b11100000000000000001000100000010 ; Read at address in r1 with offset 1 to r2
+.dw 0b01110000000000000000000000000011 ; Set r3 to 0
+.dw 0b01010000000000000010001111000000 ; If r3 != r12, then jump to offset 2
+.dw 0b00001010100000011000001000000010 ; Compute r2 << 24 and write result to r2
+.dw 0b01110000000000000001000000000011 ; Set r3 to 1
+.dw 0b01010000000000000010001111000000 ; If r3 != r12, then jump to offset 2
+.dw 0b00001010100000010000001000000010 ; Compute r2 << 16 and write result to r2
+.dw 0b01110000000000000010000000000011 ; Set r3 to 2
+.dw 0b01010000000000000010001111000000 ; If r3 != r12, then jump to offset 2
+.dw 0b00001010100000001000001000000010 ; Compute r2 << 8 and write result to r2
+.dw 0b01110000000000000011000000000011 ; Set r3 to 3
+.dw 0b01010000000000000010001111000000 ; If r3 != r12, then jump to offset 2
+.dw 0b00001010100000000000001000000010 ; Compute r2 << 0 and write result to r2
+.dw 0b00001001100000000001110000001100 ; Compute r12 + 1 and write result to r12
+.dw 0b00000001100000000000001010101010 ; Compute r2 + r10 and write result to r10
+.dw 0b01110000000000000100000000000011 ; Set r3 to 4
+.dw 0b00110000000000000010110000110000 ; If r12 >= r3, then jump to offset 2
+.dw 0b00010000000000000000000000000000 ; Return from interrupt
+.dw 0b01110000000000000000000000000100 ; Set r4 to 0x0000
+.dw 0b01110000000001000000000100000100 ; Set highest 16 bits of r4 to 0x40
+.dw 0b00000001100000000000101101000100 ; Compute r11 + r4 and write result to r4
+.dw 0b11010000000000000000010010100000 ; Write value in r10 to address in r4 with offset 0
+.dw 0b00001001100000000001101100001011 ; Compute r11 + 1 and write result to r11
+.dw 0b01110000000000000000000000000001 ; Set r1 to 0
+.dw 0b01110000000000000000000000000010 ; Set r2 to 0
+.dw 0b01110000000000000000000000000011 ; Set r3 to 0
+.dw 0b01110000000000000000000000000100 ; Set r4 to 0
+.dw 0b01110000000000000000000000000101 ; Set r5 to 0
+.dw 0b01110000000000000000000000000110 ; Set r6 to 0
+.dw 0b01110000000000000000000000000111 ; Set r7 to 0
+.dw 0b01110000000000000000000000001000 ; Set r8 to 0
+.dw 0b01110000000000000000000000001001 ; Set r9 to 0
+.dw 0b01110000000000000000000000001010 ; Set r10 to 0
+.dw 0b01110000000000000000000000001100 ; Set r12 to 0
+.dw 0b01100000000000000010101111100000 ; If r11 == r14, then jump to offset 2
+.dw 0b00010000000000000000000000000000 ; Return from interrupt
+.dw 0b01110010011000101110000000000001 ; Set r1 to 0x262E
+.dw 0b01110000000011000000000100000001 ; Set highest 16 bits of r1 to 0xC0
+.dw 0b01110000000001100100000000000011 ; Set r3 to 100
+.dw 0b11010000000000000000000100110000 ; Write value in r3 to address in r1 with offset 0
+.dw 0b01110010011000100110000000000001 ; Set r1 to 0x2626
+.dw 0b01110000000011000000000100000001 ; Set highest 16 bits of r1 to 0xC0
+.dw 0b01110000000000000001000000000010 ; Set r2 to 1
+.dw 0b11010000000000000000000100100000 ; Write value in r2 to address in r1 with offset 0
+.dw 0b11010000000000000001000100100000 ; Write value in r2 to address in r1 with offset 1
+.dw 0b00010000000000000000000000000000 ; Return from interrupt
+.dw 0b00010000000000000000000000000000 ; Return from interrupt, end of UART bootloader data
+
+
+TILETABLE:
+.db 0  1  2  3  4  5  0  0  0  0  0  0  0  0  0  0
+.db 6  7  8  9  10 11 12 0  0  0  0  0  0  0  0  0
+.db 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28
+.db 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44
+.db 45 46 47 48 49 50 51 0  0  52 53 54 55 56 0  57
+.db 58 59 60 61 62 63 0  0  0  0  0  0  0  0  0  0
+
+LOGOTABLE: ; 252 words long
+.dw 0 0 0 0 ; tile 0, background, so always empty
+.dw 0b00000000000000000000000000000011
+.dw 0b00000000000000110000000000000000
+.dw 0b00000000110000000000001111110000
+.dw 0b00000000111111000000000000111111 ; tile  1
+.dw 0b00000000000000001100000000000000
+.dw 0b11110000000000001111110000000000
+.dw 0b00111111000011110000110000111111
+.dw 0b00000000111111000000001111111100 ; tile  2
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000011
+.dw 0b11111111000011111111111111000011
+.dw 0b00000011111100000000000011111100 ; tile  3
+.dw 0b00000000000000000011110000000000
+.dw 0b11111100000000001111000000000000
+.dw 0b11000000001111000000000011111100
+.dw 0b00000011111100000000111111000000 ; tile  4
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000011000000000000 ; tile  5
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000011110000
+.dw 0b00000000111111000000000000111111
+.dw 0b00110000000011111111110000000011 ; tile  6
+.dw 0b11110000000011111111110000000000
+.dw 0b00111111000000000000111111000011
+.dw 0b00000011000011110000000000111111
+.dw 0b11000000111111001100001111110000 ; tile  7
+.dw 0b00001111110011110011111100000011
+.dw 0b11111100000000001111110000000000
+.dw 0b11001111000000000000001111000000
+.dw 0b00000000111100000000000000111100 ; tile  8
+.dw 0b00000000001111111100000000001111
+.dw 0b11110000000000110011110000000000
+.dw 0b00001111000000000000001111000000
+.dw 0b00000000111100000000000000111100 ; tile  9
+.dw 0b00001111000000001100000000000011
+.dw 0b11110000000011111111110000111111
+.dw 0b00111111000011000000111111000000
+.dw 0b00000011111100000000000011111100 ; tile  10
+.dw 0b11111100000000001111000000000000
+.dw 0b11000000000000000000000011110000
+.dw 0b00000011111100000000111111000000
+.dw 0b00111111000000000011110000000011 ; tile  00
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b11000000000000001111000000000000 ; tile  12
+.dw 0b00111111000000000000111111000000
+.dw 0b00000011111100000000000011000011
+.dw 0b00000000000011110000000000111111
+.dw 0b00000000111111000000000011110000 ; tile  13
+.dw 0b00001111110000000011111100000000
+.dw 0b11111100000000001111000000000000
+.dw 0b11000000001111110000000000110011
+.dw 0b00000000111111110000001111000000 ; tile  14
+.dw 0b00000000111111110000000011111111
+.dw 0b00000000111111110000000011111111
+.dw 0b00000000111111110000000011111111
+.dw 0b00000000111111110000000011111111 ; tile  15
+.dw 0b11111111111111111111111111111111
+.dw 0b11111111111111111100000000000000
+.dw 0b11000000000000001100000000000000
+.dw 0b11111111111111001111111111111100 ; tile  16
+.dw 0b11111100001111111111110000001111
+.dw 0b11111100000000110000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000 ; tile  17
+.dw 0b00000000000011111100000000111111
+.dw 0b11110000111111001111110000110000
+.dw 0b00111111000000000000111111000000
+.dw 0b00111111111100001111000011110000 ; tile  18
+.dw 0b11000011111111110000001111111111
+.dw 0b00000011111111110000001111111111
+.dw 0b00000011111111110000001111111111
+.dw 0b00000011111111110000001111111111 ; tile  19
+.dw 0b11111111111111001111111111111100
+.dw 0b11111111111111000000000000111111
+.dw 0b00000000001111110000000000111111
+.dw 0b00000000001111110000000000111111 ; tile  20
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000001111000000001111
+.dw 0b11110000000011111111000000001111
+.dw 0b11110000000011111111000000001111 ; tile  21
+.dw 0b00111111111111110011111111111111
+.dw 0b00111111111111111111110000000000
+.dw 0b11111100000000001111110000000000
+.dw 0b11111100000000001111110000000000 ; tile  22
+.dw 0b11111111110000001111111111000000
+.dw 0b11111111110000000000001111111111
+.dw 0b00000011111111110000001111111111
+.dw 0b00000000000000000000000000000000 ; tile  23
+.dw 0b00000000000000110000000000000011
+.dw 0b00000000000000110000000011111111
+.dw 0b00000000111111110000000011111111
+.dw 0b00000000111111110000000011111111 ; tile  24
+.dw 0b11111111111111111111111111111111
+.dw 0b11111111111111111100000000000000
+.dw 0b11000000000000001100000000000000
+.dw 0b11000000000000001100000000000000 ; tile  25
+.dw 0b11111100000000001111110000000000
+.dw 0b11111100000000000011111111110000
+.dw 0b00111111111100000011111111110000
+.dw 0b00000000000000000000000000000000 ; tile  26
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000001111
+.dw 0b00000000000011110000000011111111
+.dw 0b00000000111111000000111111111100 ; tile  27
+.dw 0b00111111110000000011111111000000
+.dw 0b00111111110000001111111111000000
+.dw 0b11111111110000001111111111000000
+.dw 0b00111111110000000011111111000000 ; tile  28
+.dw 0b00000000111100000000000011110000
+.dw 0b00000000111111000000000000111111
+.dw 0b00000000000011110000000011000011
+.dw 0b00000011111100000000111111000000 ; tile  29
+.dw 0b00001111000000000011110000001111
+.dw 0b11110000000011001100000000001111
+.dw 0b11000000001111001111000011110000
+.dw 0b11111111110000000011111100000000 ; tile  30
+.dw 0b00000000111111111100000011111111
+.dw 0b11000000111111111100000011111111
+.dw 0b00000000111111110000000011111111
+.dw 0b00000000111111110000000011111111 ; tile  31
+.dw 0b11111111111111001100000000000000
+.dw 0b11000000000000001100000000000000
+.dw 0b11000000000011111100000000001100
+.dw 0b11000000000011111111000000000000 ; tile  32
+.dw 0b00000000000000110000000011111111
+.dw 0b00000000110011000000000011111100
+.dw 0b11000000000000001100000000000000
+.dw 0b11000000000000111111000000001111 ; tile  33
+.dw 0b11000000111100000000000011110000
+.dw 0b00000011111100000000111111000000
+.dw 0b00111111000000001111110000110000
+.dw 0b11110000111111001100000000111111 ; tile  34
+.dw 0b00000011111111110000001111111111
+.dw 0b00000011111111110000001111111111
+.dw 0b00000011111111110000001111111111
+.dw 0b00000011111111110000001111111111 ; tile  35
+.dw 0b00000000001111111111111111111100
+.dw 0b11111111111111001111111111111100
+.dw 0b11111111111111000000000000000000
+.dw 0b00000000000000000000000000000000 ; tile  36
+.dw 0b11110000000011110000000000001111
+.dw 0b00000000000011110000000000001111
+.dw 0b00000000000011110000000000001111
+.dw 0b00000000000011110000000000001111 ; tile  37
+.dw 0b11111100000000001111110000000000
+.dw 0b11111100000000001111110000000000
+.dw 0b11111100000000001111110000000000
+.dw 0b11111100000000001111110000000000 ; tile  38
+.dw 0b00000000000000001111111111111111
+.dw 0b11111111111111111111111111111111
+.dw 0b11111111111111110000001111111111
+.dw 0b00000011111111110000001111111111 ; tile  39
+.dw 0b00000000111111110000000011111111
+.dw 0b00000000111111110000000011111111
+.dw 0b00000000111111110000000011111111
+.dw 0b00000000111111110000000011111111 ; tile  40
+.dw 0b11000000000000001100000000000000
+.dw 0b11000000000000001100000000000000
+.dw 0b11000000000000001100000000000000
+.dw 0b11000000000000001100000000000000 ; tile  41
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000011111111110000
+.dw 0b00111111111100000011111111110000 ; tile  42
+.dw 0b00001111110000001111111111000000
+.dw 0b11111100000000001111111111111111
+.dw 0b11111111111111111111111111111111
+.dw 0b00000000000000000000000000000000 ; tile  43
+.dw 0b00111111110000000011111111000000
+.dw 0b00111111110000001111111111111111
+.dw 0b11111111111111111111111111111111
+.dw 0b00111111110000000011111111000000 ; tile  44
+.dw 0b00111111000000001111110000000011
+.dw 0b00110000000011110000000000111111
+.dw 0b00000000111111000000000011110000
+.dw 0b00000000000000000000000000000000 ; tile  45
+.dw 0b00001111110000001100001111110000
+.dw 0b11000000111111000000000000111111
+.dw 0b00000011000011110000111111000011
+.dw 0b00111111000000001111110000000000 ; tile  46
+.dw 0b00000000111111110000000011111111
+.dw 0b00000000111111110000000000001111
+.dw 0b11000000000011111111000000111100
+.dw 0b11111100111100000011111111000000 ; tile  47
+.dw 0b11111100000000001100111100000000
+.dw 0b11000011110000000000000011110000
+.dw 0b00000000001111000000000000001111
+.dw 0b00000000000000110000000000001111 ; tile  48
+.dw 0b00111100001111110000111111111100
+.dw 0b00000011111100000000111111000000
+.dw 0b00111111000011001111110000111111
+.dw 0b11110000000011111100000000000011 ; tile  49
+.dw 0b00000000000011110011110000000011
+.dw 0b00111111000000000000111111000000
+.dw 0b00000011111100000000000011110000
+.dw 0b11000000000000001111000000000000 ; tile  50
+.dw 0b11000011111111111111001111111111
+.dw 0b11000011111111110000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000 ; tile  51
+.dw 0b00111111111111110011111111111111
+.dw 0b00111111111111110000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000 ; tile  52
+.dw 0b11111111111111111111111111111111
+.dw 0b11111111111111110000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000 ; tile  53
+.dw 0b00000000000000110000000000000011
+.dw 0b00000000000000110000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000 ; tile  54
+.dw 0b11111111111111111111111111111111
+.dw 0b11111111111111110000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000 ; tile  55
+.dw 0b11111100000000001111110000000000
+.dw 0b11111100000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000 ; tile  56
+.dw 0b00111111110000000011111111000000
+.dw 0b00111111110000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000 ; tile  57
+.dw 0b00000000000000110000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000 ; tile  58
+.dw 0b11110000000011111100000000111111
+.dw 0b00000000111111000000001111110000
+.dw 0b00000011110000000000000000000000
+.dw 0b00000000000000110000000000000011 ; tile  59
+.dw 0b00001111110000000000001111110000
+.dw 0b00000000111111000000110000111111
+.dw 0b00111111000011111111110000000000
+.dw 0b11110000000000001100000000000000 ; tile  60
+.dw 0b00000000001111110000000011111100
+.dw 0b00000011111100001111111111000011
+.dw 0b11111111000011110000000000000011
+.dw 0b00000000000000000000000000000000 ; tile  61
+.dw 0b00001111000000000000111111000000
+.dw 0b00000011111100000000000011111100
+.dw 0b11000000001111001111000000000000
+.dw 0b11111100000000000011110000000000 ; tile  62
+.dw 0b11111100000000000011000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000
+.dw 0b00000000000000000000000000000000 ; tile  63
+
+
+; interrupt handlers are required for assembler, but will be removed in bootloader, since no interrupts are possible during bootloading
 
 Int1:
-    ; backup registers
-    push r1
-    push r2
-    push r3
-    push r4
-    push r5
-    push r6
-    push r7
-    push r8
-    push r9
-    push r10
-    push r11
-    push r12
-    push r13
-    push rbp
-    push rsp
-
-    load32 0x7B0000 rsp     ; initialize stack address
-    addr2reg Return_Interrupt r1 ; get address of return function
-    sub r1 4 r1             ; remove 4 from address, since function return has offset 4
-    write 0 rsp r1          ; write return address on stack
-    jump Label_int1         ; jump to interrupt handler of C program
-                            ; should return to the address we just put on the stack
-    halt                    ; should not get here
-
+    reti
 
 Int2:
-    ; backup registers
-    push r1
-    push r2
-    push r3
-    push r4
-    push r5
-    push r6
-    push r7
-    push r8
-    push r9
-    push r10
-    push r11
-    push r12
-    push r13
-    push rbp
-    push rsp
-
-    load32 0x7B0000 rsp     ; initialize stack address
-    addr2reg Return_Interrupt r1 ; get address of return function
-    sub r1 4 r1             ; remove 4 from address, since function return has offset 4
-    write 0 rsp r1          ; write return address on stack
-    jump Label_int2         ; jump to interrupt handler of C program
-                            ; should return to the address we just put on the stack
-    halt                    ; should not get here
-
+    reti
 
 Int3:
-    ; backup registers
-    push r1
-    push r2
-    push r3
-    push r4
-    push r5
-    push r6
-    push r7
-    push r8
-    push r9
-    push r10
-    push r11
-    push r12
-    push r13
-    push rbp
-    push rsp
-
-    load32 0x7B0000 rsp     ; initialize stack address
-    addr2reg Return_Interrupt r1 ; get address of return function
-    sub r1 4 r1             ; remove 4 from address, since function return has offset 4
-    write 0 rsp r1          ; write return address on stack
-    jump Label_int3         ; jump to interrupt handler of C program
-                            ; should return to the address we just put on the stack
-    halt                    ; should not get here
-
+    reti
 
 Int4:
-    ; backup registers
-    push r1
-    push r2
-    push r3
-    push r4
-    push r5
-    push r6
-    push r7
-    push r8
-    push r9
-    push r10
-    push r11
-    push r12
-    push r13
-    push rbp
-    push rsp
-
-    load32 0x7B0000 rsp     ; initialize stack address
-    addr2reg Return_Interrupt r1 ; get address of return function
-    sub r1 4 r1             ; remove 4 from address, since function return has offset 4
-    write 0 rsp r1          ; write return address on stack
-    jump Label_int4         ; jump to interrupt handler of C program
-                            ; should return to the address we just put on the stack
-    halt                    ; should not get here
-
-
-; Function that is called after any interrupt handler from C has returned
-; Restores all registers and issues RETI instruction to continue from original code
-Return_Interrupt:
-    ; restore registers
-    pop rsp
-    pop rbp
-    pop r13
-    pop r12
-    pop r11
-    pop r10
-    pop r9
-    pop r8
-    pop r7
-    pop r6
-    pop r5
-    pop r4
-    pop r3
-    pop r2
-    pop r1
-
-    reti        ; return from interrrupt
-
-    halt        ; should not get here
-
+    reti

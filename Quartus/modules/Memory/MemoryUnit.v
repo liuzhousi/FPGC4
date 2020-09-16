@@ -91,30 +91,66 @@ module MemoryUnit(
 
     //SDRAMcontroller, SPIreader, vram, and I/O should work on negedge clock
 
-    assign spi_clk = clk;           //run SPI flash at 25MHz
-
     wire [23:0] sr_addr;            //address of spi
     wire        sr_start;           //start of spi
 
     wire [31:0] sr_q;               //q of spi
     wire        sr_initDone;        //initdone of spi
     wire        sr_recvDone;        //recvdone of spi TODO might change this to busy
+    wire        sr_reset;
+
+    //SPIreader
+    wire spi_write;
+    wire io0_out, io1_out, io2_out, io3_out;    //d, q wp, hold
+    wire io0_in,  io1_in,  io2_in,  io3_in;     //d, q wp, hold
+
+    //SPI3
+    wire spi3_clk;
+    wire spi3_mosi;
+
+    reg enableSPI3; //1 to enable SPI3 and disable SPIreader
+
+    wire dRead, qRead, wpRead, holdRead, csRead, writeRead;
+
+    assign spi_clk  = (enableSPI3) ? spi3_clk   : clk;      //run SPI flash at 25MHz when in read mode
+    assign spi_cs   = (enableSPI3) ? GPO[2]     : csRead;   //in SPI3 mode, set CS to GPO[2]
+    assign sr_reset = (enableSPI3) ? 1'b1       : reset;    //reset SPI reader when disabled
+
+    assign dRead        = (enableSPI3) ? spi3_mosi  : io0_out;
+    assign qRead        = (enableSPI3) ? 'bz        : io1_out;
+    assign wpRead       = (enableSPI3) ? 1'b1       : io2_out;
+    assign holdRead     = (enableSPI3) ? 1'b1       : io3_out;
+    assign writeRead    = (enableSPI3) ? 1'b1       : spi_write;
+
+    assign spi_data  = (writeRead) ? dRead : 'bz;
+    assign spi_q     = (writeRead) ? qRead : 'bz;
+    assign spi_wp    = (writeRead) ? wpRead : 'bz;
+    assign spi_hold  = (writeRead) ? holdRead : 'bz;
+
+    assign io0_in  = (~writeRead) ? spi_data : 'bz;
+    assign io1_in  = (~writeRead) ? spi_q    : 'bz;
+    assign io2_in  = (~writeRead) ? spi_wp   : 'bz;
+    assign io3_in  = (~writeRead) ? spi_hold : 'bz;
 
     SPIreader sreader (
     .clk        (spi_clk),
-    .reset      (reset),
-    .d          (spi_data),
-    .q          (spi_q),
-    .wp         (spi_wp),
-    .hold       (spi_hold),
-    .cs         (spi_cs),
+    .reset      (sr_reset),
+    .cs         (csRead),
     .address    (sr_addr),
     .instr      (sr_q),
     .start      (sr_start),
     .initDone   (sr_initDone), 
-    .recvDone   (sr_recvDone)
+    .recvDone   (sr_recvDone),
+    .write      (spi_write),
+    .io0_out    (io0_out),
+    .io1_out    (io1_out),
+    .io2_out    (io2_out),
+    .io3_out    (io3_out),
+    .io0_in     (io0_in),
+    .io1_in     (io1_in),
+    .io2_in     (io2_in),
+    .io3_in     (io3_in)
     );
-
 
     //----SDRAM----
     wire        sd_we;
@@ -300,7 +336,7 @@ SimpleSPI spi(
 .busy       (s_busy)
 );
 
-//----------------SPI2-(GP)-------------------
+//----------------SPI2-(W5500)-------------------
 //SPI I/O
 wire s2_start;
 wire [7:0] s2_in;
@@ -317,6 +353,26 @@ SimpleSPI spi2(
 .miso       (spi2_miso),
 .mosi       (spi2_mosi),
 .busy       (s2_busy)
+);
+
+//----------------SPI3-(Flash)-------------------
+//SPI I/O
+
+wire s3_start;
+wire [7:0] s3_in;
+wire [7:0] s3_out;
+wire s3_busy;
+
+SimpleSPI spi3(
+.clk        (clk),
+.reset      (reset),
+.t_start    (s3_start),
+.d_in       (s3_in),
+.d_out      (s3_out),
+.spi_clk    (spi3_clk),
+.miso       (spi_q),
+.mosi       (spi3_mosi),
+.busy       (s3_busy)
 );
 
 
@@ -369,12 +425,15 @@ assign s_start          = (address == 27'hC02631 && we)                     ? st
 assign s2_in            = (address == 27'hC02734)                           ? data                      : 8'd0;
 assign s2_start         = (address == 27'hC02734 && we)                     ? start                     : 1'b0;
 
+assign s3_in            = (address == 27'hC02735)                           ? data                      : 8'd0;
+assign s3_start         = (address == 27'hC02735 && we)                     ? start                     : 1'b0;
 
 initial
 begin
     busy <= 0;
     q <= 32'd0;
     GPO <= 8'd0;
+    enableSPI3 <= 1'b0;
 end
 
 always @(negedge clk)
@@ -384,6 +443,7 @@ begin
         busy <= 0;
         q <= 32'd0;
         GPO <= 8'd0;
+        enableSPI3 <= 1'b0;
     end
     else 
     begin
@@ -392,17 +452,17 @@ begin
             busy <= 1;
             
         //SDRAM
-        if (busy && sr_recvDone)
-        begin
-            busy <= 0;
-            q <= sr_q;
-        end
-
-        //SPI FLASH
-        if (busy && sd_q_ready)
+        if (busy && sd_q_ready && address < 27'h800000)
         begin
             busy <= 0;
             q <= sd_q;
+        end
+
+        //SPI FLASH
+        if (busy && (sr_recvDone || enableSPI3) && address >= 27'h800000 && address < 27'hC00000)
+        begin
+            busy <= 0;
+            q <= sr_q;
         end
 
         //VRAM32
@@ -520,15 +580,33 @@ begin
             q <= w2_Rx_Byte;
         end
 
-        //SPI2 GP
+        //SPI2 W5500
         if (busy && address == 27'hC02734 && !s2_busy)
         begin
             busy <= 0;
             q <= s2_out;
         end
 
+        //SPI3 Flash
+        if (busy && address == 27'hC02735 && !s3_busy)
+        begin
+            busy <= 0;
+            q <= s3_out;
+        end
+
+        //SPI3 enable
+        if (busy && address == 27'hC02736)
+        begin
+            if (we)
+            begin
+                enableSPI3 <= data[0];
+            end
+            busy <= 0;
+            q <= data[0];
+        end
+
         //Prevent lockups
-        if (busy && address >= 27'hC02735)
+        if (busy && address >= 27'hC02737)
         begin
             busy <= 0;
             q <= 32'd0;

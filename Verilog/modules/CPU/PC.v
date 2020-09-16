@@ -246,6 +246,7 @@ end
 
 initial
 begin
+    int_en          <= 1'b1;
     PCintBackup     <= 27'd0;
     pc_out          <= PCstart;
     ext_int_id      <= 8'd0;

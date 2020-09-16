@@ -16,10 +16,12 @@ Here I keep a list of my latest progress and a TODO list
 - ESP32 APU uses I2S DAC, and now has a bidirectional UART communication port with the MU
 - Added W5500 in hardware and software
 - Reimplemented SPI module. Now uses 6.25MHz SPI clock (verified stable for CH376)
+- Added a way to access SPI flash using a SPI(3) module. Can switch between SPIreader and SPI3 using a memory address
 
 ## Future plans
 These are kinda ordered based on priority
 
+- Port SPI programmer
 - Improve C compiler
 - Improve ESP32Synth
 - Improve and write more libraries
@@ -28,12 +30,9 @@ These are kinda ordered based on priority
 - Write a USB loader program
 - Write a platformer game
 - Create a pattern and palette table generator
-- Add logo to USB loader
 - Change speed of FT232RL to 1Mboud
 - Write an OS (when C is super stable)
 - Add Gameboy printer via Arduino to I/O (Best way to do this currently is using UART3)
-- Change SPI Flash for SDCARD (if yes, then use an SRAM cache for blocks and rewrite bootloader), 
-   or add a way to reprogram the flash directly from the FPGA (better idea)
 
 ## Todo documentation
 - really, I should add more pictures and examples (of video output, simulation, hardware)
@@ -96,10 +95,6 @@ These are kinda ordered based on priority
 
 
 ## TODO soon
-- CH376 Subdirs
-- CH376 Binary files (images)
-- W5500 Set buffer to 10KB
-- W5500 Send image of < 10KB
-- W5500 Headers
+- SPI flash programmer
+- New PCB design
 - Documentation
-- CCompiler Change Int size to 1 word

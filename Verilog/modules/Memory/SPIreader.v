@@ -5,29 +5,17 @@
 */
 module SPIreader (
     input clk, reset,
-    inout d, q, wp, hold, 
     output cs, 
     input [23:0] address, 
     output [31:0] instr, 
     input start, 
-    output reg initDone, recvDone
+    output reg initDone, recvDone,
+    output wire write,
+    output wire io0_out, io1_out, io2_out, io3_out, //d, q wp, hold
+    input wire io0_in, io1_in, io2_in, io3_in       //d, q wp, hold
 );
 
-wire io0_in, io1_in, io2_in, io3_in;         //d, q wp, hold
-wire io0_out, io1_out, io2_out, io3_out;     //d, q wp, hold
 
-wire write;
-
-//tri state
-assign d    = (write) ? io0_out : 'bz;
-assign q    = (write) ? io1_out : 'bz;
-assign wp   = (write) ? io2_out : 'bz;
-assign hold = (write) ? io3_out : 'bz;
-
-assign io0_in  = (~write) ? d    : 'bz;
-assign io1_in  = (~write) ? q    : 'bz;
-assign io2_in  = (~write) ? wp   : 'bz;
-assign io3_in  = (~write) ? hold : 'bz;
 
 wire recvDoneWire;
 assign recvDoneWire = (initDone && phase == 2 && counter == 2);

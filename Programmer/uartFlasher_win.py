@@ -8,6 +8,7 @@ def writeThread(port):
     for line in fileinput.input():
         for c in line:
             port.write(c.encode('utf-8'))
+            sleep(0.0001) # give the FPGC time to process the UART in software
 
 
 testReturnMode = False  # mode where we do not use a serial monitor,

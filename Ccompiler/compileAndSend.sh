@@ -16,10 +16,10 @@ then
             # convert list to binary files and send to FPGC4
 
             # WSL2 version
-            # (cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && powershell.exe "python uartFlasher_win.py")
+            (cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && powershell.exe "python uartFlasher_win.py")
 
             # WSL1 version
-            (cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && python3 uartFlasher.py) #python3 SPIflasher.py
+            # (cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && python3 uartFlasher.py) #python3 SPIflasher.py
     
     else # assemble failed, run again to show error
         echo "Failed to assemble B332 ASM code"

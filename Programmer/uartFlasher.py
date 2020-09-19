@@ -18,6 +18,8 @@ def writeThread(port):
                 exit()
             for c in line:
                 port.write(c.encode('utf-8'))
+                sleep(0.0001) # give the FPGC time to process the UART in software
+
     except:
         exit()
         

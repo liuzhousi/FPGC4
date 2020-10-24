@@ -86,9 +86,9 @@ These are kinda ordered based on priority
 
 
 ## Future improvements (FPGC5?)
+- Seperate set of registers for interrupts, or an instruction that backs up/swaps given registers (bit per register)
 - Better bus protocol between CPU and MU, with no cyles ovehead
-- Maybe byte addressable memory
-- Maybe pipelining
+- Byte addressable memory
 - Maybe DMA controller
 - Maybe some way to use 3D rendering with a frame buffer
 - Optimize SPI to SDRAM by using one (two including size) big sequential read

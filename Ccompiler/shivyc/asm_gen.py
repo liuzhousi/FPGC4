@@ -51,7 +51,6 @@ class ASMCode:
         if init:
             self.data.append(f"\t.dw {init}")
         else:
-            #words = (size // 4)
             line = "\t.dw"
             for i in range(size):
                 line += " 0"
@@ -59,7 +58,7 @@ class ASMCode:
 
     def add_string_literal(self, name, chars):
         """Add a string literal to the ASM code.
-        Each char is stored in its own word"""
+        Each char is stored in its own word, because of easy indexing"""
         self.string_literals.append(f"Label_{name}:")
         data = " ".join(str(char) for char in chars)
         self.string_literals.append(f"\t.dw {data}")
@@ -252,6 +251,7 @@ Return_Interrupt:
     halt        ; should not get here
 """
         returnCode = ASMwrapper1 + fullCode + ASMwrapper2
+        #returnCode = fullCode
         return returnCode
 
 
@@ -442,7 +442,6 @@ class ASMGen:
 
         global_spotmap = self._get_global_spotmap()
 
-        #print("global_spotmap:")
         #pprint.pprint(self.il_code.__dict__)
 
         for func in self.il_code.commands:
@@ -462,24 +461,36 @@ class ASMGen:
         free_values = self._get_free_values(commands, global_spotmap)
         #print("\nfree values", free_values)
 
+        #pprint.pprint(commands)
 
         # If any variable may have its address referenced, assign it a
         # permanent memory spot if it doesn't yet have one.
         move_to_mem = []
-        for command in commands:
-            refs = command.references().values()
-            for line in refs:
-                for v in line:
-                    if v not in refs:
-                        move_to_mem.append(v)
-                        #print(v, " was moved to mem")
 
-        # In addition, move all IL values of strange size to memory because
-        # they won't fit in a register.
-        for v in free_values:
-            if v.ctype.size > 4:
+        moveAllToMem = False
+
+        if moveAllToMem:
+            # test where we move all variables to memory
+            for v in free_values:
                 move_to_mem.append(v)
-                #print(v, " was moved to mem because of size")
+                #print(v, " was moved to mem because of test")
+
+        else:
+            for command in commands:
+                refs = command.references().values()
+                for line in refs:
+                    for v in line:
+                        if v not in refs:
+                            move_to_mem.append(v)
+                            #print(v, " was moved to mem")
+
+            # In addition, move all IL values of strange size to memory because
+            # they won't fit in a register.
+            for v in free_values:
+                if v.ctype.size > 4:
+                    move_to_mem.append(v)
+                    #print(v, " was moved to mem because of size")
+            
 
         # (Not really relevant for B322)
         # Shivy-todo: All non-free IL values are automatically assigned distinct
@@ -505,6 +516,8 @@ class ASMGen:
                 self.offset += v.ctype.size
                 global_spotmap[v] = MemSpot(spots.RBP, -self.offset)
                 free_values.remove(v)
+
+        # pprint.pprint(free_values)
 
         # Perform liveliness analysis
         live_vars = self._get_live_vars(commands, free_values)

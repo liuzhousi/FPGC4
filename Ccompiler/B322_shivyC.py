@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 """
 Main executable for C compiler.
 This compiler is a modified version of the ShivyC compiler (C to x86_64 compiler, written in Python, see https://github.com/ShivamSarodia/ShivyC) by Shivam Sarodia.
@@ -17,6 +18,7 @@ Not all cases are tested yet, since I do not have test cases written for everyth
 The MIT License (MIT)
 
 Copyright (c) 2016 Shivam Sarodia
+Copyright (c) 2020 b4rt-dev
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +37,13 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+"""
+
+"""
+TODO:
+* rename all shivyc to B322C
+* multiple big clean-up and reimplementation passes
+* good tests
 """
 
 import argparse
@@ -60,19 +69,22 @@ def main():
 
     arguments = get_arguments()
 
-    # currently supports compiling one .c file only
+    # supports compiling one .c file only
     if len(arguments.files) != 1:
-        print("Expected one input file, got ", str(len(arguments.files)))
+        print("Expected 1 input file, got", str(len(arguments.files)), "instead")
         return -1
 
+    # compile the file
     asm = process_file(arguments.files[0], arguments)
 
-    # print complete assembly to stdout
+    # print complete assembly to stdout on success
     if asm:
         print(asm)
 
+    # show all errors
     error_collector.show()
 
+    # return with code
     if len(error_collector.issues) == 0:
         sys.exit(0)
     
@@ -147,7 +159,7 @@ def get_arguments():
     desc = """Compile C files into B332 Assembly. Option flags starting
     with `-z` are primarily for debugging or diagnostic purposes."""
     parser = argparse.ArgumentParser(
-        description=desc, usage="shivyc [-h] [options] files...")
+        description=desc, usage="B322C [-h] [options] files...")
 
     # Files to compile
     parser.add_argument("files", metavar="files", nargs="+")
@@ -183,45 +195,6 @@ def write_asm(asm_source, asm_filename):
     except IOError:
         descrip = f"could not write output file '{asm_filename}'"
         error_collector.add(CompilerError(descrip))
-
-
-def find_library_or_err(file):
-    """Search the given library file and return path if found.
-
-    If not found, add an error to the error collector and return None.
-    """
-    path = find_library(file)
-    if not path:
-        err = f"could not find {file}"
-        error_collector.add(CompilerError(err))
-        return None
-    else:
-        return path
-
-
-def find_library(file):
-    """Search the given library file by searching in common directories.
-
-    If found, returns the path. Otherwise, returns None.
-    """
-    search_paths = [pathlib.Path("/usr/local/lib/x86_64-linux-gnu"),
-                    pathlib.Path("/lib/x86_64-linux-gnu"),
-                    pathlib.Path("/usr/lib/x86_64-linux-gnu"),
-                    pathlib.Path("/usr/local/lib64"),
-                    pathlib.Path("/lib64"),
-                    pathlib.Path("/usr/lib64"),
-                    pathlib.Path("/usr/local/lib"),
-                    pathlib.Path("/lib"),
-                    pathlib.Path("/usr/lib"),
-                    pathlib.Path("/usr/x86_64-linux-gnu/lib64"),
-                    pathlib.Path("/usr/x86_64-linux-gnu/lib")]
-
-    for path in search_paths:
-        full = path.joinpath(file)
-        if full.is_file():
-            return str(full)
-    return None
-
 
 if __name__ == "__main__":
     sys.exit(main())

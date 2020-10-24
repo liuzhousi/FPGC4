@@ -2,6 +2,8 @@
 
 import shivyc.ctypes as ctypes
 from shivyc.spots import LiteralSpot
+import shivyc.spots as spots
+import shivyc.asm_cmds as asm_cmds
 
 
 class ILCommand:
@@ -152,3 +154,59 @@ class ILCommand:
         return (isinstance(spot, LiteralSpot) and
                 (int(spot.detail) > ctypes.int_max or
                  int(spot.detail) < ctypes.int_min))
+
+    def move(self, src_spot, dst_spot, asm_code):
+        # Move data from src_spot to dst_spot
+
+        """
+        The following spot type combinations are possible:
+        src     dst
+        -----------
+        lit     reg
+        lit     mem
+        reg     reg
+        reg     mem
+        mem     reg
+        mem     mem
+
+        Note: moving towards a literal spot makes no sense
+        """
+
+        # temporary register spot
+        r12_spot = spots.RegSpot("r12")
+
+        # this stays here until I removed size from all functions
+        size = None
+
+        # lit, reg
+        if isinstance(src_spot, spots.LiteralSpot) and isinstance(dst_spot, spots.RegSpot):
+            # load the literal to the destination reg
+            asm_code.add(asm_cmds.Load(src_spot, dst_spot, size))
+
+        # lit, mem
+        elif isinstance(src_spot, spots.LiteralSpot) and isinstance(dst_spot, spots.MemSpot):
+            # load the literal to r12, then write r12 to dst
+            asm_code.add(asm_cmds.Load(src_spot, r12_spot, size))
+            asm_code.add(asm_cmds.Write(dst_spot, r12_spot, size))
+
+        # reg, reg
+        elif isinstance(src_spot, spots.RegSpot) and isinstance(dst_spot, spots.RegSpot):
+            # move the register content using OR r0
+            asm_code.add(asm_cmds.Mov(dst_spot, src_spot, size))
+
+        # reg, mem
+        elif isinstance(src_spot, spots.RegSpot) and isinstance(dst_spot, spots.MemSpot):
+            # write the src reg to dst
+            asm_code.add(asm_cmds.Write(dst_spot, src_spot, size))
+
+        # mem, reg
+        elif isinstance(src_spot, spots.MemSpot) and isinstance(dst_spot, spots.RegSpot):
+            # read the src to dst reg
+            asm_code.add(asm_cmds.Read(src_spot, dst_spot, size))
+
+        # mem, mem
+        elif isinstance(src_spot, spots.MemSpot) and isinstance(dst_spot, spots.MemSpot):
+            # TODO: add COPY to the assembly list, and use that instead
+            # for now, read src to r12, and write r12 to dst
+            asm_code.add(asm_cmds.Read(src_spot, r12_spot, size))
+            asm_code.add(asm_cmds.Write(dst_spot, r12_spot, size))

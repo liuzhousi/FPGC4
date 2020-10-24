@@ -18,10 +18,10 @@ do
                 # convert list to binary files and send to FPGC4
 
                 # WSL2 version
-                # (cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && powershell.exe "python uartFlasher_win.py testMode; exit \$LASTEXITCODE ")
+                (cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && powershell.exe "python uartFlasher_win.py testMode; exit \$LASTEXITCODE ")
                 
                 # WSL1 version
-                (cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && python3 uartFlasher.py testMode)
+                #(cd ../Programmer && bash compileROM.sh && echo "Sending binary to FPGC4" && python3 uartFlasher.py testMode)
 
                 retVal="$?"
                 echo "$filename exited with code: $retVal"

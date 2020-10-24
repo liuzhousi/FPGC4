@@ -13,145 +13,8 @@ class _ValueCmd(ILCommand):
     This class defines a helper function for moving data from one location
     to another.
     """
-    def move_data(self, target_spot, start_spot, size, reg, asm_code):
-        """Emits code to move data from start to target.
 
-        Given a target spot, start spot, size of data to move,
-        and a register that can be clobbered in the move, this function
-        emits code to move all the data. It is efficient whether the input
-        spots are registers or memory, and in particular this function
-        works even if the input size is not in {1, 2, 4, 8}.
-
-        The given register is used as an intermediary for transferring
-        values between the target_spot and start_spot. It is *always* safe
-        for `reg` to be one of these two, and in fact it is recommended
-        that if either of target_spot or start_spot is a register then
-        `reg` be equal to that.
-        """
-
-        useR13AsTarget = False
-
-        if isinstance(target_spot, MemSpot) and isinstance(target_spot.count, RegSpot):
-            #print(target_spot.__dict__)
-            #r13 := base + offset + (chunk * count.value)
-
-            useR13AsTarget = True
-
-            asm_code.add(asm_cmds.Mov(RegSpot("r13"), target_spot.base, size))
-
-            asm_code.add(asm_cmds.Load(LiteralSpot(target_spot.chunk), RegSpot("r12"), size))
-            asm_code.add(asm_cmds.Mult(RegSpot("r12"), target_spot.count, size))
-
-            asm_code.add(asm_cmds.Add(RegSpot("r13"), RegSpot("r12"), size))
-
-
-            if target_spot.offset >= 0:
-                asm_code.add(asm_cmds.Load(LiteralSpot(target_spot.offset), RegSpot("r12"), size))
-                asm_code.add(asm_cmds.Add(RegSpot("r13"), RegSpot("r12"), size))
-            else:
-                asm_code.add(asm_cmds.Load(LiteralSpot(abs(target_spot.offset)), RegSpot("r12"), size))
-                asm_code.add(asm_cmds.Sub(RegSpot("r13"), RegSpot("r12"), size))
-                
-
-
-        if isinstance(start_spot, LiteralSpot):
-            if isinstance(target_spot, RegSpot):
-                # load
-                asm_code.add(asm_cmds.Load(start_spot, target_spot, size))
-
-            elif isinstance(target_spot, MemSpot):
-                if useR13AsTarget:
-                    # load
-                    asm_code.add(asm_cmds.Load(start_spot, RegSpot("r12"), size))
-                    # write
-                    asm_code.add(asm_cmds.Write(RegSpot("r13"), RegSpot("r12"), size))
-                else:
-                    # load
-                    asm_code.add(asm_cmds.Load(start_spot, RegSpot("r12"), size))
-                    # write
-                    asm_code.add(asm_cmds.Write(target_spot, RegSpot("r12"), size))
-
-            elif isinstance(target_spot, LiteralSpot):
-                print("Target spot is a LiteralSpot?!")
-
-
-        elif isinstance(start_spot, RegSpot):
-            if isinstance(target_spot, RegSpot):
-                # mov (or)
-                asm_code.add(asm_cmds.Mov(target_spot, start_spot, size))
-
-            elif isinstance(target_spot, MemSpot):
-                if useR13AsTarget:
-                    # write
-                    asm_code.add(asm_cmds.Write(RegSpot("r13"), start_spot, size))
-                else:
-                    # write
-                    asm_code.add(asm_cmds.Write(target_spot, start_spot, size))
-
-            elif isinstance(target_spot, LiteralSpot):
-                print("Target spot is a LiteralSpot?!")
-
-
-        elif isinstance(start_spot, MemSpot):
-            if isinstance(target_spot, RegSpot):
-                # read
-                asm_code.add(asm_cmds.Read(start_spot, target_spot, size))
-
-            elif isinstance(target_spot, MemSpot):
-                if useR13AsTarget:
-                    # read
-                    asm_code.add(asm_cmds.Read(start_spot, RegSpot("r12"), size))
-                    # write
-                    asm_code.add(asm_cmds.Write(RegSpot("r13"), RegSpot("r12"), size))
-                else:
-                    # read
-                    asm_code.add(asm_cmds.Read(start_spot, RegSpot("r12"), size))
-                    # write
-                    asm_code.add(asm_cmds.Write(target_spot, RegSpot("r12"), size))
-
-            elif isinstance(target_spot, LiteralSpot):
-                print("Target spot is a LiteralSpot?!")
-
-        """
-        shift = 0
-        while shift < size:
-            reg_size = self._reg_size(size - shift)
-            start_spot = start_spot.shift(shift)
-            target_spot = target_spot.shift(shift)
-
-            # TODO: probably make better cases for memspots/regspots
-
-            if isinstance(start_spot, LiteralSpot):
-                reg = start_spot
-            elif reg != start_spot:
-                #print("AAAA", asm_cmds.Mov(reg, start_spot, reg_size), asm_cmds.Read(start_spot, reg, reg_size))
-                #asm_code.add(asm_cmds.Mov(reg, start_spot, reg_size))
-                if isinstance(start_spot, MemSpot):
-                    asm_code.add(asm_cmds.Read(start_spot, reg, reg_size))
-                else:
-                    asm_code.add(asm_cmds.Mov(reg, start_spot, reg_size))
-
-            if reg != target_spot:
-                #print("BBBB", asm_cmds.Mov(target_spot, reg, reg_size), asm_cmds.Write(target_spot, reg, reg_size))
-                #asm_code.add(asm_cmds.Mov(target_spot, reg, reg_size))
-                if isinstance(reg, LiteralSpot):
-                    #print("a")
-                    asm_code.add(asm_cmds.Load(reg, RegSpot("r12") , reg_size))
-                    asm_code.add(asm_cmds.Write(target_spot, RegSpot("r12"), reg_size))
-                else:
-                    asm_code.add(asm_cmds.Write(target_spot, reg, reg_size))
-
-
-            shift += reg_size
-
-        """
-
-    def _reg_size(self, size):
-        """Return largest register size that does not overfit given size."""
-        reg_sizes = [4, 2, 1]
-        for reg_size in reg_sizes:
-            if size >= reg_size:
-                return reg_size
+    
 
 
 class LoadArg(ILCommand):
@@ -193,10 +56,7 @@ class LoadArg(ILCommand):
         if spotmap[self.output] == self.arg_reg:
             return
         else:
-            if isinstance(spotmap[self.output], spots.MemSpot):
-                asm_code.add(asm_cmds.Write(spotmap[self.output], self.arg_reg, self.output.ctype.size))
-            else:
-                asm_code.add(asm_cmds.Mov(spotmap[self.output], self.arg_reg, self.output.ctype.size))
+            self.move(self.arg_reg, spotmap[self.output], asm_code)
 
 
 class Set(_ValueCmd):
@@ -205,8 +65,6 @@ class Set(_ValueCmd):
     SET converts between all scalar types, so the output and arg IL values
     need not have the same type if both are scalar types. If either one is
     a struct type, the other must be the same struct type.
-
-    TODO: split this up into finer IL commands.
     """
     def __init__(self, output, arg): # noqa D102
         self.output = output
@@ -234,37 +92,8 @@ class Set(_ValueCmd):
         if spotmap[self.arg] == spotmap[self.output]:
             return
 
-        self.move_data(spotmap[self.output], spotmap[self.arg],
-                       self.output.ctype.size, None, asm_code)
+        self.move(spotmap[self.arg], spotmap[self.output], asm_code)
 
-
-
-    def _set_bool(self, spotmap, get_reg, asm_code):
-        """Emit code for SET command if arg is boolean type."""
-        # When any scalar value is converted to _Bool, the result is 0 if the
-        # value compares equal to 0; otherwise, the result is 1
-
-        # If arg_asm is a LITERAL or conflicts with output, move to register.
-        if (isinstance(spotmap[self.arg], LiteralSpot)
-              or spotmap[self.arg] == spotmap[self.output]):
-            r = get_reg([], [spotmap[self.output]])
-            asm_code.add(
-                asm_cmds.Mov(r, spotmap[self.arg], self.arg.ctype.size))
-            arg_spot = r
-        else:
-            arg_spot = spotmap[self.arg]
-
-        label = asm_code.get_label()
-        output_spot = spotmap[self.output]
-
-        zero = LiteralSpot("0")
-        one = LiteralSpot("1")
-
-        asm_code.add(asm_cmds.Mov(output_spot, zero, self.output.ctype.size))
-        asm_code.add(asm_cmds.Cmp(arg_spot, zero, self.arg.ctype.size))
-        asm_code.add(asm_cmds.Je(label))
-        asm_code.add(asm_cmds.Mov(output_spot, one, self.output.ctype.size))
-        asm_code.add(asm_cmds.Label(label))
 
 
 class AddrOf(ILCommand):
@@ -309,7 +138,8 @@ class AddrOf(ILCommand):
             
         # default to use a read instruction over an addr2reg instruction
         else:
-            asm_code.add(asm_cmds.Read(home_spots[self.var], r))
+            #asm_code.add(asm_cmds.Read(home_spots[self.var], r))
+            self.move(home_spots[self.var], r, asm_code)
             #asm_code.add(asm_cmds.Addr2Reg(home_spots[self.var], r))
 
         
@@ -320,7 +150,8 @@ class AddrOf(ILCommand):
 
             #asm_code.add(asm_cmds.Mov(spotmap[self.output], r, size))
 
-            _ValueCmd.move_data(self, spotmap[self.output], r, size, None, asm_code)
+            #_ValueCmd.move_data(self, spotmap[self.output], r, size, None, asm_code)
+            self.move(r, spotmap[self.output], asm_code)
 
 
 class ASMcode(ILCommand):
@@ -374,24 +205,14 @@ class ReadAt(_ValueCmd):
         addr_spot = spotmap[self.addr]
         output_spot = spotmap[self.output]
 
-        if isinstance(addr_spot, RegSpot):
-            addr_r = addr_spot
-        elif isinstance(addr_spot, MemSpot):
-            addr_r = get_reg([], [output_spot])
-            asm_code.add(asm_cmds.Read(addr_spot, addr_r))
-        else:
-            addr_r = get_reg([], [output_spot])
-            asm_code.add(asm_cmds.Mov(addr_r, addr_spot, 1))
+
+        addr_r = get_reg([], [output_spot])
+        self.move(addr_spot, addr_r, asm_code)
 
         indir_spot = MemSpot(addr_r)
-        if isinstance(output_spot, RegSpot):
-            temp_reg = output_spot
-        else:
-            temp_reg = get_reg([], [addr_r])
 
-        self.move_data(output_spot, indir_spot, self.output.ctype.size,
-                       temp_reg, asm_code)
-
+        self.move(indir_spot, output_spot, asm_code)
+        
 
 class SetAt(_ValueCmd):
     """Sets value at given address.
@@ -417,20 +238,12 @@ class SetAt(_ValueCmd):
         addr_spot = spotmap[self.addr]
         value_spot = spotmap[self.val]
 
-        if isinstance(addr_spot, RegSpot):
-            addr_r = addr_spot
-        else:
-            addr_r = get_reg([], [value_spot])
-            asm_code.add(asm_cmds.Mov(addr_r, addr_spot, 1))
+        addr_r = get_reg([], [value_spot])
+        self.move(addr_spot, addr_r, asm_code)
 
         indir_spot = MemSpot(addr_r)
-        if isinstance(value_spot, RegSpot):
-            temp_reg = value_spot
-        else:
-            temp_reg = get_reg([], [addr_r])
 
-        self.move_data(indir_spot, value_spot, self.val.ctype.size,
-                       temp_reg, asm_code)
+        self.move(value_spot, indir_spot, asm_code)
 
 
 class _RelCommand(_ValueCmd):
@@ -467,7 +280,8 @@ class _RelCommand(_ValueCmd):
         self._used_regs.append(r)
 
         count_size = self.count.ctype.size
-        asm_code.add(asm_cmds.Mov(r, spotmap[self.count], count_size))
+        #asm_code.add(asm_cmds.Mov(r, spotmap[self.count], count_size))
+        self.move(spotmap[self.count], r, asm_code)
 
         return spotmap[self.base].shift(self.chunk, r)
 
@@ -532,7 +346,8 @@ class SetRel(_RelCommand):
         reg = self.get_reg_spot(self.val, spotmap, get_reg)
 
         val_size = self.val.ctype.size
-        self.move_data(rel_spot, spotmap[self.val], val_size, reg, asm_code)
+        #self.move_data(rel_spot, spotmap[self.val], val_size, reg, asm_code)
+        self.move(spotmap[self.val], rel_spot, asm_code)
 
 
 class AddrRel(_RelCommand):
@@ -563,7 +378,8 @@ class AddrRel(_RelCommand):
         asm_code.add(asm_cmds.Lea(out_spot, rel_spot))
 
         if out_spot != spotmap[self.output]:
-            asm_code.add(asm_cmds.Mov(spotmap[self.output], out_spot, 1))
+            #asm_code.add(asm_cmds.Mov(spotmap[self.output], out_spot, 1))
+            self.move(out_spot, spotmap[self.output], asm_code)
 
 
 class ReadRel(_RelCommand):
@@ -594,4 +410,5 @@ class ReadRel(_RelCommand):
         reg = self.get_reg_spot(self.output, spotmap, get_reg)
 
         out_size = self.output.ctype.size
-        self.move_data(spotmap[self.output], rel_spot, out_size, reg, asm_code)
+        #self.move_data(spotmap[self.output], rel_spot, out_size, reg, asm_code)
+        self.move(rel_spot, spotmap[self.output], asm_code)

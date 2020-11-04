@@ -172,11 +172,41 @@ class ILCommand:
         Note: moving towards a literal spot makes no sense
         """
 
-        # temporary register spot
-        r12_spot = spots.RegSpot("r12")
-
         # this stays here until I removed size from all functions
         size = None
+
+        # temporary register spot
+        r12_spot = spots.RegSpot("r12")
+        r13_spot = spots.RegSpot("r13")
+        r7_spot = spots.RegSpot("r7") # Warning! also used by read/write cmds
+        
+
+        # handle memspots with counts that are registers
+        # reminder: base + offset + (chunk * count)
+        # TODO: test
+        if isinstance(src_spot, spots.MemSpot):
+            if isinstance(src_spot.count, spots.RegSpot):
+                asm_code.add(asm_cmds.Load(spots.LiteralSpot(src_spot.chunk), r7_spot, size))
+                asm_code.add(asm_cmds.Mult(r7_spot, src_spot.count, size))
+                if src_spot.offset < 0:
+                    asm_code.add(asm_cmds.Sub(r7_spot, spots.LiteralSpot(abs(src_spot.offset)), size))
+                else:
+                    asm_code.add(asm_cmds.Add(r7_spot, spots.LiteralSpot(abs(src_spot.offset)), size))
+                asm_code.add(asm_cmds.Add(r7_spot, spots.LiteralSpot(src_spot.base), size))
+                asm_code.add(asm_cmds.Read(r7_spot, r12_spot, size))
+                src_spot = r12_spot
+
+         
+        orig_dst_spot = dst_spot
+        changed_dst_spot = False       
+            
+        # we write to the correct dst_spot later on
+        if isinstance(dst_spot, spots.MemSpot):
+            if isinstance(dst_spot.count, spots.RegSpot):
+                dst_spot = r13_spot
+                changed_dst_spot = True
+
+        
 
         # lit, reg
         if isinstance(src_spot, spots.LiteralSpot) and isinstance(dst_spot, spots.RegSpot):
@@ -186,6 +216,11 @@ class ILCommand:
         # lit, mem
         elif isinstance(src_spot, spots.LiteralSpot) and isinstance(dst_spot, spots.MemSpot):
             # load the literal to r12, then write r12 to dst
+            
+            # change r12 to r13 if r12 is the destination address
+            tmp_spot = r12_spot
+            if dst_spot == r12_spot:
+                tmp_spot = r13_spot
             asm_code.add(asm_cmds.Load(src_spot, r12_spot, size))
             asm_code.add(asm_cmds.Write(dst_spot, r12_spot, size))
 
@@ -208,5 +243,19 @@ class ILCommand:
         elif isinstance(src_spot, spots.MemSpot) and isinstance(dst_spot, spots.MemSpot):
             # TODO: add COPY to the assembly list, and use that instead
             # for now, read src to r12, and write r12 to dst
+            if dst_spot == r12_spot:
+                print("ERROR: destination is R12. To fix implement copy instruction")
             asm_code.add(asm_cmds.Read(src_spot, r12_spot, size))
             asm_code.add(asm_cmds.Write(dst_spot, r12_spot, size))
+
+
+        # if we changed the dst_spot, write it to the original dst_spot
+        if changed_dst_spot:
+            asm_code.add(asm_cmds.Load(spots.LiteralSpot(orig_dst_spot.chunk), r7_spot, size))
+            asm_code.add(asm_cmds.Mult(r7_spot, orig_dst_spot.count, size))
+            if orig_dst_spot.offset < 0:
+                asm_code.add(asm_cmds.Sub(r7_spot, spots.LiteralSpot(abs(orig_dst_spot.offset)), size))
+            else:
+                asm_code.add(asm_cmds.Add(r7_spot, spots.LiteralSpot(orig_dst_spot.offset), size))
+            asm_code.add(asm_cmds.Add(r7_spot, spots.LiteralSpot(orig_dst_spot.base), size))
+            asm_code.add(asm_cmds.Write(r7_spot, dst_spot, size))

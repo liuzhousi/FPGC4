@@ -347,7 +347,6 @@ class SetRel(_RelCommand):
 
         val_size = self.val.ctype.size
         #self.move_data(rel_spot, spotmap[self.val], val_size, reg, asm_code)
-        #print(rel_spot.__dict__)
         self.move(spotmap[self.val], rel_spot, asm_code)
 
 

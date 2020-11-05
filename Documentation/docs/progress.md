@@ -58,6 +58,7 @@ These are kinda ordered based on priority
 - register/assembly info for c compiler
 - add schematic of pcb
 - add info about w5500 hardware and software
+- note about how to get the USB flash drive to properly formatted: Minitool Partition Wizard, reinitialize MBR, add Fat32 value with cluster? size of 2KB
 
 
 ## Todo C compiler related

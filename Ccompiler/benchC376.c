@@ -6,16 +6,18 @@ char fileBuffer[4096] = 0;
 int TestReadingFile()
 {
 	if (!CH376_init())
-		return 49;
+		return 'a';
+
+	delay(10);
 
 	if (!CH376_connectDrive())
-		return 50;
+		return 'b';
 
 	if (!CH376_sendFileName("/INDEX.HTM"))
-		return 51;
+		return 'c';
 
 	if (!CH376_openFile())
-		return 52;
+		return 'd';
 
 	char buffer[10];
 	int fzise = CH376_getFileSize();
@@ -25,13 +27,13 @@ int TestReadingFile()
 	uprintln(&buffer[0]);
 
 	if (!CH376_setCursor(0))
-		return 53;
+		return 'e';
 
 	if (!CH376_readFile(fileBuffer, fzise))
-		return 54;
+		return 'f';
 
 	if (!CH376_closeFile())
-		return 55;
+		return 'g';
 
 	char *p_fileBuffer = fileBuffer;
 	*(p_fileBuffer+fzise) = 0;

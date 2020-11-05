@@ -183,7 +183,6 @@ class ILCommand:
 
         # handle memspots with counts that are registers
         # reminder: base + offset + (chunk * count)
-        # TODO: test
         if isinstance(src_spot, spots.MemSpot):
             if isinstance(src_spot.count, spots.RegSpot):
                 asm_code.add(asm_cmds.Load(spots.LiteralSpot(src_spot.chunk), r7_spot, size))

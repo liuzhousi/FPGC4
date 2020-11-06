@@ -3,7 +3,7 @@ These are the current specifications of the FPGC4:
 
 - 25MHz CPU clock   
 - 6.63MHz GPU clock
-- 16MiB external SPI flash (QSPI with continous read mode) @ 25MHz. 32bit addresses. Used as ROM
+- 16MiB external SPI flash (QSPI with continous read mode) @ 25MHz. 32bit addresses. Used as ROM, but has option to switch to direct access where it is connected to an SPI bus in the Memory Unit.
 - 32MiB SDRAM @ 25MHz. 32bit addresses. Readable and writable. Used as main memory
 - ~16.4KiB VRAM (SRAM). Combination of 32, 9 and 8bit addresses (three seperate modules)
 - 2KiB internal ROM for the Bootloader. 32bit addresses
@@ -20,10 +20,13 @@ These are the current specifications of the FPGC4:
 - SNES Controller support
 - PS/2 Keyboard support
 - UART and power over USB
-- 8 GPI and 8 GPO pins
+- 8 GPI and 8 GPO pins (will become 8 GPIO pins after new PCB arrives)
 - ESP32 as APU, connected via secondary UART port.
 - 16bit I2S DAC for ESP32 APU
 - USB host with FAT(12/16/32) file system support using a CH376T controller over SPI
 - Ethernet using W5500 over SPI
 - 8 interrupts, of which 4 normal interrupts (currently attached to two OS timers, UART RX and the frameDrawn signal of the FSX2), and 4 extended interrupts (currently attached to the PS/2 controller, a third OS timer and UART2 RX (ESP32 APU))
-- <1W Power draw (without USB device plugged in), so can easily be powered by a single laptop USB port, and no heatsinks/cooling is required (update: now a bit more, since and ESP32 and W5500 has been added. Still no heat of course and easy to power).
+- <1W Power draw (without USB device plugged in), so can easily be powered by a single laptop USB port, and no heatsinks/cooling is required (update: now a bit more, since and ESP32 and W5500 has been added. Still no heat of course and easy to power). 
+
+!!! info "TODO"
+	When new PCB assembled, do final measurements on power

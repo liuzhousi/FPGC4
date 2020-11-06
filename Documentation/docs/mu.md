@@ -1,4 +1,8 @@
 # MU
+
+!!! info "TODO"
+	Make sure this page is up to date and complete
+
 The MU, or memory unit, handles all memory access between the CPU and all the different memories used in the FPGC4. The MU makes use of a memory map (see the Memory map page) so it knows from or to which memory it should read or write. The MU contains logic for reading and/or writing each type of memory that is connected to the MU. The goal of the MU is to have the CPU access all memories without the having to care about the type or timing of the memory, making an easy memory interface for the CPU. This is achieved using a start signal from the CPU to the MU to indicate the start of a memory read or write, and a busy signal from the MU to the CPU which only goes high when the start signal is received, and goes low when the data is read or written. However, there is one cycle of overhead per operation on the MU. This means that for eample writing to VRAM (SRAM) takes two cycles instead of one.
 
 !!! info "TODO"

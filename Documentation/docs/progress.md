@@ -1,14 +1,7 @@
 # Progress
 Here I keep a list of my latest progress and a TODO list
 
-## Big Progress log (truncated to latest progress)
-- Added 4 extension interrupts
-- Changed PS/2 controller to only check for scan codes and send an interrupt
-- Reimplemented programmable timer
-- Moved documentation to mkdocs website
-- Modified an existing C compiler (written in python, outputs x86_64 asm) to output B322 asm
-- Added UART DTR reset like an Arduino
-- C compiler is pretty usable, still some errors here and there with certain code
+## Big Progress log (truncated to latest progress, last entry at the bottom of the list)
 - Libraries for CH376 and GFX added
 - Added support for reading interrupt signal from CH376
 - Ported code from personal Arduino project to read MIDI USB keybaord using CH376
@@ -17,24 +10,34 @@ Here I keep a list of my latest progress and a TODO list
 - Added W5500 in hardware and software
 - Reimplemented SPI module. Now uses 6.25MHz SPI clock (verified stable for CH376)
 - Added a way to access SPI flash using a SPI(3) module. Can switch between SPIreader and SPI3 using a memory address
+- Restructured Ccompiler changes to be less ad hoc and more streamlined
+- Designed and ordered V2 of the I/O Board PCB (4 layer)
 
 ## Future plans
 These are kinda ordered based on priority
 
-- Port SPI programmer
 - Improve C compiler
-- Improve ESP32Synth
+- Assemble PCB V2
+- Adjust and optimize Verilog code for new PCB design
+- Reorder AND TEST! memory map
+- Port SPI programmer
+- Implement true GPIO
 - Improve and write more libraries
-- Enable third UART port
+- Clean up and improve tools/scripts (arguments/functionality)
+- Enable all external interfaces (UART, SPI)
 - Change all static paths in the project to relative ones
+- Improve ESP32Synth (for non-live settings)
 - Write a USB loader program
-- Write a platformer game
 - Create a pattern and palette table generator
+- Write a platformer game
 - Change speed of FT232RL to 1Mboud
 - Write an OS (when C is super stable)
 - Add Gameboy printer via Arduino to I/O (Best way to do this currently is using UART3)
 
 ## Todo documentation
+- gallery page
+- installation/setup page
+- build it yourself page
 - really, I should add more pictures and examples (of video output, simulation, hardware)
 - add DSUB9 pinout
 - add (probably in specs section) the FPGA usage statistics
@@ -69,13 +72,13 @@ These are kinda ordered based on priority
 - [done] add prefix main (as header) with load 0x700000 rsp
 - [done] in asm main prefix header, get return value from label_main and send it over UART
 - [done] add more instructions and test files
-- eventually clean up code, remove size arg
 - [done] add inline assembly for fast code like copying tables
 - [done] add static defines
 - [done] add hex support!!! (and binary while at it) (also in defines)
 - [done] add bitwise | ^ and & operators (look at commit 31180511de0f95cf5dbda0bf98df71901a2fd1ed)
 - [done] print static string in correct asm format (.dw without commas)
 - [done] Fix empty label problem in ASSEMBLER! by adding a nop when detected
+- [done] Rewrite and streamline il_cmds
 - Fix global array indexing using variables in global variables
 - Fix commenting out asm code
 - Remove requirement to add intX() functions
@@ -84,18 +87,18 @@ These are kinda ordered based on priority
 - Add timer 1 interrupt code to assembly wrapper
 - Change or r0 const rx to load const rx
 - Maybe add some hotfix for number not fitting in register by using temp reg
+- eventually clean up code, remove size arg
 
 
 ## Future improvements (FPGC5?)
-- Seperate set of registers for interrupts, or an instruction that backs up/swaps given registers (bit per register)
-- Better bus protocol between CPU and MU, with no cyles ovehead
+- Separate set of registers for interrupts, or an instruction that backs up/swaps given registers (bit per register)
+- Better bus protocol between CPU and MU, with no cycles overhead
 - Byte addressable memory
-- Maybe DMA controller
-- Maybe some way to use 3D rendering with a frame buffer
+- Maybe DMA controller (probably not tho, unless useful for future OS)
+- Maybe some way to use 3D rendering with a frame buffer, though it is already complicated to make use of 2D rendering.
 - Optimize SPI to SDRAM by using one (two including size) big sequential read
 
 
 ## TODO soon
-- SPI flash programmer
-- New PCB design
 - Documentation
+- SPI flash programmer

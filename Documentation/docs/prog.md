@@ -1,4 +1,8 @@
 # Programmer
+
+!!! info "TODO"
+	Update with FPGC4 flash programmer WIP option
+
 The Programmer folder contains all files related to programming the FPGC4 and the SPI flash (ROM). 
 
 The compileROM.sh script converts the code.list file, the file with machine instructions, to the code.bin file. The file size will be a multiple of 4096 bytes, because the SPI flash programmer expects a file of this size. Now based on the last line of compileROM.sh, you can either flash the code.bin to the SPI flash (ROM) using an Arduino with flash.sh, or send the binary over UART to the FPGC4 using uartFlasher.py.

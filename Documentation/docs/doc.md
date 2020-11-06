@@ -1,4 +1,8 @@
 # Documentation
+
+!!! info "TODO"
+	Remove this page eventually
+
 - you need mkdocs (pip3 install mkdocs)
 - also you need mkdocs-material from pip3
 - to work on the documentation:

@@ -1,4 +1,8 @@
 # C Compiler
+
+!!! info "TODO"
+	Update this page!
+
 Using the C compiler it is possible to compile C code to B322 assembly. Using C it is way easier to write code for the FPGC4, although it is less optimized and currently not perfectly stable.
 
 ## How the C Compiler works

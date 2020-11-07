@@ -24,6 +24,7 @@ These are kinda ordered based on priority
 - Implement true GPIO
 - Improve and write more libraries
 - Clean up and improve tools/scripts (arguments/functionality)
+- Clean up unused files in PCB folders
 - Enable all external interfaces (UART, SPI)
 - Change all static paths in the project to relative ones
 - Improve ESP32Synth (for non-live settings)

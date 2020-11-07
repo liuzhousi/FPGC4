@@ -399,6 +399,7 @@ void startMidiPlayer()
 
 int main() 
 {
+    startMidiPlayer();
 
 	CH376_init();
 
@@ -413,8 +414,6 @@ int main()
 
 	if (CH376_DEBUG)
 	    uprintln("------Ready to receive------");
-
-	startMidiPlayer();
 
     // Main loop
     while(1)

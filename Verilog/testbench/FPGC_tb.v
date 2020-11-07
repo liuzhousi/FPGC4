@@ -162,7 +162,7 @@ begin
     clk = 0;
     nreset = 1;
     uart_dtr = 1;
-    GPI = 8'b00000000;
+    GPI = 8'b11111111;
 
     /*
 
@@ -184,7 +184,7 @@ begin
     */
 
     
-    repeat(5000) #20 clk = ~clk; //25MHz
+    repeat(50000) #20 clk = ~clk; //25MHz
 
 
     //repeat(500) #20 clk = ~clk; //25MHz

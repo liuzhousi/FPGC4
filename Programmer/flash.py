@@ -1,5 +1,8 @@
-# WSL1 version. Deamon thread stops automatically when program stops
-# I do not expect this to happen on "real" linux
+#!/usr/bin/env python3
+
+"""
+Interface to program SPI Flash using FPGC4 as programmer
+"""
 
 import serial
 from time import sleep
@@ -7,12 +10,43 @@ import sys
 import fileinput
 import os
 from tqdm import tqdm
+import argparse
+
+BLOCKSIZE = 32768
+PAGESIZE = 256
 
 
-#len(sys.argv)
-#str(sys.argv)
+parser = argparse.ArgumentParser(description='Interface to FPGC4 SPI Flash Programmer')
 
-port = serial.Serial("/dev/ttyUSB0", baudrate=115200, timeout=None)
+parser.add_argument('-d', dest='device', default='/dev/ttyUSB0',
+                    help='serial port to communicate with')
+
+parser.add_argument('-i', dest='input', default='code.bin',
+                    help='file to read from')
+
+parser.add_argument('-o', dest='output', default='dump.bin',
+                    help='file to write to')
+
+parser.add_argument('-l', type=int, dest='length', default=4096,
+                    help='length to read in bytes')
+
+parser.add_argument('-a', type=int, dest='address', default=0,
+                    help='address offset (TBI)')
+
+parser.add_argument('--rate', type=int, dest='baud_rate', default=115200,
+                    help='baud-rate of serial connection')
+
+parser.add_argument('-v', dest='verify', default=None,
+                    help='filename for verification (enables verification)')
+
+parser.add_argument('command', choices=('read', 'write', 'erase', 'id', 'status'),
+                    help='command to execute')
+
+args = parser.parse_args()
+
+
+
+port = serial.Serial(args.device, baudrate=args.baud_rate, timeout=None)
 
 
 
@@ -190,12 +224,12 @@ def writeFlash(inFile, addr = 0, verify = False, outFile = "verify.bin"):
     print("Going to write " + str(size) + " bytes")
 
     # erase before programming
-    blocksToErase = -(-size // 32768) # number of 32KiB blocks to erase
+    blocksToErase = -(-size // BLOCKSIZE) # number of 32KiB blocks to erase
 
     blocksErased = 0
 
     for i in range(blocksToErase):
-        eraseBlock(i*32768)
+        eraseBlock(i*BLOCKSIZE)
         blocksErased+=1
 
     print("Erased " + str(blocksErased) + " blocks")
@@ -213,14 +247,13 @@ def writeFlash(inFile, addr = 0, verify = False, outFile = "verify.bin"):
     print("Writing pages")
 
     # loop in chunks of 256 bytes
-    chunk_size= 256
+    chunk_size= PAGESIZE
     for i in  tqdm(range(0, len(ba), chunk_size)):
         chunk = ba[i:i+chunk_size]
 
         # write chunk
         writePage(chunk, addr)
-        #print('.' , end = '', flush=True)
-        addr = addr + 256
+        addr = addr + PAGESIZE
 
     print()
 
@@ -240,22 +273,15 @@ print()
 print("---FPGC4 FLASH PROGRAMMER---")
 
 
-#readFlash(2048, 0, "dump.bin")
+if args.command == "read":
+    readFlash(args.length, args.address, args.output)
 
-writeFlash("midiSynth.bin", 0, True)
 
+elif args.command == "write":
+    enableVerify = False
+    if args.verify:
+        enableVerify = True
+    writeFlash(args.input, args.address, enableVerify, args.verify)
 
-"""
-
-while True:
-    bytesToRead = port.in_waiting
-    if(bytesToRead > 0):
-        rcv = port.read(1)
-        try:
-            print(rcv.encode('hex'), end = '', flush=True)
-        except:
-            print(rcv, end = '', flush=True)
-    else:
-        sleep(.01) # allow CPU to idle
-
-"""
+else:
+    print("Command not fully implemented yet")

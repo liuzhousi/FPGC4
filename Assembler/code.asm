@@ -18,7 +18,7 @@ Return_UART:
 
 ; COMPILED C CODE HERE
 
-Label___strlit30:
+Label___strlit29:
 	.dw 66 65 67 75 71 82 79 85 78 68 0
 Label___strlit50:
 	.dw 104 97 108 108 111 0
@@ -1644,7 +1644,7 @@ Label_main:
 	addr2reg Label_GFX_printBGColored r1
 	write -2 rbp r1
 	; ADDROF
-	addr2reg Label___strlit30 r1
+	addr2reg Label___strlit29 r1
 	; SET
 	; SET
 	write -4 rbp r1

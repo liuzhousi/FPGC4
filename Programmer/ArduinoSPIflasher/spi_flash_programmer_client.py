@@ -1,4 +1,4 @@
-#!/bin/python3
+#!/usr/bin/env python3
 
 """
 Credits to Nicholas FitzRoy-Dale (https://github.com/nfd/spi-flash-programmer)

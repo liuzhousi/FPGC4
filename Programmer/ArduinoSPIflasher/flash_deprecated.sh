@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# Flash SPI flash using Arduino (deprecated, you can now use the FPGC4 itself)
+
 if [ ! $# -eq 2 ]
   then
     echo "Please give two arguments"

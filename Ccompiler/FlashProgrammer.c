@@ -64,21 +64,27 @@ int SpiTransfer(int dataByte)
 
 #define COMMAND_IDLE                    0
 #define COMMAND_FLASH_READ              114 // 'r'
-#define COMMAND_FLASH_ERASE_SECTOR      101 // 'e'
+#define COMMAND_FLASH_ERASE_BLOCK       101 // 'e'
 #define COMMAND_FLASH_WRITE             119 // 'w'
+#define COMMAND_FILL_BUFFER             98  // 'b'
 
 #define BLOCK_SIZE 32768
 #define SECTOR_SIZE 4096
 #define PAGE_SIZE 256
+#define COMMAND_SIZE 8
 
 
 // the current command the program is busy with
 // if idle, should listen to UART for new command
 int currentCommand = COMMAND_IDLE;
 
-// UART buffer that stores a line until \n
+// UART buffer that stores a single command
 int UARTbufferIndex = 0;
-int UARTbuffer[32] = 0;
+int UARTbuffer[COMMAND_SIZE] = 0;
+
+// Buffer of a page to write
+int pageBufferIndex = 0;
+int pageBuffer[PAGE_SIZE] = 0;
 
 /* Description of commands:
 
@@ -315,12 +321,12 @@ int blockErase(int addr24, int addr16, int addr8)
 // Currently writes only A's to test without having to fill a buffer
 // A 256 byte write buffer should be used in the future
 // Returns 1 on success
-int pageProgram(int address)
+int pageProgram(int addr24, int addr16, int addr8)
 {
 
-    int a24 = address >> 16;
-    int a16 = address >> 8;
-    int a8 = address;
+    int a24 = addr24;
+    int a16 = addr16;
+    int a8 = addr8;
 
     enableWrite();
 
@@ -337,10 +343,11 @@ int pageProgram(int address)
     SpiTransfer(a16);
     SpiTransfer(a8);
 
-    // Send data
+    // Send page
+    int *p_pageBuffer = pageBuffer;
     for (int i = 0; i < 256; i++)
     {
-        SpiTransfer('A');
+        SpiTransfer(*(p_pageBuffer + i));
     }
 
     SpiEndTransfer();
@@ -374,8 +381,7 @@ void processCommand()
     {
         // do nothing
     }
-
-    if (currentCommand == COMMAND_FLASH_READ)
+    else if (currentCommand == COMMAND_FLASH_READ)
     {
 
         int len = UARTbuffer[1] << 16;
@@ -387,14 +393,42 @@ void processCommand()
         int addr8 = UARTbuffer[6];
 
         readAndPrint(len, addr24, addr16, addr8);
-    }
 
-    if (currentCommand == COMMAND_FLASH_ERASE_SECTOR)
+        currentCommand = COMMAND_IDLE;
+        uprintc('r');
+    }
+    else if (currentCommand == COMMAND_FLASH_ERASE_BLOCK)
     {
+        int addr24 = UARTbuffer[4];
+        int addr16 = UARTbuffer[5];
+        int addr8 = UARTbuffer[6];
 
+        blockErase(addr24, addr16, addr8);
+
+        currentCommand = COMMAND_IDLE;
+        uprintc('r');
     }
+    else if (currentCommand == COMMAND_FLASH_WRITE)
+    {
+        int addr24 = UARTbuffer[4];
+        int addr16 = UARTbuffer[5];
+        int addr8 = UARTbuffer[6];
 
-    currentCommand = COMMAND_IDLE;
+        pageProgram(addr24, addr16, addr8);
+
+        currentCommand = COMMAND_IDLE;
+        uprintc('r');
+    }
+    else if (currentCommand == COMMAND_FILL_BUFFER)
+    {
+        // done when full page is received
+        if (pageBufferIndex == PAGE_SIZE)
+        {
+            pageBufferIndex = 0;
+            currentCommand = COMMAND_IDLE;
+            uprintc('r');
+        }
+    }
 }
 
 
@@ -403,52 +437,13 @@ int main()
     
     initSPI();
 
-    /*
-    int i = 0;
-    char buffer[10];
-    i = SpiTransfer(0x00);
-    itoah(i, &buffer[0]);
-    uprint(&buffer[0]);
-    */
-
-
-
-    readDeviceID();
-    uprintln("---");
-
-    
-
-    
-    int status = pageProgram(2048);
-    char buffer[10];
-    itoah(status, &buffer[0]);
-    uprintln(&buffer[0]);
-
-    
-    uprintln("////////////");
-    
-
-    
-    
-    uprintc(64);
-
-    UARTbuffer[0] = 'r';
-    UARTbuffer[1] = 0;
-    UARTbuffer[2] = 32;
-    UARTbuffer[3] = 0;
-    UARTbuffer[4] = 0;
-    UARTbuffer[5] = 0;
-    UARTbuffer[6] = 0;
-    UARTbuffer[7] = '\n';
-
-    currentCommand = COMMAND_FLASH_READ;
+    // Notify that we are ready to recieve commands
+    uprintc('r');
 
     while (1)
     {
         processCommand();
     }
-    
-    
 
     return 48;
 }
@@ -468,7 +463,22 @@ void int2()
 void int3()
 {
     // UART RX interrupt
-    if (currentCommand == COMMAND_IDLE)
+
+    // Fill buffer
+    if (currentCommand == COMMAND_FILL_BUFFER)
+    {
+        // read byte
+        int *p = (int *)0xC0262F;   // address of UART RX
+        int b = *p;                 // read byte from UART
+
+        // write byte to buffer, increase index
+        int *p_pageBuffer = pageBuffer;
+        *(p_pageBuffer + pageBufferIndex) = b;
+        pageBufferIndex++;
+
+    }
+    // Get command
+    else if (currentCommand == COMMAND_IDLE)
     {
         // read byte
         int *p = (int *)0xC0262F;   // address of UART RX
@@ -480,10 +490,16 @@ void int3()
         UARTbufferIndex++;
 
         // execute command when 8 bytes received
-        if (UARTbufferIndex == 8)
+        if (UARTbufferIndex == COMMAND_SIZE)
         {
             currentCommand = *(p_UARTbuffer);
             UARTbufferIndex = 0;
+
+            // notify ready to receive when filling buffer
+            if (currentCommand == COMMAND_FILL_BUFFER)
+            {
+                uprintc('b');
+            }
         }
 
     }

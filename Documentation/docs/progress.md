@@ -22,6 +22,7 @@ These are kinda ordered based on priority
 - Reorder AND TEST! memory map
 - Port SPI programmer
 - Implement true GPIO
+- UART buffer in hardware
 - Improve and write more libraries
 - Clean up and improve tools/scripts (arguments/functionality)
 - Clean up unused files in PCB folders

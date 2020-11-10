@@ -60,5 +60,4 @@ V_TOTAL = 240+3+5+14    = 262 //Vertical total lines
 
 422 pixels * 262 lines * 60 FPS = 6.633840 MHz (6.632653MHz works fine)
 ```
-The PLL responsible for generating the GPU clock is configured to multiply 50MHz by 13, and divide it by 98. This makes the refresh rate 59.989Hz.
-Since a real CRT TV is used, and NTSC is officially 59.94Hz, this may or may not cause some issues. Though I am not sure if 60Hz or 59.94Hz would be better, since I do not use NTSC color encoding. For my relatively new Trinitron, 60Hz is not an issue.
+The PLL responsible for generating the GPU clock is configured to multiply 50MHz by 13, and divide it by 98. This makes the refresh rate 59.989Hz, close enough to the NTSC standard of 59.94Hz.

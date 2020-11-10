@@ -16,6 +16,8 @@ repo_url: https://github.com/b4rt-dev/fpgc4
 
 edit_uri: edit/master/Documentation/docs/
 
+use_directory_urls: False
+
 nav:
   - Introduction: 'index.md'
   - 'specs.md'

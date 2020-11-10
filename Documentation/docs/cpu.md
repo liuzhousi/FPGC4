@@ -56,16 +56,18 @@ The Timer creates four phases for the CPU to execute each instruction:
 4. writeBack: Write result back to register bank or memory and change the program counter
 
 The fetch, readMem and writeBack phase can take multiple clock cycles because of the memory timings.
-Because of the current memory access design, it is fundamentally impossible to pipeline instructions. This was never a goal of this project.
+
+<figure>
+    <img align="center" src="images/timer.png" alt="timer waveform">
+    <figcaption>Timer waveform. Running instructions from SDRAM.</figcaption>
+</figure>
 
 ### Instruction Decoder
-Splits the 32 bits of each instructions.
-
+Splits the 32 bits of each instructions using combinational logic.
 These parts are then connected to various other components of the CPU. 
-The instruction decoder does not use a clock.
 
 ### Register bank
-Contains 16 32 bit registers. Aside from `R0`, all registers are basically GP register. However, to maintain some kind of coding consistency, some registers have a special function assigned (though their hardware implementation are the same).
+Contains 16 registers which are all 32 bit wide. Aside from `R0` which is always zero, all registers are basically GP register. However, to maintain some kind of coding consistency, some registers have a special function assigned (though their hardware implementation are the same).
 
 The 16 32 bit registers have the current functions:
 ``` text
@@ -78,7 +80,7 @@ R3 		|GP			|Arg|retval |GP (3rd arg)
 R4 		|GP			|GP			|GP
 R5 		|GP			|GP			|GP
 R6 		|GP			|GP			|GP
-R7 		|GP			|GP			|GP
+R7 		|GP			|GP			|Temp
 R8 		|GP			|GP			|GP
 R9 		|GP			|GP			|GP
 R10		|GP			|GP			|GP
@@ -88,10 +90,12 @@ R13		|GP			|GP			|Temp
 R14		|GP			|GP			|RBP (base pointer)
 R15		|GP			|Ret Ptr 	|RSP (stack pointer)
 ```
-The register bank has two read ports and one write port. Internally on the FPGA, the registers are implemented as two block RAM modules. One module contains the highest 16 bits, the other the lowest 16 bits. This made it easy to implement the `LOADHI` instruction.
+The register bank has two read ports and one write port. Internally on the FPGA, the registers are implemented as two block RAM modules to increase performance and save space. One module contains the highest 16 bits, the other the lowest 16 bits. This made it easy to implement the `LOADHI` instruction.
+
+Note that the program counter is not part of the register bank, as it is a seperate part of the CPU.
 
 ### Stack
-Stack memory with internal stack pointer. The stack is mostly used in assembly coding for jumping to functions and backing up or restoring registers in interrupt handlers or functions. In combination with the SavPC instruction, one can jump to (and return from) functions.
+Stack memory with internal stack pointer. The stack is mostly used in assembly coding for jumping to functions and backing up or restoring registers in interrupt handlers or functions. In combination with the SavPC instruction, one can easily jump to (and return from) functions in assembly (C uses a software stack).
 
 The pointer wraps around in case of a push when the stack is full or in case of a pop when the stack is empty.
 The stack is 1024 words deep. The stack pointer and stack memory are not accessible by the rest of the CPU. This and the small size make the stack mostly unusable for the C compiler. For this, a software stack implementation using the 32MiB SDRAM main memory and a GP register is used. However, the hardware stack is used to quickly backup and restore all 15 GP registers during an interrupt.
@@ -133,4 +137,4 @@ The CPU has 8 interrupt pins, of which 4 standard interrupts and 4 extended inte
 For the extended interrupts, the PC will still jump to address 2, but will also set an ID. This way the interrupt handler can check which interrupt was triggered. The ID can be read using the `I` (interrupt) flag in the READ instruction.
 
 ### CU
-The CU, or control unit, directs all signals to the corresponding components based on the instruction. This is done using only assign statements, so no clocks. This part can be seen as the heart of the CPU.
+The CU, or control unit, directs all signals to the corresponding components based on the instruction, state and flags. This is done using combinational logic.

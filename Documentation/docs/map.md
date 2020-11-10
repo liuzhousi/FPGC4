@@ -4,7 +4,7 @@ One map is used by the CPU (and implemented by the MU) and the other map is used
 
 ## CPU memory map
 When the CPU gets a `READ`, `WRITE` or `COPY` instruction, it will use the following memory map. This means that, for example, reading from address `0xC02622` will read the button states of the (S)NES controller, and writing to address `0xC0041F` will write an entry in the Palette Table for the GPU.
-The memory map is not really ordered that well (like how Sprite VRAM is between two I/O blocks). This is because I added and removed certain things while developing this project, and 'sorting' it would force me to change addresses in code I already wrote.
+The memory map is not really ordered that well (like how Sprite VRAM is between two I/O blocks). This is because I added and removed certain things while developing this project, and 'sorting' it would force me to change addresses in code I already wrote. However I might adjust it when the new PCB is assembled.
 
 ``` text
 $000000 +------------------------+ 
@@ -94,7 +94,7 @@ $C02732 |                        |
 ```
 
 ## GPU memory map
-This memory map is only used in the GPU. These are basically the content read from the GPU port of VRAM. This map is only internal to the GPU hardware, and should not be used when writing code (use the CPU memory map instead for this!). This map is only useful when making modifications to the GPU in Verilog (for example when adding VGA rendering)
+This memory map is only used in the GPU. These are basically the content read from the GPU port of VRAM. This map is only internal to the GPU hardware, and should/can not be used when writing code (use the CPU memory map instead for this!). This map is only useful when making modifications to the GPU in Verilog.
 ``` text
 VRAM32
 $000  +------------------------+ 

@@ -16,6 +16,7 @@ Here I keep a list of my latest progress and a TODO list
 ## Future plans
 These are kinda ordered based on priority
 
+- Write system test code in C
 - Improve C compiler
 - Assemble PCB V2
 - Adjust and optimize Verilog code for new PCB design
@@ -35,6 +36,17 @@ These are kinda ordered based on priority
 - Change speed of FT232RL to 1Mboud
 - Write an OS (when C is super stable)
 - Add Gameboy printer via Arduino to I/O (Best way to do this currently is using UART3)
+
+## Ideas
+Random ideas that came up at some point. Some might be stupid tho.
+
+- Create very very basic floating point unit, though it might be difficult to implement it into the C compiler
+- Add debouncer to reset button (and button only!)
+- Optimize timings in many Verilog files, since it has been quite some time
+- Also, 'fix' as many warnings as possible
+- Contstrain divided clocks?
+- Write verilog tests for single modules
+- 
 
 ## Todo documentation
 - gallery page

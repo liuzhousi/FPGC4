@@ -184,7 +184,7 @@ begin
     */
 
     
-    repeat(50000) #20 clk = ~clk; //25MHz
+    repeat(5000) #20 clk = ~clk; //25MHz
 
 
     //repeat(500) #20 clk = ~clk; //25MHz

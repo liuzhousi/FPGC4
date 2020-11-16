@@ -12,22 +12,22 @@ Here I keep a list of my latest progress and a TODO list
 - Added a way to access SPI flash using a SPI(3) module. Can switch between SPIreader and SPI3 using a memory address
 - Restructured Ccompiler changes to be less ad hoc and more streamlined
 - Designed and ordered V2 of the I/O Board PCB (4 layer)
+- Created SPI flash programmer, removing the need for an external one
+- Assembled new PCB
+
 
 ## Future plans
 These are kinda ordered based on priority
 
-- Write system test code in C
-- Improve C compiler
-- Assemble PCB V2
-- Adjust and optimize Verilog code for new PCB design
 - Reorder AND TEST! memory map
-- Port SPI programmer
+- Write system test code in C
 - Implement true GPIO
+- Improve C compiler
+- Proper placement of Synchronizers (dual flip flops)
 - UART buffer in hardware
 - Improve and write more libraries
 - Clean up and improve tools/scripts (arguments/functionality)
 - Clean up unused files in PCB folders
-- Enable all external interfaces (UART, SPI)
 - Change all static paths in the project to relative ones
 - Improve ESP32Synth (for non-live settings)
 - Write a USB loader program
@@ -35,7 +35,7 @@ These are kinda ordered based on priority
 - Write a platformer game
 - Change speed of FT232RL to 1Mboud
 - Write an OS (when C is super stable)
-- Add Gameboy printer via Arduino to I/O (Best way to do this currently is using UART3)
+- Add Gameboy printer via Arduino to I/O
 
 ## Ideas
 Random ideas that came up at some point. Some might be stupid tho.

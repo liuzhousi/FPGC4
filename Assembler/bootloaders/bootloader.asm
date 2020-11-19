@@ -58,12 +58,14 @@ Main:
 
 
     CopySPI:
-    load32 0xC02630 r1      ; r1 = GPIO address: 0xC02630
+    load32 0xC02741 r1      ; r1 = Boot mode address: 0xC02741
+    // This part is deprecated, but does not hurt to leave in
+    // It was used when GPI[0] was used to dertermine the boot mode
     read 0 r1 r2            ; r2 = GPIO values
     load 0b00000001 r3      ; r3 = bitmask for GPI[0]
     and r2 r3 r3            ; r3 = GPI[0]
 
-    ; if GPI[0] is high (currently default because of pullup), then jump to UART bootloader copy function
+    ; if Boot mode is high, then jump to UART bootloader copy function
     beq r0 r3 2
         jump CopyUartLoader
 
@@ -150,9 +152,9 @@ UARTBOOTLOADERDATAPART1:
 .dw 0b11111111111111111111111111111111 ; Halt
 
 UARTBOOTLOADERDATAPART2:
-.dw 0b01110010011000101110000000000001 ; Set r1 to 0x262E, second part of UART bootloader data (to SDRAM 4185607, 95 words long)
+.dw 0b01110010011100100011000000000001 ; Set r1 to 0x2723, second part of UART bootloader data (to SDRAM 4185607, 95 words long)
 .dw 0b01110000000011000000000100000001 ; Set highest 16 bits of r1 to 0xC0
-.dw 0b11100000000000000001000100000010 ; Read at address in r1 with offset 1 to r2
+.dw 0b11100000000000000001000100100010 ; Read at address in r1 with offset -1 to r2
 .dw 0b01110000000000000000000000000100 ; Set r4 to 0
 .dw 0b01010000000000000010010011010000 ; If r4 != r13, then jump to offset 2
 .dw 0b00001010100000011000001000000010 ; Compute r2 << 24 and write result to r2
@@ -196,9 +198,9 @@ UARTBOOTLOADERDATAPART2:
 .dw 0b01110000000000000100000000000001 ; Set r1 to 4
 .dw 0b01100000000000000010110100010000 ; If r13 == r1, then jump to offset 2
 .dw 0b10010000011111111011110000001110 ; Jump to constant address 4185607
-.dw 0b01110010011000101110000000000001 ; Set r1 to 0x262E
+.dw 0b01110010011100100011000000000001 ; Set r1 to 0x2723 
 .dw 0b01110000000011000000000100000001 ; Set highest 16 bits of r1 to 0xC0
-.dw 0b11100000000000000001000100000010 ; Read at address in r1 with offset 1 to r2
+.dw 0b11100000000000000001000100100010 ; Read at address in r1 with offset -1 to r2
 .dw 0b01110000000000000000000000000011 ; Set r3 to 0
 .dw 0b01010000000000000010001111000000 ; If r3 != r12, then jump to offset 2
 .dw 0b00001010100000011000001000000010 ; Compute r2 << 24 and write result to r2
@@ -234,11 +236,11 @@ UARTBOOTLOADERDATAPART2:
 .dw 0b01110000000000000000000000001100 ; Set r12 to 0
 .dw 0b01100000000000000010101111100000 ; If r11 == r14, then jump to offset 2
 .dw 0b00010000000000000000000000000000 ; Return from interrupt
-.dw 0b01110010011000101110000000000001 ; Set r1 to 0x262E
+.dw 0b01110010011100100011000000000001 ; Set r1 to 0x2723 
 .dw 0b01110000000011000000000100000001 ; Set highest 16 bits of r1 to 0xC0
 .dw 0b01110000000001100100000000000011 ; Set r3 to 100
 .dw 0b11010000000000000000000100110000 ; Write value in r3 to address in r1 with offset 0
-.dw 0b01110010011000100110000000000001 ; Set r1 to 0x2626
+.dw 0b01110010011100111001000000000001 ; Set r1 to 0x2739
 .dw 0b01110000000011000000000100000001 ; Set highest 16 bits of r1 to 0xC0
 .dw 0b01110000000000000001000000000010 ; Set r2 to 1
 .dw 0b11010000000000000000000100100000 ; Write value in r2 to address in r1 with offset 0

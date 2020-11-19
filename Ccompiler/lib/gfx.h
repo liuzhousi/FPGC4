@@ -358,7 +358,7 @@ void GFX_clearSprites()
     push r5								;\
 										;\
     // vram address						;\
-    load32 0xC02632 r1        // r1 = vram addr 0xC02632     					;\
+    load32 0xC02422 r1        // r1 = vram addr 0xC02422     					;\
 																				;\
     // loop variables															;\
     load 0 r3               // r3 = loopvar										;\

@@ -10,6 +10,7 @@
 
 //Include modules
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Stabilizer.v"
+`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/MultiStabilizer.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/ClockDivider.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/DtrReset.v"
 

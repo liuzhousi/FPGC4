@@ -11,68 +11,6 @@ module CPU(
     input         busy
 );
 
-//----------------Interrupt Stabilizers----------------
-//Stabilizer I/O
-wire int1_s, int2_s, int3_s, int4_s;
-
-Stabilizer int1Stabilizer (
-.clk(clk),
-.reset(reset),
-.unstable(int1),
-.stable(int1_s)
-);
-
-Stabilizer int2Stabilizer (
-.clk(clk),
-.reset(reset),
-.unstable(int2),
-.stable(int2_s)
-);
-
-Stabilizer int3Stabilizer (
-.clk(clk),
-.reset(reset),
-.unstable(int3),
-.stable(int3_s)
-);
-
-Stabilizer int4Stabilizer (
-.clk(clk),
-.reset(reset),
-.unstable(int4),
-.stable(int4_s)
-);
-
-wire ext_int1_s, ext_int2_s, ext_int3_s, ext_int4_s;
-
-Stabilizer ext_int1Stabilizer (
-.clk(clk),
-.reset(reset),
-.unstable(ext_int1),
-.stable(ext_int1_s)
-);
-
-Stabilizer ext_int2Stabilizer (
-.clk(clk),
-.reset(reset),
-.unstable(ext_int2),
-.stable(ext_int2_s)
-);
-
-Stabilizer ext_int3Stabilizer (
-.clk(clk),
-.reset(reset),
-.unstable(ext_int3),
-.stable(ext_int3_s)
-);
-
-Stabilizer ext_int4Stabilizer (
-.clk(clk),
-.reset(reset),
-.unstable(ext_int4),
-.stable(ext_int4_s)
-);
-
 
 //----------------------Timer------------------------
 //Timer I/O
@@ -107,14 +45,14 @@ PC pc(
 .jump_addr(jump_addr),
 .pc_out(pc_out),
 .ext_int_id(ext_int_id),
-.int1(int1_s),
-.int2(int2_s),
-.int3(int3_s),
-.int4(int4_s),
-.ext_int1(ext_int1_s),
-.ext_int2(ext_int2_s),
-.ext_int3(ext_int3_s),
-.ext_int4(ext_int4_s)
+.int1(int1),
+.int2(int2),
+.int3(int3),
+.int4(int4),
+.ext_int1(ext_int1),
+.ext_int2(ext_int2),
+.ext_int3(ext_int3),
+.ext_int4(ext_int4)
 );
 
 

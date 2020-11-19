@@ -22,9 +22,14 @@ These are kinda ordered based on priority
 - Reorder AND TEST! memory map
 - Write system test code in C
 - Implement true GPIO
+- Different SPI speeds for different modules (25MHz for W5500 and SPI flash)
 - Improve C compiler
-- Proper placement of Synchronizers (dual flip flops)
+- Proper placement of Synchronizers (dual flip flops). Make single module at top verilog file, put all signals in this one module
+- Stabilize PS/2 input?
+- Stabilize GPIO when module
+- Remove stabilizers in CPU
 - UART buffer in hardware
+- Move ROM to MU
 - Improve and write more libraries
 - Clean up and improve tools/scripts (arguments/functionality)
 - Clean up unused files in PCB folders
@@ -105,6 +110,7 @@ Random ideas that came up at some point. Some might be stupid tho.
 
 
 ## Future improvements (FPGC5?)
+- Do not use any negedge statements. Do everything on posedge, because everyone says that is the way to go when using FPGAs
 - Separate set of registers for interrupts, or an instruction that backs up/swaps given registers (bit per register)
 - Better bus protocol between CPU and MU, with no cycles overhead
 - Byte addressable memory

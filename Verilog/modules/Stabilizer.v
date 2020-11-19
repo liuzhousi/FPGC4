@@ -1,4 +1,5 @@
 /*
+* NOTE: Deprecated! Use MultiStabilizer instead
 * Stabilizes unstable signal
 */
 module Stabilizer (

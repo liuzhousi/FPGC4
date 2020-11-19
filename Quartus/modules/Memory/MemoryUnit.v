@@ -1,11 +1,13 @@
 /*
 * Memory Unit
+* Requests by CPU are made on the posedge of clk.
+* Modules work on the negedge of clk.
 */
 module MemoryUnit(
-    //clocks
-    input clk, reset,
+    //clock
+    input           clk, reset,
 
-    //I/O
+    //CPU connection (bus)
     input  [26:0]   address,
     input  [31:0]   data,
     input           we,
@@ -14,33 +16,14 @@ module MemoryUnit(
     output reg      busy,
     output reg [31:0]  q,
 
+    /********
+    * MEMORY
+    ********/
 
-    //vram32 cpu side
-    output [31:0]   vram32_cpu_d,
-    output [13:0]   vram32_cpu_addr, 
-    output          vram32_cpu_we,
-    input  [31:0]   vram32_cpu_q,
-
-    //vram8 cpu side
-    output [7:0]    vram8_cpu_d,
-    output [13:0]   vram8_cpu_addr, 
-    output          vram8_cpu_we,
-    input  [7:0]    vram8_cpu_q,
-
-    //vramSPR cpu side
-    output [8:0]    vramSPR_cpu_d,
-    output [13:0]   vramSPR_cpu_addr, 
-    output          vramSPR_cpu_we,
-    input  [8:0]    vramSPR_cpu_q,
-
-    //ROM
-    output [8:0]    rom_addr,
-    input  [31:0]   rom_q,
-
-    //SPI Flash
-    inout           spi_data, spi_q, spi_wp, spi_hold,
-    output          spi_cs, 
-    output          spi_clk,
+    //SPI Flash / SPI0
+    inout           SPIflash_data, SPIflash_q, SPIflash_wp, SPIflash_hold,
+    output          SPIflash_cs, 
+    output          SPIflash_clk,
 
     //SDRAM
     output          SDRAM_CSn, SDRAM_WEn, SDRAM_CASn,
@@ -50,98 +33,128 @@ module MemoryUnit(
     output [1:0]    SDRAM_DQM,
     inout [15:0]    SDRAM_DQ,
 
-    //PS/2
-    input           ps2d, ps2c,
-    output          scan_code_ready,
-    
-    //(S)NESpad
-    output          nesc, nesl,
-    input           nesd,
+    //VRAM32 cpu port
+    output [31:0]   VRAM32_cpu_d,
+    output [13:0]   VRAM32_cpu_addr, 
+    output          VRAM32_cpu_we,
+    input  [31:0]   VRAM32_cpu_q,
+
+    //VRAM8 cpu port
+    output [7:0]    VRAM8_cpu_d,
+    output [13:0]   VRAM8_cpu_addr, 
+    output          VRAM8_cpu_we,
+    input  [7:0]    VRAM8_cpu_q,
+
+    //VRAMspr cpu port
+    output [8:0]    VRAMspr_cpu_d,
+    output [13:0]   VRAMspr_cpu_addr, 
+    output          VRAMspr_cpu_we,
+    input  [8:0]    VRAMspr_cpu_q,
+
+    //ROM
+    output [8:0]    ROM_addr,
+    input  [31:0]   ROM_q,
+
+    /********
+    * I/O
+    ********/
+
+    //UART0 (Main USB)
+    input           UART0_in,
+    output          UART0_out,
+    output          UART0_rx_interrupt,
+
+    //UART1 (APU)
+    input           UART1_in,
+    output          UART1_out,
+    output          UART1_rx_interrupt,
+
+    //UART2 (GP)
+    input           UART2_in,
+    output          UART2_out,
+    output          UART2_rx_interrupt,
+
+    //SPI0 (Flash)
+    //declared under MEMORY
+
+    //SPI1 (USB0/CH376T)
+    output          SPI1_clk,
+    output reg      SPI1_cs,
+    output          SPI1_mosi,
+    input           SPI1_miso,
+    input           SPI1_nint,
+
+    //SPI2 (USB1/CH376T)
+    output          SPI2_clk,
+    output reg      SPI2_cs,
+    output          SPI2_mosi,
+    input           SPI2_miso,
+    input           SPI2_nint,
+
+    //SPI3 (W5500)
+    output          SPI3_clk,
+    output reg      SPI3_cs,
+    output          SPI3_mosi,
+    input           SPI3_miso,
+    input           SPI3_int,
+
+    //SPI4 (EXT/GP)
+    output          SPI4_clk,
+    output reg      SPI4_cs,
+    output          SPI4_mosi,
+    input           SPI4_miso,
+    input           SPI4_GP,
+
+    //GPIO (Separated GPI and GPO until GPIO module is implemented)
+    input [3:0]     GPI,
+    output reg [3:0]GPO,
 
     //OStimers
-    output          t1_interrupt,
-    output          t2_interrupt,
-    output          t3_interrupt,
+    output          OST1_int,
+    output          OST2_int,
+    output          OST3_int,
 
-    //UART
-    output          uart_out,
-    output          uart_rx_interrupt,
-    input           uart_in,
+    //SNESpad
+    output          SNES_clk, SNES_latch,
+    input           SNES_data,
 
-    //UART2
-    output          uart2_out,
-    output          uart2_rx_interrupt,
-    input           uart2_in,
-
-    //GPIO
-    input [7:0]     GPI,
-    output reg [7:0]GPO,
-
-    //SPI
-    output          s_clk,
-    input           s_miso,
-    output          s_mosi,
-    input           s_nint,
-
-    //SPI2
-    output          spi2_clk,
-    output          spi2_mosi,
-    input           spi2_miso
+    //PS/2
+    input           PS2_clk, PS2_data,
+    output          PS2_int,            //Scan code ready signal
+    
+    //Boot mode
+    input           boot_mode
+    
 );  
 
-    //SDRAMcontroller, SPIreader, vram, and I/O should work on negedge clock
 
-    wire [23:0] sr_addr;            //address of spi
-    wire        sr_start;           //start of spi
-
-    wire [31:0] sr_q;               //q of spi
-    wire        sr_initDone;        //initdone of spi
-    wire        sr_recvDone;        //recvdone of spi TODO might change this to busy
-    wire        sr_reset;
+    //------------
+    //SPI0 (flash) TODO: move this to a separate module
+    //------------
 
     //SPIreader
-    wire spi_write;
-    wire io0_out, io1_out, io2_out, io3_out;    //d, q wp, hold
-    wire io0_in,  io1_in,  io2_in,  io3_in;     //d, q wp, hold
+    wire [23:0] SPIflashReader_addr;            //address of flash (32 bit)
+    wire        SPIflashReader_start;           //start signal for SPIreader
+    wire        SPIflashReader_cs;              //cs
+    wire [31:0] SPIflashReader_q;               //data out
+    wire        SPIflashReader_initDone;        //initdone of SPIreader
+    wire        SPIflashReader_recvDone;        //recvdone of SPIreader TODO might change this to busy
+    wire        SPIflashReader_reset;           //reset SPIreader
+    wire        SPIflashReader_write;           //output mode of inout pins (high when writing to SPI flash)
 
-    //SPI3
-    wire spi3_clk;
-    wire spi3_mosi;
-
-    reg enableSPI3; //1 to enable SPI3 and disable SPIreader
-
-    wire dRead, qRead, wpRead, holdRead, csRead, writeRead;
-
-    assign spi_clk  = (enableSPI3) ? spi3_clk   : clk;      //run SPI flash at 25MHz when in read mode
-    assign spi_cs   = (enableSPI3) ? GPO[2]     : csRead;   //in SPI3 mode, set CS to GPO[2]
-    assign sr_reset = (enableSPI3) ? 1'b1       : reset;    //reset SPI reader when disabled
-
-    assign dRead        = (enableSPI3) ? spi3_mosi  : io0_out;
-    assign qRead        = (enableSPI3) ? 'bz        : io1_out;
-    assign wpRead       = (enableSPI3) ? 1'b1       : io2_out;
-    assign holdRead     = (enableSPI3) ? 1'b1       : io3_out;
-    assign writeRead    = (enableSPI3) ? 1'b1       : spi_write;
-
-    assign spi_data  = (writeRead) ? dRead : 'bz;
-    assign spi_q     = (writeRead) ? qRead : 'bz;
-    assign spi_wp    = (writeRead) ? wpRead : 'bz;
-    assign spi_hold  = (writeRead) ? holdRead : 'bz;
-
-    assign io0_in  = (~writeRead) ? spi_data : 'bz;
-    assign io1_in  = (~writeRead) ? spi_q    : 'bz;
-    assign io2_in  = (~writeRead) ? spi_wp   : 'bz;
-    assign io3_in  = (~writeRead) ? spi_hold : 'bz;
+    wire io0_out, io1_out, io2_out, io3_out;    //d, q wp, hold output
+    wire io0_in,  io1_in,  io2_in,  io3_in;     //d, q wp, hold input
 
     SPIreader sreader (
-    .clk        (spi_clk),
-    .reset      (sr_reset),
-    .cs         (csRead),
-    .address    (sr_addr),
-    .instr      (sr_q),
-    .start      (sr_start),
-    .initDone   (sr_initDone), 
-    .recvDone   (sr_recvDone),
-    .write      (spi_write),
+    .clk        (clk),
+    .reset      (SPIflashReader_reset),
+    .cs         (SPIflashReader_cs),
+    .address    (SPIflashReader_addr),
+    .instr      (SPIflashReader_q),
+    .start      (SPIflashReader_start),
+    .initDone   (SPIflashReader_initDone), 
+    .recvDone   (SPIflashReader_recvDone),
+    .write      (SPIflashReader_write),
     .io0_out    (io0_out),
     .io1_out    (io1_out),
     .io2_out    (io2_out),
@@ -152,7 +165,57 @@ module MemoryUnit(
     .io3_in     (io3_in)
     );
 
-    //----SDRAM----
+    //SPI0 (flash)
+    wire SPI0_clk;
+    wire SPI0_mosi;
+    reg  SPI0_cs;
+    reg  SPI0_enable; //high enables SPI0 and disables SPIreader
+    wire SPI0_start;
+    wire [7:0] SPI0_in;
+    wire [7:0] SPI0_out;
+    wire SPI0_busy;
+
+    SimpleSPI SPI0(
+    .clk        (clk),
+    .reset      (reset),
+    .t_start    (SPI0_start),
+    .d_in       (SPI0_in),
+    .d_out      (SPI0_out),
+    .spi_clk    (SPI0_clk),
+    .miso       (SPIflash_q),
+    .mosi       (SPI0_mosi),
+    .busy       (SPI0_busy)
+    );
+
+    //Tri-state signals
+    wire SPIcombined_d, SPIcombined_q, SPIcombined_wp, SPIcombined_hold, SPIcombined_OutputEnable;
+
+    assign SPIflash_clk             = (SPI0_enable) ? SPI0_clk  : clk;
+    assign SPIflash_cs              = (SPI0_enable) ? SPI0_cs   : SPIflashReader_cs;
+    assign SPIflashReader_reset     = (SPI0_enable) ? 1'b1      : reset;    
+
+    assign SPIcombined_d            = (SPI0_enable) ? SPI0_mosi : io0_out;
+    assign SPIcombined_q            = (SPI0_enable) ? 'bz       : io1_out;
+    assign SPIcombined_wp           = (SPI0_enable) ? 1'b1      : io2_out;
+    assign SPIcombined_hold         = (SPI0_enable) ? 1'b1      : io3_out;
+    assign SPIcombined_OutputEnable = (SPI0_enable) ? 1'b1      : SPIflashReader_write;
+
+    assign SPIflash_data = (SPIcombined_OutputEnable) ? SPIcombined_d    : 'bz;
+    assign SPIflash_q    = (SPIcombined_OutputEnable) ? SPIcombined_q    : 'bz;
+    assign SPIflash_wp   = (SPIcombined_OutputEnable) ? SPIcombined_wp   : 'bz;
+    assign SPIflash_hold = (SPIcombined_OutputEnable) ? SPIcombined_hold : 'bz;
+
+    assign io0_in = (~SPIcombined_OutputEnable) ? SPIflash_data : 'bz;
+    assign io1_in = (~SPIcombined_OutputEnable) ? SPIflash_q    : 'bz;
+    assign io2_in = (~SPIcombined_OutputEnable) ? SPIflash_wp   : 'bz;
+    assign io3_in = (~SPIcombined_OutputEnable) ? SPIflash_hold : 'bz;
+
+
+
+
+    //------------
+    //SDRAM
+    //------------
     wire        sd_we;
     wire        sd_start;
     wire [31:0] sd_d; 
@@ -172,7 +235,7 @@ module MemoryUnit(
     .d          (sd_d),          // data to write
     .we         (sd_we),         // high if write, low if read
     .q          (sd_q),          // read data output
-    .q_ready_delay(sd_q_ready),    // read data ready
+    .q_ready_delay(sd_q_ready),  // read data ready
     .start      (sd_start),
     .initDone   (sd_initDone),
 
@@ -188,430 +251,671 @@ module MemoryUnit(
     .SDRAM_DQ   (SDRAM_DQ)
     );
 
-//-----------------NES Controller-------------------
-//Controller I/O
-wire [15:0] nesState;
-
-NESpadReader npr (
-.clk(clk),
-.reset(reset),
-.nesc(nesc),
-.nesl(nesl),
-.nesd(nesd),
-.nesState(nesState)
-);
 
 
-//-----------------PS/2 Keyboard-------------------
-//PS/2 Keyboard I/O
-wire [7:0] scanCode;
 
-Keyboard keyboard (
-.clk(clk), 
-.reset(reset), 
-.rx_en(1'b1), 
-.ps2d(ps2d), 
-.ps2c(ps2c), 
-.rx_done_tick(scan_code_ready), 
-.rx_data(scanCode)
-);
+    //------------
+    //UART0
+    //------------
+    wire UART0_r_Tx_DV, UART0_w_Tx_Done;
+    wire [7:0] UART0_r_Tx_Byte;
 
+    UARTtx UART0_tx(
+    .i_Clock    (clk),
+    .reset      (reset),
+    .i_Tx_DV    (UART0_r_Tx_DV),
+    .i_Tx_Byte  (UART0_r_Tx_Byte),
+    .o_Tx_Active(),
+    .o_Tx_Serial(UART0_out),
+    .o_Tx_Done_l(UART0_w_Tx_Done)
+    );
 
-//----------------OS timer 1----------------------
-//OS timer 1 I/O
-wire t1_trigger, t1_set;
-wire [31:0] t1_value;
+    wire [7:0] UART0_w_Rx_Byte;
 
-OStimer osTimer1(
-.clk(clk),
-.reset(reset),
-.timerValue(t1_value),
-.setValue(t1_set),
-.trigger(t1_trigger),
-.interrupt(t1_interrupt)
-);
-
-//----------------OS timer 2----------------------
-//OS timer 2 I/O
-wire t2_trigger, t2_set;
-wire [31:0] t2_value;
-
-OStimer osTimer2(
-.clk(clk),
-.reset(reset),
-.timerValue(t2_value),
-.setValue(t2_set),
-.trigger(t2_trigger),
-.interrupt(t2_interrupt)
-);
-
-//----------------OS timer 3----------------------
-//OS timer 3 I/O
-wire t3_trigger, t3_set;
-wire [31:0] t3_value;
-
-OStimer osTimer3(
-.clk(clk),
-.reset(reset),
-.timerValue(t3_value),
-.setValue(t3_set),
-.trigger(t3_trigger),
-.interrupt(t3_interrupt)
-);
+    UARTrx UART0_rx(
+    .i_Clock    (clk),
+    .reset      (reset),
+    .i_Rx_Serial(UART0_in),
+    .o_Rx_DV    (UART0_rx_interrupt),
+    .o_Rx_Byte  (UART0_w_Rx_Byte)
+    );
 
 
-//-------------------UART TX-----------------------
-//UART TX I/O
-wire r_Tx_DV, w_Tx_Done;
-wire [7:0] r_Tx_Byte;
+    //------------
+    //UART1
+    //------------
+    wire UART1_r_Tx_DV, UART1_w_Tx_Done;
+    wire [7:0] UART1_r_Tx_Byte;
 
-UARTtx uart_tx(
-.i_Clock    (clk),
-.reset      (reset),
-.i_Tx_DV    (r_Tx_DV),
-.i_Tx_Byte  (r_Tx_Byte),
-.o_Tx_Active(),
-.o_Tx_Serial(uart_out),
-.o_Tx_Done_l(w_Tx_Done)
-);
+    UARTtx UART1_tx(
+    .i_Clock    (clk),
+    .reset      (reset),
+    .i_Tx_DV    (UART1_r_Tx_DV),
+    .i_Tx_Byte  (UART1_r_Tx_Byte),
+    .o_Tx_Active(),
+    .o_Tx_Serial(UART1_out),
+    .o_Tx_Done_l(UART1_w_Tx_Done)
+    );
 
-//-------------------UART RX-----------------------
-//UART RX I/O
-wire [7:0] w_Rx_Byte;
+    wire [7:0] UART1_w_Rx_Byte;
 
-
-UARTrx uart_rx(
-.i_Clock    (clk),
-.reset      (reset),
-.i_Rx_Serial(uart_in),
-.o_Rx_DV    (uart_rx_interrupt),
-.o_Rx_Byte  (w_Rx_Byte)
-);
+    UARTrx UART1_rx(
+    .i_Clock    (clk),
+    .reset      (reset),
+    .i_Rx_Serial(UART1_in),
+    .o_Rx_DV    (UART1_rx_interrupt),
+    .o_Rx_Byte  (UART1_w_Rx_Byte)
+    );
 
 
-//-------------------UART2 TX-----------------------
-//UART TX I/O
-wire r2_Tx_DV, w2_Tx_Done;
-wire [7:0] r2_Tx_Byte;
+    //------------
+    //UART2
+    //------------
+    wire UART2_r_Tx_DV, UART2_w_Tx_Done;
+    wire [7:0] UART2_r_Tx_Byte;
 
-UARTtx uart_tx2(
-.i_Clock    (clk),
-.reset      (reset),
-.i_Tx_DV    (r2_Tx_DV),
-.i_Tx_Byte  (r2_Tx_Byte),
-.o_Tx_Active(),
-.o_Tx_Serial(uart2_out),
-.o_Tx_Done_l(w2_Tx_Done)
-);
+    UARTtx UART2_tx(
+    .i_Clock    (clk),
+    .reset      (reset),
+    .i_Tx_DV    (UART2_r_Tx_DV),
+    .i_Tx_Byte  (UART2_r_Tx_Byte),
+    .o_Tx_Active(),
+    .o_Tx_Serial(UART2_out),
+    .o_Tx_Done_l(UART2_w_Tx_Done)
+    );
 
-//-------------------UART2 RX-----------------------
-//UART2 RX I/O
-wire [7:0] w2_Rx_Byte;
+    wire [7:0] UART2_w_Rx_Byte;
 
-
-UARTrx uart_rx2(
-.i_Clock    (clk),
-.reset      (reset),
-.i_Rx_Serial(uart2_in),
-.o_Rx_DV    (uart2_rx_interrupt),
-.o_Rx_Byte  (w2_Rx_Byte)
-);
-
-//----------------SPI-(USB disk)-------------------
-//SPI I/O
-wire s_start;
-wire [7:0] s_in;
-wire [7:0] s_out;
-wire s_busy;
-
-SimpleSPI spi(
-.clk        (clk),
-.reset      (reset),
-.t_start    (s_start),
-.d_in       (s_in),
-.d_out      (s_out),
-.spi_clk    (s_clk),
-.miso       (s_miso),
-.mosi       (s_mosi),
-.busy       (s_busy)
-);
-
-//----------------SPI2-(W5500)-------------------
-//SPI I/O
-wire s2_start;
-wire [7:0] s2_in;
-wire [7:0] s2_out;
-wire s2_busy;
-
-SimpleSPI spi2(
-.clk        (clk),
-.reset      (reset),
-.t_start    (s2_start),
-.d_in       (s2_in),
-.d_out      (s2_out),
-.spi_clk    (spi2_clk),
-.miso       (spi2_miso),
-.mosi       (spi2_mosi),
-.busy       (s2_busy)
-);
-
-//----------------SPI3-(Flash)-------------------
-//SPI I/O
-
-wire s3_start;
-wire [7:0] s3_in;
-wire [7:0] s3_out;
-wire s3_busy;
-
-SimpleSPI spi3(
-.clk        (clk),
-.reset      (reset),
-.t_start    (s3_start),
-.d_in       (s3_in),
-.d_out      (s3_out),
-.spi_clk    (spi3_clk),
-.miso       (spi_q),
-.mosi       (spi3_mosi),
-.busy       (s3_busy)
-);
+    UARTrx UART2_rx(
+    .i_Clock    (clk),
+    .reset      (reset),
+    .i_Rx_Serial(UART2_in),
+    .o_Rx_DV    (UART2_rx_interrupt),
+    .o_Rx_Byte  (UART2_w_Rx_Byte)
+    );
 
 
-assign initDone         = (sr_initDone && sd_initDone);
-
-assign sd_addr          = (address < 27'h800000)                            ? address                   : 24'd0;
-assign sd_d             = (address < 27'h800000)                            ? data                      : 32'd0;
-assign sd_we            = (address < 27'h800000)                            ? we                        : 1'd0;
-assign sd_start         = (address < 27'h800000)                            ? start                     : 1'd0;
-
-assign sr_addr          = (address >= 27'h800000 && address < 27'hC00000)   ? address - 27'h800000      : 24'd0;
-assign sr_start         = (address >= 27'h800000 && address < 27'hC00000)   ? start                     : 1'd0;
 
 
-assign vram32_cpu_addr  = (address >= 27'hC00000 && address < 27'hC00420)   ? address - 27'hC00000      : 14'd0;
-assign vram32_cpu_d     = (address >= 27'hC00000 && address < 27'hC00420)   ? data                      : 32'd0;
-assign vram32_cpu_we    = (address >= 27'hC00000 && address < 27'hC00420)   ? we                        : 1'd0;
+    //------------
+    //SPI1 (CH376T bottom)
+    //------------
+    wire SPI1_start;
+    wire [7:0] SPI1_in;
+    wire [7:0] SPI1_out;
+    wire SPI1_busy;
 
-assign vram8_cpu_addr   = (address >= 27'hC00420 && address < 27'hC02422)   ? address - 27'hC00420      : 14'd0;
-assign vram8_cpu_d      = (address >= 27'hC00420 && address < 27'hC02422)   ? data                      : 8'd0;
-assign vram8_cpu_we     = (address >= 27'hC00420 && address < 27'hC02422)   ? we                        : 1'd0;
+    SimpleSPI SPI1(
+    .clk        (clk),
+    .reset      (reset),
+    .t_start    (SPI1_start),
+    .d_in       (SPI1_in),
+    .d_out      (SPI1_out),
+    .spi_clk    (SPI1_clk),
+    .miso       (SPI1_miso),
+    .mosi       (SPI1_mosi),
+    .busy       (SPI1_busy)
+    );
 
-assign vramSPR_cpu_addr   = (address >= 27'hC02632 && address < 27'hC02732) ? address - 27'hC02632      : 14'd0;
-assign vramSPR_cpu_d      = (address >= 27'hC02632 && address < 27'hC02732) ? data                      : 9'd0;
-assign vramSPR_cpu_we     = (address >= 27'hC02632 && address < 27'hC02732) ? we                        : 1'd0;
 
-assign rom_addr         = (address >= 27'hC02422 && address < 27'hC02622)   ? address - 27'hC02422      : 9'd0;
+    //------------
+    //SPI2 (CH376T top)
+    //------------
+    wire SPI2_start;
+    wire [7:0] SPI2_in;
+    wire [7:0] SPI2_out;
+    wire SPI2_busy;
 
-assign t1_value         = (address == 27'hC02626 && we)                     ? data                      : 32'd0;
-assign t1_set           = (address == 27'hC02626 && we)                     ? 1'b1                      : 1'b0;
-assign t1_trigger       = (address == 27'hC02627 && we)                     ? 1'b1                      : 1'b0;
+    SimpleSPI SPI2(
+    .clk        (clk),
+    .reset      (reset),
+    .t_start    (SPI2_start),
+    .d_in       (SPI2_in),
+    .d_out      (SPI2_out),
+    .spi_clk    (SPI2_clk),
+    .miso       (SPI2_miso),
+    .mosi       (SPI2_mosi),
+    .busy       (SPI2_busy)
+    );
 
-assign t2_value         = (address == 27'hC02628 && we)                     ? data                      : 32'd0;
-assign t2_set           = (address == 27'hC02628 && we)                     ? 1'b1                      : 1'b0;
-assign t2_trigger       = (address == 27'hC02629 && we)                     ? 1'b1                      : 1'b0;
 
-assign t3_value         = (address == 27'hC0262A && we)                     ? data                      : 32'd0;
-assign t3_set           = (address == 27'hC0262A && we)                     ? 1'b1                      : 1'b0;
-assign t3_trigger       = (address == 27'hC0262B && we)                     ? 1'b1                      : 1'b0;
+    //------------
+    //SPI3 (W5500)
+    //------------
+    wire SPI3_start;
+    wire [7:0] SPI3_in;
+    wire [7:0] SPI3_out;
+    wire SPI3_busy;
 
-assign r_Tx_DV          = (address == 27'hC0262E && we)                     ? start                     : 1'b0;
-assign r_Tx_Byte        = (address == 27'hC0262E)                           ? data                      : 8'd0;
+    SimpleSPI SPI3(
+    .clk        (clk),
+    .reset      (reset),
+    .t_start    (SPI3_start),
+    .d_in       (SPI3_in),
+    .d_out      (SPI3_out),
+    .spi_clk    (SPI3_clk),
+    .miso       (SPI3_miso),
+    .mosi       (SPI3_mosi),
+    .busy       (SPI3_busy)
+    );
 
-assign r2_Tx_DV         = (address == 27'hC02732 && we)                     ? start                     : 1'b0;
-assign r2_Tx_Byte       = (address == 27'hC02732)                           ? data                      : 8'd0;
 
-assign s_in             = (address == 27'hC02631)                           ? data                      : 8'd0;
-assign s_start          = (address == 27'hC02631 && we)                     ? start                     : 1'b0;
+    //------------
+    //SPI4 (EXT/GP)
+    //------------
+    wire SPI4_start;
+    wire [7:0] SPI4_in;
+    wire [7:0] SPI4_out;
+    wire SPI4_busy;
 
-assign s2_in            = (address == 27'hC02734)                           ? data                      : 8'd0;
-assign s2_start         = (address == 27'hC02734 && we)                     ? start                     : 1'b0;
+    SimpleSPI SPI4(
+    .clk        (clk),
+    .reset      (reset),
+    .t_start    (SPI4_start),
+    .d_in       (SPI4_in),
+    .d_out      (SPI4_out),
+    .spi_clk    (SPI4_clk),
+    .miso       (SPI4_miso),
+    .mosi       (SPI4_mosi),
+    .busy       (SPI4_busy)
+    );
 
-assign s3_in            = (address == 27'hC02735)                           ? data                      : 8'd0;
-assign s3_start         = (address == 27'hC02735 && we)                     ? start                     : 1'b0;
+
+
+
+    //------------
+    //GPIO
+    //------------
+    // TODO: To be implemented
+
+
+
+
+    //------------
+    //OS timer 1
+    //------------
+    wire OST1_trigger, OST1_set;
+    wire [31:0] OST1_value;
+
+    OStimer OST1(
+    .clk        (clk),
+    .reset      (reset),
+    .timerValue (OST1_value),
+    .setValue   (OST1_set),
+    .trigger    (OST1_trigger),
+    .interrupt  (OST1_int)
+    );
+
+    
+    //------------
+    //OS timer 2
+    //------------
+    wire OST2_trigger, OST2_set;
+    wire [31:0] OST2_value;
+
+    OStimer OST2(
+    .clk        (clk),
+    .reset      (reset),
+    .timerValue (OST2_value),
+    .setValue   (OST2_set),
+    .trigger    (OST2_trigger),
+    .interrupt  (OST2_int)
+    );
+
+
+    //------------
+    //OS timer 3
+    //------------
+    wire OST3_trigger, OST3_set;
+    wire [31:0] OST3_value;
+
+    OStimer OST3(
+    .clk        (clk),
+    .reset      (reset),
+    .timerValue (OST3_value),
+    .setValue   (OST3_set),
+    .trigger    (OST3_trigger),
+    .interrupt  (OST3_int)
+    );
+
+
+
+
+    //------------
+    //SNES controller
+    //------------
+    wire [15:0] SNES_state;
+
+    NESpadReader npr (
+    .clk(clk),
+    .reset(reset),
+    .nesc(SNES_clk),
+    .nesl(SNES_latch),
+    .nesd(SNES_data),
+    .nesState(SNES_state)
+    );
+
+
+
+
+    //------------
+    //PS/2 keyboard
+    //------------
+    wire [7:0] PS2_scanCode;
+
+    Keyboard PS2Keyboard (
+    .clk            (clk), 
+    .reset          (reset), 
+    .rx_en          (1'b1), 
+    .ps2d           (PS2_data), 
+    .ps2c           (PS2_clk), 
+    .rx_done_tick   (PS2_int), 
+    .rx_data        (PS2_scanCode)
+    );
+
+
+
+
+
+
+assign initDone         = (SPIflashReader_initDone && sd_initDone);
+
+//----
+//MEMORY
+//----
+
+//SDRAM
+assign sd_addr              = (address < 27'h800000)                            ? address                   : 24'd0;
+assign sd_d                 = (address < 27'h800000)                            ? data                      : 32'd0;
+assign sd_we                = (address < 27'h800000)                            ? we                        : 1'd0;
+assign sd_start             = (address < 27'h800000)                            ? start                     : 1'd0;
+
+//SPI FLASH MEMORY
+assign SPIflashReader_addr  = (address >= 27'h800000 && address < 27'hC00000)   ? address - 27'h800000      : 24'd0;
+assign SPIflashReader_start = (address >= 27'h800000 && address < 27'hC00000)   ? start                     : 1'd0;
+
+//VRAM32
+assign VRAM32_cpu_addr      = (address >= 27'hC00000 && address < 27'hC00420)   ? address - 27'hC00000      : 14'd0;
+assign VRAM32_cpu_d         = (address >= 27'hC00000 && address < 27'hC00420)   ? data                      : 32'd0;
+assign VRAM32_cpu_we        = (address >= 27'hC00000 && address < 27'hC00420)   ? we                        : 1'd0;
+
+//VRAM8
+assign VRAM8_cpu_addr       = (address >= 27'hC00420 && address < 27'hC02422)   ? address - 27'hC00420      : 14'd0;
+assign VRAM8_cpu_d          = (address >= 27'hC00420 && address < 27'hC02422)   ? data                      : 8'd0;
+assign VRAM8_cpu_we         = (address >= 27'hC00420 && address < 27'hC02422)   ? we                        : 1'd0;
+
+//VRAMspr
+assign VRAMspr_cpu_addr     = (address >= 27'hC02422 && address < 27'hC02522)   ? address - 27'hC02422      : 14'd0;
+assign VRAMspr_cpu_d        = (address >= 27'hC02422 && address < 27'hC02522)   ? data                      : 9'd0;
+assign VRAMspr_cpu_we       = (address >= 27'hC02422 && address < 27'hC02522)   ? we                        : 1'd0;
+
+//ROM
+assign ROM_addr             = (address >= 27'hC02522 && address < 27'hC02722)   ? address - 27'hC02522      : 9'd0;
+
+//----
+//I/O
+//----
+
+//UART
+assign UART0_r_Tx_DV    = (address == 27'hC02723 && we)                     ? start                     : 1'b0;
+assign UART0_r_Tx_Byte  = (address == 27'hC02723)                           ? data                      : 8'd0;
+
+assign UART1_r_Tx_DV    = (address == 27'hC02725 && we)                     ? start                     : 1'b0;
+assign UART1_r_Tx_Byte  = (address == 27'hC02725)                           ? data                      : 8'd0;
+
+assign UART2_r_Tx_DV    = (address == 27'hC02727 && we)                     ? start                     : 1'b0;
+assign UART2_r_Tx_Byte  = (address == 27'hC02727)                           ? data                      : 8'd0;
+
+//SPI
+assign SPI0_in          = (address == 27'hC02728)                           ? data                      : 8'd0;
+assign SPI0_start       = (address == 27'hC02728 && we)                     ? start                     : 1'b0;
+
+assign SPI1_in          = (address == 27'hC0272B)                           ? data                      : 8'd0;
+assign SPI1_start       = (address == 27'hC0272B && we)                     ? start                     : 1'b0;
+
+assign SPI2_in          = (address == 27'hC0272E)                           ? data                      : 8'd0;
+assign SPI2_start       = (address == 27'hC0272E && we)                     ? start                     : 1'b0;
+
+assign SPI3_in          = (address == 27'hC02731)                           ? data                      : 8'd0;
+assign SPI3_start       = (address == 27'hC02731 && we)                     ? start                     : 1'b0;
+
+assign SPI4_in          = (address == 27'hC02734)                           ? data                      : 8'd0;
+assign SPI4_start       = (address == 27'hC02734 && we)                     ? start                     : 1'b0;
+
+//OS Timers
+assign OST1_value       = (address == 27'hC02739 && we)                     ? data                      : 32'd0;
+assign OST1_set         = (address == 27'hC02739 && we);
+assign OST1_trigger     = (address == 27'hC0273A && we);
+
+assign OST2_value       = (address == 27'hC0273B && we)                     ? data                      : 32'd0;
+assign OST2_set         = (address == 27'hC0273B && we);
+assign OST2_trigger     = (address == 27'hC0273C && we);
+
+assign OST3_value       = (address == 27'hC0273D && we)                     ? data                      : 32'd0;
+assign OST3_set         = (address == 27'hC0273D && we);
+assign OST3_trigger     = (address == 27'hC0273E && we);
+
+
+// TODO: minimize statements/return values by removing unnecessary ones
 
 initial
 begin
-    busy <= 0;
-    q <= 32'd0;
-    GPO <= 8'd0;
-    enableSPI3 <= 1'b0;
+    busy        <= 0;
+    q           <= 32'd0;
+
+    GPO         <= 4'd0;
+    SPI0_enable <= 1'b0;
 end
 
 always @(negedge clk)
 begin
     if (reset)
     begin
-        busy <= 0;
-        q <= 32'd0;
-        GPO <= 8'd0;
-        enableSPI3 <= 1'b0;
+        busy        <= 0;
+        q           <= 32'd0;
+
+        GPO         <= 4'd0;
+        SPI0_enable <= 1'b0;
     end
     else 
     begin
         
         if (start)
-            busy <= 1;
-            
+            busy    <= 1;
+
+
+        //------
+        //MEMORY
+        //------
+
         //SDRAM
-        if (busy && sd_q_ready && address < 27'h800000)
+        if (busy && address < 27'h800000 && sd_q_ready)
         begin
-            busy <= 0;
-            q <= sd_q;
+            busy    <= 0;
+            q       <= sd_q;
         end
 
         //SPI FLASH
-        if (busy && (sr_recvDone || enableSPI3) && address >= 27'h800000 && address < 27'hC00000)
+        if (busy && address >= 27'h800000 && address < 27'hC00000 && (SPIflashReader_recvDone || SPI0_enable))
         begin
-            busy <= 0;
-            q <= sr_q;
+            busy    <= 0;
+            q       <= SPIflashReader_q;
         end
 
         //VRAM32
         if (busy && address >= 27'hC00000 && address < 27'hC00420)
         begin
-            busy <= 0;
-            q <= vram32_cpu_q;
+            busy    <= 0;
+            q       <= VRAM32_cpu_q;
         end
 
         //VRAM8
         if (busy && address >= 27'hC00420 && address < 27'hC02422)
         begin
-            busy <= 0;
-            q <= {24'd0, vram8_cpu_q};
+            busy    <= 0;
+            q       <= {24'd0, VRAM8_cpu_q};
+        end
+
+        //VRAMspr
+        if (busy && address >= 27'hC02422 && address < 27'hC02522)
+        begin
+            busy    <= 0;
+            q       <= {23'd0, VRAMspr_cpu_q};
         end
 
         //ROM
-        if (busy && address >= 27'hC02422 && address < 27'hC02622)
+        if (busy && address >= 27'hC02522 && address < 27'hC02722)
         begin
-            busy <= 0;
-            q <= rom_q;
+            busy    <= 0;
+            q       <= ROM_q;
         end
 
-        //NESPAD
-        if (busy && address == 27'hC02622)
+
+        //------
+        //I/O
+        //------
+
+        //UART0 RX
+        if (busy && address == 27'hC02722)
         begin
-            busy <= 0;
-            q <= {16'd0, nesState};
+            busy    <= 0;
+            q       <= UART0_w_Rx_Byte;
         end
 
-        //Keyboard
-        if (busy && address == 27'hC02623)
+        //UART0 TX
+        if (busy && address == 27'hC02723)
         begin
-            busy <= 0;
-            q <= {24'd0, scanCode};
-        end
-
-        //CH376 n_interrupt
-        if (busy && address == 27'hC02624)
-        begin
-            busy <= 0;
-            q <= s_nint;
-        end
-
-        //Unused2
-        if (busy && address == 27'hC02625)
-        begin
-            busy <= 0;
-            q <= 32'd0;
-        end
-
-        //OStimers and (removed) NotePlayers
-        if (busy && address >= 27'hC02626 && address < 27'hC0262E)
-        begin
-            busy <= 0;
-            q <= 32'd0;
-        end
-
-        //UART TX
-        if (busy && address == 27'hC0262E)
-        begin
-            if (w_Tx_Done)
+            if (UART0_w_Tx_Done)
             begin
-                busy <= 0;
-                q <=32'd0;
+                busy    <= 0;
+                q       <= 32'd0;
             end
         end
 
-        //UART RX
-        if (busy && address == 27'hC0262F)
+        //UART1 RX
+        if (busy && address == 27'hC02724)
         begin
-            busy <= 0;
-            q <= w_Rx_Byte;
+            busy    <= 0;
+            q       <= UART1_w_Rx_Byte;
         end
 
-        //GPIO
-        if (busy && address == 27'hC02630)
+        //UART1 TX
+        if (busy && address == 27'hC02725)
         begin
-            if (we)
+            if (UART1_w_Tx_Done)
             begin
-                GPO <= data[15:8];
-            end
-            busy <= 0;
-            q <= {GPO,GPI};
-        end
-
-        //CH376 SPI
-        if (busy && address == 27'hC02631 && !s_busy)
-        begin
-            busy <= 0;
-            q <= s_out;
-        end
-
-        //VRAM8
-        if (busy && address >= 27'hC02632 && address < 27'hC02732)
-        begin
-            busy <= 0;
-            q <= {23'd0, vramSPR_cpu_q};
-        end
-
-        //UART2 TX
-        if (busy && address == 27'hC02732)
-        begin
-            if (w2_Tx_Done)
-            begin
-                busy <= 0;
-                q <=32'd0;
+                busy    <= 0;
+                q       <= 32'd0;
             end
         end
 
         //UART2 RX
-        if (busy && address == 27'hC02733)
+        if (busy && address == 27'hC02726)
         begin
-            busy <= 0;
-            q <= w2_Rx_Byte;
+            busy    <= 0;
+            q       <= UART2_w_Rx_Byte;
         end
 
-        //SPI2 W5500
-        if (busy && address == 27'hC02734 && !s2_busy)
+        //UART2 TX
+        if (busy && address == 27'hC02727)
         begin
-            busy <= 0;
-            q <= s2_out;
+            if (UART2_w_Tx_Done)
+            begin
+                busy    <= 0;
+                q       <= 32'd0;
+            end
         end
 
-        //SPI3 Flash
-        if (busy && address == 27'hC02735 && !s3_busy)
+
+        //SPI0
+        if (busy && address == 27'hC02728 && !SPI0_busy)
         begin
-            busy <= 0;
-            q <= s3_out;
+            busy    <= 0;
+            q       <= SPI0_out;
         end
 
-        //SPI3 enable
-        if (busy && address == 27'hC02736)
+        //SPI0 CS
+        if (busy && address == 27'hC02729)
         begin
             if (we)
             begin
-                enableSPI3 <= data[0];
+                SPI0_cs <= data[0];
             end
-            busy <= 0;
-            q <= data[0];
+            busy    <= 0;
+            q       <= SPI0_cs;
         end
+
+        //SPI0 enable
+        if (busy && address == 27'hC0272A)
+        begin
+            if (we)
+            begin
+                SPI0_enable <= data[0];
+            end
+            busy    <= 0;
+            q       <= SPI0_enable;
+        end
+
+
+        //SPI1
+        if (busy && address == 27'hC0272B && !SPI1_busy)
+        begin
+            busy    <= 0;
+            q       <= SPI1_out;
+        end
+
+        //SPI1 CS
+        if (busy && address == 27'hC0272C)
+        begin
+            if (we)
+            begin
+                SPI1_cs <= data[0];
+            end
+            busy    <= 0;
+            q       <= SPI1_cs;
+        end
+
+        //SPI1 nInt
+        if (busy && address == 27'hC0272D)
+        begin
+            busy    <= 0;
+            q       <= SPI1_nint;
+        end
+
+
+        //SPI2
+        if (busy && address == 27'hC0272E && !SPI2_busy)
+        begin
+            busy    <= 0;
+            q       <= SPI2_out;
+        end
+
+        //SPI2 CS
+        if (busy && address == 27'hC0272F)
+        begin
+            if (we)
+            begin
+                SPI2_cs <= data[0];
+            end
+            busy    <= 0;
+            q       <= SPI2_cs;
+        end
+
+        //SPI2 nInt
+        if (busy && address == 27'hC02730)
+        begin
+            busy    <= 0;
+            q       <= SPI2_nint;
+        end
+
+
+        //SPI3
+        if (busy && address == 27'hC02731 && !SPI3_busy)
+        begin
+            busy    <= 0;
+            q       <= SPI3_out;
+        end
+
+        //SPI3 CS
+        if (busy && address == 27'hC02732)
+        begin
+            if (we)
+            begin
+                SPI3_cs <= data[0];
+            end
+            busy    <= 0;
+            q       <= SPI3_cs;
+        end
+
+        //SPI3 int
+        if (busy && address == 27'hC02733)
+        begin
+            busy    <= 0;
+            q       <= SPI3_int;
+        end
+
+
+        //SPI4
+        if (busy && address == 27'hC02734 && !SPI4_busy)
+        begin
+            busy    <= 0;
+            q       <= SPI4_out;
+        end
+
+        //SPI4 CS
+        if (busy && address == 27'hC02735)
+        begin
+            if (we)
+            begin
+                SPI4_cs <= data[0];
+            end
+            busy    <= 0;
+            q       <= SPI4_cs;
+        end
+
+        //SPI4 GP (currently input)
+        if (busy && address == 27'hC02736)
+        begin
+            busy    <= 0;
+            q       <= SPI4_GP;
+        end
+
+
+        //GPIO TODO: implement true GPIO
+        if (busy && address == 27'hC02737)
+        begin
+            if (we)
+            begin
+                GPO <= data[7:4];
+            end
+            busy    <= 0;
+            q       <= {24'd0, GPO, GPI};
+        end
+
+        //GPIO Direction TODO: implement
+        if (busy && address >= 27'hC02738)
+        begin
+            busy    <= 0;
+            q       <= 32'd0;
+        end
+
+        //OS Timers (do not return anything)
+        if (busy && address >= 27'hC02738 && address < 27'hC0273F)
+        begin
+            busy    <= 0;
+            q       <= 32'd0;
+        end
+
+
+        //SNESpad
+        if (busy && address == 27'hC0273F)
+        begin
+            busy    <= 0;
+            q       <= {16'd0, SNES_state};
+        end
+
+        //PS/2 Keyboard
+        if (busy && address == 27'hC02740)
+        begin
+            busy    <= 0;
+            q       <= {24'd0, PS2_scanCode};
+        end
+
+
+        //Boot mode
+        if (busy && address == 27'hC02741)
+        begin
+            busy    <= 0;
+            q       <= {31'd0, boot_mode};
+        end
+
 
         //Prevent lockups
-        if (busy && address >= 27'hC02737)
+        if (busy && address > 27'hC02741)
         begin
-            busy <= 0;
-            q <= 32'd0;
+            busy    <= 0;
+            q       <= 32'd0;
         end
-
 
     end
     

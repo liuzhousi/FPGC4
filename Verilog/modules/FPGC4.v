@@ -2,7 +2,7 @@
 * Top level design of the FPGC4
 */
 module FPGC4(
-    input           clk, //50MHz
+    input           clk, //25MHz
     input           nreset,
 
     //VGA for GM7123 module
@@ -43,24 +43,10 @@ module FPGC4(
     input [7:0]     GPI,
     output [7:0]    GPO,
 
-    input           uart_dtr
+    input           uart_dtr,
+    input           boot_mode
 
 );
-
-//I/O
-    //PS/2
-    wire    ps2d, ps2c;
-    //(S)NESpad
-    wire    nesc, nesl;
-    wire    nesd;
-
-    wire uart_out;
-    wire uart_in;
-    wire uart_rx_interrupt;
-
-    wire uart2_out;
-    wire uart2_in;
-    wire uart2_rx_interrupt;
 
 
 //-------------------Reset----------------------
@@ -319,12 +305,26 @@ wire        t2_interrupt;
 wire        t3_interrupt;
 wire        scan_code_ready;
 
+//I/O
+//PS/2
+wire    ps2d, ps2c;
+//(S)NESpad
+wire    nesc, nesl;
+wire    nesd;
+
+wire UART0_in, UART0_out, UART0_rx_int;
+wire UART1_in, UART1_out, UART1_rx_int;
+wire UART2_in, UART2_out, UART2_rx_int;
+
+
 MemoryUnit mu(
-//clocks
+
+
+//clock
 .clk            (clk),
 .reset          (reset),
 
-//I/O
+//CPU connection (bus)
 .address        (address),
 .data           (data),
 .we             (we),
@@ -333,35 +333,17 @@ MemoryUnit mu(
 .busy           (busy),
 .q              (q),
 
-//vram32 cpu side
-.vram32_cpu_d   (vram32_cpu_d),        
-.vram32_cpu_addr(vram32_cpu_addr), 
-.vram32_cpu_we  (vram32_cpu_we),
-.vram32_cpu_q   (vram32_cpu_q),
+/********
+* MEMORY
+********/
 
-//vram8 cpu side
-.vram8_cpu_d    (vram8_cpu_d),
-.vram8_cpu_addr (vram8_cpu_addr), 
-.vram8_cpu_we   (vram8_cpu_we),
-.vram8_cpu_q    (vram8_cpu_q),
-
-//vramSPR cpu side
-.vramSPR_cpu_d    (vramSPR_cpu_d),
-.vramSPR_cpu_addr (vramSPR_cpu_addr), 
-.vramSPR_cpu_we   (vramSPR_cpu_we),
-.vramSPR_cpu_q    (vramSPR_cpu_q),
-
-//ROM
-.rom_addr       (rom_addr),
-.rom_q          (rom_q),
-
-//SPI
-.spi_data       (spi_data), 
-.spi_q          (spi_q), 
-.spi_wp         (spi_wp), 
-.spi_hold       (spi_hold),
-.spi_cs         (spi_cs), 
-.spi_clk        (spi_clk),
+//SPI Flash / SPI0
+.SPIflash_data  (spi_data), 
+.SPIflash_q     (spi_q), 
+.SPIflash_wp    (spi_wp), 
+.SPIflash_hold  (spi_hold),
+.SPIflash_cs    (spi_cs), 
+.SPIflash_clk   (spi_clk),
 
 //SDRAM
 .SDRAM_CSn      (SDRAM_CSn), 
@@ -374,30 +356,100 @@ MemoryUnit mu(
 .SDRAM_DQM      (SDRAM_DQM),
 .SDRAM_DQ       (SDRAM_DQ),
 
+//VRAM32 cpu port
+.VRAM32_cpu_d       (vram32_cpu_d),
+.VRAM32_cpu_addr    (vram32_cpu_addr), 
+.VRAM32_cpu_we      (vram32_cpu_we),
+.VRAM32_cpu_q       (vram32_cpu_q),
+
+//VRAM8 cpu port
+.VRAM8_cpu_d        (vram8_cpu_d),
+.VRAM8_cpu_addr     (vram8_cpu_addr), 
+.VRAM8_cpu_we       (vram8_cpu_we),
+.VRAM8_cpu_q        (vram8_cpu_q),
+
+//VRAMspr cpu port
+.VRAMspr_cpu_d      (vramSPR_cpu_d),
+.VRAMspr_cpu_addr   (vramSPR_cpu_addr), 
+.VRAMspr_cpu_we     (vramSPR_cpu_we),
+.VRAMspr_cpu_q      (vramSPR_cpu_q),
+
+//ROM
+.ROM_addr(rom_addr),
+.ROM_q(rom_q),
+
+/********
+* I/O
+********/
+
+//UART0 (Main USB)
+.UART0_in           (UART0_in),
+.UART0_out          (UART0_out),
+.UART0_rx_interrupt (UART0_rx_int),
+
+//UART1 (APU)
+.UART1_in           (UART1_in),
+.UART1_out          (UART1_out),
+.UART1_rx_interrupt (UART1_rx_int),
+
+//UART2 (GP)
+.UART2_in           (UART2_in),
+.UART2_out          (UART2_out),
+.UART2_rx_interrupt (UART2_rx_int),
+
+//SPI0 (Flash)
+//declared under MEMORY
+
+//SPI1 (USB0/CH376T)
+.SPI1_clk       (),
+.SPI1_cs        (),
+.SPI1_mosi      (),
+.SPI1_miso      (),
+.SPI1_nint      (),
+
+//SPI2 (USB1/CH376T)
+.SPI2_clk       (),
+.SPI2_cs        (),
+.SPI2_mosi      (),
+.SPI2_miso      (),
+.SPI2_nint      (),
+
+//SPI3 (W5500)
+.SPI3_clk       (),
+.SPI3_cs        (),
+.SPI3_mosi      (),
+.SPI3_miso      (),
+.SPI3_int       (),
+
+//SPI4 (EXT/GP)
+.SPI4_clk       (),
+.SPI4_cs        (),
+.SPI4_mosi      (),
+.SPI4_miso      (),
+.SPI4_GP        (),
+
+//GPIO (Separated GPI and GPO until GPIO module is implemented)
+.GPI        (GPI[3:0]),
+.GPO        (GPO[3:0]),
+
+//OStimers
+.OST1_int   (t1_interrupt),
+.OST2_int   (t2_interrupt),
+.OST3_int   (t3_interrupt),
+
+//SNESpad
+.SNES_clk   (nesc),
+.SNES_latch (nesl),
+.SNES_data  (nesd),
+
 //PS/2
-.ps2d(ps2d), 
-.ps2c(ps2c),
-.scan_code_ready(scan_code_ready),
+.PS2_clk    (ps2c),
+.PS2_data   (ps2d),
+.PS2_int    (scan_code_ready), //Scan code ready signal
 
-//(S)NESpad
-.nesc(nesc), 
-.nesl(nesl),
-.nesd(nesd),
+//Boot mode
+.boot_mode  (boot_mode)
 
-.t1_interrupt(t1_interrupt),
-.t2_interrupt(t2_interrupt),
-.t3_interrupt(t3_interrupt),
-
-.uart_out(uart_out),
-.uart_in(uart_in),
-.uart_rx_interrupt(uart_rx_interrupt),
-
-.uart2_out(uart2_out),
-.uart2_in(uart2_in),
-.uart2_rx_interrupt(uart2_rx_interrupt),
-
-.GPI(GPI),
-.GPO(GPO)
 );
 
 
@@ -410,12 +462,12 @@ CPU cpu(
 .reset          (reset),
 .int1           (t1_interrupt),             //timer1
 .int2           (t2_interrupt),             //timer2
-.int3           (uart_rx_interrupt),        //UART rx
+.int3           (UART0_rx_int),             //UART0 rx
 .int4           (frameDrawn),               //Frame Drawn
 .ext_int1       (t3_interrupt),             //timer3
 .ext_int2       (scan_code_ready),          //PS/2 scancode ready
-.ext_int3       (uart2_rx_interrupt),       //UART2 rx
-.ext_int4       (1'b0),
+.ext_int3       (UART1_rx_int),             //UART1 rx
+.ext_int4       (UART2_rx_int),             //UART2 rx
 .address        (address),
 .data           (data),
 .we             (we),

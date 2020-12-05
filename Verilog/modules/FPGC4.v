@@ -16,71 +16,157 @@ module FPGC4(
 
     //RGBs video
     output          crt_sync,
+    output          crt_clk,
     output [2:0]    crt_r,
     output [2:0]    crt_g,
     output [1:0]    crt_b,
 
     //SDRAM
     output          SDRAM_CLK,
-    output          SDRAM_CSn, 
-    output          SDRAM_WEn, 
-    output          SDRAM_CASn, 
+    output          SDRAM_CSn,
+    output          SDRAM_WEn,
+    output          SDRAM_CASn,
     output          SDRAM_RASn,
-    output          SDRAM_CKE, 
+    output          SDRAM_CKE,
     output [12:0]   SDRAM_A,
     output [1:0]    SDRAM_BA,
     output [1:0]    SDRAM_DQM,
     inout  [15:0]   SDRAM_DQ,
 
-    //SPI
-    output          spi_cs,
-    output          spi_clk,
-    inout           spi_data, 
-    inout           spi_q, 
-    inout           spi_wp, 
-    inout           spi_hold,
-
-    input [7:0]     GPI,
-    output [7:0]    GPO,
-
-    input           uart_dtr,
-    input           boot_mode
-
+    //SPI0 flash
+    output          SPI0_clk,
+    output          SPI0_cs,
+    inout           SPI0_data,
+    inout           SPI0_q,
+    inout           SPI0_wp,
+    inout           SPI0_hold,
+     
+    //SPI1 CH376 bottom
+    output          SPI1_clk,
+    output          SPI1_cs,
+    output          SPI1_mosi,
+    input           SPI1_miso,
+    input           SPI1_nint,
+    output          SPI1_rst,
+     
+    //SPI2 CH376 top
+    output          SPI2_clk,
+    output          SPI2_cs,
+    output          SPI2_mosi,
+    input           SPI2_miso,
+    input           SPI2_nint,
+    output          SPI2_rst,
+     
+    //SPI3 W5500
+    output          SPI3_clk,
+    output          SPI3_cs,
+    output          SPI3_mosi,
+    input           SPI3_miso,
+    input           SPI3_int,
+    output          SPI3_nrst,
+     
+    //SPI4 GP
+    output          SPI4_clk,
+    output          SPI4_cs,
+    output          SPI4_mosi,
+    input           SPI4_miso,
+    input           SPI4_gp,
+     
+    //UART0
+    input           UART0_in,
+    output          UART0_out,
+    input           UART0_dtr,
+     
+    //UART1
+    input           UART1_in,
+    output          UART1_out,
+     
+    //UART2
+    input           UART2_in,
+    output          UART2_out,
+     
+    //PS/2
+    input           PS2_clk, PS2_data,
+     
+    //SNESpad
+    output          SNES_clk, SNES_latch,
+    input           SNES_data,
+     
+    //Led for debugging
+    output          led,
+     
+    //GPIO
+    input [3:0]     GPI,
+    output [3:0]    GPO,
+     
+    //DIP switch
+    input [3:0]     DIPS
 );
 
 
-//-------------------Reset----------------------
-//Reset stabilizer I/O
-wire nreset_stable, reset, dtr_stable;
+//-------------------CLK-------------------------
+//In hardware a PLL should be used here
+// to create the clk and crt_clk 
+assign crt_clk = clk; //'fix' for simulation
+
+//Run VGA at CRT speed
+assign vga_clk = crt_clk;
+
+//Run SDRAM at system speed
+assign SDRAM_CLK = clk;
 
 
-Stabilizer resStabilizer (
+//--------------------Reset&Stabilizers-----------------------
+//Reset signals
+wire nreset_stable, UART0_dtr_stable, reset;
+
+//Dip switch
+wire boot_mode_stable;
+
+//GPU: High when frame just rendered (needs to be stabilized)
+wire frameDrawn, frameDrawn_stable;
+
+//Stabilized SPI interrupt signals
+wire SPI1_nint_stable, SPI2_nint_stable, SPI3_int_stable, SPI4_gp_stable; 
+
+MultiStabilizer multistabilizer (
 .clk(clk),
-.reset(1'b0), //Since we stabilize a reset signal, we do NOT want to use it here
-.unstable(nreset),
-.stable(nreset_stable)
+.u0(nreset),
+.s0(nreset_stable),
+.u1(UART0_dtr),
+.s1(UART0_dtr_stable),
+.u2(SPI1_nint),
+.s2(SPI1_nint_stable),
+.u3(SPI2_nint),
+.s3(SPI2_nint_stable),
+.u4(SPI3_int),
+.s4(SPI3_int_stable),
+.u5(SPI4_gp),
+.s5(SPI4_gp_stable),
+.u6(frameDrawn),
+.s6(frameDrawn_stable),
+.u7(DIPS[0]),
+.s7(boot_mode_stable)
 );
 
-Stabilizer dtrStabilizer (
-.clk(clk),
-.reset(1'b0), //Since we stabilize a reset signal, we do NOT want to use it here
-.unstable(uart_dtr),
-.stable(dtr_stable)
-);
+//Indicator for opened Serial port
+assign led = UART0_dtr_stable;
 
+//DRT to reset pulse
 wire dtrRst;
 
 DtrReset dtrReset (
 .clk(clk),
-.dtr(uart_dtr),
+.dtr(UART0_dtr_stable),
 .dtrRst(dtrRst)
 );
 
 assign reset = (~nreset_stable) || dtrRst;
 
-//--------------------Clocks----------------------
-assign SDRAM_CLK = clk;
-wire gpu_clk, gpu_clk2;
+//External reset outputs
+assign SPI1_rst = reset;
+assign SPI2_rst = reset;
+assign SPI3_nrst = ~reset;
 
 
 //---------------------------VRAM32---------------------------------
@@ -114,7 +200,7 @@ VRAM #(
 .cpu_q      (vram32_cpu_q),
 
 //GPU port
-.gpu_clk    (vga_clk),
+.gpu_clk    (crt_clk),
 .gpu_d      (vram32_gpu_d),
 .gpu_addr   (vram32_gpu_addr),
 .gpu_we     (vram32_gpu_we),
@@ -147,7 +233,7 @@ VRAM #(
 .cpu_q      (),
 
 //GPU port
-.gpu_clk    (vga_clk),
+.gpu_clk    (crt_clk),
 .gpu_d      (vram322_gpu_d),
 .gpu_addr   (vram322_gpu_addr),
 .gpu_we     (vram322_gpu_we),
@@ -186,7 +272,7 @@ VRAM #(
 .cpu_q      (vram8_cpu_q),
 
 //GPU port
-.gpu_clk    (vga_clk),
+.gpu_clk    (crt_clk),
 .gpu_d      (vram8_gpu_d),
 .gpu_addr   (vram8_gpu_addr),
 .gpu_we     (vram8_gpu_we),
@@ -225,7 +311,7 @@ VRAM #(
 .cpu_q      (vramSPR_cpu_q),
 
 //GPU port
-.gpu_clk    (vga_clk),
+.gpu_clk    (crt_clk),
 .gpu_d      (vramSPR_gpu_d),
 .gpu_addr   (vramSPR_gpu_addr),
 .gpu_we     (vramSPR_gpu_we),
@@ -233,15 +319,23 @@ VRAM #(
 );
 
 
+//-------------------ROM-------------------------
+//ROM I/O
+wire [8:0] rom_addr;
+wire [31:0] rom_q;
+
+
+ROM rom(
+.clk            (clk),
+.reset          (reset),
+.address        (rom_addr),
+.q              (rom_q)
+);
+
+
 //-----------------------FSX-------------------------
-//FSX I/O
-wire frameDrawn;      //high when frame just rendered
-                    //needs to be stabilized
-
-assign vga_clk = clk; //should become 6 ish mhz eventually
-
 FSX fsx(
-.vga_clk(vga_clk),
+.vga_clk        (crt_clk),
 
 //VGA
 .vga_r          (vga_r),
@@ -251,10 +345,10 @@ FSX fsx(
 .vga_vs         (vga_vs),
 
 //CRT
-.crt_sync(crt_sync),
-.crt_r(crt_r),
-.crt_g(crt_g),
-.crt_b(crt_b),
+.crt_sync       (crt_sync),
+.crt_r          (crt_r),
+.crt_g          (crt_g),
+.crt_b          (crt_b),
 
 //VRAM32
 .vram32_addr    (vram32_gpu_addr),
@@ -277,19 +371,6 @@ FSX fsx(
 );
 
 
-//-------------------ROM-------------------------
-//ROM I/O
-wire [8:0] rom_addr;
-wire [31:0] rom_q;
-
-
-ROM rom(
-.clk            (clk),
-.reset          (reset),
-.address        (rom_addr),
-.q              (rom_q)
-);
-
 
 //----------------Memory Unit--------------------
 //Memory Unit I/O
@@ -300,26 +381,12 @@ wire        start;
 wire        initDone;
 wire        busy;
 wire [31:0] q;
-wire        t1_interrupt;
-wire        t2_interrupt;
-wire        t3_interrupt;
-wire        scan_code_ready;
-
-//I/O
-//PS/2
-wire    ps2d, ps2c;
-//(S)NESpad
-wire    nesc, nesl;
-wire    nesd;
-
-wire UART0_in, UART0_out, UART0_rx_int;
-wire UART1_in, UART1_out, UART1_rx_int;
-wire UART2_in, UART2_out, UART2_rx_int;
-
+//Interrupt signals
+wire        OST1_int, OST2_int, OST3_int;
+wire        UART0_rx_int, UART1_rx_int, UART2_rx_int;
+wire        PS2_int;
 
 MemoryUnit mu(
-
-
 //clock
 .clk            (clk),
 .reset          (reset),
@@ -338,12 +405,12 @@ MemoryUnit mu(
 ********/
 
 //SPI Flash / SPI0
-.SPIflash_data  (spi_data), 
-.SPIflash_q     (spi_q), 
-.SPIflash_wp    (spi_wp), 
-.SPIflash_hold  (spi_hold),
-.SPIflash_cs    (spi_cs), 
-.SPIflash_clk   (spi_clk),
+.SPIflash_data  (SPI0_data), 
+.SPIflash_q     (SPI0_q), 
+.SPIflash_wp    (SPI0_wp), 
+.SPIflash_hold  (SPI0_hold),
+.SPIflash_cs    (SPI0_cs), 
+.SPIflash_clk   (SPI0_clk),
 
 //SDRAM
 .SDRAM_CSn      (SDRAM_CSn), 
@@ -375,8 +442,8 @@ MemoryUnit mu(
 .VRAMspr_cpu_q      (vramSPR_cpu_q),
 
 //ROM
-.ROM_addr(rom_addr),
-.ROM_q(rom_q),
+.ROM_addr           (rom_addr),
+.ROM_q              (rom_q),
 
 /********
 * I/O
@@ -401,73 +468,71 @@ MemoryUnit mu(
 //declared under MEMORY
 
 //SPI1 (USB0/CH376T)
-.SPI1_clk       (),
-.SPI1_cs        (),
-.SPI1_mosi      (),
-.SPI1_miso      (),
-.SPI1_nint      (),
+.SPI1_clk       (SPI1_clk),
+.SPI1_cs        (SPI1_cs),
+.SPI1_mosi      (SPI1_mosi),
+.SPI1_miso      (SPI1_miso),
+.SPI1_nint      (SPI1_nint_stable),
 
 //SPI2 (USB1/CH376T)
-.SPI2_clk       (),
-.SPI2_cs        (),
-.SPI2_mosi      (),
-.SPI2_miso      (),
-.SPI2_nint      (),
+.SPI2_clk       (SPI2_clk),
+.SPI2_cs        (SPI2_cs),
+.SPI2_mosi      (SPI2_mosi),
+.SPI2_miso      (SPI2_miso),
+.SPI2_nint      (SPI2_nint_stable),
 
 //SPI3 (W5500)
-.SPI3_clk       (),
-.SPI3_cs        (),
-.SPI3_mosi      (),
-.SPI3_miso      (),
-.SPI3_int       (),
+.SPI3_clk       (SPI3_clk),
+.SPI3_cs        (SPI3_cs),
+.SPI3_mosi      (SPI3_mosi),
+.SPI3_miso      (SPI3_miso),
+.SPI3_int       (SPI3_int_stable),
 
 //SPI4 (EXT/GP)
-.SPI4_clk       (),
-.SPI4_cs        (),
-.SPI4_mosi      (),
-.SPI4_miso      (),
-.SPI4_GP        (),
+.SPI4_clk       (SPI4_clk),
+.SPI4_cs        (SPI4_cs),
+.SPI4_mosi      (SPI4_mosi),
+.SPI4_miso      (SPI4_miso),
+.SPI4_GP        (SPI4_gp_stable),
 
 //GPIO (Separated GPI and GPO until GPIO module is implemented)
 .GPI        (GPI[3:0]),
 .GPO        (GPO[3:0]),
 
 //OStimers
-.OST1_int   (t1_interrupt),
-.OST2_int   (t2_interrupt),
-.OST3_int   (t3_interrupt),
+.OST1_int   (OST1_int),
+.OST2_int   (OST2_int),
+.OST3_int   (OST3_int),
 
 //SNESpad
-.SNES_clk   (nesc),
-.SNES_latch (nesl),
-.SNES_data  (nesd),
+.SNES_clk   (SNES_clk),
+.SNES_latch (SNES_latch),
+.SNES_data  (SNES_data),
 
 //PS/2
-.PS2_clk    (ps2c),
-.PS2_data   (ps2d),
-.PS2_int    (scan_code_ready), //Scan code ready signal
+.PS2_clk    (PS2_clk),
+.PS2_data   (PS2_data),
+.PS2_int    (PS2_int), //Scan code ready signal
 
 //Boot mode
-.boot_mode  (boot_mode)
-
+.boot_mode  (boot_mode_stable)
 );
 
 
 //---------------CPU----------------
 //CPU I/O
 
-
 CPU cpu(
 .clk            (clk),
 .reset          (reset),
-.int1           (t1_interrupt),             //timer1
-.int2           (t2_interrupt),             //timer2
-.int3           (UART0_rx_int),             //UART0 rx
-.int4           (frameDrawn),               //Frame Drawn
-.ext_int1       (t3_interrupt),             //timer3
-.ext_int2       (scan_code_ready),          //PS/2 scancode ready
-.ext_int3       (UART1_rx_int),             //UART1 rx
-.ext_int4       (UART2_rx_int),             //UART2 rx
+.int1           (OST1_int),            //OStimer1
+.int2           (OST2_int),            //OStimer2
+.int3           (UART0_rx_int),        //UART0 rx (MAIN)
+.int4           (frameDrawn_stable),   //GPU Frame Drawn
+.ext_int1       (OST3_int),            //OStimer3
+.ext_int2       (PS2_int),             //PS/2 scancode ready
+.ext_int3       (UART1_rx_int),        //UART1 rx (APU)
+.ext_int4       (UART2_rx_int),        //UART2 rx (EXT)
 .address        (address),
 .data           (data),
 .we             (we),
@@ -475,6 +540,5 @@ CPU cpu(
 .start          (start),
 .busy           (busy)
 );
-
 
 endmodule

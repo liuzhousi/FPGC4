@@ -15,6 +15,16 @@ Here I keep a list of my latest progress and a TODO list
 - Created SPI flash programmer, removing the need for an external one
 - Assembled new PCB
 
+## TODO since new PCB
+Things I need/want to fix/do since PCB v2 (has duplicates with Future plans)
+
+- Update libraries for new memory map
+- Write system test code in C, that tests all I/O and functionality
+- Different SPI speeds for different modules (25MHz for W5500 and SPI flash)
+- Implement true GPIO (Stabilize GPIO when module)
+- Stabilize PS/2 input
+- Add all signals to gtkwave for simulation
+- Make pictures for documentation
 
 ## Future plans
 These are kinda ordered based on priority
@@ -23,11 +33,10 @@ These are kinda ordered based on priority
 - Write system test code in C
 - Implement true GPIO
 - Different SPI speeds for different modules (25MHz for W5500 and SPI flash)
+- Add all signals to gtkwave for simulation
 - Improve C compiler
-- Proper placement of Synchronizers (dual flip flops). Make single module at top verilog file, put all signals in this one module
 - Stabilize PS/2 input?
 - Stabilize GPIO when module
-- Remove stabilizers in CPU
 - UART buffer in hardware
 - Move ROM to MU
 - Improve and write more libraries
@@ -36,6 +45,7 @@ These are kinda ordered based on priority
 - Change all static paths in the project to relative ones
 - Improve ESP32Synth (for non-live settings)
 - Write a USB loader program
+- Improve sprite renderer design, since it uses (space/logic-wise) half of the entire design
 - Create a pattern and palette table generator
 - Write a platformer game
 - Change speed of FT232RL to 1Mboud

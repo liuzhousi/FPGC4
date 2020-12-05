@@ -9,7 +9,6 @@
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/FPGC4.v"
 
 //Include modules
-`include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/Stabilizer.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/MultiStabilizer.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/ClockDivider.v"
 `include "/home/bart/Documents/FPGA/FPGC4/Verilog/modules/DtrReset.v"
@@ -45,54 +44,51 @@
 //Define testmodule
 module FPGC_tb;
 
-//I/O
+//Clock I/O
 reg clk;
 reg nreset;
 
-//reg ext_int1, ext_int2, ext_int3, ext_int4;
 
-//SPI Flash
-wire spi_clk;
-wire spi_cs; 
-wire spi_data; 
-wire spi_wp;
-wire spi_q;  
-wire spi_hold; 
+//SPI0 Flash
+wire SPI0_clk;
+wire SPI0_cs; 
+wire SPI0_data; 
+wire SPI0_wp;
+wire SPI0_q;  
+wire SPI0_hold; 
 
 W25Q128JV spiFlash (
-.CLK    (spi_clk), 
-.DIO    (spi_data), 
-.CSn    (spi_cs), 
-.WPn    (spi_wp), 
-.HOLDn  (spi_hold), 
-.DO     (spi_q)
+.CLK    (SPI0_clk), 
+.DIO    (SPI0_data), 
+.CSn    (SPI0_cs), 
+.WPn    (SPI0_wp), 
+.HOLDn  (SPI0_hold), 
+.DO     (SPI0_q)
 );
 
 //SDRAM
-wire             sdram_clk;     // SDRAM clock
-wire    [15 : 0] sdram_dq;      // SDRAM I/O
-wire    [12 : 0] sdram_addr;    // SDRAM Address
-wire    [1 : 0]  sdram_ba;      // Bank Address
-wire             sdram_cke;     // Synchronous Clock Enable
-wire             sdram_cs_n;    // CS#
-wire             sdram_ras_n;   // RAS#
-wire             sdram_cas_n;   // CAS#
-wire             sdram_we_n;    // WE#
-wire    [1 : 0]  sdram_dqm;     // Mask
-
-wire    [15 : 0] sdram_DQ = sdram_dq;
+wire             SDRAM_CLK;     // SDRAM clock
+wire    [15 : 0] SDRAM_DQ;      // SDRAM I/O
+wire    [12 : 0] SDRAM_A;    // SDRAM Address
+wire    [1 : 0]  SDRAM_BA;      // Bank Address
+wire             SDRAM_CKE;     // Synchronous Clock Enable
+wire             SDRAM_CSn;    // CS#
+wire             SDRAM_RASn;   // RAS#
+wire             SDRAM_CASn;   // CAS#
+wire             SDRAM_WEn;    // WE#
+wire    [1 : 0]  SDRAM_DQM;     // Mask
 
 mt48lc16m16a2 sdram (
-.Dq     (sdram_DQ), 
-.Addr   (sdram_addr), 
-.Ba     (sdram_ba), 
-.Clk    (sdram_clk), 
-.Cke    (sdram_cke), 
-.Cs_n   (sdram_cs_n), 
-.Ras_n  (sdram_ras_n), 
-.Cas_n  (sdram_cas_n), 
-.We_n   (sdram_we_n), 
-.Dqm    (sdram_dqm)
+.Dq     (SDRAM_DQ), 
+.Addr   (SDRAM_A), 
+.Ba     (SDRAM_BA), 
+.Clk    (SDRAM_CLK), 
+.Cke    (SDRAM_CKE), 
+.Cs_n   (SDRAM_CSn), 
+.Ras_n  (SDRAM_RASn), 
+.Cas_n  (SDRAM_CASn), 
+.We_n   (SDRAM_WEn), 
+.Dqm    (SDRAM_DQM)
 );
 
 //VGA
@@ -104,54 +100,178 @@ wire [2:0]  vga_g;
 wire [1:0]  vga_b;
 wire        vga_blk;
 
-wire [7:0]  GPO;
-reg  [7:0]  GPI;
+//CRT
+wire        crt_clk;
+wire        crt_sync;
+wire [2:0]  crt_r;
+wire [2:0]  crt_g;
+wire [1:0]  crt_b;
 
-reg         uart_dtr;
+//SPI1
+wire SPI1_clk;
+wire SPI1_cs;
+wire SPI1_mosi;
+wire SPI1_miso;
+wire SPI1_rst;
+reg  SPI1_nint;
+
+//SPI2
+wire SPI2_clk;
+wire SPI2_cs;
+wire SPI2_mosi;
+wire SPI2_miso;
+wire SPI2_rst;
+reg  SPI2_nint;
+
+//SPI3
+wire SPI3_clk;
+wire SPI3_cs;
+wire SPI3_mosi;
+wire SPI3_miso;
+wire SPI3_nrst;
+reg  SPI3_int;
+
+//SPI4
+wire SPI4_clk;
+wire SPI4_cs;
+wire SPI4_mosi;
+wire SPI4_miso;
+reg  SPI4_gp;
+
+//UART0
+reg  UART0_in;
+wire UART0_out;
+reg  UART0_dtr;
+
+//UART1
+reg  UART1_in;
+wire UART1_out;
+
+//UART2
+reg  UART2_in;
+wire UART2_out;
+
+//PS/2
+reg PS2_clk;
+reg PS2_data;
+
+//SNESpad
+wire SNES_clk; 
+wire SNES_latch;
+reg  SNES_data;
+
+//Led
+wire led;
+
+//GPIO
+wire [3:0]  GPO;
+reg  [3:0]  GPI;
+
+//DIP Switch
+reg [3:0] DIPS;
 
 FPGC4 fpgc (
-//Clock and reset
-.clk        (clk),
-.nreset     (nreset),
+.clk(clk), //25MHz
+.nreset(nreset),
 
-//VGA
-.vga_clk    (vga_clk),
-.vga_hs     (vga_hs),
-.vga_vs     (vga_vs),
-.vga_r      (vga_r),
-.vga_g      (vga_g),
-.vga_b      (vga_b),
-.vga_blk    (vga_blk),
+//VGA for GM7123 module
+.vga_clk(vga_clk),
+.vga_hs(vga_hs),
+.vga_vs(vga_vs),
+.vga_r(vga_r),
+.vga_g(vga_g),
+.vga_b(vga_b),
+.vga_blk(vga_blk),
 
+//RGBs video
+.crt_sync(crt_sync),
+.crt_clk(crt_clk),
+.crt_r(crt_r),
+.crt_g(crt_g),
+.crt_b(crt_b),
 
 //SDRAM
-.SDRAM_CLK  (sdram_clk),
-.SDRAM_CKE  (sdram_cke), 
-.SDRAM_CSn  (sdram_cs_n),
-.SDRAM_WEn  (sdram_we_n), 
-.SDRAM_CASn (sdram_cas_n), 
-.SDRAM_RASn (sdram_ras_n),
-.SDRAM_A    (sdram_addr),
-.SDRAM_BA   (sdram_ba),
-.SDRAM_DQM  (sdram_dqm),
-.SDRAM_DQ   (sdram_DQ),
+.SDRAM_CLK(SDRAM_CLK),
+.SDRAM_CSn(SDRAM_CSn),
+.SDRAM_WEn(SDRAM_WEn),
+.SDRAM_CASn(SDRAM_CASn),
+.SDRAM_RASn(SDRAM_RASn),
+.SDRAM_CKE(SDRAM_CKE),
+.SDRAM_A(SDRAM_A),
+.SDRAM_BA(SDRAM_BA),
+.SDRAM_DQM(SDRAM_DQM),
+.SDRAM_DQ(SDRAM_DQ),
 
-
-//SPI
-.spi_clk    (spi_clk),
-.spi_data   (spi_data),
-.spi_q      (spi_q),
-.spi_wp     (spi_wp),
-.spi_hold   (spi_hold),
-.spi_cs     (spi_cs),
-
-
+//SPI0 flash
+.SPI0_clk(SPI0_clk),
+.SPI0_cs(SPI0_cs),
+.SPI0_data(SPI0_data),
+.SPI0_q(SPI0_q),
+.SPI0_wp(SPI0_wp),
+.SPI0_hold(SPI0_hold),
+     
+//SPI1 CH376 bottom
+.SPI1_clk(SPI1_clk),
+.SPI1_cs(SPI1_cs),
+.SPI1_mosi(SPI1_mosi),
+.SPI1_miso(SPI1_miso),
+.SPI1_nint(SPI1_nint),
+.SPI1_rst(SPI1_rst),
+     
+//SPI2 CH376 top
+.SPI2_clk(SPI2_clk),
+.SPI2_cs(SPI2_cs),
+.SPI2_mosi(SPI2_mosi),
+.SPI2_miso(SPI2_miso),
+.SPI2_nint(SPI2_nint),
+.SPI2_rst(SPI2_rst),
+     
+//SPI3 W5500
+.SPI3_clk(SPI3_clk),
+.SPI3_cs(SPI3_cs),
+.SPI3_mosi(SPI3_mosi),
+.SPI3_miso(SPI3_miso),
+.SPI3_int(SPI3_int),
+.SPI3_nrst(SPI3_nrst),
+     
+//SPI4 GP
+.SPI4_clk(SPI4_clk),
+.SPI4_cs(SPI4_cs),
+.SPI4_mosi(SPI4_mosi),
+.SPI4_miso(SPI4_miso),
+.SPI4_gp(SPI4_gp),
+     
+//UART0
+.UART0_in(UART0_in),
+.UART0_out(UART0_out),
+.UART0_dtr(UART0_dtr),
+     
+//UART1
+.UART1_in(UART1_in),
+.UART1_out(UART1_out),
+     
+//UART2
+.UART2_in(UART2_in),
+.UART2_out(UART2_out),
+     
+//PS/2
+.PS2_clk(PS2_clk), 
+.PS2_data(PS2_data),
+     
+//SNESpad
+.SNES_clk(SNES_clk), 
+.SNES_latch(SNES_latch),
+.SNES_data(SNES_data),
+     
+//Led for debugging
+.led(led),
+     
 //GPIO
 .GPI(GPI),
 .GPO(GPO),
-
-//UART
-.uart_dtr(uart_dtr)
+     
+//DIP switch
+.DIPS(DIPS)
 );
 
 
@@ -160,35 +280,33 @@ begin
     //Dump everything for GTKwave
     $dumpfile("/home/bart/Documents/FPGA/FPGC4/Verilog/output/wave.vcd");
     $dumpvars;
+    
     clk = 0;
     nreset = 1;
-    uart_dtr = 1;
-    GPI = 8'b11111111;
 
-    /*
+    SPI1_nint = 1;
+    SPI2_nint = 1;
+    SPI3_int = 0;
+    SPI4_gp = 1;
 
-    repeat(100) #20 clk = ~clk; //25MHz
+    UART0_in = 1;
+    UART0_dtr = 1;
+    UART1_in = 1;
+    UART2_in = 1;
 
-    uart_dtr = 0;
-    repeat(100) #20 clk = ~clk; //25MHz
+    PS2_clk = 1;
+    PS2_data = 0;
 
-    uart_dtr = 1;
-    repeat(500) #20 clk = ~clk; //25MHz
+    SNES_data = 0;
 
+    GPI = 4'b1111;
 
-    uart_dtr = 0;
-    repeat(100) #20 clk = ~clk; //25MHz
+    DIPS = 4'b1111;
 
-    uart_dtr = 1;
-    repeat(100) #20 clk = ~clk; //25MHz
-
-    */
 
     
     repeat(5000) #20 clk = ~clk; //25MHz
 
-
-    //repeat(500) #20 clk = ~clk; //25MHz
 
     #1 $finish;
 end

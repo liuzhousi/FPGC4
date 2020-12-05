@@ -26,11 +26,11 @@ void memcpy(char* dest, char* src, int n)
 /*
 uprintc(char c)
 
-Prints a single char c by writing it to 0xC0262E
+Prints a single char c by writing it to 0xC02723
 */
 void uprintc(char c) 
 {
-	int *p = (int *)0xC0262E; 	// address of UART TX
+	int *p = (int *)0xC02723; 	// address of UART TX
 	*p = (int)c; 			// write char over UART
 }
 
@@ -39,13 +39,13 @@ void uprintc(char c)
 uprint(char* str)
 
 Sends each character from str over UART
-by writing them to 0xC0262E
+by writing them to 0xC02723
 until a 0 value is found.
 Does not send a newline afterwards.
 */
 void uprint(char* str) 
 {
-	int *p = (int *)0xC0262E; 	// address of UART TX
+	int *p = (int *)0xC02723; 	// address of UART TX
 	char chr = *str; 			// first character of str
 
 	while (chr != 0) 			// continue until null value
@@ -183,10 +183,10 @@ void delay(int ms)
 	*o = 0;
 
 	// set timer
-	int *p = (int *) 0xC02626;
+	int *p = (int *) 0xC02739;
 	*p = ms;
 	// start timer
-	int *q = (int *) 0xC02627;
+	int *q = (int *) 0xC0273A;
 	*q = 1;
 
 	// wait until timer done

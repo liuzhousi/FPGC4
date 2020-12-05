@@ -478,28 +478,28 @@ MemoryUnit mu(
 .SPI1_cs        (SPI1_cs),
 .SPI1_mosi      (SPI1_mosi),
 .SPI1_miso      (SPI1_miso),
-.SPI1_nint      (SPI1_nint),
+.SPI1_nint      (SPI1_nint_stable),
 
 //SPI2 (USB1/CH376T)
 .SPI2_clk       (SPI2_clk),
 .SPI2_cs        (SPI2_cs),
 .SPI2_mosi      (SPI2_mosi),
 .SPI2_miso      (SPI2_miso),
-.SPI2_nint      (SPI2_nint),
+.SPI2_nint      (SPI2_nint_stable),
 
 //SPI3 (W5500)
 .SPI3_clk       (SPI3_clk),
 .SPI3_cs        (SPI3_cs),
 .SPI3_mosi      (SPI3_mosi),
 .SPI3_miso      (SPI3_miso),
-.SPI3_int       (SPI3_int),
+.SPI3_int       (SPI3_int_stable),
 
 //SPI4 (EXT/GP)
 .SPI4_clk       (SPI4_clk),
 .SPI4_cs        (SPI4_cs),
 .SPI4_mosi      (SPI4_mosi),
 .SPI4_miso      (SPI4_miso),
-.SPI4_GP        (SPI4_gp),
+.SPI4_GP        (SPI4_gp_stable),
 
 //GPIO (Separated GPI and GPO until GPIO module is implemented)
 .GPI        (GPI[3:0]),

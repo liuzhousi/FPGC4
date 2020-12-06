@@ -1,46 +1,38 @@
 #include "lib/stdlib.h" 
 
-// Sets GPO[2] (cs) low
+// Sets SPI0_CS low
 void SpiBeginTransfer()
 {
     ASM("\
     // backup regs ;\
     push r1 ;\
     push r2 ;\
-    push r3 ;\
     \
-    load32 0xC02630 r3          // r3 = 0xC02630 | GPIO ;\
+    load32 0xC02729 r2          // r2 = 0xC02729 | SPI0_CS ;\
     \
-    read 0 r3 r1                // r1 = GPIO values ;\
-    load 0b1111101111111111 r2  // r2 = bitmask ;\
-    and r1 r2 r1                // set GPO[2] low ;\
-    write 0 r3 r1               // write GPIO ;\
+    load 0 r1                   // r1 = 0 (enable) ;\
+    write 0 r2 r1               // write to SPI0_CS ;\
     \
     // restore regs ;\
-    pop r3 ;\
     pop r2 ;\
     pop r1 ;\
     ");
 }
 
-// Sets GPO[2] (cs) high
+// Sets SPI0_CS high
 void SpiEndTransfer()
 {
     ASM("\
     // backup regs ;\
     push r1 ;\
     push r2 ;\
-    push r3 ;\
     \
-    load32 0xC02630 r3          // r3 = 0xC02630 | GPIO ;\
+    load32 0xC02729 r2          // r2 = 0xC02729 | SPI0_CS ;\
     \
-    read 0 r3 r1                // r1 = GPIO values ;\
-    load 0b10000000000 r2       // r2 = bitmask ;\
-    or r1 r2 r1                 // set GPO[2] high ;\
-    write 0 r3 r1               // write GPIO ;\
+    load 1 r1                   // r1 = 1 (disable) ;\
+    write 0 r2 r1               // write to SPI0_CS ;\
     \
     // restore regs ;\
-    pop r3 ;\
     pop r2 ;\
     pop r1 ;\
     ");
@@ -55,7 +47,7 @@ void SpiEndTransfer()
 int SpiTransfer(int dataByte)
 {
     ASM("\
-    load32 0xC02735 r1      // r1 = 0xC02735 | SPI address      ;\
+    load32 0xC02728 r1      // r1 = 0xC02728 | SPI address      ;\
     write 0 r1 r5           // write r5 over SPI                ;\
     read 0 r1 r1            // read return value                ;\
     ");
@@ -99,14 +91,14 @@ READ x(24bit) Bytes from address y(24bit):
     b7: '\n' (indicate end of command)
 */
 
-// inits SPI by enabling SPI3 and resetting the chip
+// inits SPI by enabling SPI0 and resetting the chip
 void initSPI()
 {
-    // already set CS high before enabling SPI3
+    // already set CS high before enabling SPI0
     SpiEndTransfer();
 
-    // enable SPI3
-    int *p = (int *) 0xC02736; // set address (SPI3 enable)
+    // enable SPI0
+    int *p = (int *) 0xC0272A; // set address (SPI0 enable)
     *p = 1; // write value
     delay(10);
 
@@ -366,15 +358,6 @@ int pageProgram(int addr24, int addr16, int addr8)
 }
 
 
-/**********************
-UNTESTED FUNCTIONS BELOW!
-**********************/
-
-
-
-
-
-
 void processCommand()
 {
     if (currentCommand == COMMAND_IDLE)
@@ -468,7 +451,7 @@ void int3()
     if (currentCommand == COMMAND_FILL_BUFFER)
     {
         // read byte
-        int *p = (int *)0xC0262F;   // address of UART RX
+        int *p = (int *)0xC02722;   // address of UART RX
         int b = *p;                 // read byte from UART
 
         // write byte to buffer, increase index
@@ -481,7 +464,7 @@ void int3()
     else if (currentCommand == COMMAND_IDLE)
     {
         // read byte
-        int *p = (int *)0xC0262F;   // address of UART RX
+        int *p = (int *)0xC02722;   // address of UART RX
         int b = *p;                 // read byte from UART
 
         // write byte to buffer, increase index

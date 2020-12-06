@@ -1,5 +1,7 @@
 #include "lib/stdlib.h"
-#include "lib/ch376.h" 
+#include "lib/USBlib.h" 
+
+#define USBPORT 1
 
 // Wiznet W5500 Op Codes
 #define WIZNET_WRITE_COMMON 0x04 //opcode to write to one of the common block of registers
@@ -110,47 +112,39 @@ char fileBuffer[FILE_BUFFER_SIZE] = 0;
 //BASIC READ AND WRITE FUNCTIONS
 //-------------------
 
-// Sets GPO[1] (cs) low
+// Sets SPI3_CS low
 void WizSpiBeginTransfer()
 {
   ASM("\
-  // backup regs ;\
+    // backup regs ;\
     push r1 ;\
     push r2 ;\
-    push r3 ;\
     \
-    load32 0xC02630 r3          // r3 = 0xC02630 | GPIO ;\
+    load32 0xC02732 r2          // r2 = 0xC02732 | SPI3_CS ;\
     \
-    read 0 r3 r1                // r1 = GPIO values ;\
-    load 0b1111110111111111 r2  // r2 = bitmask ;\
-    and r1 r2 r1                // set GPO[1] low ;\
-    write 0 r3 r1               // write GPIO ;\
+    load 0 r1                   // r1 = 0 (enable) ;\
+    write 0 r2 r1               // write to SPI3_CS ;\
     \
     // restore regs ;\
-    pop r3 ;\
     pop r2 ;\
     pop r1 ;\
     ");
 }
 
-// Sets GPO[1] (cs) high
+// Sets SPI3_CS high
 void WizSpiEndTransfer()
 {
   ASM("\
-  // backup regs ;\
+    // backup regs ;\
     push r1 ;\
     push r2 ;\
-    push r3 ;\
     \
-    load32 0xC02630 r3          // r3 = 0xC02630 | GPIO ;\
+    load32 0xC02732 r2          // r2 = 0xC02732 | SPI3_CS ;\
     \
-    read 0 r3 r1                // r1 = GPIO values ;\
-    load 0b1000000000 r2        // r2 = bitmask ;\
-    or r1 r2 r1                 // set GPO[1] high ;\
-    write 0 r3 r1               // write GPIO ;\
+    load 1 r1                   // r1 = 1 (disable) ;\
+    write 0 r2 r1               // write to SPI3_CS ;\
     \
     // restore regs ;\
-    pop r3 ;\
     pop r2 ;\
     pop r1 ;\
     ");
@@ -166,7 +160,7 @@ void WizSpiEndTransfer()
 int WizSpiTransfer(int dataByte)
 {
   ASM("\
-    load32 0xC02734 r1      // r1 = 0xC02734 | SPI2 address      ;\
+    load32 0xC02731 r1      // r1 = 0xC02731 | SPI3 address      ;\
     write 0 r1 r5           // write r5 over SPI        ;\
     read 0 r1 r1            // read return value        ;\
     ");
@@ -478,7 +472,7 @@ int wizWriteResponseFromUSB(int s, int fileSize)
 {
   // file size is already checked on being > 0
 
-  if (!CH376_setCursor(0))
+  if (!CH376_setCursor(USBPORT, 0))
       uprintln("cursor error");
 
   int bytesSent = 0;
@@ -493,7 +487,7 @@ int wizWriteResponseFromUSB(int s, int fileSize)
       partToSend = FILE_BUFFER_SIZE;
 
     // read from usb to buffer
-    if (!CH376_readFile(fileBuffer, partToSend))
+    if (!CH376_readFile(USBPORT, fileBuffer, partToSend))
       uprintln("read error");
     if (!wizWriteResponseFromMemory(s, fileBuffer, partToSend))
     {
@@ -505,7 +499,7 @@ int wizWriteResponseFromUSB(int s, int fileSize)
     bytesSent += partToSend;
   }
 
-  CH376_closeFile();
+  CH376_closeFile(USBPORT);
   return 1;
 }
 
@@ -626,16 +620,16 @@ void wizServeFile(int s, char* path)
 
   int error = 0;
 
-  if (!CH376_sendFileName(&path[0]))
+  if (!CH376_sendFileName(USBPORT, &path[0]))
     error = 404;
 
   if (!error)
-    if (!CH376_openFile())
+    if (!CH376_openFile(USBPORT))
       error = 404;
 
   int fileSize;
   if (!error)
-    fileSize = CH376_getFileSize();
+    fileSize = CH376_getFileSize(USBPORT);
 
   if (!error)
     if (fileSize == 0)
@@ -653,8 +647,8 @@ void wizServeFile(int s, char* path)
     char* header = "HTTP/1.1 404 Not Found\nServer: FPGC4/1.0\nContent-Type: text/html\n\n";
     wizWriteResponseFromMemory(s, header, 66);
 
-    CH376_sendFileName("/404.HTM");
-    if (!CH376_openFile())
+    CH376_sendFileName(USBPORT, "/404.HTM");
+    if (!CH376_openFile(USBPORT))
     {
       // if the custom 404 does not exist, return own error code
       wizSend404Response(s);
@@ -662,7 +656,7 @@ void wizServeFile(int s, char* path)
     else
     {
       // send custom 404
-      fileSize = CH376_getFileSize();
+      fileSize = CH376_getFileSize(USBPORT);
       // write the response from USB
       wizWriteResponseFromUSB(s, fileSize);
     }
@@ -811,8 +805,8 @@ int main()
   delay(100);
 
   // Init CH376
-  CH376_init();
-  CH376_connectDrive();
+  CH376_init(USBPORT);
+  CH376_connectDrive(USBPORT);
 
   // Init W5500
   wiz_Init();

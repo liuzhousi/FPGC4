@@ -1,5 +1,6 @@
 Test/
 Assembler/__pycache__/
+Assembler/code.asm
 Quartus/db/
 Quartus/incremental_db/
 Quartus/simulation/

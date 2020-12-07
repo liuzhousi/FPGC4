@@ -14,6 +14,7 @@ Here I keep a list of my latest progress and a TODO list
 - Designed and ordered V2 of the I/O Board PCB (4 layer)
 - Created SPI flash programmer, removing the need for an external one
 - Assembled new PCB
+- New memory map, restructured the way SPI works (CS and Int), most libraries are updated now
 
 ## TODO since new PCB
 Things I need/want to fix/do since PCB v2 (has duplicates with Future plans)
